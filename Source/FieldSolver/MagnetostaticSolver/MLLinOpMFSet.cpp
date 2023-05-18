@@ -3,14 +3,19 @@
 namespace Solver {
 
 void
-MLLinOpMFV::define (const amrex::Vector<amrex::Geometry>& a_geom,
-                    const amrex::Vector<amrex::BoxArray>& a_grids,
-                    const amrex::Vector<amrex::DistributionMapping>& a_dmap,
-                    const amrex::LPInfo& a_info,
-                    const amrex::Vector<amrex::FabFactory<FAB> const*>& a_factory,
-                    [[maybe_unused]] bool eb_limit_coarsening)
-{
+MLLinOpMFSet::define (const amrex::Vector<amrex::Geometry>& a_geom,
+                      const amrex::Vector<amrex::BoxArray>& a_grids,
+                      const amrex::Vector<amrex::DistributionMapping>& a_dmap,
+                      const amrex::LPInfo& a_info,
+                      const amrex::Vector<amrex::FabFactory<FAB> const*>& a_factory,
+                      [[maybe_unused]] bool eb_limit_coarsening,
+                      int a_ncomp_sol,
+                      int a_ncomp_rhs ) {
     BL_PROFILE("MLLinOp::define()");
+
+    m_ncomp_sol = a_ncomp_sol;
+    m_ncomp_rhs = a_ncomp_rhs;
+
 
     info = a_info;
 #ifdef AMREX_USE_GPU
@@ -40,7 +45,7 @@ MLLinOpMFV::define (const amrex::Vector<amrex::Geometry>& a_geom,
 }
 
 void
-MLLinOpMFV::defineGrids (const amrex::Vector<amrex::Geometry>& a_geom,
+MLLinOpMFSet::defineGrids (const amrex::Vector<amrex::Geometry>& a_geom,
                            const amrex::Vector<amrex::BoxArray>& a_grids,
                            const amrex::Vector<amrex::DistributionMapping>& a_dmap,
                            const amrex::Vector<amrex::FabFactory<FAB> const*>& a_factory)
@@ -396,7 +401,7 @@ MLLinOpMFV::defineGrids (const amrex::Vector<amrex::Geometry>& a_geom,
 }
 
 void
-MLLinOpMFV::defineBC ()
+MLLinOpMFSet::defineBC ()
 {
     m_needs_coarse_data_for_bc = !m_domain_covered[0];
 
@@ -407,19 +412,19 @@ MLLinOpMFV::defineBC ()
 }
 
 void
-MLLinOpMFV::setDomainBC (const amrex::Array<BCType,AMREX_SPACEDIM>& a_lobc,
+MLLinOpMFSet::setDomainBC (const amrex::Array<BCType,AMREX_SPACEDIM>& a_lobc,
                            const amrex::Array<BCType,AMREX_SPACEDIM>& a_hibc) noexcept
 {
-    const int ncomp = MLLinOpMFV::getNComp();
+    const int ncomp = getNCompSol();
     setDomainBC(amrex::Vector<amrex::Array<BCType,AMREX_SPACEDIM> >(ncomp,a_lobc),
                 amrex::Vector<amrex::Array<BCType,AMREX_SPACEDIM> >(ncomp,a_hibc));
 }
 
 void
-MLLinOpMFV::setDomainBC (const amrex::Vector<amrex::Array<BCType,AMREX_SPACEDIM> >& a_lobc,
+MLLinOpMFSet::setDomainBC (const amrex::Vector<amrex::Array<BCType,AMREX_SPACEDIM> >& a_lobc,
                            const amrex::Vector<amrex::Array<BCType,AMREX_SPACEDIM> >& a_hibc) noexcept
 {
-    const int ncomp = getNComp();
+    const int ncomp = getNCompSol();
     AMREX_ASSERT_WITH_MESSAGE(ncomp == a_lobc.size() && ncomp == a_hibc.size(),
                               "MLLinOp::setDomainBC: wrong size");
     m_lobc = a_lobc;
@@ -467,7 +472,7 @@ MLLinOpMFV::setDomainBC (const amrex::Vector<amrex::Array<BCType,AMREX_SPACEDIM>
 }
 
 bool
-MLLinOpMFV::hasBC (BCType bct) const noexcept
+MLLinOpMFSet::hasBC (BCType bct) const noexcept
 {
     int ncomp = m_lobc_orig.size();
     for (int n = 0; n < ncomp; ++n) {
@@ -480,20 +485,8 @@ MLLinOpMFV::hasBC (BCType bct) const noexcept
     return false;
 }
 
-bool
-MLLinOpMFV::hasInhomogNeumannBC () const noexcept
-{
-    return hasBC(BCType::inhomogNeumann);
-}
-
-bool
-MLLinOpMFV::hasRobinBC () const noexcept
-{
-    return hasBC(BCType::Robin);
-}
-
 amrex::Box
-MLLinOpMFV::compactify (amrex::Box const& b) const noexcept
+MLLinOpMFSet::compactify (amrex::Box const& b) const noexcept
 {
 #if (AMREX_SPACEDIM == 3)
     if (info.hasHiddenDimension()) {
@@ -514,16 +507,13 @@ MLLinOpMFV::compactify (amrex::Box const& b) const noexcept
 }
 
 void
-MLLinOpMFV::makeAgglomeratedDMap (const amrex::Vector<amrex::BoxArray>& ba,
+MLLinOpMFSet::makeAgglomeratedDMap (const amrex::Vector<amrex::BoxArray>& ba,
                                   amrex::Vector<amrex::DistributionMapping>& dm)
 {
     BL_PROFILE("MLLinOp::makeAgglomeratedDMap");
-
     BL_ASSERT(!dm[0].empty());
-    for (int i = 1, N=static_cast<int>(ba.size()); i < N; ++i)
-    {
-        if (dm[i].empty())
-        {
+    for (int i = 1, N=static_cast<int>(ba.size()); i < N; ++i) {
+        if (dm[i].empty()) {
             const std::vector< std::vector<int> >& sfc = amrex::DistributionMapping::makeSFC(ba[i]);
 
             const int nprocs = amrex::ParallelContext::NProcsSub();
@@ -542,7 +532,7 @@ MLLinOpMFV::makeAgglomeratedDMap (const amrex::Vector<amrex::BoxArray>& ba,
 }
 
 void
-MLLinOpMFV::makeConsolidatedDMap (const amrex::Vector<amrex::BoxArray>& ba,
+MLLinOpMFSet::makeConsolidatedDMap (const amrex::Vector<amrex::BoxArray>& ba,
                                   amrex::Vector<amrex::DistributionMapping>& dm,
                                   int ratio, int strategy)
 {
@@ -550,10 +540,8 @@ MLLinOpMFV::makeConsolidatedDMap (const amrex::Vector<amrex::BoxArray>& ba,
 
     int factor = 1;
     BL_ASSERT(!dm[0].empty());
-    for (int i = 1, N=static_cast<int>(ba.size()); i < N; ++i)
-    {
-        if (dm[i].empty())
-        {
+    for (int i = 1, N=static_cast<int>(ba.size()); i < N; ++i) {
+        if (dm[i].empty()) {
             factor *= ratio;
 
             const int nprocs = amrex::ParallelContext::NProcsSub();
@@ -597,7 +585,7 @@ MLLinOpMFV::makeConsolidatedDMap (const amrex::Vector<amrex::BoxArray>& ba,
 }
 
 MPI_Comm
-MLLinOpMFV::makeSubCommunicator (const amrex::DistributionMapping& dm)
+MLLinOpMFSet::makeSubCommunicator (const amrex::DistributionMapping& dm)
 {
     BL_PROFILE("MLLinOp::makeSubCommunicator()");
 
@@ -635,7 +623,7 @@ MLLinOpMFV::makeSubCommunicator (const amrex::DistributionMapping& dm)
 }
 
 void
-MLLinOpMFV::setDomainBCLoc (const amrex::Array<amrex::Real,AMREX_SPACEDIM>& lo_bcloc,
+MLLinOpMFSet::setDomainBCLoc (const amrex::Array<amrex::Real,AMREX_SPACEDIM>& lo_bcloc,
                               const amrex::Array<amrex::Real,AMREX_SPACEDIM>& hi_bcloc) noexcept
 {
     m_domain_bloc_lo = lo_bcloc;
@@ -643,53 +631,53 @@ MLLinOpMFV::setDomainBCLoc (const amrex::Array<amrex::Real,AMREX_SPACEDIM>& lo_b
 }
 
 void
-MLLinOpMFV::setCoarseFineBC (const MFSet* crse, int crse_ratio) noexcept
+MLLinOpMFSet::setCoarseFineBC (const MFSet* crse, int crse_ratio) noexcept
 {
     m_coarse_data_for_bc = crse;
     m_coarse_data_crse_ratio = crse_ratio;
 }
 
-template <typename AMF, std::enable_if_t<!std::is_same_v<MFSet,AMF>,int>>
-void
-MLLinOpMFV::setCoarseFineBC (const AMF* crse, int crse_ratio) noexcept
-{
-    m_coarse_data_for_bc_raii = MFSet(crse->boxArray(), crse->DistributionMap(),
-                                   crse->nComp(), crse->nGrowVect());
-    m_coarse_data_for_bc_raii.LocalCopy(*crse, 0, 0, crse->nComp(),
-                                        crse->nGrowVect());
-    m_coarse_data_for_bc = &m_coarse_data_for_bc_raii;
-    m_coarse_data_crse_ratio = crse_ratio;
-}
+// void
+// MLLinOpMFSet::setCoarseFineBC (const AMF* crse, int crse_ratio) noexcept
+// {
+//     m_coarse_data_for_bc_raii = MFSet(crse->boxArray(), crse->DistributionMap(),
+//                                    crse->nComp(), crse->nGrowVect());
+//     m_coarse_data_for_bc_raii.LocalCopy(*crse, 0, 0, crse->nComp(),
+//                                         crse->nGrowVect());
+//     m_coarse_data_for_bc = &m_coarse_data_for_bc_raii;
+//     m_coarse_data_crse_ratio = crse_ratio;
+// }
 
-void
-MLLinOpMFV::make (amrex::Vector<amrex::Vector<MFSet> >& mf, amrex::IntVect const& ng) const
-{
-    mf.clear();
-    mf.resize(m_num_amr_levels);
-    for (int alev = 0; alev < m_num_amr_levels; ++alev) {
-        mf[alev].resize(m_num_mg_levels[alev]);
-        for (int mlev = 0; mlev < m_num_mg_levels[alev]; ++mlev) {
-            mf[alev][mlev] = make(alev, mlev, ng);
-        }
-    }
-}
-
-MFSet
-MLLinOpMFV::make (int amrlev, int mglev, amrex::IntVect const& ng) const
-{
-    return amrex::MultiFab(amrex::convert(m_grids[amrlev][mglev], m_ixtype),
-              m_dmap[amrlev][mglev], getNComp(), ng, amrex::MFInfo(),
-              *m_factory[amrlev][mglev]);
-}
+// void
+// MLLinOpMFSet::make (amrex::Vector<amrex::Vector<MFSet>>& mfs, amrex::IntVect const& ng) const
+// {
+//     mfs.clear();
+//     mfs.resize(m_num_amr_levels);
+//     for (int alev = 0; alev < m_num_amr_levels; ++alev) {
+//         mfs[alev].resize(m_num_mg_levels[alev]);
+//         for (int mlev = 0; mlev < m_num_mg_levels[alev]; ++mlev) {
+//             mfs[alev][mlev] = make(alev, mlev, ng);
+//         }
+//     }
+// }
 
 // MFSet
-// MLLinOpMFV::makeAlias (MFSet const& mf) const
+// MLLinOpMFSet::make (int amrlev, int mglev, amrex::IntVect const& ng) const
 // {
-//     return MFSet(mf, amrex::make_alias, 0, 1);//mf.nComp());
+//     return MFSet(m_grids[amrlev][mglev], m_ixtype_set_sol, m_dmap[amrlev][mglev], ng, amrex::MFInfo(), *m_factory[amrlev][mglev]);
+//     // return amrex::MultiFab(amrex::convert(m_grids[amrlev][mglev], m_ixtype),
+//     //           m_dmap[amrlev][mglev], getNComp(), ng, amrex::MFInfo(),
+//     //           *m_factory[amrlev][mglev]);
+// }
+
+// MFSet
+// MLLinOpMFSet::makeAlias (MFSet const& mfs) const
+// {
+//     return MFSet(mfs, amrex::make_alias, 0, 1);//mfs.nComp());
 // }
 
 MFSet
-MLLinOpMFV::makeCoarseMG (int amrlev, int mglev, amrex::IntVect const& ng) const
+MLLinOpMFSet::makeCoarseMG (int amrlev, int mglev, amrex::IntVect const& ng) const
 {
     amrex::BoxArray cba = m_grids[amrlev][mglev];
     amrex::IntVect ratio = (amrlev > 0) ? amrex::IntVect(2) : mg_coarsen_ratio_vec[mglev];
@@ -700,7 +688,7 @@ MLLinOpMFV::makeCoarseMG (int amrlev, int mglev, amrex::IntVect const& ng) const
 }
 
 MFSet
-MLLinOpMFV::makeCoarseAmr (int famrlev, amrex::IntVect const& ng) const
+MLLinOpMFSet::makeCoarseAmr (int famrlev, amrex::IntVect const& ng) const
 {
     amrex::BoxArray cba = m_grids[famrlev][0];
     amrex::IntVect ratio(AMRRefRatio(famrlev-1));
@@ -710,7 +698,7 @@ MLLinOpMFV::makeCoarseAmr (int famrlev, amrex::IntVect const& ng) const
 }
 
 void
-MLLinOpMFV::resizeMultiGrid (int new_size)
+MLLinOpMFSet::resizeMultiGrid (int new_size)
 {
     if (new_size <= 0 || new_size >= m_num_mg_levels[0]) { return; }
 
@@ -727,9 +715,9 @@ MLLinOpMFV::resizeMultiGrid (int new_size)
 }
 
 void
-MLLinOpMFV::avgDownResMG (int clev, MFSet& cres, MFSet const& fres) const
+MLLinOpMFSet::avgDownResMG (int clev, MFSet& cres, MFSet const& fres) const
 {
-    const int ncomp = this->getNComp();
+    const int ncomp = this->getNCompRHS();
     if constexpr (amrex::IsFabArray<MFSet>::value) {
 #ifdef AMREX_USE_EB
         if (!fres.isAllRegular()) {
@@ -740,60 +728,66 @@ MLLinOpMFV::avgDownResMG (int clev, MFSet& cres, MFSet const& fres) const
             amrex::average_down(fres, cres, 0, ncomp, mg_coarsen_ratio_vec[clev-1]);
         }
     } else {
-        amrex::Abort("For non-FabArray, MLLinOpMFV::avgDownResMG should be overridden.");
+        amrex::Abort("For non-FabArray, MLLinOpMFSet::avgDownResMG should be overridden.");
     }
 }
 
 bool
-MLLinOpMFV::isMFIterSafe (int amrlev, int mglev1, int mglev2) const
+MLLinOpMFSet::isMFIterSafe (int amrlev, int mglev1, int mglev2) const
 {
     return m_dmap[amrlev][mglev1] == m_dmap[amrlev][mglev2]
         && amrex::BoxArray::SameRefs(m_grids[amrlev][mglev1], m_grids[amrlev][mglev2]);
 }
 
-template <typename AMF, std::enable_if_t<!std::is_same_v<MFSet,AMF>,int>>
 void
-MLLinOpMFV::setLevelBC (int amrlev, const AMF* levelbcdata,
-                          const AMF* robinbc_a, const AMF* robinbc_b,
-                          const AMF* robinbc_f)
+MLLinOpMFSet::setLevelBC (int amrlev, const MFSet* levelbcdata,
+                          const MFSet* robinbc_a, const MFSet* robinbc_b,
+                          const MFSet* robinbc_f)
 {
-    const int ncomp = this->getNComp();
     if (levelbcdata) {
-        levelbc_raii[amrlev] = std::make_unique<MFSet>(levelbcdata->boxArray(),
-                                                    levelbcdata->DistributionMap(),
-                                                    ncomp, levelbcdata->nGrowVect());
-        levelbc_raii[amrlev]->LocalCopy(*levelbcdata, 0, 0, ncomp,
-                                        levelbcdata->nGrowVect());
+        // levelbc_raii[amrlev] = std::make_unique<MFSet>(levelbcdata->boxArray(),
+        //                                             levelbcdata->DistributionMap(),
+        //                                             ncomp, levelbcdata->nGrowVect());
+        // levelbc_raii[amrlev]->LocalCopy(*levelbcdata, 0, 0, ncomp,
+        //                                 levelbcdata->nGrowVect());
+        levelbc_raii[amrlev] = std::make_unique<MFSet>(levelbcdata, amrex::MFInfo(), amrex::FArrayBoxFactory());
+        levelbc_raii[amrlev]->LocalCopy(*levelbcdata);
     } else {
         levelbc_raii[amrlev].reset();
     }
 
     if (robinbc_a) {
-        robin_a_raii[amrlev] = std::make_unique<MFSet>(robinbc_a->boxArray(),
-                                                    robinbc_a->DistributionMap(),
-                                                    ncomp, robinbc_a->nGrowVect());
-        robin_a_raii[amrlev]->LocalCopy(*robinbc_a, 0, 0, ncomp,
-                                        robinbc_a->nGrowVect());
+        // robin_a_raii[amrlev] = std::make_unique<MFSet>(robinbc_a->boxArray(),
+        //                                             robinbc_a->DistributionMap(),
+        //                                             ncomp, robinbc_a->nGrowVect());
+        // robin_a_raii[amrlev]->LocalCopy(*robinbc_a, 0, 0, ncomp,
+        //                                 robinbc_a->nGrowVect());
+        robin_a_raii[amrlev] = std::make_unique<MFSet>(robinbc_a, amrex::MFInfo(), amrex::FArrayBoxFactory());
+        robin_a_raii[amrlev]->LocalCopy(*robinbc_a);
     } else {
         robin_a_raii[amrlev].reset();
     }
 
     if (robinbc_b) {
-        robin_b_raii[amrlev] = std::make_unique<MFSet>(robinbc_b->boxArray(),
-                                                    robinbc_b->DistributionMap(),
-                                                    ncomp, robinbc_b->nGrowVect());
-        robin_b_raii[amrlev]->LocalCopy(*robinbc_b, 0, 0, ncomp,
-                                        robinbc_b->nGrowVect());
+        // robin_b_raii[amrlev] = std::make_unique<MFSet>(robinbc_b->boxArray(),
+        //                                             robinbc_b->DistributionMap(),
+        //                                             ncomp, robinbc_b->nGrowVect());
+        // robin_b_raii[amrlev]->LocalCopy(*robinbc_b, 0, 0, ncomp,
+        //                                 robinbc_b->nGrowVect());
+        robin_b_raii[amrlev] = std::make_unique<MFSet>(robinbc_b, amrex::MFInfo(), amrex::FArrayBoxFactory());
+        robin_b_raii[amrlev]->LocalCopy(*robinbc_b);
     } else {
         robin_b_raii[amrlev].reset();
     }
 
     if (robinbc_f) {
-        robin_f_raii[amrlev] = std::make_unique<MFSet>(robinbc_f->boxArray(),
-                                                    robinbc_f->DistributionMap(),
-                                                    ncomp, robinbc_f->nGrowVect());
-        robin_f_raii[amrlev]->LocalCopy(*robinbc_f, 0, 0, ncomp,
-                                        robinbc_f->nGrowVect());
+        // robin_f_raii[amrlev] = std::make_unique<MFSet>(robinbc_f->boxArray(),
+        //                                             robinbc_f->DistributionMap(),
+        //                                             ncomp, robinbc_f->nGrowVect());
+        // robin_f_raii[amrlev]->LocalCopy(*robinbc_f, 0, 0, ncomp,
+        //                                 robinbc_f->nGrowVect());
+        robin_f_raii[amrlev] = std::make_unique<MFSet>(robinbc_f, amrex::MFInfo(), amrex::FArrayBoxFactory());
+        robin_f_raii[amrlev]->LocalCopy(*robinbc_f);
     } else {
         robin_f_raii[amrlev].reset();
     }

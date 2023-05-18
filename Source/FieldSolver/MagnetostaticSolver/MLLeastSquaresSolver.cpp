@@ -3,9 +3,9 @@
 namespace Solver {
 
 RT
-MLLeastSquaresSolver::dotxy (const MFSet r, const MFSet z, bool local)
+MLLeastSquaresSolver::dotxy (const MFSet& r, const MFSet& z, bool local)
 {
-    BL_PROFILE_VAR_NS("MLCGSolver::ParallelAllReduce", blp_par);
+    BL_PROFILE_VAR_NS("MLLeastSquaresSolver::ParallelAllReduce", blp_par);
     if (!local) { 
         BL_PROFILE_VAR_START(blp_par);
     }
@@ -17,7 +17,7 @@ MLLeastSquaresSolver::dotxy (const MFSet r, const MFSet z, bool local)
 }
 
 RT
-MLLeastSquaresSolver::norm_inf (const MFSet res, bool local)
+MLLeastSquaresSolver::norm_inf (const MFSet& res, bool local)
 {
     // int ncomp = res.nComp();
     RT result = res.norminf();
@@ -26,7 +26,7 @@ MLLeastSquaresSolver::norm_inf (const MFSet res, bool local)
     }
 
     if (!local) {
-        BL_PROFILE("MLCGSolver::ParallelAllReduce");
+        BL_PROFILE("MLLeastSquaresSolver::ParallelAllReduce");
         amrex::ParallelAllReduce::Max(result, Lp.BottomCommunicator());
     }
     return result;
@@ -34,7 +34,7 @@ MLLeastSquaresSolver::norm_inf (const MFSet res, bool local)
 
 int
 MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, RT eps_abs) {
-    BL_PROFILE("MLCGSolver::bicgstab");
+    BL_PROFILE("MLLeastSquaresSolver::bicgstab");
 
     // amrex::MultiFab& sol_test;
     // const int ncomp_in = sol_test.nComp(); // Number of components for input
@@ -46,19 +46,19 @@ MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, 
 
     amrex::MFInfo mfinfo = amrex::MFInfo();
 
-    MFSet ph(sol, nghost, mfinfo); // Input size
-    MFSet sh(sol, nghost, mfinfo); // Input size
+    MFSet ph(sol, mfinfo, nghost); // Input size
+    MFSet sh(sol, mfinfo, nghost); // Input size
 
     ph.setVal(RT(0.0));
     sh.setVal(RT(0.0));
 
-    MFSet sorig(sol, nghost, mfinfo); // Input size
-    MFSet p    (rhs, nghost, mfinfo); // Output size
-    MFSet r    (rhs, nghost, mfinfo); // Output size, residual
-    MFSet s    (sol, nghost, mfinfo); //
-    MFSet rh   (rhs, nghost, mfinfo); // Output size
-    MFSet v    (rhs, nghost, mfinfo); // Output size
-    MFSet t    (rhs, nghost, mfinfo); // Output size
+    MFSet sorig(sol, mfinfo, nghost); // Input size
+    MFSet p    (rhs, mfinfo, nghost); // Output size
+    MFSet r    (rhs, mfinfo, nghost); // Output size, residual
+    MFSet s    (sol, mfinfo, nghost); //
+    MFSet rh   (rhs, mfinfo, nghost); // Output size
+    MFSet v    (rhs, mfinfo, nghost); // Output size
+    MFSet t    (rhs, mfinfo, nghost); // Output size
 
     // This suggests that r and rhs are the same size, i.e., output size
     Lp.correctionResidual(amrlev, mglev, r, sol, rhs, BCMode::Homogeneous);
@@ -78,7 +78,7 @@ MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, 
 
     if ( verbose > 0 )
     {
-        amrex::Print() << "MLCGSolver_BiCGStab: Initial error (error0) =        " << rnorm0 << '\n';
+        amrex::Print() << "MLLeastSquaresSolver_BiCGStab: Initial error (error0) =        " << rnorm0 << '\n';
     }
     int ret = 0;
     iter = 1;
@@ -88,7 +88,7 @@ MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, 
     {
         if ( verbose > 0 )
         {
-            amrex::Print() << "MLCGSolver_BiCGStab: niter = 0,"
+            amrex::Print() << "MLLeastSquaresSolver_BiCGStab: niter = 0,"
                         << ", rnorm = " << rnorm
                         << ", eps_abs = " << eps_abs << std::endl;
         }
@@ -111,13 +111,13 @@ MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, 
         {
             const RT beta = (rho/rho_1)*(alpha/omega);
             // This suggests v is the same size as p, i.e., output size
-            MF::Saxpy(p, -omega, v, 0, 0, ncomp_in, nghost); // p += -omega*v
-            MF::Xpay(p, beta, r, 0, 0, ncomp_in, nghost); // p = r + beta*p
+            MFSet::Saxpy(p, -omega, v, 0, 0, ncomp_in, nghost); // p += -omega*v
+            MFSet::Xpay(p, beta, r, 0, 0, ncomp_in, nghost); // p = r + beta*p
         }
         ph.LocalCopy(p,0,0,ncomp_in,nghost);
 
         // This line indicates that v is output size and ph is input size
-        Lp.apply(amrlev, mglev, v, ph, amrex::MLLinOpT<MF>::BCMode::Homogeneous, amrex::MLLinOpT<MF>::StateMode::Correction);
+        Lp.apply(amrlev, mglev, v, ph, amrex::MLLinOpT<MFSet>::BCMode::Homogeneous, amrex::MLLinOpT<MFSet>::StateMode::Correction);
         Lp.normalize(amrlev, mglev, v);
 
         RT rhTv = dotxy(rh,v);
@@ -129,14 +129,14 @@ MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, 
         {
             ret = 2; break;
         }
-        MF::Saxpy(sol, alpha, ph, 0, 0, ncomp_in, nghost); // sol += alpha * ph
-        MF::LinComb(s, RT(1.0), r, 0, -alpha, v, 0, 0, ncomp_in, nghost); // s = r - alpha * v
+        MFSet::Saxpy(sol, alpha, ph, 0, 0, ncomp_in, nghost); // sol += alpha * ph
+        MFSet::LinComb(s, RT(1.0), r, 0, -alpha, v, 0, 0, ncomp_in, nghost); // s = r - alpha * v
 
         rnorm = norm_inf(s);
 
         if ( verbose > 2 && amrex::ParallelDescriptor::IOProcessor() )
         {
-            amrex::Print() << "MLCGSolver_BiCGStab: Half Iter "
+            amrex::Print() << "MLLeastSquaresSolver_BiCGStab: Half Iter "
                         << std::setw(11) << iter
                         << " rel. err. "
                         << rnorm/(rnorm0) << '\n';
@@ -147,7 +147,7 @@ MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, 
         // This suggests s and sh are the same size
         sh.LocalCopy(s,0,0,ncomp_in,nghost);
         // This suggests that t is output size and sh is input size
-        Lp.apply(amrlev, mglev, t, sh, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
+        Lp.apply(amrlev, mglev, t, sh, MLLinOpT<MFSet>::BCMode::Homogeneous, MLLinOpT<MFSet>::StateMode::Correction);
         Lp.normalize(amrlev, mglev, t);
         //
         // This is a little funky.  I want to elide one of the reductions
@@ -156,7 +156,7 @@ MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, 
         //
         RT tvals[2] = { dotxy(t,t,true), dotxy(t,s,true) };
 
-        BL_PROFILE_VAR("MLCGSolver::ParallelAllReduce", blp_par);
+        BL_PROFILE_VAR("MLLeastSquaresSolver::ParallelAllReduce", blp_par);
         amrex::ParallelAllReduce::Sum(tvals,2,Lp.BottomCommunicator());
         BL_PROFILE_VAR_STOP(blp_par);
 
@@ -168,15 +168,15 @@ MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, 
         {
             ret = 3; break;
         }
-        MF::Saxpy(sol, omega, sh, 0, 0, ncomp_in, nghost); // sol += omega * sh
+        MFSet::Saxpy(sol, omega, sh, 0, 0, ncomp_in, nghost); // sol += omega * sh
         // This suggests r, s, and t share the same size, i.e., output size
-        MF::LinComb(r, RT(1.0), s, 0, -omega, t, 0, 0, ncomp_in, nghost); // r = s - omega * t
+        MFSet::LinComb(r, RT(1.0), s, 0, -omega, t, 0, 0, ncomp_in, nghost); // r = s - omega * t
 
         rnorm = norm_inf(r);
 
         if ( verbose > 2 )
         {
-            amrex::Print() << "MLCGSolver_BiCGStab: Iteration "
+            amrex::Print() << "MLLeastSquaresSolver_BiCGStab: Iteration "
                         << std::setw(11) << iter
                         << " rel. err. "
                         << rnorm/(rnorm0) << '\n';
@@ -193,7 +193,7 @@ MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, 
 
     if ( verbose > 0 )
     {
-        amrex::Print() << "MLCGSolver_BiCGStab: Final: Iteration "
+        amrex::Print() << "MLLeastSquaresSolver_BiCGStab: Final: Iteration "
                     << std::setw(4) << iter
                     << " rel. err. "
                     << rnorm/(rnorm0) << '\n';
@@ -202,7 +202,7 @@ MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, 
     if ( ret == 0 && rnorm > eps_rel*rnorm0 && rnorm > eps_abs)
     {
         if ( verbose > 0 && amrex::ParallelDescriptor::IOProcessor() )
-            amrex::Warning("MLCGSolver_BiCGStab:: failed to converge!");
+            amrex::Warning("MLLeastSquaresSolver_BiCGStab:: failed to converge!");
         ret = 8;
     }
 
@@ -222,16 +222,16 @@ MLLeastSquaresSolver::solve_BiCGStab (MFSet& sol, const MFSet& rhs, RT eps_rel, 
 int
 MLLeastSquaresSolver::solve_CGLS (MFSet& sol, const MFSet& rhs, RT eps_rel, RT eps_abs)
 {
-    BL_PROFILE("MLCGSolver::cg");
+    BL_PROFILE("MLLeastSquaresSolver::cg");
 
     amrex::MFInfo mfinfo = amrex::MFInfo();
 
-    MFSet p = MFSet(sol, true, mfinfo);
-    
-    MFSet sorig (sol, nghost, mfinfo);
-    MFSet r     (sol, nghost, mfinfo);
-    MFSet LTr   (sol, nghost, mfinfo);
-    MFSet q     (sol, nghost, mfinfo);
+    MFSet p = MFSet(sol, mfinfo);
+
+    MFSet sorig (sol, mfinfo, nghost);
+    MFSet r     (sol, mfinfo, nghost);
+    MFSet LTr   (sol, mfinfo, nghost);
+    MFSet q     (sol, mfinfo, nghost);
 
     p.setVal(RT(0.0));
     sorig.LocalCopy(sol, nghost);
@@ -241,9 +241,8 @@ MLLeastSquaresSolver::solve_CGLS (MFSet& sol, const MFSet& rhs, RT eps_rel, RT e
     RT       rnorm    = norm_inf(r);
     const RT rnorm0   = rnorm;
 
-    if ( verbose > 0 )
-    {
-        amrex::Print() << "MLCGSolver_CG: Initial error (error0) :        " << rnorm0 << '\n';
+    if ( verbose > 0 ) {
+        amrex::Print() << "MLLeastSquaresSolver_CG: Initial error (error0) :        " << rnorm0 << '\n';
     }
 
     RT rho_1 = 0;
@@ -253,7 +252,7 @@ MLLeastSquaresSolver::solve_CGLS (MFSet& sol, const MFSet& rhs, RT eps_rel, RT e
     if ( rnorm0 == 0 || rnorm0 < eps_abs )
     {
         if ( verbose > 0 ) {
-            amrex::Print() << "MLCGSolver_CG: niter = 0,"
+            amrex::Print() << "MLLeastSquaresSolver_CG: niter = 0,"
                            << ", rnorm = " << rnorm
                            << ", eps_abs = " << eps_abs << std::endl;
         }
@@ -270,14 +269,14 @@ MLLeastSquaresSolver::solve_CGLS (MFSet& sol, const MFSet& rhs, RT eps_rel, RT e
         }
         if (iter == 1)
         {
-            p.LocalCopy(z,0,0,ncomp,nghost);
+            p.LocalCopy(r, nghost);
         }
         else
         {
             RT beta = rho/rho_1;
-            MF::Xpay(p, beta, z, 0, 0, ncomp, nghost); // p = z + beta * p
+            MFSet::Xpay(p, beta, p, 0, 0, ncomp, nghost); // p = z + beta * p
         }
-        Lp.apply(amrlev, mglev, q, p, MLLinOpT<MF>::BCMode::Homogeneous, MLLinOpT<MF>::StateMode::Correction);
+        Lp.apply(amrlev, mglev, q, p, MLLinOpT<MFSet>::BCMode::Homogeneous, MLLinOpT<MFSet>::StateMode::Correction);
 
         RT alpha;
         RT pw = dotxy(p,q);
@@ -292,18 +291,18 @@ MLLeastSquaresSolver::solve_CGLS (MFSet& sol, const MFSet& rhs, RT eps_rel, RT e
 
         if ( verbose > 2 )
         {
-            amrex::Print() << "MLCGSolver_cg:"
+            amrex::Print() << "MLLeastSquaresSolver_cg:"
                            << " iter " << iter
                            << " rho " << rho
                            << " alpha " << alpha << '\n';
         }
-        MF::Saxpy(sol, alpha, p, 0, 0, ncomp, nghost); // sol += alpha * p
-        MF::Saxpy(r, -alpha, q, 0, 0, ncomp, nghost); // r += -alpha * q
+        MFSet::Saxpy(sol, alpha, p, 0, 0, ncomp, nghost); // sol += alpha * p
+        MFSet::Saxpy(r, -alpha, q, 0, 0, ncomp, nghost); // r += -alpha * q
         rnorm = norm_inf(r);
 
         if ( verbose > 2 )
         {
-            amrex::Print() << "MLCGSolver_cg:       Iteration"
+            amrex::Print() << "MLLeastSquaresSolver_cg:       Iteration"
                            << std::setw(4) << iter
                            << " rel. err. "
                            << rnorm/(rnorm0) << '\n';
@@ -318,25 +317,23 @@ MLLeastSquaresSolver::solve_CGLS (MFSet& sol, const MFSet& rhs, RT eps_rel, RT e
 
     if ( verbose > 0 )
     {
-        amrex::Print() << "MLCGSolver_cg: Final Iteration"
+        amrex::Print() << "MLLeastSquaresSolver_cg: Final Iteration"
                        << std::setw(4) << iter
                        << " rel. err. "
                        << rnorm/(rnorm0) << '\n';
     }
 
-    if ( ret == 0 && rnorm > eps_rel*rnorm0 && rnorm > eps_abs )
-    {
-        if ( verbose > 0 && amrex::ParallelDescriptor::IOProcessor() )
-            amrex::Warning("MLCGSolver_cg: failed to converge!");
+    if ( ret == 0 && rnorm > eps_rel*rnorm0 && rnorm > eps_abs ) {
+        if ( verbose > 0 && amrex::ParallelDescriptor::IOProcessor() ) {
+            amrex::Warning("MLLeastSquaresSolver_cg: failed to converge!");
+        }
         ret = 8;
     }
 
-    if ( ( ret == 0 || ret == 8 ) && (rnorm < rnorm0) )
-    {
+    if ( ( ret == 0 || ret == 8 ) && (rnorm < rnorm0) ) {
         sol.LocalAdd(sorig, nghost);
     }
-    else
-    {
+    else {
         sol.setVal(RT(0.0));
         sol.LocalAdd(sorig, nghost);
     }

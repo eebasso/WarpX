@@ -2,38 +2,44 @@
 #include <AMReX_MultiFab.H>
 #include <AMReX_MLLinOp.H>
 #include <MultiFabSet.H>
+#include <AMReX_REAL.H>
 
 namespace Solver {
 
-using MFSet = amrex::MultiFab;
-using FAB = amrex::FArrayBox;
-// using RT  = amrex::Real;
-using BCType = amrex::LinOpBCType;
-using BCMode    = amrex::LinOpEnumType::BCMode;
-using StateMode = amrex::LinOpEnumType::StateMode;
-using Location  = amrex::LinOpEnumType::Location;
-
-class MLLinOpMFV
+class MLLinOpMFSet
 {
-
 public:
 
+    using MF = typename amrex::MultiFab;
+    using MFSet = MultiFabSet;
+    using FAB = amrex::FArrayBox;
+    using RT  = amrex::Real;
+    using BCType = amrex::LinOpBCType;
+    using BCMode    = amrex::LinOpEnumType::BCMode;
+    using StateMode = amrex::LinOpEnumType::StateMode;
+    using Location  = amrex::LinOpEnumType::Location;
+    using BottomSolver = amrex::BottomSolver;
+
+
     friend class MLLeastSquaresSolver;
+    friend class MLMGWarpX;
 
-    MLLinOpMFV () = default;
-    virtual ~MLLinOpMFV () = default;
+    MLLinOpMFSet () = default;
+    virtual ~MLLinOpMFSet () = default;
 
-    MLLinOpMFV (const MLLinOpMFV&) = delete;
-    MLLinOpMFV (MLLinOpMFV&&) = delete;
-    MLLinOpMFV& operator= (const MLLinOpMFV&) = delete;
-    MLLinOpMFV& operator= (MLLinOpMFV&&) = delete;
+    MLLinOpMFSet (const MLLinOpMFSet&) = delete;
+    MLLinOpMFSet (MLLinOpMFSet&&) = delete;
+    MLLinOpMFSet& operator= (const MLLinOpMFSet&) = delete;
+    MLLinOpMFSet& operator= (MLLinOpMFSet&&) = delete;
 
     void define (const amrex::Vector<amrex::Geometry>& a_geom,
                  const amrex::Vector<amrex::BoxArray>& a_grids,
                  const amrex::Vector<amrex::DistributionMapping>& a_dmap,
                  const amrex::LPInfo& a_info,
                  const amrex::Vector<amrex::FabFactory<FAB> const*>& a_factory,
-                 bool eb_limit_coarsening = true);
+                 bool eb_limit_coarsening = true,
+                 int a_nsolcomp = 1,
+                 int a_nrhscomp = 1);
 
     [[nodiscard]] virtual std::string name () const { return std::string("Unspecified"); }
 
@@ -146,20 +152,22 @@ public:
     //! Set the flag for whether the solver should try to make singular
     //! problem solvable, which is on by default.
     void setEnforceSingularSolvable (bool o) noexcept { enforceSingularSolvable = o; }
+
     //! Get the flag for whether the solver should try to make singular
     //! problem solvable.
     [[nodiscard]] bool getEnforceSingularSolvable () const noexcept { return enforceSingularSolvable; }
 
-    // [[nodiscard]] virtual amrex::BottomSolver getDefaultBottomSolver () const { return amrex::BottomSolver::bicgstab; }
-
-    //! Return number of components
-    // [[nodiscard]] virtual int getNComp () const { return 1; }
-
-
     [[nodiscard]] virtual int getNGrow (int /*a_lev*/ = 0, int /*mg_lev*/ = 0) const { return 0; }
+
+    //! Return the number of MultiFabs in the MultiFabSet solution. This is distinct from the number of components in any particular MultiFab, which is usually 1 in this context.
+    int getNCompSol () const { return m_ncomp_sol; }
+
+    //! Return the number of Multifabs in the MultiFabSet RHS. This is distinct from the number of components in any particular MultiFab, which is usually 1 in this context.
+    int getNCompRHS () const { return m_ncomp_rhs; }
 
     //! Does it need update if it's reused?
     [[nodiscard]] virtual bool needsUpdate () const { return false; }
+
     //! Update for reuse.
     virtual void update () {}
 
@@ -363,7 +371,7 @@ public:
     //! x dot y, used by the bottom solver
     virtual amrex::Real xdoty (int amrlev, int mglev, const MFSet& x, const MFSet& y, bool local) const = 0;
 
-    virtual std::unique_ptr<MLLinOpMFV> makeNLinOp (int grid_size) const = 0;
+    virtual std::unique_ptr<MLLinOpMFSet> makeNLinOp (int grid_size) const = 0;
 
     [[nodiscard]] virtual bool supportNSolve () const { return false; }
 
@@ -426,8 +434,8 @@ protected:
     }
 
     [[nodiscard]] bool hasBC (BCType bct) const noexcept;
-    [[nodiscard]] bool hasInhomogNeumannBC () const noexcept;
-    [[nodiscard]] bool hasRobinBC () const noexcept;
+    [[nodiscard]] bool hasInhomogNeumannBC () const noexcept { return hasBC(BCType::inhomogNeumann); };
+    [[nodiscard]] bool hasRobinBC () const noexcept { return hasBC(BCType::Robin); };
 
     [[nodiscard]] virtual bool supportRobinBC () const noexcept { return false; }
     [[nodiscard]] virtual bool supportInhomogNeumannBC () const noexcept { return false; }
@@ -445,12 +453,11 @@ protected:
     [[nodiscard]] bool doAgglomeration () const noexcept { return m_do_agglomeration; }
     [[nodiscard]] bool doConsolidation () const noexcept { return m_do_consolidation; }
     [[nodiscard]] bool doSemicoarsening () const noexcept { return m_do_semicoarsening; }
-    [[nodiscard]] bool isCellCentered () const noexcept { return m_ixtype == 0; }
 
-    virtual void make (amrex::Vector<amrex::Vector<MFSet> >& mf, amrex::IntVect const& ng) const;
-
+    virtual void make (amrex::Vector<amrex::Vector<MFSet> >& mfs, amrex::IntVect const& ng) const;
     [[nodiscard]] virtual MFSet make (int amrlev, int mglev, amrex::IntVect const& ng) const;
-    [[nodiscard]] virtual MFSet makeAlias (MFSet const& mf) const;
+
+    // [[nodiscard]] virtual MFSet makeAlias (MFSet const& mfs) const;
     [[nodiscard]] virtual MFSet makeCoarseMG (int amrlev, int mglev, amrex::IntVect const& ng) const;
     [[nodiscard]] virtual MFSet makeCoarseAmr (int famrlev, amrex::IntVect const& ng) const;
     [[nodiscard]] virtual std::unique_ptr<amrex::FabFactory<FAB> > makeFactory (int /*amrlev*/, int /*mglev*/) const {
@@ -464,37 +471,23 @@ protected:
     [[nodiscard]] amrex::Box compactify (amrex::Box const& b) const noexcept;
 
     template <typename T>
-    [[nodiscard]] amrex::Array4<T> compactify (amrex::Array4<T> const& a) const noexcept
-    {
-        if (info.hidden_direction == 0) {
-            return Array4<T>(a.dataPtr(), {a.begin.y,a.begin.z,0}, {a.end.y,a.end.z,1}, a.nComp());
-        } else if (info.hidden_direction == 1) {
-            return Array4<T>(a.dataPtr(), {a.begin.x,a.begin.z,0}, {a.end.x,a.end.z,1}, a.nComp());
-        } else if (info.hidden_direction == 2) {
-            return Array4<T>(a.dataPtr(), {a.begin.x,a.begin.y,0}, {a.end.x,a.end.y,1}, a.nComp());
-        } else {
-            return a;
+    [[nodiscard]] amrex::Array4<T> compactify (amrex::Array4<T> const& a) const noexcept {
+        switch (info.hidden_direction) {
+            case 0: return Array4<T>(a.dataPtr(), {a.begin.y,a.begin.z,0}, {a.end.y,a.end.z,1}, a.nComp());
+            case 1: return Array4<T>(a.dataPtr(), {a.begin.x,a.begin.z,0}, {a.end.x,a.end.z,1}, a.nComp());
+            case 2: return Array4<T>(a.dataPtr(), {a.begin.x,a.begin.y,0}, {a.end.x,a.end.y,1}, a.nComp());
+            default: return a;
         }
     }
 
     template <typename T>
-    [[nodiscard]] T get_d0 (T const& dx, T const& dy, T const&) const noexcept
-    {
-        if (info.hidden_direction == 0) {
-            return dy;
-        } else {
-            return dx;
-        }
-    }
+    [[nodiscard]] T get_d0 (T const& dx, T const& dy, T const&) const noexcept {
+        return (info.hidden_direction == 0) ? dy : dx;
+    };
 
     template <typename T>
-    [[nodiscard]] T get_d1 (T const&, T const& dy, T const& dz) const noexcept
-    {
-        if (info.hidden_direction == 0 || info.hidden_direction == 1) {
-            return dz;
-        } else {
-            return dy;
-        }
+    [[nodiscard]] T get_d1 (T const&, T const& dy, T const& dz) const noexcept {
+        return (info.hidden_direction == 0 || info.hidden_direction == 1) ? dz : dy;
     }
 
 private:
@@ -515,6 +508,12 @@ private:
 
 protected:
 
+    int m_ncomp_sol;
+    int m_ncomp_rhs;
+
+    amrex::Vector<amrex::IndexType> m_ixtype_set_sol; // Should have length of m_ncomp_sol
+    amrex::Vector<amrex::IndexType> m_ixtype_set_rhs; // Should have length of m_ncomp_rhs
+
     static constexpr int mg_coarsen_ratio = 2;
     static constexpr int mg_box_min_width = 2;
 #ifdef AMREX_USE_EB
@@ -529,8 +528,10 @@ protected:
     int m_num_amr_levels;
     amrex::Vector<int> m_amr_ref_ratio;
     amrex::Vector<int> m_num_mg_levels;
-    const MLLinOpMFV* m_parent = nullptr;
+    const MLLinOpMFSet* m_parent = nullptr;
+
     // amrex::IntVect m_ixtype; // Controls CellType in each direction. Need to replace this with vectors specifying such info for both the input and the output MFSet
+
     bool m_do_agglomeration = false;
     bool m_do_consolidation = false;
     bool m_do_semicoarsening = false;
@@ -553,8 +554,10 @@ protected:
     amrex::Vector<amrex::Array<BCType, AMREX_SPACEDIM> > m_lobc_orig;
     amrex::Vector<amrex::Array<BCType, AMREX_SPACEDIM> > m_hibc_orig;
 
-    amrex::Array<amrex::Real, AMREX_SPACEDIM> m_domain_bloc_lo {{AMREX_D_DECL(0._rt,0._rt,0._rt)}};
-    amrex::Array<amrex::Real, AMREX_SPACEDIM> m_domain_bloc_hi {{AMREX_D_DECL(0._rt,0._rt,0._rt)}};
+    // amrex::Array<amrex::Real, AMREX_SPACEDIM> m_domain_bloc_lo {{AMREX_D_DECL(0._rt,0._rt,0._rt)}};
+    // amrex::Array<amrex::Real, AMREX_SPACEDIM> m_domain_bloc_hi {{AMREX_D_DECL(0._rt,0._rt,0._rt)}};
+    amrex::Array<amrex::Real, AMREX_SPACEDIM> m_domain_bloc_lo {{AMREX_D_DECL(RT(0),RT(0),RT(0))}};
+    amrex::Array<amrex::Real, AMREX_SPACEDIM> m_domain_bloc_hi {{AMREX_D_DECL(RT(0),RT(0),RT(0))}};
 
     bool m_needs_coarse_data_for_bc;
     int m_coarse_data_crse_ratio = -1;
@@ -569,6 +572,11 @@ private:
     amrex::Vector<std::unique_ptr<MFSet>> robin_a_raii;
     amrex::Vector<std::unique_ptr<MFSet>> robin_b_raii;
     amrex::Vector<std::unique_ptr<MFSet>> robin_f_raii;
+
+    // [[nodiscard]] bool isCellCentered () const noexcept { return m_ixtype == 0; }
+    // [[nodiscard]] virtual amrex::BottomSolver getDefaultBottomSolver () const { return amrex::BottomSolver::bicgstab; }
+    //! Return number of components
+    // [[nodiscard]] virtual int getNComp () const { return 1; }
 };
 
 }
