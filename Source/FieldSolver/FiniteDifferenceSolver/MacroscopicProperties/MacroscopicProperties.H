@@ -102,7 +102,7 @@ private:
 
 /**
  * \brief
- * This struct contains only static functions to compute the co-efficients for the
+ * This struct contains only static functions to compute the coefficients for the
  * Lax-Wendroff scheme of macroscopic Maxwells equations using
  * macroscopic properties, namely, conductivity (sigma), permittivity (epsilon).
  * Permeability of the material, mu, is used as (beta/mu) for the E-update
@@ -110,31 +110,41 @@ private:
  */
 struct LaxWendroffAlgo {
 
-     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-     static amrex::Real alpha (amrex::Real const sigma,
-                               amrex::Real const epsilon,
-                               amrex::Real dt) {
-         using namespace amrex;
-         const amrex::Real fac1 = 0.5_rt * sigma * dt / epsilon;
-         const amrex::Real alpha = (1._rt - fac1)/(1._rt + fac1);
-         return alpha;
-     }
-
-     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-     static amrex::Real beta (amrex::Real const sigma,
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    static amrex::Real alpha (amrex::Real const sigma,
                               amrex::Real const epsilon,
                               amrex::Real dt) {
-         using namespace amrex;
-         const amrex::Real fac1 = 0.5_rt * sigma * dt / epsilon;
-         const amrex::Real beta = dt / ( epsilon * (1._rt + fac1) );
-         return beta;
-     }
+        const amrex::Real oneHalfsigdt = amrex::Real(0.5)*sigma*dt;
+        const amrex::Real alpha = (epsilon - oneHalfsigdt)/(epsilon + oneHalfsigdt);
+        return alpha;
+    }
 
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    static amrex::Real beta (amrex::Real sigma,
+                             amrex::Real epsilon,
+                             amrex::Real dt) {
+        const amrex::Real oneHalfsigdt = amrex::Real(0.5)*sigma*dt;
+        const amrex::Real beta = dt / (epsilon + oneHalfsigdt);
+        return beta;
+    }
+
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    static void compute_alpha_and_beta(amrex::Real& alpha,
+                                       amrex::Real& beta,
+                                       amrex::Real sigma,
+                                       amrex::Real epsilon,
+                                       amrex::Real dt)
+    {
+        const amrex::Real oneHalfsigdt = amrex::Real(0.5) * sigma * dt;
+        const amrex::Real eps_plus_oneHalfsigdt_inv = amrex::Real(1.0)/(epsilon + oneHalfsigdt);
+        alpha = (epsilon - oneHalfsigdt)*eps_plus_oneHalfsigdt_inv;
+        beta  =                       dt*eps_plus_oneHalfsigdt_inv;
+    }
 };
 
 /**
  * \brief
- * This struct contains only static functions to compute the co-efficients for the
+ * This struct contains only static functions to compute the coefficients for the
  * BackwardEuler scheme of macroscopic Maxwells equations using
  * macroscopic properties, namely, conductivity (sigma) and permittivity (epsilon).
  * Permeability of the material, mu, is used as (beta/mu) for the E-update
@@ -142,25 +152,35 @@ struct LaxWendroffAlgo {
  */
 struct BackwardEulerAlgo {
 
-     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-     static amrex::Real alpha (amrex::Real const sigma,
-                               amrex::Real const epsilon,
-                               amrex::Real dt) {
-         using namespace amrex;
-         const amrex::Real fac1 = sigma * dt / epsilon;
-         const amrex::Real alpha = (1._rt)/(1._rt + fac1);
-         return alpha;
-     }
-
-     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-     static amrex::Real beta (amrex::Real const sigma,
-                              amrex::Real const epsilon,
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    static amrex::Real alpha (amrex::Real sigma,
+                              amrex::Real epsilon,
                               amrex::Real dt) {
-         using namespace amrex;
-         const amrex::Real fac1 = sigma * dt / epsilon;
-         const amrex::Real beta = dt / ( epsilon * (1._rt + fac1) );
-         return beta;
-     }
+        const amrex::Real sigdt = sigma*dt;
+        const amrex::Real alpha = epsilon/(epsilon + sigdt);
+        return alpha;
+    }
+
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    static amrex::Real beta (amrex::Real sigma,
+                             amrex::Real epsilon,
+                             amrex::Real dt) {
+        const amrex::Real sigdt = sigma * dt;
+        const amrex::Real beta = dt/(epsilon + sigdt);
+        return beta;
+    }
+
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    static void compute_alpha_and_beta(amrex::Real& alpha,
+                                       amrex::Real& beta,
+                                       amrex::Real sigma,
+                                       amrex::Real epsilon,
+                                       amrex::Real dt)
+    {
+        const amrex::Real eps_plus_sigdt_inv = amrex::Real(1.0)/(epsilon + sigma * dt);
+        alpha = epsilon*eps_plus_sigdt_inv;
+        beta  =      dt*eps_plus_sigdt_inv;
+    }
 
 };
 
