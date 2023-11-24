@@ -22,7 +22,7 @@
 #include <memory>
 #include <string>
 
-
+using namespace amrex::literals;
 /**
  * \brief This class contains the macroscopic properties of the medium needed to
  * evaluate macroscopic Maxwell equation.
@@ -114,17 +114,17 @@ struct LaxWendroffAlgo {
     static amrex::Real alpha (amrex::Real const sigma,
                               amrex::Real const epsilon,
                               amrex::Real dt) {
-        const amrex::Real oneHalfsigdt = amrex::Real(0.5)*sigma*dt;
-        const amrex::Real alpha = (epsilon - oneHalfsigdt)/(epsilon + oneHalfsigdt);
+        const amrex::Real oneHalfsigdt = 0.5_rt * sigma * dt;
+        const amrex::Real alpha = (epsilon - oneHalfsigdt) / (epsilon + oneHalfsigdt);
         return alpha;
     }
 
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-    static amrex::Real beta (amrex::Real sigma,
-                             amrex::Real epsilon,
+    static amrex::Real beta (amrex::Real const sigma,
+                             amrex::Real const epsilon,
                              amrex::Real dt) {
-        const amrex::Real oneHalfsigdt = amrex::Real(0.5)*sigma*dt;
-        const amrex::Real beta = dt/(epsilon + oneHalfsigdt);
+        const amrex::Real oneHalfsigdt = 0.5_rt * sigma * dt;
+        const amrex::Real beta = dt / (epsilon + oneHalfsigdt);
         return beta;
     }
 
@@ -135,10 +135,10 @@ struct LaxWendroffAlgo {
                                        amrex::Real epsilon,
                                        amrex::Real dt)
     {
-        const amrex::Real oneHalfsigdt = amrex::Real(0.5)*sigma*dt;
-        const amrex::Real eps_plus_oneHalfsigdt_inv = amrex::Real(1.0)/(epsilon + oneHalfsigdt);
-        alpha = (epsilon - oneHalfsigdt)*eps_plus_oneHalfsigdt_inv;
-        beta  =                       dt*eps_plus_oneHalfsigdt_inv;
+        const amrex::Real oneHalfsigdt = 0.5_rt * sigma * dt;
+        const amrex::Real eps_plus_oneHalfsigdt_inv = 1.0_rt / (epsilon + oneHalfsigdt);
+        alpha = (epsilon - oneHalfsigdt) * eps_plus_oneHalfsigdt_inv;
+        beta  =                       dt * eps_plus_oneHalfsigdt_inv;
     }
 };
 
@@ -153,20 +153,20 @@ struct LaxWendroffAlgo {
 struct BackwardEulerAlgo {
 
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-    static amrex::Real alpha (amrex::Real sigma,
-                              amrex::Real epsilon,
+    static amrex::Real alpha (amrex::Real const sigma,
+                              amrex::Real const epsilon,
                               amrex::Real dt) {
-        const amrex::Real sigdt = sigma*dt;
-        const amrex::Real alpha = epsilon/(epsilon + sigdt);
+        const amrex::Real sigdt = sigma * dt;
+        const amrex::Real alpha = epsilon / (epsilon + sigdt);
         return alpha;
     }
 
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-    static amrex::Real beta (amrex::Real sigma,
-                             amrex::Real epsilon,
+    static amrex::Real beta (amrex::Real const sigma,
+                             amrex::Real const epsilon,
                              amrex::Real dt) {
-        const amrex::Real sigdt = sigma*dt;
-        const amrex::Real beta = dt/(epsilon + sigdt);
+        const amrex::Real sigdt = sigma * dt;
+        const amrex::Real beta = dt / (epsilon + sigdt);
         return beta;
     }
 
@@ -177,9 +177,10 @@ struct BackwardEulerAlgo {
                                        amrex::Real epsilon,
                                        amrex::Real dt)
     {
-        const amrex::Real eps_plus_sigdt_inv = amrex::Real(1.0)/(epsilon + sigma*dt);
-        alpha = epsilon*eps_plus_sigdt_inv;
-        beta  =      dt*eps_plus_sigdt_inv;
+        const amrex::Real sigdt = sigma * dt;
+        const amrex::Real eps_plus_sigdt_inv = 1.0_rt / (epsilon + sigdt);
+        alpha = epsilon * eps_plus_sigdt_inv;
+        beta  =      dt * eps_plus_sigdt_inv;
     }
 
 };
