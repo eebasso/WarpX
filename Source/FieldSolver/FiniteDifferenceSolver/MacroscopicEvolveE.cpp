@@ -185,7 +185,8 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
                 amrex::Real const epsilon_interp = ablastr::coarsen::sample::Interp(eps_arr, epsilon_stag,
                                                                                     Ex_stag, macro_cr, i, j, k, scomp);
                 amrex::Real alpha, beta;
-                T_MacroAlgo::compute_alpha_and_beta(alpha,beta,sigma_interp,epsilon_interp,dt);
+                T_MacroAlgo::compute_alpha_and_beta(alpha, beta, sigma_interp, epsilon_interp, dt);
+
                 Ex(i, j, k) = alpha * Ex(i, j, k)
                             + beta * ( - T_Algo::DownwardDz(Hy, coefs_z, n_coefs_z, i, j, k,0)
                                        + T_Algo::DownwardDy(Hz, coefs_y, n_coefs_y, i, j, k,0)
@@ -209,7 +210,8 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
                 amrex::Real const epsilon_interp = ablastr::coarsen::sample::Interp(eps_arr, epsilon_stag,
                                                                                     Ey_stag, macro_cr, i, j, k, scomp);
                 amrex::Real alpha, beta;
-                T_MacroAlgo::compute_alpha_and_beta(alpha,beta,sigma_interp,epsilon_interp,dt);
+                T_MacroAlgo::compute_alpha_and_beta(alpha, beta, sigma_interp, epsilon_interp, dt);
+
                 Ey(i, j, k) = alpha * Ey(i, j, k)
                             + beta * ( - T_Algo::DownwardDx(Hz, coefs_x, n_coefs_x, i, j, k,0)
                                        + T_Algo::DownwardDz(Hx, coefs_z, n_coefs_z, i, j, k,0)
@@ -228,7 +230,8 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
                 amrex::Real const epsilon_interp = ablastr::coarsen::sample::Interp(eps_arr, epsilon_stag,
                                                                                     Ez_stag, macro_cr, i, j, k, scomp);
                 amrex::Real alpha, beta;
-                T_MacroAlgo::compute_alpha_and_beta(alpha,beta,sigma_interp,epsilon_interp,dt);
+                T_MacroAlgo::compute_alpha_and_beta(alpha, beta, sigma_interp, epsilon_interp, dt);
+
                 Ez(i, j, k) = alpha * Ez(i, j, k)
                             + beta * ( - T_Algo::DownwardDy(Hx, coefs_y, n_coefs_y, i, j, k,0)
                                        + T_Algo::DownwardDx(Hy, coefs_x, n_coefs_x, i, j, k,0)
