@@ -124,7 +124,7 @@ struct LaxWendroffAlgo {
                              amrex::Real epsilon,
                              amrex::Real dt) {
         const amrex::Real oneHalfsigdt = amrex::Real(0.5)*sigma*dt;
-        const amrex::Real beta = dt / (epsilon + oneHalfsigdt);
+        const amrex::Real beta = dt/(epsilon + oneHalfsigdt);
         return beta;
     }
 
@@ -135,7 +135,7 @@ struct LaxWendroffAlgo {
                                        amrex::Real epsilon,
                                        amrex::Real dt)
     {
-        const amrex::Real oneHalfsigdt = amrex::Real(0.5) * sigma * dt;
+        const amrex::Real oneHalfsigdt = amrex::Real(0.5)*sigma*dt;
         const amrex::Real eps_plus_oneHalfsigdt_inv = amrex::Real(1.0)/(epsilon + oneHalfsigdt);
         alpha = (epsilon - oneHalfsigdt)*eps_plus_oneHalfsigdt_inv;
         beta  =                       dt*eps_plus_oneHalfsigdt_inv;
@@ -165,7 +165,7 @@ struct BackwardEulerAlgo {
     static amrex::Real beta (amrex::Real sigma,
                              amrex::Real epsilon,
                              amrex::Real dt) {
-        const amrex::Real sigdt = sigma * dt;
+        const amrex::Real sigdt = sigma*dt;
         const amrex::Real beta = dt/(epsilon + sigdt);
         return beta;
     }
@@ -177,7 +177,7 @@ struct BackwardEulerAlgo {
                                        amrex::Real epsilon,
                                        amrex::Real dt)
     {
-        const amrex::Real eps_plus_sigdt_inv = amrex::Real(1.0)/(epsilon + sigma * dt);
+        const amrex::Real eps_plus_sigdt_inv = amrex::Real(1.0)/(epsilon + sigma*dt);
         alpha = epsilon*eps_plus_sigdt_inv;
         beta  =      dt*eps_plus_sigdt_inv;
     }
