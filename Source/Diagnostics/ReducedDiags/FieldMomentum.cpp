@@ -36,7 +36,7 @@
 #include <algorithm>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 FieldMomentum::FieldMomentum (std::string rd_name)
     : ReducedDiags{rd_name}
@@ -139,7 +139,7 @@ void FieldMomentum::ComputeDiags (int step)
         }
 
         amrex::ReduceOps<ReduceOpSum, ReduceOpSum, ReduceOpSum> reduce_ops;
-        amrex::ReduceData<Real, Real, Real> reduce_data(reduce_ops);
+        amrex::ReduceData<amrex::Real, amrex::Real, amrex::Real> reduce_data(reduce_ops);
 
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
@@ -158,7 +158,7 @@ void FieldMomentum::ComputeDiags (int step)
 
             // Compute E x B
             reduce_ops.eval(box, reduce_data,
-                [=] AMREX_GPU_DEVICE (int i, int j, int k) -> amrex::GpuTuple<Real, Real, Real>
+                [=] AMREX_GPU_DEVICE (int i, int j, int k) -> amrex::GpuTuple<amrex::Real, amrex::Real, amrex::Real>
                 {
                     const amrex::Real Ex_cc = ablastr::coarsen::sample::Interp(Ex_arr, Ex_stag, cc, cr, i, j, k, comp);
                     const amrex::Real Ey_cc = ablastr::coarsen::sample::Interp(Ey_arr, Ey_stag, cc, cr, i, j, k, comp);

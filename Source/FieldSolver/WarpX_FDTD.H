@@ -25,7 +25,7 @@ void warpx_computedivb(int i, int j, int k, int dcomp,
                        )
 {
 
-    using namespace amrex;
+    // using namespace amrex;
 
 #if defined WARPX_DIM_3D
     divB(i,j,k,dcomp) = (Bx(i+1,j  ,k  ) - Bx(i,j,k))*dxinv

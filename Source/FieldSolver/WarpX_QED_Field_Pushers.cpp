@@ -39,7 +39,7 @@
 #include <iostream>
 #include <memory>
 
-using namespace amrex;
+// using namespace amrex;
 
 
 void
@@ -70,7 +70,7 @@ void
 WarpX::Hybrid_QED_Push (int lev, PatchType patch_type, amrex::Real a_dt)
 {
     const int patch_level = (patch_type == PatchType::fine) ? lev : lev-1;
-    const std::array<Real,3>& dx_vec= WarpX::CellSize(patch_level);
+    const std::array<amrex::Real,3>& dx_vec= WarpX::CellSize(patch_level);
     const Real dx = dx_vec[0];
     const Real dy = dx_vec[1];
     const Real dz = dx_vec[2];
@@ -113,7 +113,7 @@ WarpX::Hybrid_QED_Push (int lev, PatchType patch_type, amrex::Real a_dt)
         {
             amrex::Gpu::synchronize();
         }
-        Real wt = static_cast<Real>(amrex::second());
+        amrex::Real wt = static_cast<amrex::Real>(amrex::second());
 
         // Get boxes for E, B, and J
 
@@ -185,7 +185,7 @@ WarpX::Hybrid_QED_Push (int lev, PatchType patch_type, amrex::Real a_dt)
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
-            wt = static_cast<Real>(amrex::second()) - wt;
+            wt = static_cast<amrex::Real>(amrex::second()) - wt;
             amrex::HostDevice::Atomic::Add( &(*cost)[mfi.index()], wt);
         }
     }

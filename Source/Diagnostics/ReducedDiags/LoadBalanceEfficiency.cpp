@@ -17,7 +17,7 @@
 #include <ostream>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 // constructor
 LoadBalanceEfficiency::LoadBalanceEfficiency (std::string rd_name)
@@ -25,7 +25,7 @@ LoadBalanceEfficiency::LoadBalanceEfficiency (std::string rd_name)
 {
     // read number of levels
     int nLevel = 0;
-    const ParmParse pp_amr("amr");
+    const amrex::ParmParse pp_amr("amr");
     pp_amr.query("max_level", nLevel);
     nLevel += 1;
 

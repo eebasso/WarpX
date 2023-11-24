@@ -27,7 +27,7 @@
 #include <vector>
 
 using namespace std;
-using namespace amrex;
+// using namespace amrex;
 namespace pxr_sr = picsar::multi_physics::utils::serialization;
 
 //This file provides a wrapper aroud the quantum_sync engine

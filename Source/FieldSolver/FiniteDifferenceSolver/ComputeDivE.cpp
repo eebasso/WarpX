@@ -34,7 +34,7 @@
 #include <array>
 #include <memory>
 
-using namespace amrex;
+// using namespace amrex;
 
 /**
  * \brief Update the F field, over one timestep
@@ -87,17 +87,17 @@ void FiniteDifferenceSolver::ComputeDivECartesian (
     for ( MFIter mfi(divEfield, TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
 
         // Extract field data for this grid/tile
-        Array4<Real> const& divE = divEfield.array(mfi);
-        Array4<Real> const& Ex = Efield[0]->array(mfi);
-        Array4<Real> const& Ey = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real> const& divE = divEfield.array(mfi);
+        Array4<amrex::Real> const& Ex = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Ey = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
         auto const n_coefs_x = static_cast<int>(m_stencil_coefs_x.size());
-        Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
         auto const n_coefs_y = static_cast<int>(m_stencil_coefs_y.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // Extract tileboxes for which to loop
@@ -133,21 +133,21 @@ void FiniteDifferenceSolver::ComputeDivECylindrical (
     for ( MFIter mfi(divEfield, TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
 
         // Extract field data for this grid/tile
-        Array4<Real> divE = divEfield.array(mfi);
-        Array4<Real> const& Er = Efield[0]->array(mfi);
-        Array4<Real> const& Et = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real> divE = divEfield.array(mfi);
+        Array4<amrex::Real> const& Er = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Et = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_r = m_stencil_coefs_r.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_r = m_stencil_coefs_r.dataPtr();
         auto const n_coefs_r = static_cast<int>(m_stencil_coefs_r.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // Extract cylindrical specific parameters
-        Real const dr = m_dr;
+        amrex::Real const dr = m_dr;
         int const nmodes = m_nmodes;
-        Real const rmin = m_rmin;
+        amrex::Real const rmin = m_rmin;
 
         // Extract tileboxes for which to loop
         Box const& tdive  = mfi.tilebox(divEfield.ixType().toIntVect());
@@ -156,7 +156,7 @@ void FiniteDifferenceSolver::ComputeDivECylindrical (
         amrex::ParallelFor(tdive,
 
             [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
-                Real const r = rmin + i*dr; // r on a nodal grid (F is nodal in r)
+                amrex::Real const r = rmin + i*dr; // r on a nodal grid (F is nodal in r)
                 if (r != 0) { // Off-axis, regular equations
                     divE(i, j, 0, 0) =
                           T_Algo::DownwardDrr_over_r(Er, r, dr, coefs_r, n_coefs_r, i, j, 0, 0)

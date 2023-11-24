@@ -47,7 +47,7 @@
 #include <memory>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 void
 WarpX::UpdateAuxilaryData ()
@@ -94,19 +94,19 @@ WarpX::UpdateAuxilaryDataStagToNodal ()
 #endif
     for (MFIter mfi(*Bfield_aux[0][0], TilingIfNotGPU()); mfi.isValid(); ++mfi)
     {
-        Array4<Real> const& bx_aux = Bfield_aux[0][0]->array(mfi);
-        Array4<Real> const& by_aux = Bfield_aux[0][1]->array(mfi);
-        Array4<Real> const& bz_aux = Bfield_aux[0][2]->array(mfi);
-        Array4<Real const> const& bx_fp = Bmf[0][0]->const_array(mfi);
-        Array4<Real const> const& by_fp = Bmf[0][1]->const_array(mfi);
-        Array4<Real const> const& bz_fp = Bmf[0][2]->const_array(mfi);
+        Array4<amrex::Real> const& bx_aux = Bfield_aux[0][0]->array(mfi);
+        Array4<amrex::Real> const& by_aux = Bfield_aux[0][1]->array(mfi);
+        Array4<amrex::Real> const& bz_aux = Bfield_aux[0][2]->array(mfi);
+        Array4<amrex::Real const> const& bx_fp = Bmf[0][0]->const_array(mfi);
+        Array4<amrex::Real const> const& by_fp = Bmf[0][1]->const_array(mfi);
+        Array4<amrex::Real const> const& bz_fp = Bmf[0][2]->const_array(mfi);
 
-        Array4<Real> const& ex_aux = Efield_aux[0][0]->array(mfi);
-        Array4<Real> const& ey_aux = Efield_aux[0][1]->array(mfi);
-        Array4<Real> const& ez_aux = Efield_aux[0][2]->array(mfi);
-        Array4<Real const> const& ex_fp = Emf[0][0]->const_array(mfi);
-        Array4<Real const> const& ey_fp = Emf[0][1]->const_array(mfi);
-        Array4<Real const> const& ez_fp = Emf[0][2]->const_array(mfi);
+        Array4<amrex::Real> const& ex_aux = Efield_aux[0][0]->array(mfi);
+        Array4<amrex::Real> const& ey_aux = Efield_aux[0][1]->array(mfi);
+        Array4<amrex::Real> const& ez_aux = Efield_aux[0][2]->array(mfi);
+        Array4<amrex::Real const> const& ex_fp = Emf[0][0]->const_array(mfi);
+        Array4<amrex::Real const> const& ey_fp = Emf[0][1]->const_array(mfi);
+        Array4<amrex::Real const> const& ez_fp = Emf[0][2]->const_array(mfi);
 
         // Loop includes ghost cells (`growntilebox`)
         // (input arrays will be padded with zeros beyond ghost cells
@@ -148,23 +148,23 @@ WarpX::UpdateAuxilaryDataStagToNodal ()
     // NOTE: high-order interpolation is not implemented for mesh refinement
     for (int lev = 1; lev <= finest_level; ++lev)
     {
-        BoxArray const& nba = Bfield_aux[lev][0]->boxArray();
-        BoxArray const& cnba = amrex::coarsen(nba,2);
+        amrex::BoxArray const& nba = Bfield_aux[lev][0]->boxArray();
+        amrex::BoxArray const& cnba = amrex::coarsen(nba,2);
         DistributionMapping const& dm = Bfield_aux[lev][0]->DistributionMap();
         amrex::Periodicity const& cperiod = Geom(lev-1).periodicity();
 
         // Bfield
         {
-            Array<std::unique_ptr<MultiFab>,3> Btmp;
+            Array<std::unique_ptr<amrex::MultiFab>,3> Btmp;
             if (Bfield_cax[lev][0]) {
                 for (int i = 0; i < 3; ++i) {
-                    Btmp[i] = std::make_unique<MultiFab>(
+                    Btmp[i] = std::make_unique<amrex::MultiFab>(
                         *Bfield_cax[lev][i], amrex::make_alias, 0, 1);
                 }
             } else {
-                const IntVect ngtmp = Bfield_aux[lev-1][0]->nGrowVect();
+                const amrex::IntVect ngtmp = Bfield_aux[lev-1][0]->nGrowVect();
                 for (int i = 0; i < 3; ++i) {
-                    Btmp[i] = std::make_unique<MultiFab>(cnba, dm, 1, ngtmp);
+                    Btmp[i] = std::make_unique<amrex::MultiFab>(cnba, dm, 1, ngtmp);
                 }
             }
             Btmp[0]->setVal(0.0);
@@ -172,7 +172,7 @@ WarpX::UpdateAuxilaryDataStagToNodal ()
             Btmp[2]->setVal(0.0);
             // ParallelCopy from coarse level
             for (int i = 0; i < 3; ++i) {
-                const IntVect ng = Btmp[i]->nGrowVect();
+                const amrex::IntVect ng = Btmp[i]->nGrowVect();
                 // Guard cells may not be up to date beyond ng_FieldGather
                 const amrex::IntVect& ng_src = guard_cells.ng_FieldGather;
                 // Copy Bfield_aux to Btmp, using up to ng_src (=ng_FieldGather) guard cells from
@@ -196,18 +196,18 @@ WarpX::UpdateAuxilaryDataStagToNodal ()
 #endif
             for (MFIter mfi(*Bfield_aux[lev][0], TilingIfNotGPU()); mfi.isValid(); ++mfi)
             {
-                Array4<Real> const& bx_aux = Bfield_aux[lev][0]->array(mfi);
-                Array4<Real> const& by_aux = Bfield_aux[lev][1]->array(mfi);
-                Array4<Real> const& bz_aux = Bfield_aux[lev][2]->array(mfi);
-                Array4<Real const> const& bx_fp = Bfield_fp[lev][0]->const_array(mfi);
-                Array4<Real const> const& by_fp = Bfield_fp[lev][1]->const_array(mfi);
-                Array4<Real const> const& bz_fp = Bfield_fp[lev][2]->const_array(mfi);
-                Array4<Real const> const& bx_cp = Bfield_cp[lev][0]->const_array(mfi);
-                Array4<Real const> const& by_cp = Bfield_cp[lev][1]->const_array(mfi);
-                Array4<Real const> const& bz_cp = Bfield_cp[lev][2]->const_array(mfi);
-                Array4<Real const> const& bx_c = Btmp[0]->const_array(mfi);
-                Array4<Real const> const& by_c = Btmp[1]->const_array(mfi);
-                Array4<Real const> const& bz_c = Btmp[2]->const_array(mfi);
+                Array4<amrex::Real> const& bx_aux = Bfield_aux[lev][0]->array(mfi);
+                Array4<amrex::Real> const& by_aux = Bfield_aux[lev][1]->array(mfi);
+                Array4<amrex::Real> const& bz_aux = Bfield_aux[lev][2]->array(mfi);
+                Array4<amrex::Real const> const& bx_fp = Bfield_fp[lev][0]->const_array(mfi);
+                Array4<amrex::Real const> const& by_fp = Bfield_fp[lev][1]->const_array(mfi);
+                Array4<amrex::Real const> const& bz_fp = Bfield_fp[lev][2]->const_array(mfi);
+                Array4<amrex::Real const> const& bx_cp = Bfield_cp[lev][0]->const_array(mfi);
+                Array4<amrex::Real const> const& by_cp = Bfield_cp[lev][1]->const_array(mfi);
+                Array4<amrex::Real const> const& bz_cp = Bfield_cp[lev][2]->const_array(mfi);
+                Array4<amrex::Real const> const& bx_c = Btmp[0]->const_array(mfi);
+                Array4<amrex::Real const> const& by_c = Btmp[1]->const_array(mfi);
+                Array4<amrex::Real const> const& bz_c = Btmp[2]->const_array(mfi);
 
                 const Box& bx = mfi.growntilebox();
                 amrex::ParallelFor(bx,
@@ -222,16 +222,16 @@ WarpX::UpdateAuxilaryDataStagToNodal ()
 
         // Efield
         {
-            Array<std::unique_ptr<MultiFab>,3> Etmp;
+            Array<std::unique_ptr<amrex::MultiFab>,3> Etmp;
             if (Efield_cax[lev][0]) {
                 for (int i = 0; i < 3; ++i) {
-                    Etmp[i] = std::make_unique<MultiFab>(
+                    Etmp[i] = std::make_unique<amrex::MultiFab>(
                         *Efield_cax[lev][i], amrex::make_alias, 0, 1);
                 }
             } else {
-                const IntVect ngtmp = Efield_aux[lev-1][0]->nGrowVect();
+                const amrex::IntVect ngtmp = Efield_aux[lev-1][0]->nGrowVect();
                 for (int i = 0; i < 3; ++i) {
-                    Etmp[i] = std::make_unique<MultiFab>(
+                    Etmp[i] = std::make_unique<amrex::MultiFab>(
                         cnba, dm, 1, ngtmp);
                 }
             }
@@ -240,7 +240,7 @@ WarpX::UpdateAuxilaryDataStagToNodal ()
             Etmp[2]->setVal(0.0);
             // ParallelCopy from coarse level
             for (int i = 0; i < 3; ++i) {
-                const IntVect ng = Etmp[i]->nGrowVect();
+                const amrex::IntVect ng = Etmp[i]->nGrowVect();
                 // Guard cells may not be up to date beyond ng_FieldGather
                 const amrex::IntVect& ng_src = guard_cells.ng_FieldGather;
                 // Copy Efield_aux to Etmp, using up to ng_src (=ng_FieldGather) guard cells from
@@ -264,18 +264,18 @@ WarpX::UpdateAuxilaryDataStagToNodal ()
 #endif
             for (MFIter mfi(*Efield_aux[lev][0]); mfi.isValid(); ++mfi)
             {
-                Array4<Real> const& ex_aux = Efield_aux[lev][0]->array(mfi);
-                Array4<Real> const& ey_aux = Efield_aux[lev][1]->array(mfi);
-                Array4<Real> const& ez_aux = Efield_aux[lev][2]->array(mfi);
-                Array4<Real const> const& ex_fp = Efield_fp[lev][0]->const_array(mfi);
-                Array4<Real const> const& ey_fp = Efield_fp[lev][1]->const_array(mfi);
-                Array4<Real const> const& ez_fp = Efield_fp[lev][2]->const_array(mfi);
-                Array4<Real const> const& ex_cp = Efield_cp[lev][0]->const_array(mfi);
-                Array4<Real const> const& ey_cp = Efield_cp[lev][1]->const_array(mfi);
-                Array4<Real const> const& ez_cp = Efield_cp[lev][2]->const_array(mfi);
-                Array4<Real const> const& ex_c = Etmp[0]->const_array(mfi);
-                Array4<Real const> const& ey_c = Etmp[1]->const_array(mfi);
-                Array4<Real const> const& ez_c = Etmp[2]->const_array(mfi);
+                Array4<amrex::Real> const& ex_aux = Efield_aux[lev][0]->array(mfi);
+                Array4<amrex::Real> const& ey_aux = Efield_aux[lev][1]->array(mfi);
+                Array4<amrex::Real> const& ez_aux = Efield_aux[lev][2]->array(mfi);
+                Array4<amrex::Real const> const& ex_fp = Efield_fp[lev][0]->const_array(mfi);
+                Array4<amrex::Real const> const& ey_fp = Efield_fp[lev][1]->const_array(mfi);
+                Array4<amrex::Real const> const& ez_fp = Efield_fp[lev][2]->const_array(mfi);
+                Array4<amrex::Real const> const& ex_cp = Efield_cp[lev][0]->const_array(mfi);
+                Array4<amrex::Real const> const& ey_cp = Efield_cp[lev][1]->const_array(mfi);
+                Array4<amrex::Real const> const& ez_cp = Efield_cp[lev][2]->const_array(mfi);
+                Array4<amrex::Real const> const& ex_c = Etmp[0]->const_array(mfi);
+                Array4<amrex::Real const> const& ey_c = Etmp[1]->const_array(mfi);
+                Array4<amrex::Real const> const& ez_c = Etmp[2]->const_array(mfi);
 
                 const Box& bx = mfi.fabbox();
                 amrex::ParallelFor(bx,
@@ -296,8 +296,8 @@ WarpX::UpdateAuxilaryDataSameType ()
     for (int lev = 1; lev <= finest_level; ++lev)
     {
         const amrex::Periodicity& crse_period = Geom(lev-1).periodicity();
-        const IntVect& ng = Bfield_cp[lev][0]->nGrowVect();
-        const DistributionMapping& dm = Bfield_cp[lev][0]->DistributionMap();
+        const amrex::IntVect& ng = Bfield_cp[lev][0]->nGrowVect();
+        const amrex::DistributionMapping& dm = Bfield_cp[lev][0]->DistributionMap();
 
         // B field
         {
@@ -344,15 +344,15 @@ WarpX::UpdateAuxilaryDataSameType ()
 #endif
             for (MFIter mfi(*Bfield_aux[lev][0]); mfi.isValid(); ++mfi)
             {
-                Array4<Real> const& bx_aux = Bfield_aux[lev][0]->array(mfi);
-                Array4<Real> const& by_aux = Bfield_aux[lev][1]->array(mfi);
-                Array4<Real> const& bz_aux = Bfield_aux[lev][2]->array(mfi);
-                Array4<Real const> const& bx_fp = Bfield_fp[lev][0]->const_array(mfi);
-                Array4<Real const> const& by_fp = Bfield_fp[lev][1]->const_array(mfi);
-                Array4<Real const> const& bz_fp = Bfield_fp[lev][2]->const_array(mfi);
-                Array4<Real const> const& bx_c = dBx.const_array(mfi);
-                Array4<Real const> const& by_c = dBy.const_array(mfi);
-                Array4<Real const> const& bz_c = dBz.const_array(mfi);
+                Array4<amrex::Real> const& bx_aux = Bfield_aux[lev][0]->array(mfi);
+                Array4<amrex::Real> const& by_aux = Bfield_aux[lev][1]->array(mfi);
+                Array4<amrex::Real> const& bz_aux = Bfield_aux[lev][2]->array(mfi);
+                Array4<amrex::Real const> const& bx_fp = Bfield_fp[lev][0]->const_array(mfi);
+                Array4<amrex::Real const> const& by_fp = Bfield_fp[lev][1]->const_array(mfi);
+                Array4<amrex::Real const> const& bz_fp = Bfield_fp[lev][2]->const_array(mfi);
+                Array4<amrex::Real const> const& bx_c = dBx.const_array(mfi);
+                Array4<amrex::Real const> const& by_c = dBy.const_array(mfi);
+                Array4<amrex::Real const> const& bz_c = dBz.const_array(mfi);
 
                 amrex::ParallelFor(Box(bx_aux), Box(by_aux), Box(bz_aux),
                 [=] AMREX_GPU_DEVICE (int j, int k, int l) noexcept
@@ -417,15 +417,15 @@ WarpX::UpdateAuxilaryDataSameType ()
 #endif
             for (MFIter mfi(*Efield_aux[lev][0]); mfi.isValid(); ++mfi)
             {
-                Array4<Real> const& ex_aux = Efield_aux[lev][0]->array(mfi);
-                Array4<Real> const& ey_aux = Efield_aux[lev][1]->array(mfi);
-                Array4<Real> const& ez_aux = Efield_aux[lev][2]->array(mfi);
-                Array4<Real const> const& ex_fp = Efield_fp[lev][0]->const_array(mfi);
-                Array4<Real const> const& ey_fp = Efield_fp[lev][1]->const_array(mfi);
-                Array4<Real const> const& ez_fp = Efield_fp[lev][2]->const_array(mfi);
-                Array4<Real const> const& ex_c = dEx.const_array(mfi);
-                Array4<Real const> const& ey_c = dEy.const_array(mfi);
-                Array4<Real const> const& ez_c = dEz.const_array(mfi);
+                Array4<amrex::Real> const& ex_aux = Efield_aux[lev][0]->array(mfi);
+                Array4<amrex::Real> const& ey_aux = Efield_aux[lev][1]->array(mfi);
+                Array4<amrex::Real> const& ez_aux = Efield_aux[lev][2]->array(mfi);
+                Array4<amrex::Real const> const& ex_fp = Efield_fp[lev][0]->const_array(mfi);
+                Array4<amrex::Real const> const& ey_fp = Efield_fp[lev][1]->const_array(mfi);
+                Array4<amrex::Real const> const& ez_fp = Efield_fp[lev][2]->const_array(mfi);
+                Array4<amrex::Real const> const& ex_c = dEx.const_array(mfi);
+                Array4<amrex::Real const> const& ey_c = dEy.const_array(mfi);
+                Array4<amrex::Real const> const& ez_c = dEz.const_array(mfi);
 
                 amrex::ParallelFor(Box(ex_aux), Box(ey_aux), Box(ez_aux),
                 [=] AMREX_GPU_DEVICE (int j, int k, int l) noexcept
@@ -548,7 +548,7 @@ WarpX::FillBoundaryE_avg (IntVect ng)
 
 
 void
-WarpX::FillBoundaryE (int lev, IntVect ng, std::optional<bool> nodal_sync)
+WarpX::FillBoundaryE (int lev, amrex::IntVect ng, std::optional<bool> nodal_sync)
 {
     FillBoundaryE(lev, PatchType::fine, ng, nodal_sync);
     if (lev > 0) FillBoundaryE(lev, PatchType::coarse, ng, nodal_sync);
@@ -605,7 +605,7 @@ WarpX::FillBoundaryE (const int lev, const PatchType patch_type, const amrex::In
 }
 
 void
-WarpX::FillBoundaryB (int lev, IntVect ng, std::optional<bool> nodal_sync)
+WarpX::FillBoundaryB (int lev, amrex::IntVect ng, std::optional<bool> nodal_sync)
 {
     FillBoundaryB(lev, PatchType::fine, ng, nodal_sync);
     if (lev > 0) FillBoundaryB(lev, PatchType::coarse, ng, nodal_sync);
@@ -662,14 +662,14 @@ WarpX::FillBoundaryB (const int lev, const PatchType patch_type, const amrex::In
 }
 
 void
-WarpX::FillBoundaryE_avg(int lev, IntVect ng)
+WarpX::FillBoundaryE_avg(int lev, amrex::IntVect ng)
 {
     FillBoundaryE_avg(lev, PatchType::fine, ng);
     if (lev > 0) FillBoundaryE_avg(lev, PatchType::coarse, ng);
 }
 
 void
-WarpX::FillBoundaryE_avg (int lev, PatchType patch_type, IntVect ng)
+WarpX::FillBoundaryE_avg (int lev, PatchType patch_type, amrex::IntVect ng)
 {
     if (patch_type == PatchType::fine)
     {
@@ -680,7 +680,7 @@ WarpX::FillBoundaryE_avg (int lev, PatchType patch_type, IntVect ng)
 
         const amrex::Periodicity& period = Geom(lev).periodicity();
         if ( safe_guard_cells ){
-            const Vector<MultiFab*> mf{Efield_avg_fp[lev][0].get(),Efield_avg_fp[lev][1].get(),Efield_avg_fp[lev][2].get()};
+            const amrex::Vector<amrex::MultiFab*> mf{Efield_avg_fp[lev][0].get(),Efield_avg_fp[lev][1].get(),Efield_avg_fp[lev][2].get()};
             ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, period);
         } else {
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
@@ -700,7 +700,7 @@ WarpX::FillBoundaryE_avg (int lev, PatchType patch_type, IntVect ng)
 
         const amrex::Periodicity& cperiod = Geom(lev-1).periodicity();
         if ( safe_guard_cells ) {
-            const Vector<MultiFab*> mf{Efield_avg_cp[lev][0].get(),Efield_avg_cp[lev][1].get(),Efield_avg_cp[lev][2].get()};
+            const amrex::Vector<amrex::MultiFab*> mf{Efield_avg_cp[lev][0].get(),Efield_avg_cp[lev][1].get(),Efield_avg_cp[lev][2].get()};
             ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, cperiod);
 
         } else {
@@ -716,14 +716,14 @@ WarpX::FillBoundaryE_avg (int lev, PatchType patch_type, IntVect ng)
 
 
 void
-WarpX::FillBoundaryB_avg (int lev, IntVect ng)
+WarpX::FillBoundaryB_avg (int lev, amrex::IntVect ng)
 {
     FillBoundaryB_avg(lev, PatchType::fine, ng);
     if (lev > 0) FillBoundaryB_avg(lev, PatchType::coarse, ng);
 }
 
 void
-WarpX::FillBoundaryB_avg (int lev, PatchType patch_type, IntVect ng)
+WarpX::FillBoundaryB_avg (int lev, PatchType patch_type, amrex::IntVect ng)
 {
     if (patch_type == PatchType::fine)
     {
@@ -733,7 +733,7 @@ WarpX::FillBoundaryB_avg (int lev, PatchType patch_type, IntVect ng)
           }
         const amrex::Periodicity& period = Geom(lev).periodicity();
         if ( safe_guard_cells ) {
-            const Vector<MultiFab*> mf{Bfield_avg_fp[lev][0].get(),Bfield_avg_fp[lev][1].get(),Bfield_avg_fp[lev][2].get()};
+            const amrex::Vector<amrex::MultiFab*> mf{Bfield_avg_fp[lev][0].get(),Bfield_avg_fp[lev][1].get(),Bfield_avg_fp[lev][2].get()};
             ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, period);
         } else {
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
@@ -753,7 +753,7 @@ WarpX::FillBoundaryB_avg (int lev, PatchType patch_type, IntVect ng)
 
         const amrex::Periodicity& cperiod = Geom(lev-1).periodicity();
         if ( safe_guard_cells ){
-            const Vector<MultiFab*> mf{Bfield_avg_cp[lev][0].get(),Bfield_avg_cp[lev][1].get(),Bfield_avg_cp[lev][2].get()};
+            const amrex::Vector<amrex::MultiFab*> mf{Bfield_avg_cp[lev][0].get(),Bfield_avg_cp[lev][1].get(),Bfield_avg_cp[lev][2].get()};
             ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, cperiod);
         } else {
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
@@ -767,14 +767,14 @@ WarpX::FillBoundaryB_avg (int lev, PatchType patch_type, IntVect ng)
 }
 
 void
-WarpX::FillBoundaryF (int lev, IntVect ng, std::optional<bool> nodal_sync)
+WarpX::FillBoundaryF (int lev, amrex::IntVect ng, std::optional<bool> nodal_sync)
 {
     FillBoundaryF(lev, PatchType::fine, ng, nodal_sync);
     if (lev > 0) FillBoundaryF(lev, PatchType::coarse, ng, nodal_sync);
 }
 
 void
-WarpX::FillBoundaryF (int lev, PatchType patch_type, IntVect ng, std::optional<bool> nodal_sync)
+WarpX::FillBoundaryF (int lev, PatchType patch_type, amrex::IntVect ng, std::optional<bool> nodal_sync)
 {
     if (patch_type == PatchType::fine)
     {
@@ -808,7 +808,7 @@ WarpX::FillBoundaryF (int lev, PatchType patch_type, IntVect ng, std::optional<b
     }
 }
 
-void WarpX::FillBoundaryG (int lev, IntVect ng, std::optional<bool> nodal_sync)
+void WarpX::FillBoundaryG (int lev, amrex::IntVect ng, std::optional<bool> nodal_sync)
 {
     FillBoundaryG(lev, PatchType::fine, ng, nodal_sync);
 
@@ -818,7 +818,7 @@ void WarpX::FillBoundaryG (int lev, IntVect ng, std::optional<bool> nodal_sync)
     }
 }
 
-void WarpX::FillBoundaryG (int lev, PatchType patch_type, IntVect ng, std::optional<bool> nodal_sync)
+void WarpX::FillBoundaryG (int lev, PatchType patch_type, amrex::IntVect ng, std::optional<bool> nodal_sync)
 {
     if (patch_type == PatchType::fine)
     {
@@ -862,7 +862,7 @@ WarpX::FillBoundaryAux (IntVect ng)
 }
 
 void
-WarpX::FillBoundaryAux (int lev, IntVect ng)
+WarpX::FillBoundaryAux (int lev, amrex::IntVect ng)
 {
     const amrex::Periodicity& period = Geom(lev).periodicity();
     ablastr::utils::communication::FillBoundary(*Efield_aux[lev][0], ng, WarpX::do_single_precision_comms, period);
@@ -960,7 +960,7 @@ WarpX::SyncCurrent (
     // buffer, the buffer MultiFab is the source instead. In the
     // implementation below, we use an alias MultiFab to manage this.
 
-    std::unique_ptr<MultiFab> mf_comm; // for communication between levels
+    std::unique_ptr<amrex::MultiFab> mf_comm; // for communication between levels
     for (int idim = 0; idim < 3; ++idim)
     {
         for (int lev = finest_level; lev >= 0; --lev)
@@ -978,13 +978,13 @@ WarpX::SyncCurrent (
                                      ncomp, 0);
                 fine_lev_cp.setVal(0.0);
                 fine_lev_cp.ParallelAdd(*mf_comm, 0, 0, ncomp, mf_comm->nGrowVect(),
-                                        IntVect(0), period);
+                                        amrex::IntVect(0), period);
                 // We now need to create a mask to fix the double counting.
                 auto owner_mask = amrex::OwnerMask(fine_lev_cp, period);
                 auto const& mma = owner_mask->const_arrays();
                 auto const& sma = fine_lev_cp.const_arrays();
                 auto const& dma = J_fp[lev][idim]->arrays();
-                amrex::ParallelFor(fine_lev_cp, IntVect(0), ncomp,
+                amrex::ParallelFor(fine_lev_cp, amrex::IntVect(0), ncomp,
                 [=] AMREX_GPU_DEVICE (int bno, int i, int j, int k, int n)
                 {
                     if (mma[bno](i,j,k) && sma[bno](i,j,k,n) != 0.0_rt) {
@@ -1012,16 +1012,16 @@ WarpX::SyncCurrent (
                                                    refRatio(lev-1));
                 if (J_buffer[lev][idim])
                 {
-                    IntVect const& ng = J_cp[lev][idim]->nGrowVect();
+                    amrex::IntVect const& ng = J_cp[lev][idim]->nGrowVect();
                     AMREX_ASSERT(ng.allLE(J_buffer[lev][idim]->nGrowVect()));
                     MultiFab::Add(*J_buffer[lev][idim], *J_cp[lev][idim],
                                   0, 0, ncomp, ng);
-                    mf_comm = std::make_unique<MultiFab>
+                    mf_comm = std::make_unique<amrex::MultiFab>
                         (*J_buffer[lev][idim], amrex::make_alias, 0, ncomp);
                 }
                 else
                 {
-                    mf_comm = std::make_unique<MultiFab>
+                    mf_comm = std::make_unique<amrex::MultiFab>
                         (*J_cp[lev][idim], amrex::make_alias, 0, ncomp);
                 }
             }
@@ -1053,7 +1053,7 @@ WarpX::SyncRho (
 
     // See comments in WarpX::SyncCurrent for an explanation of the algorithm.
 
-    std::unique_ptr<MultiFab> mf_comm; // for communication between levels
+    std::unique_ptr<amrex::MultiFab> mf_comm; // for communication between levels
     for (int lev = finest_level; lev >= 0; --lev)
     {
         if (lev < finest_level)
@@ -1068,13 +1068,13 @@ WarpX::SyncRho (
                                  ncomp, 0);
             fine_lev_cp.setVal(0.0);
             fine_lev_cp.ParallelAdd(*mf_comm, 0, 0, ncomp, mf_comm->nGrowVect(),
-                                    IntVect(0), period);
+                                    amrex::IntVect(0), period);
             // We now need to create a mask to fix the double counting.
             auto owner_mask = amrex::OwnerMask(fine_lev_cp, period);
             auto const& mma = owner_mask->const_arrays();
             auto const& sma = fine_lev_cp.const_arrays();
             auto const& dma = charge_fp[lev]->arrays();
-            amrex::ParallelFor(fine_lev_cp, IntVect(0), ncomp,
+            amrex::ParallelFor(fine_lev_cp, amrex::IntVect(0), ncomp,
             [=] AMREX_GPU_DEVICE (int bno, int i, int j, int k, int n)
             {
                 if (mma[bno](i,j,k) && sma[bno](i,j,k,n) != 0.0_rt) {
@@ -1098,15 +1098,15 @@ WarpX::SyncRho (
                                                refRatio(lev-1));
             if (charge_buffer[lev])
             {
-                IntVect const& ng = charge_cp[lev]->nGrowVect();
+                amrex::IntVect const& ng = charge_cp[lev]->nGrowVect();
                 AMREX_ASSERT(ng.allLE(charge_buffer[lev]->nGrowVect()));
                 MultiFab::Add(*charge_buffer[lev], *charge_cp[lev], 0, 0, ncomp, ng);
-                mf_comm = std::make_unique<MultiFab>
+                mf_comm = std::make_unique<amrex::MultiFab>
                     (*charge_buffer[lev], amrex::make_alias, 0, ncomp);
             }
             else
             {
-                mf_comm = std::make_unique<MultiFab>
+                mf_comm = std::make_unique<amrex::MultiFab>
                     (*charge_cp[lev], amrex::make_alias, 0, ncomp);
             }
         }
@@ -1127,9 +1127,9 @@ void WarpX::RestrictCurrentFromFineToCoarsePatch (
     J_cp[lev][1]->setVal(0.0);
     J_cp[lev][2]->setVal(0.0);
 
-    const IntVect& refinement_ratio = refRatio(lev-1);
+    const amrex::IntVect& refinement_ratio = refRatio(lev-1);
 
-    std::array<const MultiFab*,3> fine { J_fp[lev][0].get(),
+    std::array<const amrex::MultiFab*,3> fine { J_fp[lev][0].get(),
                                          J_fp[lev][1].get(),
                                          J_fp[lev][2].get() };
     std::array<      MultiFab*,3> crse { J_cp[lev][0].get(),
@@ -1254,7 +1254,7 @@ void WarpX::AddCurrentFromFineLevelandSumBoundary (
                         J_fp[lev][idim]->DistributionMap(), J_fp[lev][idim]->nComp(), 0);
             mf.setVal(0.0);
 
-            const IntVect ng = J_cp[lev+1][idim]->nGrowVect();
+            const amrex::IntVect ng = J_cp[lev+1][idim]->nGrowVect();
 
             if (use_filter && J_buffer[lev+1][idim])
             {
@@ -1314,7 +1314,7 @@ void WarpX::RestrictRhoFromFineToCoarsePatch (
 {
     if (charge_fp[lev]) {
         charge_cp[lev]->setVal(0.0);
-        const IntVect& refinement_ratio = refRatio(lev-1);
+        const amrex::IntVect& refinement_ratio = refRatio(lev-1);
         ablastr::coarsen::average::Coarsen(*charge_cp[lev], *charge_fp[lev], refinement_ratio );
     }
 }
@@ -1337,8 +1337,8 @@ void WarpX::ApplyFilterandSumBoundaryRho (
 void WarpX::ApplyFilterandSumBoundaryRho (int /*lev*/, int glev, amrex::MultiFab& rho, int icomp, int ncomp)
 {
     const amrex::Periodicity& period = Geom(glev).periodicity();
-    IntVect ng = rho.nGrowVect();
-    IntVect ng_depos_rho = get_ng_depos_rho();
+    amrex::IntVect ng = rho.nGrowVect();
+    amrex::IntVect ng_depos_rho = get_ng_depos_rho();
     if (use_filter) {
         ng += bilinear_filter.stencil_length_each_dir-1;
         ng_depos_rho += bilinear_filter.stencil_length_each_dir-1;
@@ -1384,8 +1384,8 @@ void WarpX::AddRhoFromFineLevelandSumBoundary (
                     charge_fp[lev]->DistributionMap(),
                     ncomp, 0);
         mf.setVal(0.0);
-        IntVect ng = charge_cp[lev+1]->nGrowVect();
-        IntVect ng_depos_rho = get_ng_depos_rho();
+        amrex::IntVect ng = charge_cp[lev+1]->nGrowVect();
+        amrex::IntVect ng_depos_rho = get_ng_depos_rho();
         if (use_filter && charge_buffer[lev+1])
         {
             // coarse patch of fine level
@@ -1403,7 +1403,7 @@ void WarpX::AddRhoFromFineLevelandSumBoundary (
 
             MultiFab::Add(rhofb, rhofc, 0, 0, ncomp, ng);
 
-            ablastr::utils::communication::ParallelAdd(mf, rhofb, 0, 0, ncomp, ng, IntVect::TheZeroVector(),
+            ablastr::utils::communication::ParallelAdd(mf, rhofb, 0, 0, ncomp, ng, amrex::IntVect::TheZeroVector(),
                                                        WarpX::do_single_precision_comms, period);
             WarpXSumGuardCells( *charge_cp[lev+1], rhofc, period, ng_depos_rho, icomp, ncomp );
         }
@@ -1415,7 +1415,7 @@ void WarpX::AddRhoFromFineLevelandSumBoundary (
             MultiFab rf(charge_cp[lev+1]->boxArray(), charge_cp[lev+1]->DistributionMap(), ncomp, ng);
             bilinear_filter.ApplyStencil(rf, *charge_cp[lev+1], lev+1, icomp, 0, ncomp);
 
-            ablastr::utils::communication::ParallelAdd(mf, rf, 0, 0, ncomp, ng, IntVect::TheZeroVector(),
+            ablastr::utils::communication::ParallelAdd(mf, rf, 0, 0, ncomp, ng, amrex::IntVect::TheZeroVector(),
                                                        WarpX::do_single_precision_comms, period);
             WarpXSumGuardCells( *charge_cp[lev+1], rf, period, ng_depos_rho, icomp, ncomp );
         }
@@ -1429,7 +1429,7 @@ void WarpX::AddRhoFromFineLevelandSumBoundary (
             ablastr::utils::communication::ParallelAdd(mf, *charge_buffer[lev + 1], icomp, 0,
                                                        ncomp,
                                                        charge_buffer[lev + 1]->nGrowVect(),
-                                                       IntVect::TheZeroVector(), WarpX::do_single_precision_comms,
+                                                       amrex::IntVect::TheZeroVector(), WarpX::do_single_precision_comms,
                                                        period);
             WarpXSumGuardCells(*(charge_cp[lev+1]), period, ng_depos_rho, icomp, ncomp);
         }
@@ -1438,7 +1438,7 @@ void WarpX::AddRhoFromFineLevelandSumBoundary (
             ng_depos_rho.min(ng);
             ablastr::utils::communication::ParallelAdd(mf, *charge_cp[lev + 1], icomp, 0, ncomp,
                                                        charge_cp[lev + 1]->nGrowVect(),
-                                                       IntVect::TheZeroVector(), WarpX::do_single_precision_comms,
+                                                       amrex::IntVect::TheZeroVector(), WarpX::do_single_precision_comms,
                                                        period);
             WarpXSumGuardCells(*(charge_cp[lev+1]), period, ng_depos_rho, icomp, ncomp);
         }

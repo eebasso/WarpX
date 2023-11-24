@@ -22,7 +22,7 @@
 #include <set>
 #include <string>
 
-using namespace amrex;
+// using namespace amrex;
 
 void
 WarpXLaserProfiles::FieldFunctionLaserProfile::init (
@@ -37,8 +37,8 @@ WarpXLaserProfiles::FieldFunctionLaserProfile::init (
 
 void
 WarpXLaserProfiles::FieldFunctionLaserProfile::fill_amplitude (
-    const int np, Real const * AMREX_RESTRICT const Xp, Real const * AMREX_RESTRICT const Yp,
-    Real t, Real * AMREX_RESTRICT const amplitude) const
+    const int np, amrex::Real const * AMREX_RESTRICT const Xp, amrex::Real const * AMREX_RESTRICT const Yp,
+    amrex::Real t, amrex::Real * AMREX_RESTRICT const amplitude) const
 {
     auto parser = m_parser.compile<3>();
     amrex::ParallelFor(np, [=] AMREX_GPU_DEVICE (int i) noexcept

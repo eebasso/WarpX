@@ -25,7 +25,7 @@
 #include <memory>
 #include <sstream>
 
-using namespace amrex;
+// using namespace amrex;
 
 MacroscopicProperties::MacroscopicProperties ()
 {
@@ -35,7 +35,7 @@ MacroscopicProperties::MacroscopicProperties ()
 void
 MacroscopicProperties::ReadParameters ()
 {
-    const ParmParse pp_macroscopic("macroscopic");
+    const amrex::ParmParse pp_macroscopic("macroscopic");
     // Since macroscopic maxwell solve is turned on,
     // user-defined sigma, mu, and epsilon are queried.
     // The vacuum values are used as default for the macroscopic parameters

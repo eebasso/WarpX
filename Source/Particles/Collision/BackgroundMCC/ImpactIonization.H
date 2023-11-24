@@ -73,7 +73,7 @@ public:
         const PData& ptd, int const i, amrex::RandomEngine const& engine
     ) const noexcept
     {
-        using namespace amrex;
+        // using namespace amrex;
         using std::sqrt;
 
         // determine if this particle should collide
@@ -171,7 +171,7 @@ public:
         int const i_src, int const i_dst1, int const i_dst2,
         amrex::RandomEngine const& engine) const noexcept
     {
-        using namespace amrex;
+        // using namespace amrex;
         using std::sqrt;
 
         // get references to the particle to get its position

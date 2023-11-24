@@ -50,7 +50,7 @@ void doChargeDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
                                amrex::Real* cost,
                                long load_balance_costs_update_algo)
 {
-    using namespace amrex;
+    // using namespace amrex;
 
 #if !defined(AMREX_USE_GPU)
     amrex::ignore_unused(cost, load_balance_costs_update_algo);
@@ -259,7 +259,7 @@ void doChargeDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPositio
                                      const amrex::IntVect bin_size
                                      )
 {
-    using namespace amrex;
+    // using namespace amrex;
 
     auto permutation = a_bins.permutationPtr();
 
@@ -355,15 +355,15 @@ void doChargeDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPositio
           ParticleReal xp, yp, zp;
           GetPosition(permutation[bin_start], xp, yp, zp);
 #if defined(WARPX_DIM_3D)
-          IntVect iv = IntVect(int(amrex::Math::floor((xp-plo[0])*dxiarr[0])),
+          amrex::IntVect iv = amrex::IntVect(int(amrex::Math::floor((xp-plo[0])*dxiarr[0])),
                                int(amrex::Math::floor((yp-plo[1])*dxiarr[1])),
                                int(amrex::Math::floor((zp-plo[2])*dxiarr[2])));
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-          IntVect iv = IntVect(
+          amrex::IntVect iv = amrex::IntVect(
                                int(amrex::Math::floor((xp-plo[0])*dxiarr[0])),
                                int(amrex::Math::floor((zp-plo[1])*dxiarr[1])));
 #elif defined(WARPX_DIM_1D_Z)
-          IntVect iv = IntVect(int(amrex::Math::floor((zp-plo[0])*dxiarr[0])));
+          amrex::IntVect iv = amrex::IntVect(int(amrex::Math::floor((zp-plo[0])*dxiarr[0])));
 #endif
           iv += domain.smallEnd();
           getTileIndex(iv, box, true, bin_size, buffer_box);

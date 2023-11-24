@@ -50,14 +50,14 @@
 #include <map>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 // constructor
 ParticleExtrema::ParticleExtrema (std::string rd_name)
 : ReducedDiags{rd_name}
 {
     // read species name
-    const ParmParse pp_rd_name(rd_name);
+    const amrex::ParmParse pp_rd_name(rd_name);
     pp_rd_name.get("species",m_species_name);
 
     // get WarpX class object
@@ -163,7 +163,7 @@ void ParticleExtrema::ComputeDiags (int step)
     const auto species_names = mypc.GetSpeciesNames();
 
     // inverse of speed of light squared
-    Real constexpr inv_c2 = 1.0_rt / (PhysConst::c * PhysConst::c);
+    amrex::Real constexpr inv_c2 = 1.0_rt / (PhysConst::c * PhysConst::c);
 
     // If 2D-XZ, p.pos(1) is z, rather than p.pos(2).
 #if (defined WARPX_DIM_3D)
@@ -194,98 +194,98 @@ void ParticleExtrema::ComputeDiags (int step)
 
         // xmin
 #if (defined WARPX_DIM_RZ)
-        Real xmin = ReduceMin( myspc,
+        amrex::Real xmin = ReduceMin( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.pos(0)*std::cos(p.rdata(PIdx::theta)); });
 #elif (defined WARPX_DIM_1D_Z)
-        Real xmin = 0.0_rt;
+        amrex::Real xmin = 0.0_rt;
 #else
-        Real xmin = ReduceMin( myspc,
+        amrex::Real xmin = ReduceMin( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.pos(0); });
 #endif
 
         // xmax
 #if (defined WARPX_DIM_RZ)
-        Real xmax = ReduceMax( myspc,
+        amrex::Real xmax = ReduceMax( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.pos(0)*std::cos(p.rdata(PIdx::theta)); });
 #elif (defined WARPX_DIM_1D_Z)
-        Real xmax = 0.0_rt;
+        amrex::Real xmax = 0.0_rt;
 #else
-        Real xmax = ReduceMax( myspc,
+        amrex::Real xmax = ReduceMax( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.pos(0); });
 #endif
 
         // ymin
 #if (defined WARPX_DIM_RZ)
-        Real ymin = ReduceMin( myspc,
+        amrex::Real ymin = ReduceMin( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.pos(0)*std::sin(p.rdata(PIdx::theta)); });
 #elif (defined WARPX_DIM_XZ || WARPX_DIM_1D_Z)
-        Real ymin = 0.0_rt;
+        amrex::Real ymin = 0.0_rt;
 #else
-        Real ymin = ReduceMin( myspc,
+        amrex::Real ymin = ReduceMin( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.pos(1); });
 #endif
 
         // ymax
 #if (defined WARPX_DIM_RZ)
-        Real ymax = ReduceMax( myspc,
+        amrex::Real ymax = ReduceMax( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.pos(0)*std::sin(p.rdata(PIdx::theta)); });
 #elif (defined WARPX_DIM_XZ || WARPX_DIM_1D_Z)
-        Real ymax = 0.0_rt;
+        amrex::Real ymax = 0.0_rt;
 #else
-        Real ymax = ReduceMax( myspc,
+        amrex::Real ymax = ReduceMax( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.pos(1); });
 #endif
 
         // zmin
-        Real zmin = ReduceMin( myspc,
+        amrex::Real zmin = ReduceMin( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.pos(index_z); });
 
         // zmax
-        Real zmax = ReduceMax( myspc,
+        amrex::Real zmax = ReduceMax( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.pos(index_z); });
 
         // uxmin
-        Real uxmin = ReduceMin( myspc,
+        amrex::Real uxmin = ReduceMin( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.rdata(PIdx::ux); });
 
         // uxmax
-        Real uxmax = ReduceMax( myspc,
+        amrex::Real uxmax = ReduceMax( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.rdata(PIdx::ux); });
 
         // uymin
-        Real uymin = ReduceMin( myspc,
+        amrex::Real uymin = ReduceMin( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.rdata(PIdx::uy); });
 
         // uymax
-        Real uymax = ReduceMax( myspc,
+        amrex::Real uymax = ReduceMax( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.rdata(PIdx::uy); });
 
         // uzmin
-        Real uzmin = ReduceMin( myspc,
+        amrex::Real uzmin = ReduceMin( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.rdata(PIdx::uz); });
 
         // uzmax
-        Real uzmax = ReduceMax( myspc,
+        amrex::Real uzmax = ReduceMax( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.rdata(PIdx::uz); });
 
         // gmin
-        Real gmin = 0.0_rt;
+        amrex::Real gmin = 0.0_rt;
         if ( is_photon ) {
             gmin = ReduceMin( myspc,
             [=] AMREX_GPU_HOST_DEVICE (const PType& p)
@@ -309,7 +309,7 @@ void ParticleExtrema::ComputeDiags (int step)
         }
 
         // gmax
-        Real gmax = 0.0_rt;
+        amrex::Real gmax = 0.0_rt;
         if ( is_photon ) {
             gmax = ReduceMax( myspc,
             [=] AMREX_GPU_HOST_DEVICE (const PType& p)
@@ -333,12 +333,12 @@ void ParticleExtrema::ComputeDiags (int step)
         }
 
         // wmin
-        Real wmin = ReduceMin( myspc,
+        amrex::Real wmin = ReduceMin( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.rdata(PIdx::w); });
 
         // wmax
-        Real wmax = ReduceMax( myspc,
+        amrex::Real wmax = ReduceMax( myspc,
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.rdata(PIdx::w); });
 
@@ -350,13 +350,13 @@ void ParticleExtrema::ComputeDiags (int step)
         const auto level_number = WarpX::GetInstance().finestLevel();
 
         // compute chimin and chimax
-        Real chimin_f = 0.0_rt;
-        Real chimax_f = 0.0_rt;
+        amrex::Real chimin_f = 0.0_rt;
+        amrex::Real chimax_f = 0.0_rt;
 
         if (myspc.DoQED())
         {
             // declare chi arrays
-            std::vector<Real> chimin, chimax;
+            std::vector<amrex::Real> chimin, chimax;
             chimin.resize(level_number+1,0.0_rt);
             chimax.resize(level_number+1,0.0_rt);
 
@@ -373,16 +373,16 @@ void ParticleExtrema::ComputeDiags (int step)
                 // define variables in preparation for field gathering
                 const std::array<amrex::Real,3>& dx = WarpX::CellSize(std::max(lev, 0));
                 const GpuArray<amrex::Real, 3> dx_arr = {dx[0], dx[1], dx[2]};
-                const MultiFab & Ex = warpx.getEfield(lev,0);
-                const MultiFab & Ey = warpx.getEfield(lev,1);
-                const MultiFab & Ez = warpx.getEfield(lev,2);
-                const MultiFab & Bx = warpx.getBfield(lev,0);
-                const MultiFab & By = warpx.getBfield(lev,1);
-                const MultiFab & Bz = warpx.getBfield(lev,2);
+                const amrex::MultiFab & Ex = warpx.getEfield(lev,0);
+                const amrex::MultiFab & Ey = warpx.getEfield(lev,1);
+                const amrex::MultiFab & Ez = warpx.getEfield(lev,2);
+                const amrex::MultiFab & Bx = warpx.getBfield(lev,0);
+                const amrex::MultiFab & By = warpx.getBfield(lev,1);
+                const amrex::MultiFab & Bz = warpx.getBfield(lev,2);
 
                 // declare reduce_op
                 ReduceOps<ReduceOpMin, ReduceOpMax> reduce_op;
-                ReduceData<Real, Real> reduce_data(reduce_op);
+                ReduceData<amrex::Real, amrex::Real> reduce_data(reduce_op);
                 using ReduceTuple = typename decltype(reduce_data)::Type;
 
                 // Loop over boxes
@@ -435,7 +435,7 @@ void ParticleExtrema::ComputeDiags (int step)
                             dx_arr, xyzmin_arr, lo,
                             n_rz_azimuthal_modes, nox, galerkin_interpolation);
                         // compute chi
-                        Real chi = 0.0_rt;
+                        amrex::Real chi = 0.0_rt;
                         if ( is_photon ) {
                             chi = QedUtils::chi_photon(ux[i]*m, uy[i]*m, uz[i]*m,
                                              ex, ey, ez, bx, by, bz);

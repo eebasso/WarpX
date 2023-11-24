@@ -26,7 +26,7 @@
 #include <cmath>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 /* \brief Initialize k space object.
  *
@@ -35,8 +35,8 @@ using namespace amrex;
  * \param dm Indicates which MPI proc owns which box, in realspace_ba.
  * \param realspace_dx Cell size of the grid in real space
  */
-SpectralKSpace::SpectralKSpace( const BoxArray& realspace_ba,
-                                const DistributionMapping& dm,
+SpectralKSpace::SpectralKSpace( const amrex::BoxArray& realspace_ba,
+                                const amrex::DistributionMapping& dm,
                                 const RealVect realspace_dx )
     : dx(realspace_dx)  // Store the cell size as member `dx`
 {
@@ -52,13 +52,13 @@ SpectralKSpace::SpectralKSpace( const BoxArray& realspace_ba,
         // each direction and have the same number of points as the
         // (cell-centered) real space box
         const Box realspace_bx = realspace_ba[i];
-        IntVect fft_size = realspace_bx.length();
+        amrex::IntVect fft_size = realspace_bx.length();
         // Because the spectral solver uses real-to-complex FFTs, we only
         // need the positive k values along the fastest axis
         // (first axis for AMReX Fortran-order arrays) in spectral space.
         // This effectively reduces the size of the spectral space by half
         // see e.g. the FFTW documentation for real-to-complex FFTs
-        IntVect spectral_bx_size = fft_size;
+        amrex::IntVect spectral_bx_size = fft_size;
         spectral_bx_size[0] = fft_size[0]/2 + 1;
         // Define the corresponding box
         const Box spectral_bx = Box( IntVect::TheZeroVector(),
@@ -80,8 +80,8 @@ SpectralKSpace::SpectralKSpace( const BoxArray& realspace_ba,
  * corresponding k coordinate along the dimension specified by `i_dim`
  */
 KVectorComponent
-SpectralKSpace::getKComponent( const DistributionMapping& dm,
-                               const BoxArray& realspace_ba,
+SpectralKSpace::getKComponent( const amrex::DistributionMapping& dm,
+                               const amrex::BoxArray& realspace_ba,
                                const int i_dim,
                                const bool only_positive_k ) const
 {
@@ -91,15 +91,15 @@ SpectralKSpace::getKComponent( const DistributionMapping& dm,
     // for each box owned by the local MPI proc
     for ( MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi ){
         const Box bx = spectralspace_ba[mfi];
-        Gpu::DeviceVector<Real>& k = k_comp[mfi];
+        Gpu::DeviceVector<amrex::Real>& k = k_comp[mfi];
 
         // Allocate k to the right size
         const int N = bx.length( i_dim );
         k.resize( N );
-        Real* pk = k.data();
+        amrex::Real* pk = k.data();
 
         // Fill the k vector
-        IntVect fft_size = realspace_ba[mfi].length();
+        amrex::IntVect fft_size = realspace_ba[mfi].length();
         const Real dk = 2*MathConst::pi/(fft_size[i_dim]*dx[i_dim]);
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE( bx.smallEnd(i_dim) == 0,
             "Expected box to start at 0, in spectral space.");
@@ -141,7 +141,7 @@ SpectralKSpace::getKComponent( const DistributionMapping& dm,
  * a correcting "shift" factor must be applied in spectral space.)
  */
 SpectralShiftFactor
-SpectralKSpace::getSpectralShiftFactor( const DistributionMapping& dm,
+SpectralKSpace::getSpectralShiftFactor( const amrex::DistributionMapping& dm,
                                         const int i_dim,
                                         const int shift_type ) const
 {
@@ -150,17 +150,17 @@ SpectralKSpace::getSpectralShiftFactor( const DistributionMapping& dm,
    // Loop over boxes and allocate the corresponding DeviceVector
     // for each box owned by the local MPI proc
     for ( MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi ){
-        const Gpu::DeviceVector<Real>& k = k_vec[i_dim][mfi];
+        const Gpu::DeviceVector<amrex::Real>& k = k_vec[i_dim][mfi];
         Gpu::DeviceVector<Complex>& shift = shift_factor[mfi];
 
         // Allocate shift coefficients
         const auto N = static_cast<int>(k.size());
         shift.resize(N);
-        Real const* pk = k.data();
+        amrex::Real const* pk = k.data();
         Complex* pshift = shift.data();
 
         // Fill the shift coefficients
-        Real sign = 0;
+        amrex::Real sign = 0;
         switch (shift_type){
             case ShiftType::TransformFromCellCentered: sign = -1.; break;
             case ShiftType::TransformToCellCentered: sign = 1.;
@@ -188,7 +188,7 @@ SpectralKSpace::getSpectralShiftFactor( const DistributionMapping& dm,
  * \param grid_type type of grid (collocated or not)
  */
 KVectorComponent
-SpectralKSpace::getModifiedKComponent( const DistributionMapping& dm,
+SpectralKSpace::getModifiedKComponent( const amrex::DistributionMapping& dm,
                                        const int i_dim,
                                        const int n_order,
                                        const short grid_type ) const
@@ -198,8 +198,8 @@ SpectralKSpace::getModifiedKComponent( const DistributionMapping& dm,
 
     if (n_order == -1) { // Infinite-order case
         for ( MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi ){
-            const Gpu::DeviceVector<Real>& k = k_vec[i_dim][mfi];
-            Gpu::DeviceVector<Real>& modified_k = modified_k_comp[mfi];
+            const Gpu::DeviceVector<amrex::Real>& k = k_vec[i_dim][mfi];
+            Gpu::DeviceVector<amrex::Real>& modified_k = modified_k_comp[mfi];
 
             // Allocate modified_k to the same size as k
             const auto N = static_cast<int>(k.size());;
@@ -211,26 +211,26 @@ SpectralKSpace::getModifiedKComponent( const DistributionMapping& dm,
     } else {
 
         // Compute real-space stencil coefficients
-        Vector<Real> h_stencil_coef = WarpX::getFornbergStencilCoefficients(n_order, grid_type);
-        Gpu::DeviceVector<Real> d_stencil_coef(h_stencil_coef.size());
+        amrex::Vector<amrex::Real> h_stencil_coef = WarpX::getFornbergStencilCoefficients(n_order, grid_type);
+        Gpu::DeviceVector<amrex::Real> d_stencil_coef(h_stencil_coef.size());
         Gpu::copyAsync(Gpu::hostToDevice, h_stencil_coef.begin(), h_stencil_coef.end(),
                        d_stencil_coef.begin());
         Gpu::synchronize();
         const auto nstencil = static_cast<int>(d_stencil_coef.size());
-        Real const* p_stencil_coef = d_stencil_coef.data();
+        amrex::Real const* p_stencil_coef = d_stencil_coef.data();
 
         // Loop over boxes and allocate the corresponding DeviceVector
         // for each box owned by the local MPI proc
         for ( MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi ){
             const Real delta_x = dx[i_dim];
-            const Gpu::DeviceVector<Real>& k = k_vec[i_dim][mfi];
-            Gpu::DeviceVector<Real>& modified_k = modified_k_comp[mfi];
+            const Gpu::DeviceVector<amrex::Real>& k = k_vec[i_dim][mfi];
+            Gpu::DeviceVector<amrex::Real>& modified_k = modified_k_comp[mfi];
 
             // Allocate modified_k to the same size as k
             const auto N = static_cast<int>(k.size());;
             modified_k.resize(N);
-            Real const* p_k = k.data();
-            Real * p_modified_k = modified_k.data();
+            amrex::Real const* p_k = k.data();
+            amrex::Real * p_modified_k = modified_k.data();
 
             // Fill the modified k vector
             amrex::ParallelFor(N, [=] AMREX_GPU_DEVICE (int i) noexcept

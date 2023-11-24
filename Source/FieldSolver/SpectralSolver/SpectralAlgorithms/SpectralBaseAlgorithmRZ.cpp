@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-using namespace amrex;
+// using namespace amrex;
 using namespace amrex::literals;
 
 /**
@@ -41,8 +41,8 @@ SpectralBaseAlgorithmRZ::ComputeSpectralDivE (
         Array4<Complex> fields = field_data.fields[mfi].array();
 
         // Extract pointers for the k vectors
-        Real const * kr_arr = field_data.getKrArray(mfi).dataPtr();
-        Real const * modified_kz_arr = modified_kz_vec[mfi].dataPtr();
+        amrex::Real const * kr_arr = field_data.getKrArray(mfi).dataPtr();
+        amrex::Real const * modified_kz_arr = modified_kz_vec[mfi].dataPtr();
 
         int const nr = bx.length(0);
         int const modes = field_data.n_rz_azimuthal_modes;
@@ -63,8 +63,8 @@ SpectralBaseAlgorithmRZ::ComputeSpectralDivE (
 
             // k vector values
             int const ir = i + nr*mode;
-            Real const kr = kr_arr[ir];
-            Real const kz = modified_kz_arr[j];
+            amrex::Real const kr = kr_arr[ir];
+            amrex::Real const kz = modified_kz_arr[j];
             Complex const I = Complex{0._rt,1._rt};
 
             // div(E) in Fourier space

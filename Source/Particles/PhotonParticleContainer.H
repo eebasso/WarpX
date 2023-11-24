@@ -98,7 +98,7 @@ public:
 
     // DepositCharge should do nothing for photons
     void DepositCharge (WarpXParIter& /*pti*/,
-                                RealVector const & /*wp*/,
+                                amrex::RealVector const & /*wp*/,
                                 const int * const /*ion_lev*/,
                                 amrex::MultiFab* /*rho*/,
                                 int /*icomp*/,
@@ -110,10 +110,10 @@ public:
 
     // DepositCurrent should do nothing for photons
     void DepositCurrent (WarpXParIter& /*pti*/,
-                                 RealVector const & /*wp*/,
-                                 RealVector const & /*uxp*/,
-                                 RealVector const & /*uyp*/,
-                                 RealVector const & /*uzp*/,
+                                 amrex::RealVector const & /*wp*/,
+                                 amrex::RealVector const & /*uxp*/,
+                                 amrex::RealVector const & /*uyp*/,
+                                 amrex::RealVector const & /*uzp*/,
                                  int const * const /*ion_lev*/,
                                  amrex::MultiFab * const /*jx*/,
                                  amrex::MultiFab * const /*jy*/,

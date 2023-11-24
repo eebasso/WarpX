@@ -31,7 +31,7 @@
 
 #if WARPX_USE_PSATD
 
-using namespace amrex;
+// using namespace amrex;
 
 SpectralFieldIndex::SpectralFieldIndex (const bool update_with_rho,
                                         const bool time_averaging,
@@ -128,7 +128,7 @@ SpectralFieldData::SpectralFieldData( const int lev,
     amrex::LayoutData<amrex::Real>* cost = WarpX::getCosts(lev);
     const bool do_costs = WarpXUtilLoadBalance::doCosts(cost, realspace_ba, dm);
 
-    const BoxArray& spectralspace_ba = k_space.spectralspace_ba;
+    const amrex::BoxArray& spectralspace_ba = k_space.spectralspace_ba;
 
     // Allocate the arrays that contain the fields in spectral space
     // (one component per field)
@@ -177,7 +177,7 @@ SpectralFieldData::SpectralFieldData( const int lev,
         // Note: the size of the real-space box and spectral-space box
         // differ when using real-to-complex FFT. When initializing
         // the FFT plan, the valid dimensions are those of the real-space box.
-        const IntVect fft_size = realspace_ba[mfi].length();
+        const amrex::IntVect fft_size = realspace_ba[mfi].length();
 
         forward_plan[mfi] = AnyFFT::CreatePlan(
             fft_size, tmpRealField[mfi].dataPtr(),
@@ -214,7 +214,7 @@ SpectralFieldData::~SpectralFieldData()
  *  (in the spectral field specified by `field_index`) */
 void
 SpectralFieldData::ForwardTransform (const int lev,
-                                     const MultiFab& mf, const int field_index,
+                                     const amrex::MultiFab& mf, const int field_index,
                                      const int i_comp)
 {
     amrex::LayoutData<amrex::Real>* cost = WarpX::getCosts(lev);
@@ -258,7 +258,7 @@ SpectralFieldData::ForwardTransform (const int lev,
             realspace_bx.enclosedCells(); // Discard last point in nodal direction
             AMREX_ALWAYS_ASSERT( realspace_bx.contains(tmpRealField[mfi].box()) );
             const Array4<const Real> mf_arr = mf[mfi].array();
-            const Array4<Real> tmp_arr = tmpRealField[mfi].array();
+            const Array4<amrex::Real> tmp_arr = tmpRealField[mfi].array();
             ParallelFor( tmpRealField[mfi].box(),
             [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept {
                 tmp_arr(i,j,k) = mf_arr(i,j,k,i_comp);

@@ -23,10 +23,10 @@
 
 #include <AMReX_BaseFwd.H>
 
-using namespace amrex;
+// using namespace amrex;
 
 void
-WarpX::ErrorEst (int lev, TagBoxArray& tags, Real /*time*/, int /*ngrow*/)
+WarpX::ErrorEst (int lev, TagBoxArray& tags, amrex::Real /*time*/, int /*ngrow*/)
 {
     const auto problo = Geom(lev).ProbLoArray();
     const auto dx = Geom(lev).CellSizeArray();

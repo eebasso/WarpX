@@ -20,14 +20,14 @@
 #include <cstdint>
 #include <memory>
 
-using namespace amrex;
+// using namespace amrex;
 
 /** \brief
  * Convert an IntVect to a std::vector<std::uint64_t>
  * (used for compatibility with openPMD-api)
  */
 std::vector<std::uint64_t>
-getVec( const IntVect& v, bool reverse)
+getVec( const amrex::IntVect& v, bool reverse)
 {
   // Convert the IntVect v to and std::vector u
   std::vector<std::uint64_t> u = {
@@ -77,7 +77,7 @@ getVec( const Real* v , bool reverse)
  * (used for compatibility with the openPMD API)
  */
 std::vector<std::uint64_t>
-getReversedVec( const IntVect& v )
+getReversedVec( const amrex::IntVect& v )
 {
   // Convert the IntVect v to and std::vector u
   std::vector<std::uint64_t> u = {
@@ -121,8 +121,8 @@ getReversedVec( const Real* v )
 
 #ifdef WARPX_DIM_RZ
 void
-ConstructTotalRZVectorField (const std::array< std::unique_ptr<MultiFab>, 3 >& vector_total,
-                             const std::array< std::unique_ptr<MultiFab>, 3 >& vector_field)
+ConstructTotalRZVectorField (const std::array< std::unique_ptr<amrex::MultiFab>, 3 >& vector_total,
+                             const std::array< std::unique_ptr<amrex::MultiFab>, 3 >& vector_field)
 {
     // Sum over the real components, giving quantity at theta=0
     MultiFab::Copy(*vector_total[0], *vector_field[0], 0, 0, 1, vector_field[0]->nGrowVect());
@@ -136,8 +136,8 @@ ConstructTotalRZVectorField (const std::array< std::unique_ptr<MultiFab>, 3 >& v
 }
 
 void
-ConstructTotalRZScalarField (MultiFab& scalar_total,
-                            const MultiFab& scalar_field)
+ConstructTotalRZScalarField (amrex::MultiFab& scalar_total,
+                            const amrex::MultiFab& scalar_field)
 {
     // Sum over the real components, giving quantity at theta=0
     MultiFab::Copy(scalar_total, scalar_field, 0, 0, 1, scalar_field.nGrowVect());
@@ -154,10 +154,10 @@ ConstructTotalRZScalarField (MultiFab& scalar_total,
  * Should only be used for BTD now.
  */
 void
-AverageAndPackVectorField( MultiFab& mf_avg,
-                           const std::array< std::unique_ptr<MultiFab>, 3 >& vector_field,
-                           const DistributionMapping& dm,
-                           const int dcomp, const IntVect ngrow )
+AverageAndPackVectorField (amrex::MultiFab& mf_avg,
+                           const std::array< std::unique_ptr<amrex::MultiFab>, 3 >& vector_field,
+                           const amrex::DistributionMapping& dm,
+                           const int dcomp, const amrex::IntVect ngrow )
 {
 #ifndef WARPX_DIM_RZ
     (void)dm;
@@ -166,22 +166,22 @@ AverageAndPackVectorField( MultiFab& mf_avg,
 #ifdef WARPX_DIM_RZ
     // Note that vector_total is declared in the same way as
     // vector_field so that it can be handled the same way.
-    std::array<std::unique_ptr<MultiFab>,3> vector_total;
+    std::array<std::unique_ptr<amrex::MultiFab>,3> vector_total;
     if (vector_field[0]->nComp() > 1) {
         // With the RZ solver, if there are more than one component, the total
         // fields needs to be constructed in temporary MultiFabs.
-        vector_total[0] = std::make_unique<MultiFab>(vector_field[0]->boxArray(), dm, 1, vector_field[0]->nGrowVect());
-        vector_total[1] = std::make_unique<MultiFab>(vector_field[1]->boxArray(), dm, 1, vector_field[1]->nGrowVect());
-        vector_total[2] = std::make_unique<MultiFab>(vector_field[2]->boxArray(), dm, 1, vector_field[2]->nGrowVect());
+        vector_total[0] = std::make_unique<amrex::MultiFab>(vector_field[0]->boxArray(), dm, 1, vector_field[0]->nGrowVect());
+        vector_total[1] = std::make_unique<amrex::MultiFab>(vector_field[1]->boxArray(), dm, 1, vector_field[1]->nGrowVect());
+        vector_total[2] = std::make_unique<amrex::MultiFab>(vector_field[2]->boxArray(), dm, 1, vector_field[2]->nGrowVect());
         ConstructTotalRZVectorField(vector_total, vector_field);
     } else {
         // Create aliases of the MultiFabs
-        vector_total[0] = std::make_unique<MultiFab>(*vector_field[0], amrex::make_alias, 0, 1);
-        vector_total[1] = std::make_unique<MultiFab>(*vector_field[1], amrex::make_alias, 0, 1);
-        vector_total[2] = std::make_unique<MultiFab>(*vector_field[2], amrex::make_alias, 0, 1);
+        vector_total[0] = std::make_unique<amrex::MultiFab>(*vector_field[0], amrex::make_alias, 0, 1);
+        vector_total[1] = std::make_unique<amrex::MultiFab>(*vector_field[1], amrex::make_alias, 0, 1);
+        vector_total[2] = std::make_unique<amrex::MultiFab>(*vector_field[2], amrex::make_alias, 0, 1);
     }
 #else
-    const std::array<std::unique_ptr<MultiFab>,3> &vector_total = vector_field;
+    const std::array<std::unique_ptr<amrex::MultiFab>,3> &vector_total = vector_field;
 #endif
 
     ablastr::coarsen::sample::Coarsen(mf_avg, *(vector_total[0]), dcomp  , 0, 1, ngrow );
@@ -194,12 +194,12 @@ AverageAndPackVectorField( MultiFab& mf_avg,
  * resulting MultiFab in mf_avg (in the components dcomp)
  */
 void
-AverageAndPackScalarField (MultiFab& mf_avg,
-                           const MultiFab & scalar_field,
-                           const DistributionMapping& dm,
-                           const int dcomp, const IntVect ngrow )
+AverageAndPackScalarField (amrex::MultiFab& mf_avg,
+                           const amrex::MultiFab & scalar_field,
+                           const amrex::DistributionMapping& dm,
+                           const int dcomp, const amrex::IntVect ngrow )
 {
-    const MultiFab *scalar_total = &scalar_field;
+    const amrex::MultiFab *scalar_total = &scalar_field;
 
 #ifdef WARPX_DIM_RZ
     MultiFab tmp;

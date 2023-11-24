@@ -54,7 +54,7 @@
 #include <memory>
 #include <string>
 
-using namespace amrex;
+// using namespace amrex;
 
 void
 WarpX::ComputeSpaceChargeField (bool const reset_fields)
@@ -110,16 +110,16 @@ WarpX::AddBoundaryField ()
 
     // Allocate fields for charge and potential
     const int num_levels = max_level + 1;
-    Vector<std::unique_ptr<MultiFab> > rho(num_levels);
-    Vector<std::unique_ptr<MultiFab> > phi(num_levels);
+    amrex::Vector<std::unique_ptr<amrex::MultiFab> > rho(num_levels);
+    amrex::Vector<std::unique_ptr<amrex::MultiFab> > phi(num_levels);
     // Use number of guard cells used for local deposition of rho
     const amrex::IntVect ng = guard_cells.ng_depos_rho;
     for (int lev = 0; lev <= max_level; lev++) {
-        BoxArray nba = boxArray(lev);
+        amrex::BoxArray nba = boxArray(lev);
         nba.surroundingNodes();
-        rho[lev] = std::make_unique<MultiFab>(nba, DistributionMap(lev), 1, ng);
+        rho[lev] = std::make_unique<amrex::MultiFab>(nba, DistributionMap(lev), 1, ng);
         rho[lev]->setVal(0.);
-        phi[lev] = std::make_unique<MultiFab>(nba, DistributionMap(lev), 1, 1);
+        phi[lev] = std::make_unique<amrex::MultiFab>(nba, DistributionMap(lev), 1, 1);
         phi[lev]->setVal(0.);
     }
 
@@ -127,7 +127,7 @@ WarpX::AddBoundaryField ()
     setPhiBC(phi);
 
     // beta is zero for boundaries
-    const std::array<Real, 3> beta = {0._rt};
+    const std::array<amrex::Real, 3> beta = {0._rt};
 
     // Compute the potential phi, by solving the Poisson equation
     computePhi( rho, phi, beta, self_fields_required_precision,
@@ -156,16 +156,16 @@ WarpX::AddSpaceChargeField (WarpXParticleContainer& pc)
 
     // Allocate fields for charge and potential
     const int num_levels = max_level + 1;
-    Vector<std::unique_ptr<MultiFab> > rho(num_levels);
-    Vector<std::unique_ptr<MultiFab> > phi(num_levels);
+    amrex::Vector<std::unique_ptr<amrex::MultiFab> > rho(num_levels);
+    amrex::Vector<std::unique_ptr<amrex::MultiFab> > phi(num_levels);
     // Use number of guard cells used for local deposition of rho
     const amrex::IntVect ng = guard_cells.ng_depos_rho;
     for (int lev = 0; lev <= max_level; lev++) {
-        BoxArray nba = boxArray(lev);
+        amrex::BoxArray nba = boxArray(lev);
         nba.surroundingNodes();
-        rho[lev] = std::make_unique<MultiFab>(nba, DistributionMap(lev), 1, ng);
+        rho[lev] = std::make_unique<amrex::MultiFab>(nba, DistributionMap(lev), 1, ng);
         rho[lev]->setVal(0.);
-        phi[lev] = std::make_unique<MultiFab>(nba, DistributionMap(lev), 1, 1);
+        phi[lev] = std::make_unique<amrex::MultiFab>(nba, DistributionMap(lev), 1, 1);
         phi[lev]->setVal(0.);
     }
 
@@ -180,7 +180,7 @@ WarpX::AddSpaceChargeField (WarpXParticleContainer& pc)
     // Get the particle beta vector
     bool const local_average = false; // Average across all MPI ranks
     std::array<ParticleReal, 3> beta_pr = pc.meanParticleVelocity(local_average);
-    std::array<Real, 3> beta;
+    std::array<amrex::Real, 3> beta;
     for (int i=0 ; i < static_cast<int>(beta.size()) ; i++) beta[i] = beta_pr[i]/PhysConst::c; // Normalize
 
     // Compute the potential phi, by solving the Poisson equation
@@ -226,7 +226,7 @@ WarpX::AddSpaceChargeFieldLabFrame ()
 
     // beta is zero in lab frame
     // Todo: use simpler finite difference form with beta=0
-    const std::array<Real, 3> beta = {0._rt};
+    const std::array<amrex::Real, 3> beta = {0._rt};
 
     // set the boundary potentials appropriately
     setPhiBC(phi_fp);
@@ -283,9 +283,9 @@ WarpX::AddSpaceChargeFieldLabFrame ()
 void
 WarpX::computePhi (const amrex::Vector<std::unique_ptr<amrex::MultiFab> >& rho,
                    amrex::Vector<std::unique_ptr<amrex::MultiFab> >& phi,
-                   std::array<Real, 3> const beta,
-                   Real const required_precision,
-                   Real absolute_tolerance,
+                   std::array<amrex::Real, 3> const beta,
+                   amrex::Real const required_precision,
+                   amrex::Real absolute_tolerance,
                    int const max_iters,
                    int const verbosity) const
 {
@@ -427,7 +427,7 @@ WarpX::setPhiBC ( amrex::Vector<std::unique_ptr<amrex::MultiFab>>& phi ) const
                     amrex::ParallelFor( tb,
                         [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 
-                            IntVect iv(AMREX_D_DECL(i,j,k));
+                            amrex::IntVect iv(AMREX_D_DECL(i,j,k));
 
                             if (dirichlet_flag[2*idim] && iv[idim] == domain.smallEnd(idim)){
                                 phi_arr(i,j,k) = phi_bc_values_lo[idim];
@@ -840,7 +840,7 @@ WarpX::computePhiTriDiagonal (const amrex::Vector<std::unique_ptr<amrex::MultiFa
     const amrex::IntVect lo_full_domain(AMREX_D_DECL(0,0,0));
     const amrex::IntVect hi_full_domain(AMREX_D_DECL(nx_full_domain,0,0));
     const amrex::Box box_full_domain_node(lo_full_domain, hi_full_domain, amrex::IntVect::TheNodeVector());
-    const BoxArray ba_full_domain_node(box_full_domain_node);
+    const amrex::BoxArray ba_full_domain_node(box_full_domain_node);
     const amrex::Vector<int> pmap = {0}; // The data will only be on processor 0
     const amrex::DistributionMapping dm_full_domain(pmap);
 

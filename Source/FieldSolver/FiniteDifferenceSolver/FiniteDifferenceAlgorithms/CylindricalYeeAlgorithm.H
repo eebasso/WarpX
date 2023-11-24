@@ -30,7 +30,7 @@ struct CylindricalYeeAlgorithm {
         amrex::Vector<amrex::Real>& stencil_coefs_r,
         amrex::Vector<amrex::Real>& stencil_coefs_z ) {
 
-        using namespace amrex;
+        // using namespace amrex;
         // Store the inverse cell size along each direction in the coefficients
         stencil_coefs_r.resize(1);
         stencil_coefs_r[0] = 1._rt/cell_size[0];  // 1./dr
@@ -79,10 +79,10 @@ struct CylindricalYeeAlgorithm {
         amrex::Real const * const coefs_r, int const n_coefs_r,
         int const i, int const j, int const k, int const comp ) {
 
-        using namespace amrex;
+        // using namespace amrex;
         ignore_unused(n_coefs_r);
 
-        Real const inv_dr = coefs_r[0];
+        amrex::Real const inv_dr = coefs_r[0];
         return 1._rt/r * inv_dr*( (r+0.5_rt*dr)*F(i+1,j,k,comp) - (r-0.5_rt*dr)*F(i,j,k,comp) );
     }
 
@@ -97,10 +97,10 @@ struct CylindricalYeeAlgorithm {
         amrex::Real const * const coefs_r, int const n_coefs_r,
         int const i, int const j, int const k, int const comp ) {
 
-        using namespace amrex;
+        // using namespace amrex;
         ignore_unused(n_coefs_r);
 
-        Real const inv_dr = coefs_r[0];
+        amrex::Real const inv_dr = coefs_r[0];
         return 1._rt/r * inv_dr*( (r+0.5_rt*dr)*F(i,j,k,comp) - (r-0.5_rt*dr)*F(i-1,j,k,comp) );
     }
 
@@ -112,10 +112,10 @@ struct CylindricalYeeAlgorithm {
         amrex::Real const * const coefs_r, int const n_coefs_r,
         int const i, int const j, int const k, int const comp ) {
 
-        using namespace amrex;
+        // using namespace amrex;
         ignore_unused(n_coefs_r);
 
-        Real const inv_dr = coefs_r[0];
+        amrex::Real const inv_dr = coefs_r[0];
         return inv_dr*( F(i+1,j,k,comp) - F(i,j,k,comp) );
     }
 
@@ -127,10 +127,10 @@ struct CylindricalYeeAlgorithm {
         amrex::Real const * const coefs_r, int const n_coefs_r,
         int const i, int const j, int const k, int const comp ) {
 
-        using namespace amrex;
+        // using namespace amrex;
         ignore_unused(n_coefs_r);
 
-        Real const inv_dr = coefs_r[0];
+        amrex::Real const inv_dr = coefs_r[0];
         return inv_dr*( F(i,j,k,comp) - F(i-1,j,k,comp) );
     }
 

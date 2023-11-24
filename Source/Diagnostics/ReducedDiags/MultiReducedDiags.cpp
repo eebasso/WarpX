@@ -36,13 +36,13 @@
 #include <iterator>
 #include <map>
 
-using namespace amrex;
+// using namespace amrex;
 
 // constructor
 MultiReducedDiags::MultiReducedDiags ()
 {
     // read reduced diags names
-    const ParmParse pp_warpx("warpx");
+    const amrex::ParmParse pp_warpx("warpx");
     m_plot_rd = pp_warpx.queryarr("reduced_diags_names", m_rd_names);
 
     // if names are not given, reduced diags will not be done
@@ -72,7 +72,7 @@ MultiReducedDiags::MultiReducedDiags ()
     // loop over all reduced diags and fill m_multi_rd with requested reduced diags
     std::transform(m_rd_names.begin(), m_rd_names.end(), std::back_inserter(m_multi_rd),
         [&](const auto& rd_name){
-            const ParmParse pp_rd_name(rd_name);
+            const amrex::ParmParse pp_rd_name(rd_name);
 
             // read reduced diags type
             std::string rd_type;

@@ -43,7 +43,7 @@
 #include <unordered_map>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 // constructor
 
@@ -483,7 +483,7 @@ void FieldProbe::ComputeDiags (int step)
                 ParticleReal* const AMREX_RESTRICT part_S = attribs[FieldProbePIdx::S].dataPtr();
 
                 const auto &xyzmin = WarpX::LowerCorner(box, lev, 0._rt);
-                const std::array<Real, 3> &dx = WarpX::CellSize(lev);
+                const std::array<amrex::Real, 3> &dx = WarpX::CellSize(lev);
 
                 const amrex::GpuArray<amrex::Real, 3> dx_arr = {dx[0], dx[1], dx[2]};
                 const amrex::GpuArray<amrex::Real, 3> xyzmin_arr = {xyzmin[0], xyzmin[1], xyzmin[2]};

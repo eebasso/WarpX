@@ -51,7 +51,7 @@
 #include <cmath>
 #include <memory>
 
-using namespace amrex;
+// using namespace amrex;
 
 #ifdef WARPX_USE_PSATD
 namespace {
@@ -1211,10 +1211,10 @@ void WarpX::DampFieldsInGuards(const int lev, std::unique_ptr<amrex::MultiFab>& 
 // It is faster to apply this on the grid than to do it particle by particle.
 // It is put here since there isn't another nice place for it.
 void
-WarpX::ApplyInverseVolumeScalingToCurrentDensity (MultiFab* Jx, MultiFab* Jy, MultiFab* Jz, int lev)
+WarpX::ApplyInverseVolumeScalingToCurrentDensity (amrex::MultiFab* Jx, amrex::MultiFab* Jy, amrex::MultiFab* Jz, int lev)
 {
     const amrex::IntVect ngJ = Jx->nGrowVect();
-    const std::array<Real,3>& dx = WarpX::CellSize(lev);
+    const std::array<amrex::Real,3>& dx = WarpX::CellSize(lev);
     const Real dr = dx[0];
 
     constexpr int NODE = amrex::IndexType::NODE;
@@ -1225,9 +1225,9 @@ WarpX::ApplyInverseVolumeScalingToCurrentDensity (MultiFab* Jx, MultiFab* Jy, Mu
     for ( MFIter mfi(*Jx, TilingIfNotGPU()); mfi.isValid(); ++mfi )
     {
 
-        Array4<Real> const& Jr_arr = Jx->array(mfi);
-        Array4<Real> const& Jt_arr = Jy->array(mfi);
-        Array4<Real> const& Jz_arr = Jz->array(mfi);
+        Array4<amrex::Real> const& Jr_arr = Jx->array(mfi);
+        Array4<amrex::Real> const& Jt_arr = Jy->array(mfi);
+        Array4<amrex::Real> const& Jz_arr = Jz->array(mfi);
 
         Box const & tilebox = mfi.tilebox();
         Box tbr = convert( tilebox, Jx->ixType().toIntVect() );
@@ -1384,10 +1384,10 @@ WarpX::ApplyInverseVolumeScalingToCurrentDensity (MultiFab* Jx, MultiFab* Jy, Mu
 }
 
 void
-WarpX::ApplyInverseVolumeScalingToChargeDensity (MultiFab* Rho, int lev)
+WarpX::ApplyInverseVolumeScalingToChargeDensity (amrex::MultiFab* Rho, int lev)
 {
     const amrex::IntVect ngRho = Rho->nGrowVect();
-    const std::array<Real,3>& dx = WarpX::CellSize(lev);
+    const std::array<amrex::Real,3>& dx = WarpX::CellSize(lev);
     const Real dr = dx[0];
 
     constexpr int NODE = amrex::IndexType::NODE;
@@ -1400,7 +1400,7 @@ WarpX::ApplyInverseVolumeScalingToChargeDensity (MultiFab* Rho, int lev)
     for ( MFIter mfi(*Rho, TilingIfNotGPU()); mfi.isValid(); ++mfi )
     {
 
-        Array4<Real> const& Rho_arr = Rho->array(mfi);
+        Array4<amrex::Real> const& Rho_arr = Rho->array(mfi);
 
         tilebox = mfi.tilebox();
         Box tb = convert( tilebox, Rho->ixType().toIntVect() );

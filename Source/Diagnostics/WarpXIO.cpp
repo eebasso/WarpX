@@ -44,7 +44,7 @@
 #include <string>
 #include <utility>
 
-using namespace amrex;
+// using namespace amrex;
 
 namespace
 {
@@ -62,7 +62,7 @@ WarpX::GetRestartDMap (const std::string& chkfile, const amrex::BoxArray& ba, in
         return amrex::DistributionMapping{ba, ParallelDescriptor::NProcs()};
     }
 
-    Vector<char> fileCharPtr;
+    amrex::Vector<char> fileCharPtr;
     ParallelDescriptor::ReadAndBcastFile(DMFileName, fileCharPtr);
     const std::string fileCharPtrString(fileCharPtr.dataPtr());
     std::istringstream DMFile(fileCharPtrString, std::istringstream::in);
@@ -98,7 +98,7 @@ WarpX::InitFromCheckpoint ()
 
         const VisMF::IO_Buffer io_buffer(VisMF::GetIOBufferSize());
 
-        Vector<char> fileCharPtr;
+        amrex::Vector<char> fileCharPtr;
         ParallelDescriptor::ReadAndBcastFile(File, fileCharPtr);
         const std::string fileCharPtrString(fileCharPtr.dataPtr());
         std::istringstream is(fileCharPtrString, std::istringstream::in);
@@ -139,7 +139,7 @@ WarpX::InitFromCheckpoint ()
             lis.exceptions(std::ios_base::failbit | std::ios_base::badbit);
             for (auto& t_new_lev : t_new) {
                 lis >> word;
-                t_new_lev = static_cast<Real>(std::stod(word));
+                t_new_lev = static_cast<amrex::Real>(std::stod(word));
             }
         }
 
@@ -149,7 +149,7 @@ WarpX::InitFromCheckpoint ()
             lis.exceptions(std::ios_base::failbit | std::ios_base::badbit);
             for (auto& t_old_lev : t_old) {
                 lis >> word;
-                t_old_lev = static_cast<Real>(std::stod(word));
+                t_old_lev = static_cast<amrex::Real>(std::stod(word));
             }
         }
 
@@ -159,7 +159,7 @@ WarpX::InitFromCheckpoint ()
             lis.exceptions(std::ios_base::failbit | std::ios_base::badbit);
             for (auto& dt_lev : dt) {
                 lis >> word;
-                dt_lev = static_cast<Real>(std::stod(word));
+                dt_lev = static_cast<amrex::Real>(std::stod(word));
             }
         }
 
@@ -177,7 +177,7 @@ WarpX::InitFromCheckpoint ()
             lis.exceptions(std::ios_base::failbit | std::ios_base::badbit);
             for (auto& prob_lo_comp : prob_lo) {
                 lis >> word;
-                prob_lo_comp = static_cast<Real>(std::stod(word));
+                prob_lo_comp = static_cast<amrex::Real>(std::stod(word));
             }
         }
 
@@ -188,17 +188,17 @@ WarpX::InitFromCheckpoint ()
             lis.exceptions(std::ios_base::failbit | std::ios_base::badbit);
             for (auto& prob_hi_comp : prob_hi) {
                 lis >> word;
-                prob_hi_comp = static_cast<Real>(std::stod(word));
+                prob_hi_comp = static_cast<amrex::Real>(std::stod(word));
             }
         }
 
         ResetProbDomain(RealBox(prob_lo.data(),prob_hi.data()));
 
         for (int lev = 0; lev < nlevs; ++lev) {
-            BoxArray ba;
+            amrex::BoxArray ba;
             ba.readFrom(is);
             ablastr::utils::text::goto_next_line(is);
-            const DistributionMapping dm = GetRestartDMap(restart_chkfile, ba, lev);
+            const amrex::DistributionMapping dm = GetRestartDMap(restart_chkfile, ba, lev);
             SetBoxArray(lev, ba);
             SetDistributionMap(lev, dm);
             AllocLevelData(lev, ba, dm);

@@ -64,7 +64,7 @@ public:
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
     bool operator() (const PData& ptd, int const i, amrex::RandomEngine const&) const noexcept
     {
-        using namespace amrex;
+        // using namespace amrex;
 
         const amrex::ParticleReal opt_depth =
             ptd.m_runtime_rdata[m_opt_depth_runtime_comp][i];
@@ -135,7 +135,7 @@ public:
     void operator() (DstData& dst, SrcData& src, int i_src, int i_dst,
         amrex::RandomEngine const& engine) const noexcept
     {
-        using namespace amrex;
+        // using namespace amrex;
 
         // gather E and B
         amrex::ParticleReal xp, yp, zp;

@@ -28,18 +28,18 @@
 
 #if WARPX_USE_PSATD
 
-using namespace amrex;
+// using namespace amrex;
 
 PsatdAlgorithmPml::PsatdAlgorithmPml(
         const SpectralKSpace& spectral_kspace,
-        const DistributionMapping& dm,
+        const amrex::DistributionMapping& dm,
         const SpectralFieldIndex& spectral_index,
         int norder_x,
         int norder_y,
         int norder_z,
         short grid_type,
         const amrex::Vector<amrex::Real>& v_galilean,
-        Real dt,
+        amrex::Real dt,
         bool dive_cleaning,
         bool divb_cleaning) :
     SpectralBaseAlgorithm(spectral_kspace, dm, spectral_index, norder_x, norder_y, norder_z, grid_type),
@@ -59,7 +59,7 @@ PsatdAlgorithmPml::PsatdAlgorithmPml(
     m_divb_cleaning(divb_cleaning),
     m_is_galilean{(v_galilean[0] != 0.) || (v_galilean[1] != 0.) || (v_galilean[2] != 0.)}
 {
-    const BoxArray& ba = spectral_kspace.spectralspace_ba;
+    const amrex::BoxArray& ba = spectral_kspace.spectralspace_ba;
 
     // Allocate arrays of coefficients
     C_coef = SpectralRealCoefficients(ba, dm, 1, 0);

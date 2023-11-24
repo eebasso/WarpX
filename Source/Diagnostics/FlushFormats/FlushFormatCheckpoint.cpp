@@ -18,7 +18,7 @@
 #include <AMReX_Utility.H>
 #include <AMReX_VisMF.H>
 
-using namespace amrex;
+// using namespace amrex;
 
 namespace
 {
@@ -175,8 +175,8 @@ FlushFormatCheckpoint::CheckpointParticles (
     for (auto& part_diag: particle_diags) {
         WarpXParticleContainer* pc = part_diag.getParticleContainer();
 
-        Vector<std::string> real_names;
-        Vector<std::string> int_names;
+        amrex::Vector<std::string> real_names;
+        amrex::Vector<std::string> int_names;
 
         real_names.push_back("weight");
 

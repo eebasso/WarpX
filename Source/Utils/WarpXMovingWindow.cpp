@@ -52,7 +52,7 @@
 #include <memory>
 #include <string>
 
-using namespace amrex;
+// using namespace amrex;
 
 void
 WarpX::UpdateInjectionPosition (const amrex::Real a_dt)
@@ -612,7 +612,7 @@ WarpX::shiftMF (amrex::MultiFab& mf, const amrex::Geometry& geom,
             bl.push_back(amrex::grow(ba[i], 0, mf.nGrowVect()[0]));
         }
         const amrex::BoxArray rba(std::move(bl));
-        amrex::MultiFab rmf(rba, dm, mf.nComp(), IntVect(0,mf.nGrowVect()[1]), MFInfo().SetAlloc(false));
+        amrex::MultiFab rmf(rba, dm, mf.nComp(), amrex::IntVect(0,mf.nGrowVect()[1]), MFInfo().SetAlloc(false));
 
         for (amrex::MFIter mfi(mf); mfi.isValid(); ++mfi) {
             rmf.setFab(mfi, FArrayBox(mf[mfi], amrex::make_alias, 0, mf.nComp()));
@@ -646,8 +646,8 @@ WarpX::ShiftGalileanBoundary ()
             m_v_galilean[2]*time_shift };
 #elif defined(WARPX_DIM_1D_Z)
         m_galilean_shift = {
-            std::numeric_limits<Real>::quiet_NaN(),
-            std::numeric_limits<Real>::quiet_NaN(),
+            std::numeric_limits<amrex::Real>::quiet_NaN(),
+            std::numeric_limits<amrex::Real>::quiet_NaN(),
             m_v_galilean[2]*time_shift };
 #endif
 

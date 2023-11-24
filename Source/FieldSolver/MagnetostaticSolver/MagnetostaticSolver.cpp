@@ -53,7 +53,7 @@
 #include <memory>
 #include <string>
 
-using namespace amrex;
+// using namespace amrex;
 
 void
 WarpX::ComputeMagnetostaticField()
@@ -141,8 +141,8 @@ WarpX::AddMagnetostaticFieldLabFrame()
 void
 WarpX::computeVectorPotential (const amrex::Vector<amrex::Array<std::unique_ptr<amrex::MultiFab>,3> >& curr,
                                 amrex::Vector<amrex::Array<std::unique_ptr<amrex::MultiFab>,3> >& A,
-                                Real const required_precision,
-                                Real absolute_tolerance,
+                                amrex::Real const required_precision,
+                                amrex::Real absolute_tolerance,
                                 int const max_iters,
                                 int const verbosity) const
 {
@@ -238,7 +238,7 @@ WarpX::setVectorPotentialBC ( amrex::Vector<amrex::Array<std::unique_ptr<amrex::
                         amrex::ParallelFor( tb,
                             [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 
-                                IntVect iv(AMREX_D_DECL(i,j,k));
+                                amrex::IntVect iv(AMREX_D_DECL(i,j,k));
 
                                 if (dirichlet_flag[adim][2*idim] && iv[idim] == domain.smallEnd(idim))
                                     A_arr(i,j,k) = 0.;
@@ -373,8 +373,8 @@ void MagnetostaticSolver::EBCalcBfromVectorPotentialPerLevel::doInterp(const std
 #endif
     for (MFIter mfi(*dst, TilingIfNotGPU()); mfi.isValid(); ++mfi)
     {
-        IntVect const src_stag = src->ixType().toIntVect();
-        IntVect const dst_stag = dst->ixType().toIntVect();
+        amrex::IntVect const src_stag = src->ixType().toIntVect();
+        amrex::IntVect const dst_stag = dst->ixType().toIntVect();
 
         Array4<amrex::Real const> const& src_arr = src->const_array(mfi);
         Array4<amrex::Real> const& dst_arr = dst->array(mfi);

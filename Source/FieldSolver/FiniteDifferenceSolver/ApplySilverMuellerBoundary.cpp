@@ -29,7 +29,7 @@
 #include <array>
 #include <memory>
 
-using namespace amrex;
+// using namespace amrex;
 
 /**
  * \brief Update the B field at the boundary, using the Silver-Mueller condition
@@ -63,13 +63,13 @@ void FiniteDifferenceSolver::ApplySilverMuellerBoundary (
     amrex::Real const coef2_z = 2._rt*cdt_over_dz/(1._rt + cdt_over_dz) / PhysConst::c;
 
     // Extract stencil coefficients
-    Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+    amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
     auto const n_coefs_z = static_cast<int>(m_h_stencil_coefs_z.size());
 
     // Extract cylindrical specific parameters
-    Real const dr = m_dr;
+    amrex::Real const dr = m_dr;
     int const nmodes = m_nmodes;
-    Real const rmin = m_rmin;
+    amrex::Real const rmin = m_rmin;
 
     // Infer whether the Silver-Mueller needs to be applied in each direction
     bool const apply_hi_r = (field_boundary_hi[0] == FieldBoundaryType::Absorbing_SilverMueller);
@@ -81,12 +81,12 @@ void FiniteDifferenceSolver::ApplySilverMuellerBoundary (
     // since we grow the tiles by one guard cell after creating them.
     for ( MFIter mfi(*Efield[0], false); mfi.isValid(); ++mfi ) {
         // Extract field data for this grid/tile
-        Array4<Real> const& Er = Efield[0]->array(mfi);
-        Array4<Real> const& Et = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
-        Array4<Real> const& Br = Bfield[0]->array(mfi);
-        Array4<Real> const& Bt = Bfield[1]->array(mfi);
-        Array4<Real> const& Bz = Bfield[2]->array(mfi);
+        Array4<amrex::Real> const& Er = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Et = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real> const& Br = Bfield[0]->array(mfi);
+        Array4<amrex::Real> const& Bt = Bfield[1]->array(mfi);
+        Array4<amrex::Real> const& Bz = Bfield[2]->array(mfi);
 
         // Extract tileboxes for which to loop
         Box tbr  = mfi.tilebox(Bfield[0]->ixType().toIntVect());
@@ -148,7 +148,7 @@ void FiniteDifferenceSolver::ApplySilverMuellerBoundary (
 
                 // At the +r boundary (innermost guard cell)
                 if ( apply_hi_r && (i==domain_box.bigEnd(0)+1) ){
-                    Real const r = rmin + (i + 0.5_rt)*dr; // r on nodal point (Bz is cell-centered in r)
+                    amrex::Real const r = rmin + (i + 0.5_rt)*dr; // r on nodal point (Bz is cell-centered in r)
                     // Mode 0
                     Bz(i,j,0,0) = coef1_r*Bz(i,j,0,0) + coef2_r*Et(i,j,0,0) - coef3_r*Et(i,j,0,0)/r;
                     for (int m=1; m<nmodes; m++) { // Higher-order modes
@@ -202,15 +202,15 @@ void FiniteDifferenceSolver::ApplySilverMuellerBoundary (
     for ( MFIter mfi(*Efield[0], false); mfi.isValid(); ++mfi ) {
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Ex = Efield[0]->array(mfi);
-        Array4<Real> const& Ey = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ex = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Ey = Efield[1]->array(mfi);
 #ifndef WARPX_DIM_1D_Z
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
 #endif
-        Array4<Real> const& Bx = Bfield[0]->array(mfi);
-        Array4<Real> const& By = Bfield[1]->array(mfi);
+        Array4<amrex::Real> const& Bx = Bfield[0]->array(mfi);
+        Array4<amrex::Real> const& By = Bfield[1]->array(mfi);
 #ifndef WARPX_DIM_1D_Z
-        Array4<Real> const& Bz = Bfield[2]->array(mfi);
+        Array4<amrex::Real> const& Bz = Bfield[2]->array(mfi);
 #endif
 
         // Extract the tileboxes for which to loop

@@ -114,7 +114,7 @@ struct LaxWendroffAlgo {
      static amrex::Real alpha (amrex::Real const sigma,
                                amrex::Real const epsilon,
                                amrex::Real dt) {
-         using namespace amrex;
+         // using namespace amrex;
          const amrex::Real fac1 = 0.5_rt * sigma * dt / epsilon;
          const amrex::Real alpha = (1._rt - fac1)/(1._rt + fac1);
          return alpha;
@@ -124,7 +124,7 @@ struct LaxWendroffAlgo {
      static amrex::Real beta (amrex::Real const sigma,
                               amrex::Real const epsilon,
                               amrex::Real dt) {
-         using namespace amrex;
+         // using namespace amrex;
          const amrex::Real fac1 = 0.5_rt * sigma * dt / epsilon;
          const amrex::Real beta = dt / ( epsilon * (1._rt + fac1) );
          return beta;
@@ -146,7 +146,7 @@ struct BackwardEulerAlgo {
      static amrex::Real alpha (amrex::Real const sigma,
                                amrex::Real const epsilon,
                                amrex::Real dt) {
-         using namespace amrex;
+         // using namespace amrex;
          const amrex::Real fac1 = sigma * dt / epsilon;
          const amrex::Real alpha = (1._rt)/(1._rt + fac1);
          return alpha;
@@ -156,7 +156,7 @@ struct BackwardEulerAlgo {
      static amrex::Real beta (amrex::Real const sigma,
                               amrex::Real const epsilon,
                               amrex::Real dt) {
-         using namespace amrex;
+         // using namespace amrex;
          const amrex::Real fac1 = sigma * dt / epsilon;
          const amrex::Real beta = dt / ( epsilon * (1._rt + fac1) );
          return beta;

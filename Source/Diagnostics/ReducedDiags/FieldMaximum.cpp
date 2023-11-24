@@ -37,7 +37,7 @@
 #include <ostream>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 // constructor
 FieldMaximum::FieldMaximum (std::string rd_name)
@@ -51,7 +51,7 @@ FieldMaximum::FieldMaximum (std::string rd_name)
 
     // read number of levels
     int nLevel = 0;
-    const ParmParse pp_amr("amr");
+    const amrex::ParmParse pp_amr("amr");
     pp_amr.query("max_level", nLevel);
     nLevel += 1;
 
@@ -114,12 +114,12 @@ void FieldMaximum::ComputeDiags (int step)
     for (int lev = 0; lev < nLevel; ++lev)
     {
         // get MultiFab data at lev
-        const MultiFab & Ex = warpx.getEfield(lev,0);
-        const MultiFab & Ey = warpx.getEfield(lev,1);
-        const MultiFab & Ez = warpx.getEfield(lev,2);
-        const MultiFab & Bx = warpx.getBfield(lev,0);
-        const MultiFab & By = warpx.getBfield(lev,1);
-        const MultiFab & Bz = warpx.getBfield(lev,2);
+        const amrex::MultiFab & Ex = warpx.getEfield(lev,0);
+        const amrex::MultiFab & Ey = warpx.getEfield(lev,1);
+        const amrex::MultiFab & Ez = warpx.getEfield(lev,2);
+        const amrex::MultiFab & Bx = warpx.getBfield(lev,0);
+        const amrex::MultiFab & By = warpx.getBfield(lev,1);
+        const amrex::MultiFab & Bz = warpx.getBfield(lev,2);
 
         constexpr int noutputs = 8; // max of Ex,Ey,Ez,|E|,Bx,By,Bz and |B|
         constexpr int index_Ex = 0;
@@ -138,8 +138,8 @@ void FieldMaximum::ComputeDiags (int step)
 
         ReduceOps<ReduceOpMax,ReduceOpMax,ReduceOpMax,ReduceOpMax,
                   ReduceOpMax,ReduceOpMax,ReduceOpMax,ReduceOpMax> reduce_op;
-        ReduceData<Real,Real,Real,Real,
-                   Real,Real,Real,Real> reduce_data(reduce_op);
+        ReduceData<amrex::Real,amrex::Real,amrex::Real,amrex::Real,
+                   amrex::Real,amrex::Real,amrex::Real,amrex::Real> reduce_data(reduce_op);
         using ReduceTuple = typename decltype(reduce_data)::Type;
 
         // Prepare interpolation of field components to cell center
@@ -207,14 +207,14 @@ void FieldMaximum::ComputeDiags (int step)
         }
 
         auto hv = reduce_data.value();
-        Real hv_Ex = amrex::get<0>(hv); // highest value of |Ex|
-        Real hv_Ey = amrex::get<1>(hv); // highest value of |Ey|
-        Real hv_Ez = amrex::get<2>(hv); // highest value of |Ez|
-        Real hv_Bx = amrex::get<3>(hv); // highest value of |Bx|
-        Real hv_By = amrex::get<4>(hv); // highest value of |By|
-        Real hv_Bz = amrex::get<5>(hv); // highest value of |Bz|
-        Real hv_E  = amrex::get<6>(hv); // highest value of |E|**2
-        Real hv_B  = amrex::get<7>(hv); // highest value of |B|**2
+        amrex::Real hv_Ex = amrex::get<0>(hv); // highest value of |Ex|
+        amrex::Real hv_Ey = amrex::get<1>(hv); // highest value of |Ey|
+        amrex::Real hv_Ez = amrex::get<2>(hv); // highest value of |Ez|
+        amrex::Real hv_Bx = amrex::get<3>(hv); // highest value of |Bx|
+        amrex::Real hv_By = amrex::get<4>(hv); // highest value of |By|
+        amrex::Real hv_Bz = amrex::get<5>(hv); // highest value of |Bz|
+        amrex::Real hv_E  = amrex::get<6>(hv); // highest value of |E|**2
+        amrex::Real hv_B  = amrex::get<7>(hv); // highest value of |B|**2
 
         // MPI reduce
         ParallelDescriptor::ReduceRealMax({hv_Ex,hv_Ey,hv_Ez,

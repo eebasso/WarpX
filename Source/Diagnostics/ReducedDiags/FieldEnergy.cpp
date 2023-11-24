@@ -27,7 +27,7 @@
 #include <fstream>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 // constructor
 FieldEnergy::FieldEnergy (std::string rd_name)
@@ -36,7 +36,7 @@ FieldEnergy::FieldEnergy (std::string rd_name)
 
     // read number of levels
     int nLevel = 0;
-    const ParmParse pp_amr("amr");
+    const amrex::ParmParse pp_amr("amr");
     pp_amr.query("max_level", nLevel);
     nLevel += 1;
 
@@ -89,12 +89,12 @@ void FieldEnergy::ComputeDiags (int step)
     for (int lev = 0; lev < nLevel; ++lev)
     {
         // get MultiFab data at lev
-        const MultiFab & Ex = warpx.getEfield(lev,0);
-        const MultiFab & Ey = warpx.getEfield(lev,1);
-        const MultiFab & Ez = warpx.getEfield(lev,2);
-        const MultiFab & Bx = warpx.getBfield(lev,0);
-        const MultiFab & By = warpx.getBfield(lev,1);
-        const MultiFab & Bz = warpx.getBfield(lev,2);
+        const amrex::MultiFab & Ex = warpx.getEfield(lev,0);
+        const amrex::MultiFab & Ey = warpx.getEfield(lev,1);
+        const amrex::MultiFab & Ez = warpx.getEfield(lev,2);
+        const amrex::MultiFab & Bx = warpx.getBfield(lev,0);
+        const amrex::MultiFab & By = warpx.getBfield(lev,1);
+        const amrex::MultiFab & Bz = warpx.getBfield(lev,2);
 
         // get cell size
         Geometry const & geom = warpx.Geom(lev);
@@ -118,16 +118,16 @@ void FieldEnergy::ComputeDiags (int step)
         amrex::Real const Bs = tmpBx + tmpBy + tmpBz;
 #else
         // compute E squared
-        Real const tmpEx = Ex.norm2(0,geom.periodicity());
-        Real const tmpEy = Ey.norm2(0,geom.periodicity());
-        Real const tmpEz = Ez.norm2(0,geom.periodicity());
-        Real const Es = tmpEx*tmpEx + tmpEy*tmpEy + tmpEz*tmpEz;
+        amrex::Real const tmpEx = Ex.norm2(0,geom.periodicity());
+        amrex::Real const tmpEy = Ey.norm2(0,geom.periodicity());
+        amrex::Real const tmpEz = Ez.norm2(0,geom.periodicity());
+        amrex::Real const Es = tmpEx*tmpEx + tmpEy*tmpEy + tmpEz*tmpEz;
 
         // compute B squared
-        Real const tmpBx = Bx.norm2(0,geom.periodicity());
-        Real const tmpBy = By.norm2(0,geom.periodicity());
-        Real const tmpBz = Bz.norm2(0,geom.periodicity());
-        Real const Bs = tmpBx*tmpBx + tmpBy*tmpBy + tmpBz*tmpBz;
+        amrex::Real const tmpBx = Bx.norm2(0,geom.periodicity());
+        amrex::Real const tmpBy = By.norm2(0,geom.periodicity());
+        amrex::Real const tmpBz = Bz.norm2(0,geom.periodicity());
+        amrex::Real const Bs = tmpBx*tmpBx + tmpBy*tmpBy + tmpBz*tmpBz;
 #endif
 
         constexpr int noutputs = 3; // total energy, E-field energy and B-field energy

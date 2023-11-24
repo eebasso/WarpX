@@ -35,7 +35,7 @@
 
 #include <array>
 
-using namespace amrex;
+// using namespace amrex;
 
 /**
  * \brief Update the B field, over one timestep
@@ -89,19 +89,19 @@ void FiniteDifferenceSolver::EvolveBPMLCartesian (
     for ( MFIter mfi(*Bfield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Bx = Bfield[0]->array(mfi);
-        Array4<Real> const& By = Bfield[1]->array(mfi);
-        Array4<Real> const& Bz = Bfield[2]->array(mfi);
-        Array4<Real> const& Ex = Efield[0]->array(mfi);
-        Array4<Real> const& Ey = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real> const& Bx = Bfield[0]->array(mfi);
+        Array4<amrex::Real> const& By = Bfield[1]->array(mfi);
+        Array4<amrex::Real> const& Bz = Bfield[2]->array(mfi);
+        Array4<amrex::Real> const& Ex = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Ey = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
         auto const n_coefs_x = static_cast<int>(m_stencil_coefs_x.size());
-        Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
         auto const n_coefs_y = static_cast<int>(m_stencil_coefs_y.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // Extract tileboxes for which to loop

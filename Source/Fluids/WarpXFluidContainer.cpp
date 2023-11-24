@@ -17,7 +17,7 @@
 #include "Utils/SpeciesUtils.H"
 
 using namespace ablastr::utils::communication;
-using namespace amrex;
+// using namespace amrex;
 
 WarpXFluidContainer::WarpXFluidContainer(int nlevs_max, int ispecies, const std::string &name):
     species_id{ispecies},
@@ -26,7 +26,7 @@ WarpXFluidContainer::WarpXFluidContainer(int nlevs_max, int ispecies, const std:
     ReadParameters();
 
     // Initialize injection objects
-    const ParmParse pp_species_name(species_name);
+    const amrex::ParmParse pp_species_name(species_name);
     SpeciesUtils::parseDensity(species_name, h_inj_rho, density_parser);
     SpeciesUtils::parseMomentum(species_name, "none", h_inj_mom,
         ux_parser, uy_parser, uz_parser, ux_th_parser, uy_th_parser, uz_th_parser, h_mom_temp, h_mom_vel);
@@ -62,7 +62,7 @@ void WarpXFluidContainer::ReadParameters()
     std::string injection_style = "none";
     SpeciesUtils::extractSpeciesProperties(species_name, injection_style, charge, mass, physical_species);
 
-    const ParmParse pp_species_name(species_name);
+    const amrex::ParmParse pp_species_name(species_name);
     pp_species_name.query("do_not_deposit", do_not_deposit);
     pp_species_name.query("do_not_gather", do_not_gather);
     pp_species_name.query("do_not_push", do_not_push);
@@ -139,7 +139,7 @@ void WarpXFluidContainer::ReadParameters()
     }
 }
 
-void WarpXFluidContainer::AllocateLevelMFs(int lev, const BoxArray &ba, const DistributionMapping &dm)
+void WarpXFluidContainer::AllocateLevelMFs(int lev, const amrex::BoxArray &ba, const amrex::DistributionMapping &dm)
 {
     int ncomps = 1;
     const amrex::IntVect nguards(AMREX_D_DECL(2, 2, 2));
@@ -190,10 +190,10 @@ void WarpXFluidContainer::InitData(int lev, amrex::Box init_box, amrex::Real cur
     {
 
         amrex::Box tile_box = mfi.tilebox(N[lev]->ixType().toIntVect());
-        amrex::Array4<Real> const &N_arr = N[lev]->array(mfi);
-        amrex::Array4<Real> const &NUx_arr = NU[lev][0]->array(mfi);
-        amrex::Array4<Real> const &NUy_arr = NU[lev][1]->array(mfi);
-        amrex::Array4<Real> const &NUz_arr = NU[lev][2]->array(mfi);
+        amrex::Array4<amrex::Real> const &N_arr = N[lev]->array(mfi);
+        amrex::Array4<amrex::Real> const &NUx_arr = NU[lev][0]->array(mfi);
+        amrex::Array4<amrex::Real> const &NUy_arr = NU[lev][1]->array(mfi);
+        amrex::Array4<amrex::Real> const &NUz_arr = NU[lev][2]->array(mfi);
 
         // Return the intersection of all cells and the ones we wish to update
         amrex::Box init_box_intersection = init_box & tile_box;
@@ -320,10 +320,10 @@ void WarpXFluidContainer::ApplyBcFluidsAndComms (int lev)
 
         amrex::Box tile_box = mfi.tilebox(N[lev]->ixType().toIntVect());
 
-        amrex::Array4<Real> N_arr = N[lev]->array(mfi);
-        amrex::Array4<Real> NUx_arr = NU[lev][0]->array(mfi);
-        amrex::Array4<Real> NUy_arr = NU[lev][1]->array(mfi);
-        amrex::Array4<Real> NUz_arr = NU[lev][2]->array(mfi);
+        amrex::Array4<amrex::Real> N_arr = N[lev]->array(mfi);
+        amrex::Array4<amrex::Real> NUx_arr = NU[lev][0]->array(mfi);
+        amrex::Array4<amrex::Real> NUy_arr = NU[lev][1]->array(mfi);
+        amrex::Array4<amrex::Real> NUz_arr = NU[lev][2]->array(mfi);
 
         //Grow the tilebox
         tile_box.grow(1);
@@ -438,20 +438,20 @@ void WarpXFluidContainer::AdvectivePush_Muscl (int lev)
 
     // Temporary Half-step values
 #if defined(WARPX_DIM_3D)
-    amrex::MultiFab tmp_U_minus_x( amrex::convert(ba, IntVect(0,1,1)), N[lev]->DistributionMap(), 4, 1);
-    amrex::MultiFab tmp_U_plus_x( amrex::convert(ba, IntVect(0,1,1)), N[lev]->DistributionMap(), 4, 1);
-    amrex::MultiFab tmp_U_minus_y( amrex::convert(ba, IntVect(1,0,1)), N[lev]->DistributionMap(), 4, 1);
-    amrex::MultiFab tmp_U_plus_y( amrex::convert(ba, IntVect(1,0,1)), N[lev]->DistributionMap(), 4, 1);
-    amrex::MultiFab tmp_U_minus_z( amrex::convert(ba, IntVect(1,1,0)), N[lev]->DistributionMap(), 4, 1);
-    amrex::MultiFab tmp_U_plus_z( amrex::convert(ba, IntVect(1,1,0)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_minus_x( amrex::convert(ba, amrex::IntVect(0,1,1)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_plus_x( amrex::convert(ba, amrex::IntVect(0,1,1)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_minus_y( amrex::convert(ba, amrex::IntVect(1,0,1)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_plus_y( amrex::convert(ba, amrex::IntVect(1,0,1)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_minus_z( amrex::convert(ba, amrex::IntVect(1,1,0)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_plus_z( amrex::convert(ba, amrex::IntVect(1,1,0)), N[lev]->DistributionMap(), 4, 1);
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-    amrex::MultiFab tmp_U_minus_x( amrex::convert(ba, IntVect(0,1)), N[lev]->DistributionMap(), 4, 1);
-    amrex::MultiFab tmp_U_plus_x( amrex::convert(ba, IntVect(0,1)), N[lev]->DistributionMap(), 4, 1);
-    amrex::MultiFab tmp_U_minus_z( amrex::convert(ba, IntVect(1,0)), N[lev]->DistributionMap(), 4, 1);
-    amrex::MultiFab tmp_U_plus_z( amrex::convert(ba, IntVect(1,0)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_minus_x( amrex::convert(ba, amrex::IntVect(0,1)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_plus_x( amrex::convert(ba, amrex::IntVect(0,1)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_minus_z( amrex::convert(ba, amrex::IntVect(1,0)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_plus_z( amrex::convert(ba, amrex::IntVect(1,0)), N[lev]->DistributionMap(), 4, 1);
 #else
-    amrex::MultiFab tmp_U_minus_z( amrex::convert(ba, IntVect(0)), N[lev]->DistributionMap(), 4, 1);
-    amrex::MultiFab tmp_U_plus_z( amrex::convert(ba, IntVect(0)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_minus_z( amrex::convert(ba, amrex::IntVect(0)), N[lev]->DistributionMap(), 4, 1);
+    amrex::MultiFab tmp_U_plus_z( amrex::convert(ba, amrex::IntVect(0)), N[lev]->DistributionMap(), 4, 1);
 #endif
 
     // Fill edge values of N and U at the half timestep for MUSCL
@@ -474,10 +474,10 @@ void WarpXFluidContainer::AdvectivePush_Muscl (int lev)
         tile_box.growHi(idir, n_cell);
 #endif
 
-        amrex::Array4<Real> const &N_arr = N[lev]->array(mfi);
-        amrex::Array4<Real> const &NUx_arr = NU[lev][0]->array(mfi);
-        amrex::Array4<Real> const &NUy_arr = NU[lev][1]->array(mfi);
-        amrex::Array4<Real> const &NUz_arr = NU[lev][2]->array(mfi);
+        amrex::Array4<amrex::Real> const &N_arr = N[lev]->array(mfi);
+        amrex::Array4<amrex::Real> const &NUx_arr = NU[lev][0]->array(mfi);
+        amrex::Array4<amrex::Real> const &NUy_arr = NU[lev][1]->array(mfi);
+        amrex::Array4<amrex::Real> const &NUz_arr = NU[lev][2]->array(mfi);
 
         // Boxes are computed to avoid going out of bounds.
         // Grow the entire domain
@@ -741,10 +741,10 @@ void WarpXFluidContainer::AdvectivePush_Muscl (int lev)
     for (MFIter mfi(*N[lev], TilingIfNotGPU()); mfi.isValid(); ++mfi)
     {
         amrex::Box tile_box = mfi.tilebox(N[lev]->ixType().toIntVect());
-        amrex::Array4<Real> N_arr = N[lev]->array(mfi);
-        amrex::Array4<Real> NUx_arr = NU[lev][0]->array(mfi);
-        amrex::Array4<Real> NUy_arr = NU[lev][1]->array(mfi);
-        amrex::Array4<Real> NUz_arr = NU[lev][2]->array(mfi);
+        amrex::Array4<amrex::Real> N_arr = N[lev]->array(mfi);
+        amrex::Array4<amrex::Real> NUx_arr = NU[lev][0]->array(mfi);
+        amrex::Array4<amrex::Real> NUy_arr = NU[lev][1]->array(mfi);
+        amrex::Array4<amrex::Real> NUz_arr = NU[lev][2]->array(mfi);
 
 #if defined(WARPX_DIM_3D)
         amrex::Array4<amrex::Real> const &U_minus_x = tmp_U_minus_x.array(mfi);
@@ -894,10 +894,10 @@ void WarpXFluidContainer::centrifugal_source_rz (int lev)
 
         amrex::Box const &tile_box = mfi.tilebox(N[lev]->ixType().toIntVect());
 
-        amrex::Array4<Real> const &N_arr = N[lev]->array(mfi);
-        amrex::Array4<Real> NUx_arr = NU[lev][0]->array(mfi);
-        amrex::Array4<Real> NUy_arr = NU[lev][1]->array(mfi);
-        amrex::Array4<Real> const &NUz_arr = NU[lev][2]->array(mfi);
+        amrex::Array4<amrex::Real> const &N_arr = N[lev]->array(mfi);
+        amrex::Array4<amrex::Real> NUx_arr = NU[lev][0]->array(mfi);
+        amrex::Array4<amrex::Real> NUy_arr = NU[lev][1]->array(mfi);
+        amrex::Array4<amrex::Real> const &NUz_arr = NU[lev][2]->array(mfi);
 
         amrex::ParallelFor(tile_box,
             [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
@@ -945,7 +945,7 @@ void WarpXFluidContainer::GatherAndPush (
     int lev,
     const amrex::MultiFab& Ex, const amrex::MultiFab& Ey, const amrex::MultiFab& Ez,
     const amrex::MultiFab& Bx, const amrex::MultiFab& By, const amrex::MultiFab& Bz,
-    Real t)
+    amrex::Real t)
 {
     WARPX_PROFILE("WarpXFluidContainer::GatherAndPush");
 
@@ -1015,10 +1015,10 @@ void WarpXFluidContainer::GatherAndPush (
 
         amrex::Box const &tile_box = mfi.tilebox(N[lev]->ixType().toIntVect());
 
-        amrex::Array4<Real> const &N_arr = N[lev]->array(mfi);
-        amrex::Array4<Real> NUx_arr = NU[lev][0]->array(mfi);
-        amrex::Array4<Real> NUy_arr = NU[lev][1]->array(mfi);
-        amrex::Array4<Real> NUz_arr = NU[lev][2]->array(mfi);
+        amrex::Array4<amrex::Real> const &N_arr = N[lev]->array(mfi);
+        amrex::Array4<amrex::Real> NUx_arr = NU[lev][0]->array(mfi);
+        amrex::Array4<amrex::Real> NUy_arr = NU[lev][1]->array(mfi);
+        amrex::Array4<amrex::Real> NUz_arr = NU[lev][2]->array(mfi);
 
         amrex::Array4<const amrex::Real> const& Ex_arr = Ex.array(mfi);
         amrex::Array4<const amrex::Real> const& Ey_arr = Ey.array(mfi);
@@ -1214,7 +1214,7 @@ void WarpXFluidContainer::DepositCharge (int lev, amrex::MultiFab &rho, int icom
     {
 
         amrex::Box const &tile_box = mfi.tilebox(N[lev]->ixType().toIntVect());
-        amrex::Array4<Real> const &N_arr = N[lev]->array(mfi);
+        amrex::Array4<amrex::Real> const &N_arr = N[lev]->array(mfi);
         amrex::Array4<amrex::Real> rho_arr = rho.array(mfi);
         amrex::Array4<int> owner_mask_rho_arr = owner_mask_rho->array(mfi);
 
@@ -1272,10 +1272,10 @@ void WarpXFluidContainer::DepositCurrent(
     {
         amrex::Box const &tile_box = mfi.tilebox(N[lev]->ixType().toIntVect());
 
-        amrex::Array4<Real> const &N_arr = N[lev]->array(mfi);
-        amrex::Array4<Real> const &NUx_arr = NU[lev][0]->array(mfi);
-        amrex::Array4<Real> const &NUy_arr = NU[lev][1]->array(mfi);
-        amrex::Array4<Real> const &NUz_arr = NU[lev][2]->array(mfi);
+        amrex::Array4<amrex::Real> const &N_arr = N[lev]->array(mfi);
+        amrex::Array4<amrex::Real> const &NUx_arr = NU[lev][0]->array(mfi);
+        amrex::Array4<amrex::Real> const &NUy_arr = NU[lev][1]->array(mfi);
+        amrex::Array4<amrex::Real> const &NUz_arr = NU[lev][2]->array(mfi);
 
         amrex::Array4<amrex::Real> tmp_jx_fluid_arr = tmp_jx_fluid.array(mfi);
         amrex::Array4<amrex::Real> tmp_jy_fluid_arr = tmp_jy_fluid.array(mfi);

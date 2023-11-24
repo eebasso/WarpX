@@ -54,32 +54,32 @@
 #   include "AMReX_EBFabFactory.H"
 #endif
 
-using namespace amrex;
+// using namespace amrex;
 
 namespace
 {
     void FillLo (Sigma& sigma, Sigma& sigma_cumsum,
                         Sigma& sigma_star, Sigma& sigma_star_cumsum,
-                        const int olo, const int ohi, const int glo, Real fac,
+                        const int olo, const int ohi, const int glo, amrex::Real fac,
                         const amrex::Real v_sigma)
     {
         const int slo = sigma.m_lo;
         const int sslo = sigma_star.m_lo;
 
         const int N = ohi+1-olo+1;
-        Real* p_sigma = sigma.data();
-        Real* p_sigma_cumsum = sigma_cumsum.data();
-        Real* p_sigma_star = sigma_star.data();
-        Real* p_sigma_star_cumsum = sigma_star_cumsum.data();
+        amrex::Real* p_sigma = sigma.data();
+        amrex::Real* p_sigma_cumsum = sigma_cumsum.data();
+        amrex::Real* p_sigma_star = sigma_star.data();
+        amrex::Real* p_sigma_star_cumsum = sigma_star_cumsum.data();
         amrex::ParallelFor(N, [=] AMREX_GPU_DEVICE (int i) noexcept
         {
             i += olo;
-            Real offset = static_cast<Real>(glo-i);
+            amrex::Real offset = static_cast<amrex::Real>(glo-i);
             p_sigma[i-slo] = fac*(offset*offset);
             // sigma_cumsum is the analytical integral of sigma function at same points than sigma
             p_sigma_cumsum[i-slo] = (fac*(offset*offset*offset)/3._rt)/v_sigma;
             if (i <= ohi+1) {
-                offset = static_cast<Real>(glo-i) - 0.5_rt;
+                offset = static_cast<amrex::Real>(glo-i) - 0.5_rt;
                 p_sigma_star[i-sslo] = fac*(offset*offset);
                 // sigma_star_cumsum is the analytical integral of sigma function at same points than sigma_star
                 p_sigma_star_cumsum[i-sslo] = (fac*(offset*offset*offset)/3._rt)/v_sigma;
@@ -89,25 +89,25 @@ namespace
 
     void FillHi (Sigma& sigma, Sigma& sigma_cumsum,
                         Sigma& sigma_star, Sigma& sigma_star_cumsum,
-                        const int olo, const int ohi, const int ghi, Real fac,
+                        const int olo, const int ohi, const int ghi, amrex::Real fac,
                         const amrex::Real v_sigma)
     {
         const int slo = sigma.m_lo;
         const int sslo = sigma_star.m_lo;
 
         const int N = ohi+1-olo+1;
-        Real* p_sigma = sigma.data();
-        Real* p_sigma_cumsum = sigma_cumsum.data();
-        Real* p_sigma_star = sigma_star.data();
-        Real* p_sigma_star_cumsum = sigma_star_cumsum.data();
+        amrex::Real* p_sigma = sigma.data();
+        amrex::Real* p_sigma_cumsum = sigma_cumsum.data();
+        amrex::Real* p_sigma_star = sigma_star.data();
+        amrex::Real* p_sigma_star_cumsum = sigma_star_cumsum.data();
         amrex::ParallelFor(N, [=] AMREX_GPU_DEVICE (int i) noexcept
         {
             i += olo;
-            Real offset = static_cast<Real>(i-ghi-1);
+            amrex::Real offset = static_cast<amrex::Real>(i-ghi-1);
             p_sigma[i-slo] = fac*(offset*offset);
             p_sigma_cumsum[i-slo] = (fac*(offset*offset*offset)/3._rt)/v_sigma;
             if (i <= ohi+1) {
-                offset = static_cast<Real>(i-ghi) - 0.5_rt;
+                offset = static_cast<amrex::Real>(i-ghi) - 0.5_rt;
                 p_sigma_star[i-sslo] = fac*(offset*offset);
                 p_sigma_star_cumsum[i-sslo] = (fac*(offset*offset*offset)/3._rt)/v_sigma;
             }
@@ -123,18 +123,18 @@ namespace
         const int sslo = sigma_star.m_lo;
 
         const int N = ohi+1-olo+1;
-        Real* p_sigma = sigma.data();
-        Real* p_sigma_cumsum = sigma_cumsum.data();
-        Real* p_sigma_star = sigma_star.data();
-        Real* p_sigma_star_cumsum = sigma_star_cumsum.data();
+        amrex::Real* p_sigma = sigma.data();
+        amrex::Real* p_sigma_cumsum = sigma_cumsum.data();
+        amrex::Real* p_sigma_star = sigma_star.data();
+        amrex::Real* p_sigma_star_cumsum = sigma_star_cumsum.data();
         amrex::ParallelFor(N, [=] AMREX_GPU_DEVICE (int i) noexcept
         {
             i += olo;
-            p_sigma[i-slo] = Real(0.0);
-            p_sigma_cumsum[i-slo] = Real(0.0);
+            p_sigma[i-slo] = amrex::Real(0.0);
+            p_sigma_cumsum[i-slo] = amrex::Real(0.0);
             if (i <= ohi+1) {
-                p_sigma_star[i-sslo] = Real(0.0);
-                p_sigma_star_cumsum[i-sslo] = Real(0.0);
+                p_sigma_star[i-sslo] = amrex::Real(0.0);
+                p_sigma_star_cumsum[i-sslo] = amrex::Real(0.0);
             }
         });
     }
@@ -142,25 +142,25 @@ namespace
 }
 
 
-SigmaBox::SigmaBox (const Box& box, const BoxArray& grids, const Real* dx, const IntVect& ncell,
-                    const IntVect& delta, const amrex::Box& regdomain, const amrex::Real v_sigma_sb)
+SigmaBox::SigmaBox (const Box& box, const amrex::BoxArray& grids, const Real* dx, const amrex::IntVect& ncell,
+                    const amrex::IntVect& delta, const amrex::Box& regdomain, const amrex::Real v_sigma_sb)
 {
     BL_ASSERT(box.cellCentered());
 
-    const IntVect& sz = box.size();
+    const amrex::IntVect& sz = box.size();
     const int*     lo = box.loVect();
     const int*     hi = box.hiVect();
 
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
     {
-        sigma                [idim].resize(sz[idim]+1,std::numeric_limits<Real>::quiet_NaN());
-        sigma_cumsum         [idim].resize(sz[idim]+1,std::numeric_limits<Real>::quiet_NaN());
-        sigma_star           [idim].resize(sz[idim]+1,std::numeric_limits<Real>::quiet_NaN());
-        sigma_star_cumsum    [idim].resize(sz[idim]+1,std::numeric_limits<Real>::quiet_NaN());
-        sigma_fac            [idim].resize(sz[idim]+1,std::numeric_limits<Real>::quiet_NaN());
-        sigma_cumsum_fac     [idim].resize(sz[idim]+1,std::numeric_limits<Real>::quiet_NaN());
-        sigma_star_fac       [idim].resize(sz[idim]+1,std::numeric_limits<Real>::quiet_NaN());
-        sigma_star_cumsum_fac[idim].resize(sz[idim]+1,std::numeric_limits<Real>::quiet_NaN());
+        sigma                [idim].resize(sz[idim]+1,std::numeric_limits<amrex::Real>::quiet_NaN());
+        sigma_cumsum         [idim].resize(sz[idim]+1,std::numeric_limits<amrex::Real>::quiet_NaN());
+        sigma_star           [idim].resize(sz[idim]+1,std::numeric_limits<amrex::Real>::quiet_NaN());
+        sigma_star_cumsum    [idim].resize(sz[idim]+1,std::numeric_limits<amrex::Real>::quiet_NaN());
+        sigma_fac            [idim].resize(sz[idim]+1,std::numeric_limits<amrex::Real>::quiet_NaN());
+        sigma_cumsum_fac     [idim].resize(sz[idim]+1,std::numeric_limits<amrex::Real>::quiet_NaN());
+        sigma_star_fac       [idim].resize(sz[idim]+1,std::numeric_limits<amrex::Real>::quiet_NaN());
+        sigma_star_cumsum_fac[idim].resize(sz[idim]+1,std::numeric_limits<amrex::Real>::quiet_NaN());
 
         sigma                [idim].m_lo = lo[idim];
         sigma                [idim].m_hi = hi[idim]+1;
@@ -180,9 +180,9 @@ SigmaBox::SigmaBox (const Box& box, const BoxArray& grids, const Real* dx, const
         sigma_star_cumsum_fac[idim].m_hi = hi[idim]+1;
     }
 
-    Array<Real,AMREX_SPACEDIM> fac;
+    Array<amrex::Real,AMREX_SPACEDIM> fac;
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-        fac[idim] = 4.0_rt*PhysConst::c/(dx[idim]*static_cast<Real>(delta[idim]*delta[idim]));
+        fac[idim] = 4.0_rt*PhysConst::c/(dx[idim]*static_cast<amrex::Real>(delta[idim]*delta[idim]));
     }
 
     if (regdomain.ok()) { // The union of the regular grids is a single box
@@ -192,8 +192,8 @@ SigmaBox::SigmaBox (const Box& box, const BoxArray& grids, const Real* dx, const
     }
 }
 
-void SigmaBox::define_single (const Box& regdomain, const IntVect& ncell,
-                              const Array<Real,AMREX_SPACEDIM>& fac,
+void SigmaBox::define_single (const Box& regdomain, const amrex::IntVect& ncell,
+                              const Array<amrex::Real,AMREX_SPACEDIM>& fac,
                               const amrex::Real v_sigma_sb)
 {
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
@@ -235,8 +235,8 @@ void SigmaBox::define_single (const Box& regdomain, const IntVect& ncell,
     amrex::Gpu::streamSynchronize();
 }
 
-void SigmaBox::define_multiple (const Box& box, const BoxArray& grids, const IntVect& ncell,
-                                const Array<Real,AMREX_SPACEDIM>& fac, const amrex::Real v_sigma_sb)
+void SigmaBox::define_multiple (const Box& box, const amrex::BoxArray& grids, const amrex::IntVect& ncell,
+                                const Array<amrex::Real,AMREX_SPACEDIM>& fac, const amrex::Real v_sigma_sb)
 {
     const std::vector<std::pair<int,Box> >& isects = grids.intersections(box, false, ncell);
 
@@ -249,7 +249,7 @@ void SigmaBox::define_multiple (const Box& box, const BoxArray& grids, const Int
         const int kdim = (idim+2) % AMREX_SPACEDIM;
 #endif
 
-        Vector<int> direct_faces, side_faces, direct_side_edges, side_side_edges, corners;
+        amrex::Vector<int> direct_faces, side_faces, direct_side_edges, side_side_edges, corners;
         for (const auto& kv : isects)
         {
             const Box& grid_box = grids[kv.first];
@@ -435,14 +435,14 @@ void SigmaBox::define_multiple (const Box& box, const BoxArray& grids, const Int
 
 
 void
-SigmaBox::ComputePMLFactorsB (const Real* a_dx, Real dt)
+SigmaBox::ComputePMLFactorsB (const Real* a_dx, amrex::Real dt)
 {
-    GpuArray<Real*,AMREX_SPACEDIM> p_sigma_star_fac;
-    GpuArray<Real*,AMREX_SPACEDIM> p_sigma_star_cumsum_fac;
-    GpuArray<Real const*,AMREX_SPACEDIM> p_sigma_star;
-    GpuArray<Real const*,AMREX_SPACEDIM> p_sigma_star_cumsum;
+    GpuArray<amrex::Real*,AMREX_SPACEDIM> p_sigma_star_fac;
+    GpuArray<amrex::Real*,AMREX_SPACEDIM> p_sigma_star_cumsum_fac;
+    GpuArray<amrex::Real const*,AMREX_SPACEDIM> p_sigma_star;
+    GpuArray<amrex::Real const*,AMREX_SPACEDIM> p_sigma_star_cumsum;
     GpuArray<int, AMREX_SPACEDIM> N;
-    GpuArray<Real, AMREX_SPACEDIM> dx;
+    GpuArray<amrex::Real, AMREX_SPACEDIM> dx;
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         p_sigma_star_fac[idim] = sigma_star_fac[idim].data();
         p_sigma_star_cumsum_fac[idim] = sigma_star_cumsum_fac[idim].data();
@@ -469,14 +469,14 @@ SigmaBox::ComputePMLFactorsB (const Real* a_dx, Real dt)
 }
 
 void
-SigmaBox::ComputePMLFactorsE (const Real* a_dx, Real dt)
+SigmaBox::ComputePMLFactorsE (const Real* a_dx, amrex::Real dt)
 {
-    GpuArray<Real*,AMREX_SPACEDIM> p_sigma_fac;
-    GpuArray<Real*,AMREX_SPACEDIM> p_sigma_cumsum_fac;
-    GpuArray<Real const*,AMREX_SPACEDIM> p_sigma;
-    GpuArray<Real const*,AMREX_SPACEDIM> p_sigma_cumsum;
+    GpuArray<amrex::Real*,AMREX_SPACEDIM> p_sigma_fac;
+    GpuArray<amrex::Real*,AMREX_SPACEDIM> p_sigma_cumsum_fac;
+    GpuArray<amrex::Real const*,AMREX_SPACEDIM> p_sigma;
+    GpuArray<amrex::Real const*,AMREX_SPACEDIM> p_sigma_cumsum;
     GpuArray<int, AMREX_SPACEDIM> N;
-    GpuArray<Real, AMREX_SPACEDIM> dx;
+    GpuArray<amrex::Real, AMREX_SPACEDIM> dx;
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         p_sigma_fac[idim] = sigma_fac[idim].data();
         p_sigma_cumsum_fac[idim] = sigma_cumsum_fac[idim].data();
@@ -502,16 +502,16 @@ SigmaBox::ComputePMLFactorsE (const Real* a_dx, Real dt)
     });
 }
 
-MultiSigmaBox::MultiSigmaBox (const BoxArray& ba, const DistributionMapping& dm,
-                              const BoxArray& grid_ba, const Real* dx,
-                              const IntVect& ncell, const IntVect& delta,
+MultiSigmaBox::MultiSigmaBox (const amrex::BoxArray& ba, const amrex::DistributionMapping& dm,
+                              const amrex::BoxArray& grid_ba, const Real* dx,
+                              const amrex::IntVect& ncell, const amrex::IntVect& delta,
                               const amrex::Box& regular_domain, const amrex::Real v_sigma_sb)
     : FabArray<SigmaBox>(ba,dm,1,0,MFInfo(),
                          SigmaBoxFactory(grid_ba,dx,ncell,delta, regular_domain, v_sigma_sb))
 {}
 
 void
-MultiSigmaBox::ComputePMLFactorsB (const Real* dx, Real dt)
+MultiSigmaBox::ComputePMLFactorsB (const Real* dx, amrex::Real dt)
 {
     if (dt == dt_B) return;
 
@@ -527,7 +527,7 @@ MultiSigmaBox::ComputePMLFactorsB (const Real* dx, Real dt)
 }
 
 void
-MultiSigmaBox::ComputePMLFactorsE (const Real* dx, Real dt)
+MultiSigmaBox::ComputePMLFactorsE (const Real* dx, amrex::Real dt)
 {
     if (dt == dt_E) return;
 
@@ -542,10 +542,10 @@ MultiSigmaBox::ComputePMLFactorsE (const Real* dx, Real dt)
     }
 }
 
-PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& grid_dm,
+PML::PML (const int lev, const amrex::BoxArray& grid_ba, const amrex::DistributionMapping& grid_dm,
           const Geometry* geom, const Geometry* cgeom,
           int ncell, int delta, amrex::IntVect ref_ratio,
-          Real dt, int nox_fft, int noy_fft, int noz_fft, short grid_type,
+          amrex::Real dt, int nox_fft, int noy_fft, int noz_fft, short grid_type,
           int do_moving_window, int /*pml_has_particles*/, int do_pml_in_domain,
           const int psatd_solution_type, const int J_in_time, const int rho_in_time,
           const bool do_pml_dive_cleaning, const bool do_pml_divb_cleaning,
@@ -579,12 +579,12 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& gri
             }
         }
     }
-    const BoxArray grid_ba_reduced = (do_pml_in_domain) ?
-        BoxArray(grid_ba.boxList().intersect(domain0)) : grid_ba;
+    const amrex::BoxArray grid_ba_reduced = (do_pml_in_domain) ?
+        amrex::BoxArray(grid_ba.boxList().intersect(domain0)) : grid_ba;
 
     const bool is_single_box_domain = domain0.numPts() == grid_ba_reduced.numPts();
-    const BoxArray& ba = MakeBoxArray(is_single_box_domain, domain0, *geom, grid_ba_reduced,
-                                      IntVect(ncell), do_pml_in_domain, do_pml_Lo, do_pml_Hi);
+    const amrex::BoxArray& ba = MakeBoxArray(is_single_box_domain, domain0, *geom, grid_ba_reduced,
+                                      amrex::IntVect(ncell), do_pml_in_domain, do_pml_Lo, do_pml_Hi);
 
     if (ba.empty()) {
         m_ok = false;
@@ -594,11 +594,11 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& gri
     }
 
     // Define the number of guard cells in each direction, for E, B, and F
-    IntVect nge = IntVect(AMREX_D_DECL(2, 2, 2));
-    IntVect ngb = IntVect(AMREX_D_DECL(2, 2, 2));
+    amrex::IntVect nge = amrex::IntVect(AMREX_D_DECL(2, 2, 2));
+    amrex::IntVect ngb = amrex::IntVect(AMREX_D_DECL(2, 2, 2));
     int ngf_int = 0;
     if (WarpX::electromagnetic_solver_id == ElectromagneticSolverAlgo::CKC) ngf_int = std::max( ngf_int, 1 );
-    IntVect ngf = IntVect(AMREX_D_DECL(ngf_int, ngf_int, ngf_int));
+    amrex::IntVect ngf = amrex::IntVect(AMREX_D_DECL(ngf_int, ngf_int, ngf_int));
 
     if (do_moving_window) {
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE(lev <= 1,
@@ -616,17 +616,17 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& gri
         int ngFFt_y = (grid_type == GridType::Collocated) ? noy_fft : noy_fft/2;
         int ngFFt_z = (grid_type == GridType::Collocated) ? noz_fft : noz_fft/2;
 
-        const ParmParse pp_psatd("psatd");
+        const amrex::ParmParse pp_psatd("psatd");
         utils::parser::queryWithParser(pp_psatd, "nx_guard", ngFFt_x);
         utils::parser::queryWithParser(pp_psatd, "ny_guard", ngFFt_y);
         utils::parser::queryWithParser(pp_psatd, "nz_guard", ngFFt_z);
 
 #if defined(WARPX_DIM_3D)
-        IntVect ngFFT = IntVect(ngFFt_x, ngFFt_y, ngFFt_z);
+        amrex::IntVect ngFFT = amrex::IntVect(ngFFt_x, ngFFt_y, ngFFt_z);
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-        IntVect ngFFT = IntVect(ngFFt_x, ngFFt_z);
+        amrex::IntVect ngFFT = amrex::IntVect(ngFFt_x, ngFFt_z);
 #elif defined(WARPX_DIM_1D_Z)
-        IntVect ngFFT = IntVect(ngFFt_z);
+        amrex::IntVect ngFFT = amrex::IntVect(ngFFt_z);
 #endif
 
         // Set the number of guard cells to the maximum of each field
@@ -719,7 +719,7 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& gri
     Box single_domain_box = is_single_box_domain ? domain0 : Box();
     // Empty box (i.e., Box()) means it's not a single box domain.
     sigba_fp = std::make_unique<MultiSigmaBox>(ba, dm, grid_ba_reduced, geom->CellSize(),
-                                               IntVect(ncell), IntVect(delta), single_domain_box, v_sigma_sb);
+                                               amrex::IntVect(ncell), amrex::IntVect(delta), single_domain_box, v_sigma_sb);
 
     if (WarpX::electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD) {
 #ifndef WARPX_USE_PSATD
@@ -737,7 +737,7 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& gri
         const bool fft_do_time_averaging = false;
         const RealVect dx{AMREX_D_DECL(geom->CellSize(0), geom->CellSize(1), geom->CellSize(2))};
         // Get the cell-centered box, with guard cells
-        BoxArray realspace_ba = ba; // Copy box
+        amrex::BoxArray realspace_ba = ba; // Copy box
         amrex::Vector<amrex::Real> const v_galilean = WarpX::GetInstance().m_v_galilean;
         amrex::Vector<amrex::Real> const v_comoving_zero = {0., 0., 0.};
         realspace_ba.enclosedCells().grow(nge); // cell-centered + guard cells
@@ -751,11 +751,11 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& gri
     if (cgeom)
     {
         if (WarpX::electromagnetic_solver_id != ElectromagneticSolverAlgo::PSATD) {
-            nge = IntVect(AMREX_D_DECL(1, 1, 1));
-            ngb = IntVect(AMREX_D_DECL(1, 1, 1));
+            nge = amrex::IntVect(AMREX_D_DECL(1, 1, 1));
+            ngb = amrex::IntVect(AMREX_D_DECL(1, 1, 1));
         }
 
-        BoxArray grid_cba = grid_ba;
+        amrex::BoxArray grid_cba = grid_ba;
         grid_cba.coarsen(ref_ratio);
 
         // assuming that the bounding box around grid_cba is a single patch, and not disjoint patches, similar to fine patch.
@@ -774,14 +774,14 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& gri
                 }
             }
         }
-        const BoxArray grid_cba_reduced = (do_pml_in_domain) ?
-            BoxArray(grid_cba.boxList().intersect(cdomain)) : grid_cba;
+        const amrex::BoxArray grid_cba_reduced = (do_pml_in_domain) ?
+            amrex::BoxArray(grid_cba.boxList().intersect(cdomain)) : grid_cba;
 
-        const IntVect cncells = IntVect(ncell)/ref_ratio;
-        const IntVect cdelta = IntVect(delta)/ref_ratio;
+        const amrex::IntVect cncells = amrex::IntVect(ncell)/ref_ratio;
+        const amrex::IntVect cdelta = amrex::IntVect(delta)/ref_ratio;
 
         // Assuming that refinement ratio is equal in all dimensions
-        const BoxArray& cba = MakeBoxArray(is_single_box_domain, cdomain, *cgeom, grid_cba_reduced,
+        const amrex::BoxArray& cba = MakeBoxArray(is_single_box_domain, cdomain, *cgeom, grid_cba_reduced,
                                            cncells, do_pml_in_domain, do_pml_Lo, do_pml_Hi);
         DistributionMapping cdm;
         if (WarpX::do_similar_dm_pml) {
@@ -845,7 +845,7 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& gri
             const bool fft_do_time_averaging = false;
             const RealVect cdx{AMREX_D_DECL(cgeom->CellSize(0), cgeom->CellSize(1), cgeom->CellSize(2))};
             // Get the cell-centered box, with guard cells
-            BoxArray realspace_cba = cba; // Copy box
+            amrex::BoxArray realspace_cba = cba; // Copy box
             amrex::Vector<amrex::Real> const v_galilean = WarpX::GetInstance().m_v_galilean;
             amrex::Vector<amrex::Real> const v_comoving_zero = {0., 0., 0.};
             realspace_cba.enclosedCells().grow(nge); // cell-centered + guard cells
@@ -931,7 +931,7 @@ PML::MakeBoxArray_multiple (const amrex::Geometry& geom, const amrex::BoxArray& 
     for (int i = 0; i < grid_ba_size; ++i)
     {
         const Box& grid_bx = grid_ba[i];
-        const IntVect& grid_bx_sz = grid_bx.size();
+        const amrex::IntVect& grid_bx_sz = grid_bx.size();
 
         if (do_pml_in_domain == 0) {
             // Make sure that, in the case of several distinct refinement patches,
@@ -950,7 +950,7 @@ PML::MakeBoxArray_multiple (const amrex::Geometry& geom, const amrex::BoxArray& 
         bx.grow(ncell);
         bx &= domain;
 
-        Vector<Box> bndryboxes;
+        amrex::Vector<Box> bndryboxes;
 #if defined(WARPX_DIM_3D)
         const int kbegin = -1, kend = 1;
 #else
@@ -982,7 +982,7 @@ PML::MakeBoxArray_multiple (const amrex::Geometry& geom, const amrex::BoxArray& 
         }
     }
 
-    BoxArray ba(bl);
+    amrex::BoxArray ba(bl);
     ba.removeOverlap(false);
 
     return ba;
@@ -1001,43 +1001,43 @@ PML::ComputePMLFactors (amrex::Real dt)
     }
 }
 
-std::array<MultiFab*,3>
+std::array<amrex::MultiFab*,3>
 PML::GetE_fp ()
 {
     return {pml_E_fp[0].get(), pml_E_fp[1].get(), pml_E_fp[2].get()};
 }
 
-std::array<MultiFab*,3>
+std::array<amrex::MultiFab*,3>
 PML::GetB_fp ()
 {
     return {pml_B_fp[0].get(), pml_B_fp[1].get(), pml_B_fp[2].get()};
 }
 
-std::array<MultiFab*,3>
+std::array<amrex::MultiFab*,3>
 PML::Getj_fp ()
 {
     return {pml_j_fp[0].get(), pml_j_fp[1].get(), pml_j_fp[2].get()};
 }
 
-std::array<MultiFab*,3>
+std::array<amrex::MultiFab*,3>
 PML::GetE_cp ()
 {
     return {pml_E_cp[0].get(), pml_E_cp[1].get(), pml_E_cp[2].get()};
 }
 
-std::array<MultiFab*,3>
+std::array<amrex::MultiFab*,3>
 PML::GetB_cp ()
 {
     return {pml_B_cp[0].get(), pml_B_cp[1].get(), pml_B_cp[2].get()};
 }
 
-std::array<MultiFab*,3>
+std::array<amrex::MultiFab*,3>
 PML::Getj_cp ()
 {
     return {pml_j_cp[0].get(), pml_j_cp[1].get(), pml_j_cp[2].get()};
 }
 
-std::array<MultiFab*,3>
+std::array<amrex::MultiFab*,3>
 PML::Get_edge_lengths()
 {
     return {pml_edge_lengths[0].get(), pml_edge_lengths[1].get(), pml_edge_lengths[2].get()};
@@ -1141,13 +1141,13 @@ void PML::ExchangeG (PatchType patch_type, amrex::MultiFab* Gp, int do_pml_in_do
 }
 
 void
-PML::Exchange (MultiFab& pml, MultiFab& reg, const Geometry& geom,
+PML::Exchange (amrex::MultiFab& pml, amrex::MultiFab& reg, const Geometry& geom,
                 int do_pml_in_domain)
 {
     WARPX_PROFILE("PML::Exchange");
 
-    const IntVect& ngr = reg.nGrowVect();
-    const IntVect& ngp = pml.nGrowVect();
+    const amrex::IntVect& ngr = reg.nGrowVect();
+    const amrex::IntVect& ngp = pml.nGrowVect();
     const int ncp = pml.nComp();
     const auto& period = geom.periodicity();
 
@@ -1166,7 +1166,7 @@ PML::Exchange (MultiFab& pml, MultiFab& reg, const Geometry& geom,
     if (do_pml_in_domain){
         // Valid cells of the PML and of the regular grid overlap
         // Copy from valid cells of the PML to valid cells of the regular grid
-        ablastr::utils::communication::ParallelCopy(reg, totpmlmf, 0, 0, 1, IntVect(0), IntVect(0),
+        ablastr::utils::communication::ParallelCopy(reg, totpmlmf, 0, 0, 1, amrex::IntVect(0), amrex::IntVect(0),
                                                     WarpX::do_single_precision_comms,
                                                     period);
     } else {
@@ -1176,7 +1176,7 @@ PML::Exchange (MultiFab& pml, MultiFab& reg, const Geometry& geom,
         // but avoid updating the outermost valid cell
         if (ngr.max() > 0) {
             MultiFab::Copy(tmpregmf, reg, 0, 0, 1, ngr);
-            ablastr::utils::communication::ParallelCopy(tmpregmf, totpmlmf, 0, 0, 1, IntVect(0), ngr,
+            ablastr::utils::communication::ParallelCopy(tmpregmf, totpmlmf, 0, 0, 1, amrex::IntVect(0), ngr,
                                    WarpX::do_single_precision_comms,
                                                         period);
 #ifdef AMREX_USE_OMP
@@ -1211,22 +1211,22 @@ PML::Exchange (MultiFab& pml, MultiFab& reg, const Geometry& geom,
         // Where valid cells of tmpregmf overlap with PML valid cells,
         // copy the PML (this is order to avoid overwriting PML valid cells,
         // in the next `ParallelCopy`)
-        ablastr::utils::communication::ParallelCopy(tmpregmf, pml, 0, 0, ncp, IntVect(0), IntVect(0),
+        ablastr::utils::communication::ParallelCopy(tmpregmf, pml, 0, 0, ncp, amrex::IntVect(0), amrex::IntVect(0),
                                                     WarpX::do_single_precision_comms,
                                                     period);
     }
-    ablastr::utils::communication::ParallelCopy(pml, tmpregmf, 0, 0, ncp, IntVect(0), ngp,
+    ablastr::utils::communication::ParallelCopy(pml, tmpregmf, 0, 0, ncp, amrex::IntVect(0), ngp,
                                                 WarpX::do_single_precision_comms, period);
 }
 
 
 void
-PML::CopyToPML (MultiFab& pml, MultiFab& reg, const Geometry& geom)
+PML::CopyToPML (amrex::MultiFab& pml, amrex::MultiFab& reg, const Geometry& geom)
 {
-  const IntVect& ngp = pml.nGrowVect();
+  const amrex::IntVect& ngp = pml.nGrowVect();
   const auto& period = geom.periodicity();
 
-    ablastr::utils::communication::ParallelCopy(pml, reg, 0, 0, 1, IntVect(0), ngp,
+    ablastr::utils::communication::ParallelCopy(pml, reg, 0, 0, 1, amrex::IntVect(0), ngp,
                                                 WarpX::do_single_precision_comms, period);
 }
 
@@ -1236,13 +1236,13 @@ PML::FillBoundaryE (PatchType patch_type, std::optional<bool> nodal_sync)
     if (patch_type == PatchType::fine && pml_E_fp[0] && pml_E_fp[0]->nGrowVect().max() > 0)
     {
         const auto& period = m_geom->periodicity();
-        const Vector<MultiFab*> mf{pml_E_fp[0].get(),pml_E_fp[1].get(),pml_E_fp[2].get()};
+        const amrex::Vector<amrex::MultiFab*> mf{pml_E_fp[0].get(),pml_E_fp[1].get(),pml_E_fp[2].get()};
         ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, period, nodal_sync);
     }
     else if (patch_type == PatchType::coarse && pml_E_cp[0] && pml_E_cp[0]->nGrowVect().max() > 0)
     {
         const auto& period = m_cgeom->periodicity();
-        const Vector<MultiFab*> mf{pml_E_cp[0].get(),pml_E_cp[1].get(),pml_E_cp[2].get()};
+        const amrex::Vector<amrex::MultiFab*> mf{pml_E_cp[0].get(),pml_E_cp[1].get(),pml_E_cp[2].get()};
         ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, period, nodal_sync);
     }
 }
@@ -1253,13 +1253,13 @@ PML::FillBoundaryB (PatchType patch_type, std::optional<bool> nodal_sync)
     if (patch_type == PatchType::fine && pml_B_fp[0])
     {
         const auto& period = m_geom->periodicity();
-        const Vector<MultiFab*> mf{pml_B_fp[0].get(),pml_B_fp[1].get(),pml_B_fp[2].get()};
+        const amrex::Vector<amrex::MultiFab*> mf{pml_B_fp[0].get(),pml_B_fp[1].get(),pml_B_fp[2].get()};
         ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, period, nodal_sync);
     }
     else if (patch_type == PatchType::coarse && pml_B_cp[0])
     {
         const auto& period = m_cgeom->periodicity();
-        const Vector<MultiFab*> mf{pml_B_cp[0].get(),pml_B_cp[1].get(),pml_B_cp[2].get()};
+        const amrex::Vector<amrex::MultiFab*> mf{pml_B_cp[0].get(),pml_B_cp[1].get(),pml_B_cp[2].get()};
         ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, period, nodal_sync);
     }
 }

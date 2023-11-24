@@ -16,7 +16,7 @@
 #include <array>
 #include <memory>
 using namespace amrex::literals;
-using namespace amrex;
+// using namespace amrex;
 
 void WarpX::ApplyEfieldBoundary(const int lev, PatchType patch_type)
 {
@@ -78,7 +78,7 @@ void WarpX::ApplyBfieldBoundary (const int lev, PatchType patch_type, DtType a_d
     }
 }
 
-void WarpX::ApplyRhofieldBoundary (const int lev, MultiFab* rho,
+void WarpX::ApplyRhofieldBoundary (const int lev, amrex::MultiFab* rho,
                                    PatchType patch_type)
 {
     if (PEC::isAnyBoundaryPEC()) PEC::ApplyPECtoRhofield(rho, lev, patch_type);

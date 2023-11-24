@@ -31,7 +31,7 @@
 #include <map>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 // constructor
 ParticleEnergy::ParticleEnergy (std::string rd_name)
@@ -118,9 +118,9 @@ void ParticleEnergy::ComputeDiags (int step)
         amrex::ReduceOps<ReduceOpSum, ReduceOpSum> reduce_ops;
         if(myspc.AmIA<PhysicalSpecies::photon>())
         {
-            auto r = amrex::ParticleReduce<amrex::ReduceData<Real, Real>>(
+            auto r = amrex::ParticleReduce<amrex::ReduceData<amrex::Real, amrex::Real>>(
                 myspc,
-                [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<Real, Real>
+                [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<amrex::Real, amrex::Real>
                 {
                     const amrex::Real w  = p.rdata(PIdx::w);
                     const amrex::Real ux = p.rdata(PIdx::ux);
@@ -135,9 +135,9 @@ void ParticleEnergy::ComputeDiags (int step)
         }
         else // particle other than photons
         {
-            auto r = amrex::ParticleReduce<amrex::ReduceData<Real, Real>>(
+            auto r = amrex::ParticleReduce<amrex::ReduceData<amrex::Real, amrex::Real>>(
                 myspc,
-                [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<Real, Real>
+                [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<amrex::Real, amrex::Real>
                 {
                     const amrex::Real w  = p.rdata(PIdx::w);
                     const amrex::Real ux = p.rdata(PIdx::ux);
@@ -172,7 +172,7 @@ void ParticleEnergy::ComputeDiags (int step)
         // 1 value of mean  energy for all  species +
         // 1 value of mean  energy for each species
         const int offset_mean_species = 1 + nSpecies + 1 + i_s;
-        if (Ws > std::numeric_limits<Real>::min())
+        if (Ws > std::numeric_limits<amrex::Real>::min())
         {
             m_data[offset_mean_species] = Etot / Ws;
         }
@@ -199,7 +199,7 @@ void ParticleEnergy::ComputeDiags (int step)
     // 1 value of total energy for all  species +
     // 1 value of total energy for each species
     const int offset_mean_all = 1 + nSpecies;
-    if (Wtot > std::numeric_limits<Real>::min())
+    if (Wtot > std::numeric_limits<amrex::Real>::min())
     {
         m_data[offset_mean_all] = m_data[0] / Wtot;
     }

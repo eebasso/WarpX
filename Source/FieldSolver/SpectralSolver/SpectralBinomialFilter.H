@@ -30,7 +30,7 @@ class SpectralBinomialFilter
                               bool compensation,
                               KFilterArray & filter);
         void InitFilterArray (RealKVector const & kr,
-                              RealKVector const & kz,
+                              amrex::RealKVector const & kz,
                               amrex::RealVect dx,
                               amrex::IntVect filter_npass_each_dir,
                               bool compensation);

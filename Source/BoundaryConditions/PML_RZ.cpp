@@ -32,7 +32,7 @@
 #include <cmath>
 #include <memory>
 
-using namespace amrex;
+// using namespace amrex;
 
 PML_RZ::PML_RZ (const int lev, const amrex::BoxArray& grid_ba, const amrex::DistributionMapping& grid_dm,
                 const amrex::Geometry* geom, const int ncell, const int do_pml_in_domain)
@@ -139,7 +139,7 @@ PML_RZ::FillBoundaryE (PatchType patch_type, std::optional<bool> nodal_sync)
     if (patch_type == PatchType::fine && pml_E_fp[0] && pml_E_fp[0]->nGrowVect().max() > 0)
     {
         const amrex::Periodicity& period = m_geom->periodicity();
-        const Vector<amrex::MultiFab*> mf{pml_E_fp[0].get(),pml_E_fp[1].get()};
+        const amrex::Vector<amrex::MultiFab*> mf{pml_E_fp[0].get(),pml_E_fp[1].get()};
         ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, period, nodal_sync);
     }
 }
@@ -156,7 +156,7 @@ PML_RZ::FillBoundaryB (PatchType patch_type, std::optional<bool> nodal_sync)
     if (patch_type == PatchType::fine && pml_B_fp[0])
     {
         const amrex::Periodicity& period = m_geom->periodicity();
-        const Vector<amrex::MultiFab*> mf{pml_B_fp[0].get(),pml_B_fp[1].get()};
+        const amrex::Vector<amrex::MultiFab*> mf{pml_B_fp[0].get(),pml_B_fp[1].get()};
         ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, period, nodal_sync);
     }
 }

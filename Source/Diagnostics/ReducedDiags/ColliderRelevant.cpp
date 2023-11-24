@@ -57,7 +57,7 @@
 #include <memory>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 ColliderRelevant::ColliderRelevant (std::string rd_name)
 : ReducedDiags{std::move(rd_name)}
@@ -239,13 +239,13 @@ void ColliderRelevant::ComputeDiags (int step)
         amrex::ReduceOps<ReduceOpSum,
                          ReduceOpSum,
                          ReduceOpMin, ReduceOpSum, ReduceOpMax> reduce_ops;
-        auto r = amrex::ParticleReduce<amrex::ReduceData<Real,
-                                                         Real,
-                                                         Real, Real, Real>>(
+        auto r = amrex::ParticleReduce<amrex::ReduceData<amrex::Real,
+                                                         amrex::Real,
+                                                         amrex::Real, amrex::Real, amrex::Real>>(
             myspc,
-            [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<Real,
-                                                                             Real,
-                                                                             Real, Real, Real>
+            [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<amrex::Real,
+                                                                             amrex::Real,
+                                                                             amrex::Real, amrex::Real, amrex::Real>
             {
                 const amrex::Real w  = p.rdata(PIdx::w);
                 const amrex::Real x = p.pos(0);
@@ -276,9 +276,9 @@ void ColliderRelevant::ComputeDiags (int step)
             thetax_ave = thetax_ave / w_tot;
 
             amrex::ReduceOps<ReduceOpSum, ReduceOpSum> reduce_ops_std;
-            auto r_std = amrex::ParticleReduce<amrex::ReduceData<Real, Real>>(
+            auto r_std = amrex::ParticleReduce<amrex::ReduceData<amrex::Real, amrex::Real>>(
                 myspc,
-                [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<Real, Real>
+                [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<amrex::Real, amrex::Real>
                 {
                     const amrex::Real w  = p.rdata(PIdx::w);
                     const amrex::Real x = p.pos(0);
@@ -315,15 +315,15 @@ void ColliderRelevant::ComputeDiags (int step)
                          ReduceOpSum, ReduceOpSum,
                          ReduceOpMin, ReduceOpSum, ReduceOpMax,
                          ReduceOpMin, ReduceOpSum, ReduceOpMax> reduce_ops;
-        auto r = amrex::ParticleReduce<amrex::ReduceData<Real,
-                                                         Real, Real,
-                                                         Real, Real, Real,
-                                                         Real, Real, Real>>(
+        auto r = amrex::ParticleReduce<amrex::ReduceData<amrex::Real,
+                                                         amrex::Real, amrex::Real,
+                                                         amrex::Real, amrex::Real, amrex::Real,
+                                                         amrex::Real, amrex::Real, amrex::Real>>(
             myspc,
-            [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<Real,
-                                                                             Real, Real,
-                                                                             Real, Real, Real,
-                                                                             Real, Real, Real>
+            [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<amrex::Real,
+                                                                             amrex::Real, amrex::Real,
+                                                                             amrex::Real, amrex::Real, amrex::Real,
+                                                                             amrex::Real, amrex::Real, amrex::Real>
             {
                 const amrex::Real w  = p.rdata(PIdx::w);
                 const amrex::Real x = p.pos(0);
@@ -367,9 +367,9 @@ void ColliderRelevant::ComputeDiags (int step)
             thetay_ave = thetay_ave / w_tot;
 
             amrex::ReduceOps<ReduceOpSum, ReduceOpSum, ReduceOpSum, ReduceOpSum> reduce_ops_std;
-            auto r_std = amrex::ParticleReduce<amrex::ReduceData<Real, Real, Real, Real>>(
+            auto r_std = amrex::ParticleReduce<amrex::ReduceData<amrex::Real, amrex::Real, amrex::Real, amrex::Real>>(
                 myspc,
-                [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<Real, Real, Real, Real>
+                [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<amrex::Real, amrex::Real, amrex::Real, amrex::Real>
                 {
                     const amrex::Real w  = p.rdata(PIdx::w);
                     const amrex::Real x = p.pos(0);
@@ -450,7 +450,7 @@ void ColliderRelevant::ComputeDiags (int step)
 
             // declare reduce_op
             ReduceOps<ReduceOpMin, ReduceOpMax, ReduceOpSum> reduce_op;
-            ReduceData<Real, Real, Real> reduce_data(reduce_op);
+            ReduceData<amrex::Real, amrex::Real, amrex::Real> reduce_data(reduce_op);
             using ReduceTuple = typename decltype(reduce_data)::Type;
 
             // Loop over boxes

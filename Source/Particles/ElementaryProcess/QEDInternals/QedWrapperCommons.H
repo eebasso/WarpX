@@ -48,16 +48,16 @@
 /**
 * This class provides a vector suitable to be used as the building block
 * of the picsar QED lookup tables when managed memory is not used. It behaves as a
-* std::vector<Real> when data is written into it, but, "under the hood", it copies data to
+* std::vector<amrex::Real> when data is written into it, but, "under the hood", it copies data to
 * an amrex::Gpu::DeviceVector. It provides a pointer to the Device data via the data() function.
 *
 * @tparam Real the floating point type to be used
 */
 template <typename Real>
-class PicsarQedVector : public std::vector<Real>
+class PicsarQedVector : public std::vector<amrex::Real>
 {
-    using HV = std::vector<Real>;
-    using AGDV = amrex::Gpu::DeviceVector<Real>;
+    using HV = std::vector<amrex::Real>;
+    using AGDV = amrex::Gpu::DeviceVector<amrex::Real>;
 
     public:
 
@@ -86,7 +86,7 @@ class PicsarQedVector : public std::vector<Real>
 
     /**
     * This function returns a pointer to the raw data inside the
-    * amrex::Gpu::DeviceVector<Real> m_device_data.
+    * amrex::Gpu::DeviceVector<amrex::Real> m_device_data.
     * It is called to build table_views.
     *
     * @return a pointer to the raw device vector data
@@ -102,7 +102,7 @@ class PicsarQedVector : public std::vector<Real>
 #else
 
 template <typename Real>
-using PicsarQedVector = std::vector<Real>;
+using PicsarQedVector = std::vector<amrex::Real>;
 
 #endif
 

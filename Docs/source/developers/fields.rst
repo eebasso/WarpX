@@ -64,7 +64,7 @@ The innermost step ``// Apply field solver on the FAB`` could be done with 3 nes
   // Get Box corresponding to the current MFIter
   const Box& tex  = mfi.tilebox(Ex_nodal_flag);
   // Extract the FArrayBox into a simple structure, for portability
-  Array4<Real> const& Exfab = Ex->array(mfi);
+  Array4<amrex::Real> const& Exfab = Ex->array(mfi);
   // Loop over cells and perform stencil operation
   amrex::ParallelFor(tex,
       [=] AMREX_GPU_DEVICE (int j, int k, int l)

@@ -21,10 +21,10 @@
 
 #if WARPX_USE_PSATD
 
-using namespace amrex;
+// using namespace amrex;
 
 PsatdAlgorithmComoving::PsatdAlgorithmComoving (const SpectralKSpace& spectral_kspace,
-                                                const DistributionMapping& dm,
+                                                const amrex::DistributionMapping& dm,
                                                 const SpectralFieldIndex& spectral_index,
                                                 const int norder_x, const int norder_y,
                                                 const int norder_z, const short grid_type,
@@ -47,7 +47,7 @@ PsatdAlgorithmComoving::PsatdAlgorithmComoving (const SpectralKSpace& spectral_k
 {
     amrex::ignore_unused(update_with_rho);
 
-    const BoxArray& ba = spectral_kspace.spectralspace_ba;
+    const amrex::BoxArray& ba = spectral_kspace.spectralspace_ba;
 
     // Allocate arrays of real spectral coefficients
     C_coef    = SpectralRealCoefficients(ba, dm, 1, 0);

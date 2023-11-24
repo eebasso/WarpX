@@ -54,14 +54,14 @@
 #include <cmath>
 #include <map>
 
-using namespace amrex;
+// using namespace amrex;
 
 RigidInjectedParticleContainer::RigidInjectedParticleContainer (AmrCore* amr_core, int ispecies,
                                                                 const std::string& name)
     : PhysicalParticleContainer(amr_core, ispecies, name)
 {
 
-    const ParmParse pp_species_name(species_name);
+    const amrex::ParmParse pp_species_name(species_name);
 
     utils::parser::getWithParser(
         pp_species_name, "zinject_plane", zinject_plane);
@@ -292,14 +292,14 @@ RigidInjectedParticleContainer::PushPX (WarpXParIter& pti,
 
 void
 RigidInjectedParticleContainer::Evolve (int lev,
-                                        const MultiFab& Ex, const MultiFab& Ey, const MultiFab& Ez,
-                                        const MultiFab& Bx, const MultiFab& By, const MultiFab& Bz,
-                                        MultiFab& jx, MultiFab& jy, MultiFab& jz,
-                                        MultiFab* cjx, MultiFab* cjy, MultiFab* cjz,
-                                        MultiFab* rho, MultiFab* crho,
-                                        const MultiFab* cEx, const MultiFab* cEy, const MultiFab* cEz,
-                                        const MultiFab* cBx, const MultiFab* cBy, const MultiFab* cBz,
-                                        Real t, Real dt, DtType a_dt_type, bool skip_deposition)
+                                        const amrex::MultiFab& Ex, const amrex::MultiFab& Ey, const amrex::MultiFab& Ez,
+                                        const amrex::MultiFab& Bx, const amrex::MultiFab& By, const amrex::MultiFab& Bz,
+                                        MultiFab& jx, amrex::MultiFab& jy, amrex::MultiFab& jz,
+                                        MultiFab* cjx, amrex::MultiFab* cjy, amrex::MultiFab* cjz,
+                                        MultiFab* rho, amrex::MultiFab* crho,
+                                        const amrex::MultiFab* cEx, const amrex::MultiFab* cEy, const amrex::MultiFab* cEz,
+                                        const amrex::MultiFab* cBx, const amrex::MultiFab* cBy, const amrex::MultiFab* cBz,
+                                        amrex::Real t, amrex::Real dt, DtType a_dt_type, bool skip_deposition)
 {
 
     // Update location of injection plane in the boosted frame
@@ -328,15 +328,15 @@ RigidInjectedParticleContainer::Evolve (int lev,
 }
 
 void
-RigidInjectedParticleContainer::PushP (int lev, Real dt,
-                                       const MultiFab& Ex, const MultiFab& Ey, const MultiFab& Ez,
-                                       const MultiFab& Bx, const MultiFab& By, const MultiFab& Bz)
+RigidInjectedParticleContainer::PushP (int lev, amrex::Real dt,
+                                       const amrex::MultiFab& Ex, const amrex::MultiFab& Ey, const amrex::MultiFab& Ez,
+                                       const amrex::MultiFab& Bx, const amrex::MultiFab& By, const amrex::MultiFab& Bz)
 {
     WARPX_PROFILE("RigidInjectedParticleContainer::PushP");
 
     if (do_not_push) return;
 
-    const std::array<Real,3>& dx = WarpX::CellSize(std::max(lev,0));
+    const std::array<amrex::Real,3>& dx = WarpX::CellSize(std::max(lev,0));
 
 #ifdef AMREX_USE_OMP
 #pragma omp parallel

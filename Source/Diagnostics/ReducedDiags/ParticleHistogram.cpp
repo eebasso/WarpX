@@ -38,7 +38,7 @@
 #include <ostream>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 struct NormalizationType {
     enum {
@@ -53,7 +53,7 @@ struct NormalizationType {
 ParticleHistogram::ParticleHistogram (std::string rd_name):
     ReducedDiags{rd_name}
 {
-    const ParmParse pp_rd_name(rd_name);
+    const amrex::ParmParse pp_rd_name(rd_name);
 
     // read species
     std::string selected_species_name;
@@ -182,8 +182,8 @@ void ParticleHistogram::ComputeDiags (int step)
 
     // declare local variables
     auto const num_bins = m_bin_num;
-    Real const bin_min  = m_bin_min;
-    Real const bin_size = m_bin_size;
+    amrex::Real const bin_min  = m_bin_min;
+    amrex::Real const bin_size = m_bin_size;
     const bool is_unity_particle_weight = (m_norm == NormalizationType::unity_particle_weight);
 
     bool const do_parser_filter = m_do_parser_filter;
@@ -257,14 +257,14 @@ void ParticleHistogram::ComputeDiags (int step)
     // normalize the maximum value to be one
     if ( m_norm == NormalizationType::max_to_unity )
     {
-        Real f_max = 0.0_rt;
+        amrex::Real f_max = 0.0_rt;
         for ( int i = 0; i < m_bin_num; ++i )
         {
             if ( m_data[i] > f_max ) f_max = m_data[i];
         }
         for ( int i = 0; i < m_bin_num; ++i )
         {
-            if ( f_max > std::numeric_limits<Real>::min() ) m_data[i] /= f_max;
+            if ( f_max > std::numeric_limits<amrex::Real>::min() ) m_data[i] /= f_max;
         }
         return;
     }
@@ -272,14 +272,14 @@ void ParticleHistogram::ComputeDiags (int step)
     // normalize the area (integral) to be one
     if ( m_norm == NormalizationType::area_to_unity )
     {
-        Real f_area = 0.0_rt;
+        amrex::Real f_area = 0.0_rt;
         for ( int i = 0; i < m_bin_num; ++i )
         {
             f_area += m_data[i] * m_bin_size;
         }
         for ( int i = 0; i < m_bin_num; ++i )
         {
-            if ( f_area > std::numeric_limits<Real>::min() ) m_data[i] /= f_area;
+            if ( f_area > std::numeric_limits<amrex::Real>::min() ) m_data[i] /= f_area;
         }
         return;
     }

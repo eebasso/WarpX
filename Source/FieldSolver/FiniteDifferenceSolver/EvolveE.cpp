@@ -40,7 +40,7 @@
 #include <array>
 #include <memory>
 
-using namespace amrex;
+// using namespace amrex;
 
 /**
  * \brief Update the E field, over one timestep
@@ -106,7 +106,7 @@ void FiniteDifferenceSolver::EvolveECartesian (
 #endif
 
     amrex::LayoutData<amrex::Real>* cost = WarpX::getCosts(lev);
-    Real constexpr c2 = PhysConst::c * PhysConst::c;
+    amrex::Real constexpr c2 = PhysConst::c * PhysConst::c;
 
     // Loop through the grids, and over the tiles within each grid
 #ifdef AMREX_USE_OMP
@@ -120,15 +120,15 @@ void FiniteDifferenceSolver::EvolveECartesian (
         auto wt = static_cast<amrex::Real>(amrex::second());
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Ex = Efield[0]->array(mfi);
-        Array4<Real> const& Ey = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
-        Array4<Real> const& Bx = Bfield[0]->array(mfi);
-        Array4<Real> const& By = Bfield[1]->array(mfi);
-        Array4<Real> const& Bz = Bfield[2]->array(mfi);
-        Array4<Real> const& jx = Jfield[0]->array(mfi);
-        Array4<Real> const& jy = Jfield[1]->array(mfi);
-        Array4<Real> const& jz = Jfield[2]->array(mfi);
+        Array4<amrex::Real> const& Ex = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Ey = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real> const& Bx = Bfield[0]->array(mfi);
+        Array4<amrex::Real> const& By = Bfield[1]->array(mfi);
+        Array4<amrex::Real> const& Bz = Bfield[2]->array(mfi);
+        Array4<amrex::Real> const& jx = Jfield[0]->array(mfi);
+        Array4<amrex::Real> const& jy = Jfield[1]->array(mfi);
+        Array4<amrex::Real> const& jz = Jfield[2]->array(mfi);
 
 #ifdef AMREX_USE_EB
         amrex::Array4<amrex::Real> const& lx = edge_lengths[0]->array(mfi);
@@ -137,11 +137,11 @@ void FiniteDifferenceSolver::EvolveECartesian (
 #endif
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
         auto const n_coefs_x = static_cast<int>(m_stencil_coefs_x.size());
-        Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
         auto const n_coefs_y = static_cast<int>(m_stencil_coefs_y.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // Extract tileboxes for which to loop
@@ -199,7 +199,7 @@ void FiniteDifferenceSolver::EvolveECartesian (
         if (Ffield) {
 
             // Extract field data for this grid/tile
-            const Array4<Real> F = Ffield->array(mfi);
+            const Array4<amrex::Real> F = Ffield->array(mfi);
 
             // Loop over the cells and update the fields
             amrex::ParallelFor(tex, tey, tez,
@@ -252,39 +252,39 @@ void FiniteDifferenceSolver::EvolveECylindrical (
         auto wt = static_cast<amrex::Real>(amrex::second());
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Er = Efield[0]->array(mfi);
-        Array4<Real> const& Et = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
-        Array4<Real> const& Br = Bfield[0]->array(mfi);
-        Array4<Real> const& Bt = Bfield[1]->array(mfi);
-        Array4<Real> const& Bz = Bfield[2]->array(mfi);
-        Array4<Real> const& jr = Jfield[0]->array(mfi);
-        Array4<Real> const& jt = Jfield[1]->array(mfi);
-        Array4<Real> const& jz = Jfield[2]->array(mfi);
+        Array4<amrex::Real> const& Er = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Et = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real> const& Br = Bfield[0]->array(mfi);
+        Array4<amrex::Real> const& Bt = Bfield[1]->array(mfi);
+        Array4<amrex::Real> const& Bz = Bfield[2]->array(mfi);
+        Array4<amrex::Real> const& jr = Jfield[0]->array(mfi);
+        Array4<amrex::Real> const& jt = Jfield[1]->array(mfi);
+        Array4<amrex::Real> const& jz = Jfield[2]->array(mfi);
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_r = m_stencil_coefs_r.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_r = m_stencil_coefs_r.dataPtr();
         auto const n_coefs_r = static_cast<int>(m_stencil_coefs_r.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // Extract cylindrical specific parameters
-        Real const dr = m_dr;
+        amrex::Real const dr = m_dr;
         int const nmodes = m_nmodes;
-        Real const rmin = m_rmin;
+        amrex::Real const rmin = m_rmin;
 
         // Extract tileboxes for which to loop
         Box const& ter  = mfi.tilebox(Efield[0]->ixType().toIntVect());
         Box const& tet  = mfi.tilebox(Efield[1]->ixType().toIntVect());
         Box const& tez  = mfi.tilebox(Efield[2]->ixType().toIntVect());
 
-        Real const c2 = PhysConst::c * PhysConst::c;
+        amrex::Real const c2 = PhysConst::c * PhysConst::c;
 
         // Loop over the cells and update the fields
         amrex::ParallelFor(ter, tet, tez,
 
             [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
-                Real const r = rmin + (i + 0.5_rt)*dr; // r on cell-centered point (Er is cell-centered in r)
+                amrex::Real const r = rmin + (i + 0.5_rt)*dr; // r on cell-centered point (Er is cell-centered in r)
                 Er(i, j, 0, 0) +=  c2 * dt*(
                     - T_Algo::DownwardDz(Bt, coefs_z, n_coefs_z, i, j, 0, 0)
                     - PhysConst::mu0 * jr(i, j, 0, 0) ); // Mode m=0
@@ -301,7 +301,7 @@ void FiniteDifferenceSolver::EvolveECylindrical (
             },
 
             [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
-                Real const r = rmin + i*dr; // r on a nodal grid (Et is nodal in r)
+                amrex::Real const r = rmin + i*dr; // r on a nodal grid (Et is nodal in r)
                 if (r != 0) { // Off-axis, regular Maxwell equations
                     Et(i, j, 0, 0) += c2 * dt*(
                         - T_Algo::DownwardDr(Bz, coefs_r, n_coefs_r, i, j, 0, 0)
@@ -342,7 +342,7 @@ void FiniteDifferenceSolver::EvolveECylindrical (
             },
 
             [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
-                Real const r = rmin + i*dr; // r on a nodal grid (Ez is nodal in r)
+                amrex::Real const r = rmin + i*dr; // r on a nodal grid (Ez is nodal in r)
                 if (r != 0) { // Off-axis, regular Maxwell equations
                     Ez(i, j, 0, 0) += c2 * dt*(
                        T_Algo::DownwardDrr_over_r(Bt, r, dr, coefs_r, n_coefs_r, i, j, 0, 0)
@@ -378,7 +378,7 @@ void FiniteDifferenceSolver::EvolveECylindrical (
         if (Ffield) {
 
             // Extract field data for this grid/tile
-            Array4<Real> F = Ffield->array(mfi);
+            Array4<amrex::Real> F = Ffield->array(mfi);
 
             // Loop over the cells and update the fields
             amrex::ParallelFor(ter, tet, tez,
@@ -392,7 +392,7 @@ void FiniteDifferenceSolver::EvolveECylindrical (
                 },
                 [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
                     // Mode m=0: no update
-                    Real const r = rmin + i*dr; // r on a nodal grid (Et is nodal in r)
+                    amrex::Real const r = rmin + i*dr; // r on a nodal grid (Et is nodal in r)
                     if (r != 0){ // Off-axis, regular Maxwell equations
                         for (int m=1; m<nmodes; m++) { // Higher-order modes
                             Et(i, j, 0, 2*m-1) += c2 * dt *  m * F(i, j, 0, 2*m  )/r; // Real part

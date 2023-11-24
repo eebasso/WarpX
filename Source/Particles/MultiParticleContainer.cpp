@@ -79,7 +79,7 @@
 #include <utility>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 namespace
 {
@@ -131,7 +131,7 @@ MultiParticleContainer::ReadParameters ()
     static bool initialized = false;
     if (!initialized)
     {
-        const ParmParse pp_particles("particles");
+        const amrex::ParmParse pp_particles("particles");
 
         // allocating and initializing default values of external fields for particles
         m_E_external_particle.resize(3);
@@ -353,7 +353,7 @@ MultiParticleContainer::ReadParameters ()
                             "ERROR: use_fdtd_nci_corr is not supported in 1D");
 #endif
 
-        const ParmParse pp_lasers("lasers");
+        const amrex::ParmParse pp_lasers("lasers");
         pp_lasers.queryarr("names", lasers_names);
         auto const nlasers = lasers_names.size();
         // Get lasers to deposit on main grid
@@ -372,11 +372,11 @@ MultiParticleContainer::ReadParameters ()
 
 
 #ifdef WARPX_QED
-        const ParmParse pp_warpx("warpx");
+        const amrex::ParmParse pp_warpx("warpx");
         pp_warpx.query("do_qed_schwinger", m_do_qed_schwinger);
 
         if (m_do_qed_schwinger) {
-            const ParmParse pp_qed_schwinger("qed_schwinger");
+            const amrex::ParmParse pp_qed_schwinger("qed_schwinger");
             pp_qed_schwinger.get("ele_product_species", m_qed_schwinger_ele_product_name);
             pp_qed_schwinger.get("pos_product_species", m_qed_schwinger_pos_product_name);
 #if defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
@@ -469,14 +469,14 @@ MultiParticleContainer::InitMultiPhysicsModules ()
 
 void
 MultiParticleContainer::Evolve (int lev,
-                                const MultiFab& Ex, const MultiFab& Ey, const MultiFab& Ez,
-                                const MultiFab& Bx, const MultiFab& By, const MultiFab& Bz,
-                                MultiFab& jx, MultiFab& jy, MultiFab& jz,
-                                MultiFab* cjx,  MultiFab* cjy, MultiFab* cjz,
-                                MultiFab* rho, MultiFab* crho,
-                                const MultiFab* cEx, const MultiFab* cEy, const MultiFab* cEz,
-                                const MultiFab* cBx, const MultiFab* cBy, const MultiFab* cBz,
-                                Real t, Real dt, DtType a_dt_type, bool skip_deposition)
+                                const amrex::MultiFab& Ex, const amrex::MultiFab& Ey, const amrex::MultiFab& Ez,
+                                const amrex::MultiFab& Bx, const amrex::MultiFab& By, const amrex::MultiFab& Bz,
+                                MultiFab& jx, amrex::MultiFab& jy, amrex::MultiFab& jz,
+                                MultiFab* cjx,  MultiFab* cjy, amrex::MultiFab* cjz,
+                                MultiFab* rho, amrex::MultiFab* crho,
+                                const amrex::MultiFab* cEx, const amrex::MultiFab* cEy, const amrex::MultiFab* cEz,
+                                const amrex::MultiFab* cBx, const amrex::MultiFab* cBy, const amrex::MultiFab* cBz,
+                                amrex::Real t, amrex::Real dt, DtType a_dt_type, bool skip_deposition)
 {
     if (! skip_deposition) {
         jx.setVal(0.0);
@@ -495,7 +495,7 @@ MultiParticleContainer::Evolve (int lev,
 }
 
 void
-MultiParticleContainer::PushX (Real dt)
+MultiParticleContainer::PushX (amrex::Real dt)
 {
     for (auto& pc : allcontainers) {
         pc->PushX(dt);
@@ -503,22 +503,22 @@ MultiParticleContainer::PushX (Real dt)
 }
 
 void
-MultiParticleContainer::PushP (int lev, Real dt,
-                               const MultiFab& Ex, const MultiFab& Ey, const MultiFab& Ez,
-                               const MultiFab& Bx, const MultiFab& By, const MultiFab& Bz)
+MultiParticleContainer::PushP (int lev, amrex::Real dt,
+                               const amrex::MultiFab& Ex, const amrex::MultiFab& Ey, const amrex::MultiFab& Ez,
+                               const amrex::MultiFab& Bx, const amrex::MultiFab& By, const amrex::MultiFab& Bz)
 {
     for (auto& pc : allcontainers) {
         pc->PushP(lev, dt, Ex, Ey, Ez, Bx, By, Bz);
     }
 }
 
-std::unique_ptr<MultiFab>
+std::unique_ptr<amrex::MultiFab>
 MultiParticleContainer::GetZeroChargeDensity (const int lev)
 {
     const WarpX& warpx = WarpX::GetInstance();
 
-    BoxArray nba = warpx.boxArray(lev);
-    const DistributionMapping dmap = warpx.DistributionMap(lev);
+    amrex::BoxArray nba = warpx.boxArray(lev);
+    const amrex::DistributionMapping dmap = warpx.DistributionMap(lev);
     const int ng_rho = warpx.get_ng_depos_rho().max();
 
 #ifdef WARPX_DIM_RZ
@@ -531,7 +531,7 @@ MultiParticleContainer::GetZeroChargeDensity (const int lev)
     if( !is_PSATD_RZ )
         nba.surroundingNodes();
 
-    auto zero_rho = std::make_unique<MultiFab>(nba, dmap, WarpX::ncomps, ng_rho);
+    auto zero_rho = std::make_unique<amrex::MultiFab>(nba, dmap, WarpX::ncomps, ng_rho);
     zero_rho->setVal(amrex::Real(0.0));
     return zero_rho;
 }
@@ -601,14 +601,14 @@ MultiParticleContainer::DepositCharge (
 #endif
 }
 
-std::unique_ptr<MultiFab>
+std::unique_ptr<amrex::MultiFab>
 MultiParticleContainer::GetChargeDensity (int lev, bool local)
 {
-    std::unique_ptr<MultiFab> rho = GetZeroChargeDensity(lev);
+    std::unique_ptr<amrex::MultiFab> rho = GetZeroChargeDensity(lev);
 
     for (auto& container : allcontainers) {
         if (container->do_not_deposit) continue;
-        const std::unique_ptr<MultiFab> rhoi = container->GetChargeDensity(lev, true);
+        const std::unique_ptr<amrex::MultiFab> rhoi = container->GetChargeDensity(lev, true);
         MultiFab::Add(*rho, *rhoi, 0, 0, rho->nComp(), rho->nGrowVect());
     }
     if (!local) {
@@ -667,27 +667,27 @@ MultiParticleContainer::ApplyBoundaryConditions ()
     }
 }
 
-Vector<Long>
+amrex::Vector<amrex::Long>
 MultiParticleContainer::GetZeroParticlesInGrid (const int lev) const
 {
     const WarpX& warpx = WarpX::GetInstance();
     const auto num_boxes = static_cast<int>(warpx.boxArray(lev).size());
-    Vector<Long> r(num_boxes, 0);
+    amrex::Vector<amrex::Long> r(num_boxes, 0);
     return r;
 }
 
-Vector<Long>
+amrex::Vector<amrex::Long>
 MultiParticleContainer::NumberOfParticlesInGrid (int lev) const
 {
     if (allcontainers.empty())
     {
-        Vector<Long> r = GetZeroParticlesInGrid(lev);
+        amrex::Vector<amrex::Long> r = GetZeroParticlesInGrid(lev);
         return r;
     }
     else
     {
         const bool only_valid=true, only_local=true;
-        Vector<Long> r = allcontainers[0]->NumberOfParticlesInGrid(lev,only_valid,only_local);
+        amrex::Vector<amrex::Long> r = allcontainers[0]->NumberOfParticlesInGrid(lev,only_valid,only_local);
         for (unsigned i = 1, n = allcontainers.size(); i < n; ++i) {
             const auto& ri = allcontainers[i]->NumberOfParticlesInGrid(lev,only_valid,only_local);
             for (unsigned j=0, m=ri.size(); j<m; ++j) {
@@ -700,7 +700,7 @@ MultiParticleContainer::NumberOfParticlesInGrid (int lev) const
 }
 
 void
-MultiParticleContainer::Increment (MultiFab& mf, int lev)
+MultiParticleContainer::Increment (amrex::MultiFab& mf, int lev)
 {
     for (auto& pc : allcontainers) {
         pc->Increment(mf,lev);
@@ -708,7 +708,7 @@ MultiParticleContainer::Increment (MultiFab& mf, int lev)
 }
 
 void
-MultiParticleContainer::SetParticleBoxArray (int lev, BoxArray& new_ba)
+MultiParticleContainer::SetParticleBoxArray (int lev, amrex::BoxArray& new_ba)
 {
     for (auto& pc : allcontainers) {
         pc->SetParticleBoxArray(lev,new_ba);
@@ -871,12 +871,12 @@ MultiParticleContainer::SetDoBackTransformedParticles (std::string species_name,
 
 void
 MultiParticleContainer::doFieldIonization (int lev,
-                                           const MultiFab& Ex,
-                                           const MultiFab& Ey,
-                                           const MultiFab& Ez,
-                                           const MultiFab& Bx,
-                                           const MultiFab& By,
-                                           const MultiFab& Bz)
+                                           const amrex::MultiFab& Ex,
+                                           const amrex::MultiFab& Ey,
+                                           const amrex::MultiFab& Ez,
+                                           const amrex::MultiFab& Bx,
+                                           const amrex::MultiFab& By,
+                                           const amrex::MultiFab& Bz)
 {
     WARPX_PROFILE("MultiParticleContainer::doFieldIonization()");
 
@@ -1008,7 +1008,7 @@ void MultiParticleContainer::InitQED ()
 void MultiParticleContainer::InitQuantumSync ()
 {
     std::string lookup_table_mode;
-    const ParmParse pp_qed_qs("qed_qs");
+    const amrex::ParmParse pp_qed_qs("qed_qs");
 
     //If specified, use a user-defined energy threshold for photon creation
     ParticleReal temp;
@@ -1055,7 +1055,7 @@ void MultiParticleContainer::InitQuantumSync ()
         if(load_table_name.empty()){
             WARPX_ABORT_WITH_MESSAGE("Quantum Synchrotron table name should be provided");
         }
-        Vector<char> table_data;
+        amrex::Vector<char> table_data;
         ParallelDescriptor::ReadAndBcastFile(load_table_name, table_data);
         ParallelDescriptor::Barrier();
         m_shr_p_qs_engine->init_lookup_tables_from_raw_data(table_data,
@@ -1080,7 +1080,7 @@ void MultiParticleContainer::InitQuantumSync ()
 void MultiParticleContainer::InitBreitWheeler ()
 {
     std::string lookup_table_mode;
-    const ParmParse pp_qed_bw("qed_bw");
+    const amrex::ParmParse pp_qed_bw("qed_bw");
 
     // bw_minimum_chi_phot is the minimum chi parameter to be
     // considered for pair production. If a photon has chi < chi_min,
@@ -1113,7 +1113,7 @@ void MultiParticleContainer::InitBreitWheeler ()
         if(load_table_name.empty()){
             WARPX_ABORT_WITH_MESSAGE("Breit Wheeler table name should be provided");
         }
-        Vector<char> table_data;
+        amrex::Vector<char> table_data;
         ParallelDescriptor::ReadAndBcastFile(load_table_name, table_data);
         ParallelDescriptor::Barrier();
         m_shr_p_bw_engine->init_lookup_tables_from_raw_data(
@@ -1138,7 +1138,7 @@ void MultiParticleContainer::InitBreitWheeler ()
 void
 MultiParticleContainer::QuantumSyncGenerateTable ()
 {
-    const ParmParse pp_qed_qs("qed_qs");
+    const amrex::ParmParse pp_qed_qs("qed_qs");
     std::string table_name;
     pp_qed_qs.query("save_table_in", table_name);
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
@@ -1209,11 +1209,11 @@ MultiParticleContainer::QuantumSyncGenerateTable ()
         m_shr_p_qs_engine->compute_lookup_tables(ctrl, qs_minimum_chi_part);
         const auto data = m_shr_p_qs_engine->export_lookup_tables_data();
         WarpXUtilIO::WriteBinaryDataOnFile(table_name,
-            Vector<char>{data.begin(), data.end()});
+            amrex::Vector<char>{data.begin(), data.end()});
     }
 
     ParallelDescriptor::Barrier();
-    Vector<char> table_data;
+    amrex::Vector<char> table_data;
     ParallelDescriptor::ReadAndBcastFile(table_name, table_data);
     ParallelDescriptor::Barrier();
 
@@ -1228,7 +1228,7 @@ MultiParticleContainer::QuantumSyncGenerateTable ()
 void
 MultiParticleContainer::BreitWheelerGenerateTable ()
 {
-    const ParmParse pp_qed_bw("qed_bw");
+    const amrex::ParmParse pp_qed_bw("qed_bw");
     std::string table_name;
     pp_qed_bw.query("save_table_in", table_name);
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
@@ -1294,11 +1294,11 @@ MultiParticleContainer::BreitWheelerGenerateTable ()
         m_shr_p_bw_engine->compute_lookup_tables(ctrl, bw_minimum_chi_part);
         const auto data = m_shr_p_bw_engine->export_lookup_tables_data();
         WarpXUtilIO::WriteBinaryDataOnFile(table_name,
-            Vector<char>{data.begin(), data.end()});
+            amrex::Vector<char>{data.begin(), data.end()});
     }
 
     ParallelDescriptor::Barrier();
-    Vector<char> table_data;
+    amrex::Vector<char> table_data;
     ParallelDescriptor::ReadAndBcastFile(table_name, table_data);
     ParallelDescriptor::Barrier();
 
@@ -1360,12 +1360,12 @@ MultiParticleContainer::doQEDSchwinger ()
     pc_product_ele->defineAllParticleTiles();
     pc_product_pos->defineAllParticleTiles();
 
-    const MultiFab & Ex = warpx.getEfield(level_0,0);
-    const MultiFab & Ey = warpx.getEfield(level_0,1);
-    const MultiFab & Ez = warpx.getEfield(level_0,2);
-    const MultiFab & Bx = warpx.getBfield(level_0,0);
-    const MultiFab & By = warpx.getBfield(level_0,1);
-    const MultiFab & Bz = warpx.getBfield(level_0,2);
+    const amrex::MultiFab & Ex = warpx.getEfield(level_0,0);
+    const amrex::MultiFab & Ey = warpx.getEfield(level_0,1);
+    const amrex::MultiFab & Ez = warpx.getEfield(level_0,2);
+    const amrex::MultiFab & Bx = warpx.getBfield(level_0,0);
+    const amrex::MultiFab & By = warpx.getBfield(level_0,1);
+    const amrex::MultiFab & Bz = warpx.getBfield(level_0,2);
 
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
@@ -1479,12 +1479,12 @@ MultiParticleContainer::ComputeSchwingerGlobalBox () const
 }
 
 void MultiParticleContainer::doQedEvents (int lev,
-                                          const MultiFab& Ex,
-                                          const MultiFab& Ey,
-                                          const MultiFab& Ez,
-                                          const MultiFab& Bx,
-                                          const MultiFab& By,
-                                          const MultiFab& Bz)
+                                          const amrex::MultiFab& Ex,
+                                          const amrex::MultiFab& Ey,
+                                          const amrex::MultiFab& Ez,
+                                          const amrex::MultiFab& Bx,
+                                          const amrex::MultiFab& By,
+                                          const amrex::MultiFab& Bz)
 {
     WARPX_PROFILE("MultiParticleContainer::doQedEvents()");
 
@@ -1493,12 +1493,12 @@ void MultiParticleContainer::doQedEvents (int lev,
 }
 
 void MultiParticleContainer::doQedBreitWheeler (int lev,
-                                                const MultiFab& Ex,
-                                                const MultiFab& Ey,
-                                                const MultiFab& Ez,
-                                                const MultiFab& Bx,
-                                                const MultiFab& By,
-                                                const MultiFab& Bz)
+                                                const amrex::MultiFab& Ex,
+                                                const amrex::MultiFab& Ey,
+                                                const amrex::MultiFab& Ez,
+                                                const amrex::MultiFab& Bx,
+                                                const amrex::MultiFab& By,
+                                                const amrex::MultiFab& Bz)
 {
     WARPX_PROFILE("MultiParticleContainer::doQedBreitWheeler()");
 
@@ -1574,12 +1574,12 @@ void MultiParticleContainer::doQedBreitWheeler (int lev,
 }
 
 void MultiParticleContainer::doQedQuantumSync (int lev,
-                                               const MultiFab& Ex,
-                                               const MultiFab& Ey,
-                                               const MultiFab& Ez,
-                                               const MultiFab& Bx,
-                                               const MultiFab& By,
-                                               const MultiFab& Bz)
+                                               const amrex::MultiFab& Ex,
+                                               const amrex::MultiFab& Ey,
+                                               const amrex::MultiFab& Ez,
+                                               const amrex::MultiFab& Bx,
+                                               const amrex::MultiFab& By,
+                                               const amrex::MultiFab& Bz)
 {
     WARPX_PROFILE("MultiParticleContainer::doQedQuantumSync()");
 

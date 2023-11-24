@@ -27,11 +27,11 @@
 
 #if WARPX_USE_PSATD
 
-using namespace amrex;
+// using namespace amrex;
 
 PsatdAlgorithmJConstantInTime::PsatdAlgorithmJConstantInTime(
     const SpectralKSpace& spectral_kspace,
-    const DistributionMapping& dm,
+    const amrex::DistributionMapping& dm,
     const SpectralFieldIndex& spectral_index,
     const int norder_x,
     const int norder_y,

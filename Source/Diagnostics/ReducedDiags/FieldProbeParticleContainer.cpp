@@ -56,7 +56,7 @@
 #include <algorithm>
 #include <cmath>
 
-using namespace amrex;
+// using namespace amrex;
 
 FieldProbeParticleContainer::FieldProbeParticleContainer (AmrCore* amr_core)
     : ParticleContainer<0, 0, FieldProbePIdx::nattribs>(amr_core->GetParGDB())

@@ -22,7 +22,7 @@
 
 #include <utility>
 
-using namespace amrex;
+// using namespace amrex;
 
 /* \brief Determine which particles deposit/gather in the buffer, and
  *        and reorder the particle arrays accordingly
@@ -53,21 +53,21 @@ void
 PhysicalParticleContainer::PartitionParticlesInBuffers(
     long& nfine_current, long& nfine_gather, long const np,
     WarpXParIter& pti, int const lev,
-    iMultiFab const* current_masks,
-    iMultiFab const* gather_masks )
+    amrex::iMultiFab const* current_masks,
+    amrex::iMultiFab const* gather_masks )
 {
     WARPX_PROFILE("PhysicalParticleContainer::PartitionParticlesInBuffers");
 
     // Initialize temporary arrays
-    Gpu::DeviceVector<int> inexflag;
+    amrex::Gpu::DeviceVector<int> inexflag;
     inexflag.resize(np);
-    Gpu::DeviceVector<long> pid;
+    amrex::Gpu::DeviceVector<long> pid;
     pid.resize(np);
 
     // First, partition particles into the larger buffer
 
     // - Select the larger buffer
-    iMultiFab const* bmasks =
+    amrex::iMultiFab const* bmasks =
         (WarpX::n_field_gather_buffer >= WarpX::n_current_deposition_buffer) ?
         gather_masks : current_masks;
     // - For each particle, find whether it is in the larger buffer,

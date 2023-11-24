@@ -7,7 +7,7 @@
  */
 #include "InjectorMomentum.H"
 
-using namespace amrex;
+// using namespace amrex;
 
 void InjectorMomentum::clear ()
 {

@@ -20,7 +20,7 @@
 #include <fstream>
 #include <iomanip>
 
-using namespace amrex;
+// using namespace amrex;
 
 // constructor
 ReducedDiags::ReducedDiags (std::string rd_name)
@@ -28,7 +28,7 @@ ReducedDiags::ReducedDiags (std::string rd_name)
 {
     BackwardCompatibility();
 
-    const ParmParse pp_rd_name(m_rd_name);
+    const amrex::ParmParse pp_rd_name(m_rd_name);
 
     // read path
     pp_rd_name.query("path", m_path);
@@ -38,7 +38,7 @@ ReducedDiags::ReducedDiags (std::string rd_name)
 
     // check if it is a restart run
     std::string restart_chkfile;
-    const ParmParse pp_amr("amr");
+    const amrex::ParmParse pp_amr("amr");
     pp_amr.query("restart", restart_chkfile);
     bool IsNotRestart = restart_chkfile.empty();
 

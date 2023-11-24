@@ -47,7 +47,7 @@
     namespace io = openPMD;
 #endif
 
-using namespace amrex;
+// using namespace amrex;
 
 void
 WarpXLaserProfiles::FromFileLaserProfile::init (
@@ -132,8 +132,8 @@ WarpXLaserProfiles::FromFileLaserProfile::update (amrex::Real t)
 void
 WarpXLaserProfiles::FromFileLaserProfile::fill_amplitude (
     const int np,
-    Real const * AMREX_RESTRICT const Xp, Real const * AMREX_RESTRICT const Yp,
-    Real t, Real * AMREX_RESTRICT const amplitude) const
+    amrex::Real const * AMREX_RESTRICT const Xp, amrex::Real const * AMREX_RESTRICT const Yp,
+    amrex::Real t, amrex::Real * AMREX_RESTRICT const amplitude) const
 {
     t += m_params.t_min - m_params.t_delay;
     //Amplitude is 0 if time is out of range
@@ -260,7 +260,7 @@ WarpXLaserProfiles::FromFileLaserProfile::parse_binary_file (std::string binary_
         if(m_params.ny != 1) WARPX_ABORT_WITH_MESSAGE("ny in binary file must be 1 in 2D");
 #endif
         //Coordinates
-        Vector<double> dbuf_t, dbuf_x, dbuf_y;
+        amrex::Vector<double> dbuf_t, dbuf_x, dbuf_y;
         dbuf_t.resize(2);
         dbuf_x.resize(2);
 #if (defined(WARPX_DIM_3D) || (defined WARPX_DIM_RZ))
@@ -323,7 +323,7 @@ WarpXLaserProfiles::FromFileLaserProfile::read_data_t_chunk (int t_begin, int t_
         (m_params.n_rz_azimuthal_components*(i_last-i_first+1)*m_params.nr) :
         (i_last-i_first+1)*m_params.nx*m_params.ny;
     m_params.E_lasy_data.resize(data_size);
-    Vector<Complex> h_E_lasy_data(m_params.E_lasy_data.size());
+    amrex::Vector<Complex> h_E_lasy_data(m_params.E_lasy_data.size());
     if(ParallelDescriptor::IOProcessor()){
         auto series = io::Series(m_params.lasy_file_name, io::Access::READ_ONLY);
         auto i = series.iterations[0];
@@ -379,7 +379,7 @@ WarpXLaserProfiles::FromFileLaserProfile::read_binary_data_t_chunk (int t_begin,
     auto i_last = min(t_end-1, m_params.nt-1);
     const int data_size = (i_last-i_first+1)*m_params.nx*m_params.ny;
     m_params.E_binary_data.resize(data_size);
-    Vector<Real> h_E_binary_data(m_params.E_binary_data.size());
+    amrex::Vector<amrex::Real> h_E_binary_data(m_params.E_binary_data.size());
     if(ParallelDescriptor::IOProcessor()){
         //Read data chunk
         std::ifstream inp(m_params.binary_file_name, std::ios::binary);
@@ -404,7 +404,7 @@ WarpXLaserProfiles::FromFileLaserProfile::read_binary_data_t_chunk (int t_begin,
         if(!inp) WARPX_ABORT_WITH_MESSAGE("Failed to read field data from binary file");
         const int read_size = (i_last - i_first + 1)*
             m_params.nx*m_params.ny;
-        Vector<double> buf_e(read_size);
+        amrex::Vector<double> buf_e(read_size);
         inp.read(reinterpret_cast<char*>(buf_e.dataPtr()), static_cast<std::streamsize>(read_size*sizeof(double)));
         if(!inp) WARPX_ABORT_WITH_MESSAGE("Failed to read field data from binary file");
         std::transform(buf_e.begin(), buf_e.end(), h_E_binary_data.begin(),
@@ -427,8 +427,8 @@ void
 WarpXLaserProfiles::FromFileLaserProfile::internal_fill_amplitude_uniform_cartesian (
     const int idx_t_left,
     const int np,
-    Real const * AMREX_RESTRICT const Xp, Real const * AMREX_RESTRICT const Yp,
-    Real t, Real * AMREX_RESTRICT const amplitude) const
+    amrex::Real const * AMREX_RESTRICT const Xp, amrex::Real const * AMREX_RESTRICT const Yp,
+    amrex::Real t, amrex::Real * AMREX_RESTRICT const amplitude) const
 {
     // Copy member variables to tmp copies
     // and get pointers to underlying data for GPU.
@@ -512,8 +512,8 @@ void
 WarpXLaserProfiles::FromFileLaserProfile::internal_fill_amplitude_uniform_cylindrical (
     const int idx_t_left,
     const int np,
-    Real const * AMREX_RESTRICT const Xp, Real const * AMREX_RESTRICT const Yp,
-    Real t, Real * AMREX_RESTRICT const amplitude) const
+    amrex::Real const * AMREX_RESTRICT const Xp, amrex::Real const * AMREX_RESTRICT const Yp,
+    amrex::Real t, amrex::Real * AMREX_RESTRICT const amplitude) const
 {
     // Copy member variables to tmp copies
     // and get pointers to underlying data for GPU.
@@ -611,8 +611,8 @@ void
 WarpXLaserProfiles::FromFileLaserProfile::internal_fill_amplitude_uniform_binary (
     const int idx_t_left,
     const int np,
-    Real const * AMREX_RESTRICT const Xp, Real const * AMREX_RESTRICT const Yp,
-    Real t, Real * AMREX_RESTRICT const amplitude) const
+    amrex::Real const * AMREX_RESTRICT const Xp, amrex::Real const * AMREX_RESTRICT const Yp,
+    amrex::Real t, amrex::Real * AMREX_RESTRICT const amplitude) const
 {
     // Copy member variables to tmp copies
     // and get pointers to underlying data for GPU.

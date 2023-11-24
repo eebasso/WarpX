@@ -42,7 +42,7 @@
 #include <array>
 #include <memory>
 
-using namespace amrex;
+// using namespace amrex;
 
 /**
  * \brief Update the B field, over one timestep
@@ -123,19 +123,19 @@ void FiniteDifferenceSolver::EvolveBCartesian (
         auto wt = static_cast<amrex::Real>(amrex::second());
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Bx = Bfield[0]->array(mfi);
-        Array4<Real> const& By = Bfield[1]->array(mfi);
-        Array4<Real> const& Bz = Bfield[2]->array(mfi);
-        Array4<Real> const& Ex = Efield[0]->array(mfi);
-        Array4<Real> const& Ey = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real> const& Bx = Bfield[0]->array(mfi);
+        Array4<amrex::Real> const& By = Bfield[1]->array(mfi);
+        Array4<amrex::Real> const& Bz = Bfield[2]->array(mfi);
+        Array4<amrex::Real> const& Ex = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Ey = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
         auto const n_coefs_x = static_cast<int>(m_stencil_coefs_x.size());
-        Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
         auto const n_coefs_y = static_cast<int>(m_stencil_coefs_y.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // Extract tileboxes for which to loop
@@ -172,7 +172,7 @@ void FiniteDifferenceSolver::EvolveBCartesian (
         if (Gfield)
         {
             // Extract field data for this grid/tile
-            const Array4<Real> G = Gfield->array(mfi);
+            const Array4<amrex::Real> G = Gfield->array(mfi);
 
             // Loop over cells and update G
             amrex::ParallelFor(tbx, tby, tbz,
@@ -237,13 +237,13 @@ void FiniteDifferenceSolver::EvolveBCartesianECT (
 
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
             // Extract field data for this grid/tile
-            Array4<Real> const &B = Bfield[idim]->array(mfi);
-            Array4<Real> const &Rho = ECTRhofield[idim]->array(mfi);
-            Array4<Real> const &Venl_dim = Venl[idim]->array(mfi);
+            Array4<amrex::Real> const &B = Bfield[idim]->array(mfi);
+            Array4<amrex::Real> const &Rho = ECTRhofield[idim]->array(mfi);
+            Array4<amrex::Real> const &Venl_dim = Venl[idim]->array(mfi);
 
             amrex::Array4<int> const &flag_info_cell_dim = flag_info_cell[idim]->array(mfi);
-            amrex::Array4<Real> const &S = face_areas[idim]->array(mfi);
-            amrex::Array4<Real> const &S_mod = area_mod[idim]->array(mfi);
+            amrex::Array4<amrex::Real> const &S = face_areas[idim]->array(mfi);
+            amrex::Array4<amrex::Real> const &S_mod = area_mod[idim]->array(mfi);
 
             auto &borrowing_dim = (*borrowing[idim])[mfi];
             auto borrowing_dim_neigh_faces = borrowing_dim.neigh_faces.data();
@@ -388,23 +388,23 @@ void FiniteDifferenceSolver::EvolveBCylindrical (
         auto wt = static_cast<amrex::Real>(amrex::second());
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Br = Bfield[0]->array(mfi);
-        Array4<Real> const& Bt = Bfield[1]->array(mfi);
-        Array4<Real> const& Bz = Bfield[2]->array(mfi);
-        Array4<Real> const& Er = Efield[0]->array(mfi);
-        Array4<Real> const& Et = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real> const& Br = Bfield[0]->array(mfi);
+        Array4<amrex::Real> const& Bt = Bfield[1]->array(mfi);
+        Array4<amrex::Real> const& Bz = Bfield[2]->array(mfi);
+        Array4<amrex::Real> const& Er = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Et = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_r = m_stencil_coefs_r.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_r = m_stencil_coefs_r.dataPtr();
         auto const n_coefs_r = static_cast<int>(m_stencil_coefs_r.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // Extract cylindrical specific parameters
-        Real const dr = m_dr;
+        amrex::Real const dr = m_dr;
         int const nmodes = m_nmodes;
-        Real const rmin = m_rmin;
+        amrex::Real const rmin = m_rmin;
 
         // Extract tileboxes for which to loop
         Box const& tbr  = mfi.tilebox(Bfield[0]->ixType().toIntVect());
@@ -415,7 +415,7 @@ void FiniteDifferenceSolver::EvolveBCylindrical (
         amrex::ParallelFor(tbr, tbt, tbz,
 
             [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
-                Real const r = rmin + i*dr; // r on nodal point (Br is nodal in r)
+                amrex::Real const r = rmin + i*dr; // r on nodal point (Br is nodal in r)
                 if (r != 0) { // Off-axis, regular Maxwell equations
                     Br(i, j, 0, 0) += dt * T_Algo::UpwardDz(Et, coefs_z, n_coefs_z, i, j, 0, 0); // Mode m=0
                     for (int m=1; m<nmodes; m++) { // Higher-order modes
@@ -462,7 +462,7 @@ void FiniteDifferenceSolver::EvolveBCylindrical (
             },
 
             [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
-                Real const r = rmin + (i + 0.5_rt)*dr; // r on a cell-centered grid (Bz is cell-centered in r)
+                amrex::Real const r = rmin + (i + 0.5_rt)*dr; // r on a cell-centered grid (Bz is cell-centered in r)
                 Bz(i, j, 0, 0) += dt*( - T_Algo::UpwardDrr_over_r(Et, r, dr, coefs_r, n_coefs_r, i, j, 0, 0));
                 for (int m=1 ; m<nmodes ; m++) { // Higher-order modes
                     Bz(i, j, 0, 2*m-1) += dt*( m * Er(i, j, 0, 2*m  )/r

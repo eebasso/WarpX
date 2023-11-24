@@ -18,7 +18,7 @@
 #include <memory>
 
 namespace PEC {
-using namespace amrex;
+// using namespace amrex;
     /**
      * \brief Determines if the field boundary condition stored in fboundary
      *        in direction, dir, is PEC.

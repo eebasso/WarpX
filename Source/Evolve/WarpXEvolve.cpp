@@ -56,7 +56,7 @@
 #include <ostream>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 using ablastr::utils::SignalHandling;
 
 void
@@ -65,7 +65,7 @@ WarpX::Evolve (int numsteps)
     WARPX_PROFILE_REGION("WarpX::Evolve()");
     WARPX_PROFILE("WarpX::Evolve()");
 
-    Real cur_time = t_new[0];
+    amrex::Real cur_time = t_new[0];
 
     // Note that the default argument is numsteps = -1
     const int numsteps_max = (numsteps < 0)?(max_step):(istep[0] + numsteps);
@@ -79,7 +79,7 @@ WarpX::Evolve (int numsteps)
     for (int step = istep[0]; step < numsteps_max && cur_time < stop_time; ++step)
     {
         WARPX_PROFILE("WarpX::Evolve::step");
-        const auto evolve_time_beg_step = static_cast<Real>(amrex::second());
+        const auto evolve_time_beg_step = static_cast<amrex::Real>(amrex::second());
 
         //Check and clear signal flags and asynchronously broadcast them from process 0
         SignalHandling::CheckSignals();
@@ -378,7 +378,7 @@ WarpX::Evolve (int numsteps)
         }
 
         // create ending time stamp for calculating elapsed time each iteration
-        const auto evolve_time_end_step = static_cast<Real>(amrex::second());
+        const auto evolve_time_end_step = static_cast<amrex::Real>(amrex::second());
         evolve_time += evolve_time_end_step - evolve_time_beg_step;
 
         HandleSignals();
@@ -413,7 +413,7 @@ WarpX::Evolve (int numsteps)
 *  for the field advance and particle pusher.
 */
 void
-WarpX::OneStep_nosub (Real cur_time)
+WarpX::OneStep_nosub (amrex::Real cur_time)
 {
     WARPX_PROFILE("WarpX::OneStep_nosub()");
 
@@ -764,7 +764,7 @@ WarpX::OneStep_multiJ (const amrex::Real cur_time)
 *
 */
 void
-WarpX::OneStep_sub1 (Real curtime)
+WarpX::OneStep_sub1 (amrex::Real curtime)
 {
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
         electrostatic_solver_id == ElectrostaticSolverAlgo::None,
@@ -904,9 +904,9 @@ WarpX::OneStep_sub1 (Real curtime)
             // Exchange guard cells of PMLs only (0 cells are exchanged for the
             // regular B field MultiFab). This is required as B and F have just been
             // evolved.
-            FillBoundaryB(coarse_lev, PatchType::fine, IntVect::TheZeroVector(),
+            FillBoundaryB(coarse_lev, PatchType::fine, amrex::IntVect::TheZeroVector(),
                           WarpX::sync_nodal_points);
-            FillBoundaryF(coarse_lev, PatchType::fine, IntVect::TheZeroVector(),
+            FillBoundaryF(coarse_lev, PatchType::fine, amrex::IntVect::TheZeroVector(),
                           WarpX::sync_nodal_points);
         }
         DampPML(coarse_lev, PatchType::fine);
@@ -1035,7 +1035,7 @@ WarpX::PushParticlesandDepose (int lev, amrex::Real cur_time, DtType a_dt_type, 
  * The mirror normal direction has to be parallel to the z axis.
  */
 void
-WarpX::applyMirrors(Real time)
+WarpX::applyMirrors(amrex::Real time)
 {
     // Loop over the mirrors
     for(int i_mirror=0; i_mirror<num_mirrors; ++i_mirror)

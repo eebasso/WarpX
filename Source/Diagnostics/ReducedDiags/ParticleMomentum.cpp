@@ -30,7 +30,7 @@
 #include <string>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 ParticleMomentum::ParticleMomentum (std::string rd_name)
     : ReducedDiags{rd_name}
@@ -143,9 +143,9 @@ void ParticleMomentum::ComputeDiags (int step)
         // held by the current MPI rank for this species (loop over all boxes held by this MPI rank):
         // the result r is the tuple (Px, Py, Pz, Ws)
         amrex::ReduceOps<ReduceOpSum, ReduceOpSum, ReduceOpSum, ReduceOpSum> reduce_ops;
-        auto r = amrex::ParticleReduce<amrex::ReduceData<Real, Real, Real, Real>>(
+        auto r = amrex::ParticleReduce<amrex::ReduceData<amrex::Real, amrex::Real, amrex::Real, amrex::Real>>(
             myspc,
-            [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<Real, Real, Real, Real>
+            [=] AMREX_GPU_DEVICE(const PType& p) noexcept -> amrex::GpuTuple<amrex::Real, amrex::Real, amrex::Real, amrex::Real>
             {
                 const amrex::Real w  = p.rdata(PIdx::w);
                 const amrex::Real ux = p.rdata(PIdx::ux);
@@ -182,7 +182,7 @@ void ParticleMomentum::ComputeDiags (int step)
         // 3 values of mean  momentum for all  species +
         // 3 values of mean  momentum for each species
         const int offset_mean_species = 3 + nSpecies*3 + 3 + i_s*3;
-        if (Ws > std::numeric_limits<Real>::min())
+        if (Ws > std::numeric_limits<amrex::Real>::min())
         {
             m_data[offset_mean_species+0] = Px / Ws;
             m_data[offset_mean_species+1] = Py / Ws;
@@ -217,7 +217,7 @@ void ParticleMomentum::ComputeDiags (int step)
     // 3 values of total momentum for all  species +
     // 3 values of total momentum for each species
     const int offset_mean_all = 3 + nSpecies*3;
-    if (Wtot > std::numeric_limits<Real>::min())
+    if (Wtot > std::numeric_limits<amrex::Real>::min())
     {
         m_data[offset_mean_all+0] = m_data[0] / Wtot;
         m_data[offset_mean_all+1] = m_data[1] / Wtot;

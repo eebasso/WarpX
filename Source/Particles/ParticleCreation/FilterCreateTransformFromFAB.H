@@ -51,7 +51,7 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
                                 CreateFunc1&& create1, CreateFunc2&& create2,
                                 TransFunc&& transform) noexcept
 {
-    using namespace amrex;
+    // using namespace amrex;
 
     const auto ncells = box.volume();
     if (ncells == 0) return 0;
@@ -99,7 +99,7 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
     {
         if (mask[i])
         {
-            const IntVect iv = box.atOffset(i);
+            const amrex::IntVect iv = box.atOffset(i);
             const int j = iv[0];
             const int k = (spacedim >= 2) ? iv[1] : 0;
             const int l = (spacedim == 3) ? iv[2] : 0;
@@ -107,17 +107,17 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
             // Currently all particles are created on nodes. This makes it useless
             // to use N>1 (for now).
 #if defined(WARPX_DIM_1D_Z)
-            Real const x = 0.0;
-            Real const y = 0.0;
-            Real const z = zlo_global + j*dz;
+            amrex::Real const x = 0.0;
+            amrex::Real const y = 0.0;
+            amrex::Real const z = zlo_global + j*dz;
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-            Real const x = xlo_global + j*dx;
-            Real const y = 0.0;
-            Real const z = zlo_global + k*dz;
+            amrex::Real const x = xlo_global + j*dx;
+            amrex::Real const y = 0.0;
+            amrex::Real const z = zlo_global + k*dz;
 #elif defined(WARPX_DIM_3D)
-            Real const x = xlo_global + j*dx;
-            Real const y = ylo_global + k*dy;
-            Real const z = zlo_global + l*dz;
+            amrex::Real const x = xlo_global + j*dx;
+            amrex::Real const y = ylo_global + k*dy;
+            amrex::Real const z = zlo_global + l*dz;
 #endif
 
             for (int n = 0; n < N; ++n)
@@ -175,7 +175,7 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
                                 CreateFunc1&& create1, CreateFunc2&& create2,
                                 TransFunc && transform) noexcept
 {
-    using namespace amrex;
+    // using namespace amrex;
 
     FArrayBox NumPartCreation(box, 1);
     // This may be unnecessary because of the Gpu::streamSynchronize() in
@@ -196,7 +196,7 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
     amrex::ParallelForRNG(box,
     [=] AMREX_GPU_DEVICE (int i, int j, int k, amrex::RandomEngine const& engine){
         arrNumPartCreation(i,j,k) = filter(src_FABs,i,j,k,engine);
-        const IntVect iv(AMREX_D_DECL(i,j,k));
+        const amrex::IntVect iv(AMREX_D_DECL(i,j,k));
         const auto mask_position = box.index(iv);
         p_mask[mask_position] = (arrNumPartCreation(i,j,k) > 0);
     });

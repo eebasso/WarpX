@@ -80,7 +80,7 @@
 
 #include "FieldSolver/FiniteDifferenceSolver/FiniteDifferenceSolver.H"
 
-using namespace amrex;
+// using namespace amrex;
 
 namespace
 {
@@ -111,10 +111,10 @@ WarpX::PostProcessBaseGrids (BoxArray& ba0) const
 {
     if (numprocs != 0) {
         const Box& dom = Geom(0).Domain();
-        const IntVect& domlo = dom.smallEnd();
-        const IntVect& domlen = dom.size();
-        const IntVect sz = domlen / numprocs;
-        const IntVect extra = domlen - sz*numprocs;
+        const amrex::IntVect& domlo = dom.smallEnd();
+        const amrex::IntVect& domlen = dom.size();
+        const amrex::IntVect sz = domlen / numprocs;
+        const amrex::IntVect extra = domlen - sz*numprocs;
         BoxList bl;
 #if defined(WARPX_DIM_3D)
         for (int k = 0; k < numprocs[2]; ++k) {
@@ -139,7 +139,7 @@ WarpX::PostProcessBaseGrids (BoxArray& ba0) const
                     ilo += domlo[0];
                     ihi += domlo[0];
                     bl.push_back(Box(IntVect(AMREX_D_DECL(ilo,jlo,klo)),
-                                     IntVect(AMREX_D_DECL(ihi,jhi,khi))));
+                                     amrex::IntVect(AMREX_D_DECL(ihi,jhi,khi))));
         AMREX_D_TERM(},},})
         ba0 = BoxArray(std::move(bl));
     }
@@ -153,7 +153,7 @@ WarpX::PrintMainPICparameters ()
     amrex::Print() << "-------------------------------------------------------------------------------\n";
 
     // print warpx build information
-    if constexpr (std::is_same<Real, float>::value) {
+    if constexpr (std::is_same<amrex::Real, float>::value) {
       amrex::Print() << "Precision:            | SINGLE" << "\n";
     }
     else {
@@ -391,7 +391,7 @@ void
 WarpX::WriteUsedInputsFile () const
 {
     std::string filename = "warpx_used_inputs";
-    ParmParse pp_warpx("warpx");
+    amrex::ParmParse pp_warpx("warpx");
     pp_warpx.queryAdd("used_inputs_file", filename);
 
     ablastr::utils::write_used_inputs_file(filename);
@@ -727,10 +727,10 @@ WarpX::PostRestart ()
 
 
 void
-WarpX::InitLevelData (int lev, Real /*time*/)
+WarpX::InitLevelData (int lev, amrex::Real /*time*/)
 {
 
-    const ParmParse pp_warpx("warpx");
+    const amrex::ParmParse pp_warpx("warpx");
 
     // default values of E_external_grid and B_external_grid
     // are used to set the E and B field when "constant" or
@@ -759,7 +759,7 @@ WarpX::InitLevelData (int lev, Real /*time*/)
 
     // initialize the averaged fields only if the averaged algorithm
     // is activated ('psatd.do_time_averaging=1')
-    const ParmParse pp_psatd("psatd");
+    const amrex::ParmParse pp_psatd("psatd");
     pp_psatd.query("do_time_averaging", fft_do_time_averaging );
 
     for (int i = 0; i < 3; ++i) {
@@ -995,7 +995,7 @@ WarpX::InitLevelData (int lev, Real /*time*/)
 
 void
 WarpX::InitializeExternalFieldsOnGridUsingParser (
-       MultiFab *mfx, MultiFab *mfy, MultiFab *mfz,
+       MultiFab *mfx, amrex::MultiFab *mfy, amrex::MultiFab *mfz,
        ParserExecutor<3> const& xfield_parser, ParserExecutor<3> const& yfield_parser,
        ParserExecutor<3> const& zfield_parser,
        std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& edge_lengths,

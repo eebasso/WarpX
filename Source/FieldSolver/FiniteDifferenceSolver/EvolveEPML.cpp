@@ -38,7 +38,7 @@
 
 #include <array>
 
-using namespace amrex;
+// using namespace amrex;
 
 /**
  * \brief Update the E field, over one timestep
@@ -93,7 +93,7 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
     MultiSigmaBox const& sigba,
     amrex::Real const dt, bool pml_has_particles ) {
 
-    Real constexpr c2 = PhysConst::c * PhysConst::c;
+    amrex::Real constexpr c2 = PhysConst::c * PhysConst::c;
 
     // Loop through the grids, and over the tiles within each grid
 #ifdef AMREX_USE_OMP
@@ -102,25 +102,25 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
     for ( MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Ex = Efield[0]->array(mfi);
-        Array4<Real> const& Ey = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
-        Array4<Real> const& Bx = Bfield[0]->array(mfi);
-        Array4<Real> const& By = Bfield[1]->array(mfi);
-        Array4<Real> const& Bz = Bfield[2]->array(mfi);
+        Array4<amrex::Real> const& Ex = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Ey = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real> const& Bx = Bfield[0]->array(mfi);
+        Array4<amrex::Real> const& By = Bfield[1]->array(mfi);
+        Array4<amrex::Real> const& Bz = Bfield[2]->array(mfi);
 
 #ifdef AMREX_USE_EB
-        Array4<Real> const& lx = edge_lengths[0]->array(mfi);
-        Array4<Real> const& ly = edge_lengths[1]->array(mfi);
-        Array4<Real> const& lz = edge_lengths[2]->array(mfi);
+        Array4<amrex::Real> const& lx = edge_lengths[0]->array(mfi);
+        Array4<amrex::Real> const& ly = edge_lengths[1]->array(mfi);
+        Array4<amrex::Real> const& lz = edge_lengths[2]->array(mfi);
 #endif
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
         auto const n_coefs_x = static_cast<int>(m_stencil_coefs_x.size());
-        Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
         auto const n_coefs_y = static_cast<int>(m_stencil_coefs_y.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // Extract tileboxes for which to loop
@@ -182,7 +182,7 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
         // (hyperbolic correction for errors in charge conservation)
         if (Ffield) {
             // Extract field data for this grid/tile
-            Array4<Real> const& F = Ffield->array(mfi);
+            Array4<amrex::Real> const& F = Ffield->array(mfi);
 
             // Loop over the cells and update the fields
             amrex::ParallelFor(tex, tey, tez,
@@ -213,9 +213,9 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
         if (pml_has_particles) {
 
             // Extract field data for this grid/tile
-            Array4<Real> const& Jx = Jfield[0]->array(mfi);
-            Array4<Real> const& Jy = Jfield[1]->array(mfi);
-            Array4<Real> const& Jz = Jfield[2]->array(mfi);
+            Array4<amrex::Real> const& Jx = Jfield[0]->array(mfi);
+            Array4<amrex::Real> const& Jy = Jfield[1]->array(mfi);
+            Array4<amrex::Real> const& Jz = Jfield[2]->array(mfi);
             const Real* sigmaj_x = sigba[mfi].sigma[0].data();
             const Real* sigmaj_y = sigba[mfi].sigma[1].data();
             const Real* sigmaj_z = sigba[mfi].sigma[2].data();

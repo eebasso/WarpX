@@ -50,14 +50,14 @@
 namespace io = openPMD;
 #endif
 
-using namespace amrex;
+// using namespace amrex;
 
 
 // constructor
 ParticleHistogram2D::ParticleHistogram2D (std::string rd_name)
         : ReducedDiags{rd_name}
 {
-    ParmParse pp_rd_name(rd_name);
+    amrex::ParmParse pp_rd_name(rd_name);
 
     pp_rd_name.query("openpmd_backend", m_openpmd_backend);
     // pick first available backend if default is chosen
@@ -178,10 +178,10 @@ void ParticleHistogram2D::ComputeDiags (int step)
     // declare local variables
     auto const num_bins_abs = m_bin_num_abs;
     auto const num_bins_ord = m_bin_num_ord;
-    Real const bin_min_abs  = m_bin_min_abs;
-    Real const bin_size_abs = m_bin_size_abs;
-    Real const bin_min_ord  = m_bin_min_ord;
-    Real const bin_size_ord = m_bin_size_ord;
+    amrex::Real const bin_min_abs  = m_bin_min_abs;
+    amrex::Real const bin_size_abs = m_bin_size_abs;
+    amrex::Real const bin_min_ord  = m_bin_min_ord;
+    amrex::Real const bin_size_ord = m_bin_size_ord;
 
     bool const do_parser_filter = m_do_parser_filter;
 

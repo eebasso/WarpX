@@ -32,7 +32,7 @@
 #include <array>
 #include <memory>
 
-using namespace amrex;
+// using namespace amrex;
 
 void FiniteDifferenceSolver::MacroscopicEvolveE (
     std::array< std::unique_ptr<amrex::MultiFab>, 3 >& Efield,
@@ -129,15 +129,15 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
     for ( MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Ex = Efield[0]->array(mfi);
-        Array4<Real> const& Ey = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
-        Array4<Real> const& Bx = Bfield[0]->array(mfi);
-        Array4<Real> const& By = Bfield[1]->array(mfi);
-        Array4<Real> const& Bz = Bfield[2]->array(mfi);
-        Array4<Real> const& jx = Jfield[0]->array(mfi);
-        Array4<Real> const& jy = Jfield[1]->array(mfi);
-        Array4<Real> const& jz = Jfield[2]->array(mfi);
+        Array4<amrex::Real> const& Ex = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Ey = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real> const& Bx = Bfield[0]->array(mfi);
+        Array4<amrex::Real> const& By = Bfield[1]->array(mfi);
+        Array4<amrex::Real> const& Bz = Bfield[2]->array(mfi);
+        Array4<amrex::Real> const& jx = Jfield[0]->array(mfi);
+        Array4<amrex::Real> const& jy = Jfield[1]->array(mfi);
+        Array4<amrex::Real> const& jz = Jfield[2]->array(mfi);
 
 #ifdef AMREX_USE_EB
         amrex::Array4<amrex::Real> const& lx = edge_lengths[0]->array(mfi);
@@ -151,11 +151,11 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
         amrex::Array4<amrex::Real> const& mu_arr = mu_mf.array(mfi);
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
         auto const n_coefs_x = static_cast<int>(m_stencil_coefs_x.size());
-        Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
         auto const n_coefs_y = static_cast<int>(m_stencil_coefs_y.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // This functor computes Hx = Bx/mu

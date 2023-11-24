@@ -20,7 +20,7 @@
 
 #include <ablastr/coarsen/sample.H>
 
-using namespace amrex;
+// using namespace amrex;
 
 void FiniteDifferenceSolver::CalculateCurrentAmpere (
     std::array< std::unique_ptr<amrex::MultiFab>, 3>& Jfield,
@@ -85,15 +85,15 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
         {
             amrex::Gpu::synchronize();
         }
-        Real wt = static_cast<Real>(amrex::second());
+        amrex::Real wt = static_cast<amrex::Real>(amrex::second());
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Jr = Jfield[0]->array(mfi);
-        Array4<Real> const& Jt = Jfield[1]->array(mfi);
-        Array4<Real> const& Jz = Jfield[2]->array(mfi);
-        Array4<Real> const& Br = Bfield[0]->array(mfi);
-        Array4<Real> const& Bt = Bfield[1]->array(mfi);
-        Array4<Real> const& Bz = Bfield[2]->array(mfi);
+        Array4<amrex::Real> const& Jr = Jfield[0]->array(mfi);
+        Array4<amrex::Real> const& Jt = Jfield[1]->array(mfi);
+        Array4<amrex::Real> const& Jz = Jfield[2]->array(mfi);
+        Array4<amrex::Real> const& Br = Bfield[0]->array(mfi);
+        Array4<amrex::Real> const& Bt = Bfield[1]->array(mfi);
+        Array4<amrex::Real> const& Bz = Bfield[2]->array(mfi);
 
 #ifdef AMREX_USE_EB
         amrex::Array4<amrex::Real> const& lr = edge_lengths[0]->array(mfi);
@@ -102,22 +102,22 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
 #endif
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_r = m_stencil_coefs_r.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_r = m_stencil_coefs_r.dataPtr();
         int const n_coefs_r = static_cast<int>(m_stencil_coefs_r.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         int const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // Extract cylindrical specific parameters
-        Real const dr = m_dr;
+        amrex::Real const dr = m_dr;
         int const nmodes = m_nmodes;
-        Real const rmin = m_rmin;
+        amrex::Real const rmin = m_rmin;
 
         // Extract tileboxes for which to loop
         Box const& tjr  = mfi.tilebox(Jfield[0]->ixType().toIntVect());
         Box const& tjt  = mfi.tilebox(Jfield[1]->ixType().toIntVect());
         Box const& tjz  = mfi.tilebox(Jfield[2]->ixType().toIntVect());
 
-        Real const one_over_mu0 = 1._rt / PhysConst::mu0;
+        amrex::Real const one_over_mu0 = 1._rt / PhysConst::mu0;
 
         // Calculate the total current, using Ampere's law, on the same grid
         // as the E-field
@@ -136,7 +136,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
 
                 // Higher-order modes
                 // r on cell-centered point (Jr is cell-centered in r)
-                Real const r = rmin + (i + 0.5_rt)*dr;
+                amrex::Real const r = rmin + (i + 0.5_rt)*dr;
                 for (int m=1; m<nmodes; m++) {
                     Jr(i, j, 0, 2*m-1) = one_over_mu0 * (
                         - T_Algo::DownwardDz(Bt, coefs_z, n_coefs_z, i, j, 0, 2*m-1)
@@ -157,7 +157,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
                 if (lr(i, j, 0)<=0 || lr(i-1, j, 0)<=0 || lz(i, j-1, 0)<=0 || lz(i, j, 0)<=0) return;
 #endif
                 // r on a nodal point (Jt is nodal in r)
-                Real const r = rmin + i*dr;
+                amrex::Real const r = rmin + i*dr;
                 // Off-axis, regular curl
                 if (r > 0.5_rt*dr) {
                     // Mode m=0
@@ -204,7 +204,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
                 if (lz(i, j, 0) <= 0) return;
 #endif
                 // r on a nodal point (Jz is nodal in r)
-                Real const r = rmin + i*dr;
+                amrex::Real const r = rmin + i*dr;
                 // Off-axis, regular curl
                 if (r > 0.5_rt*dr) {
                     // Mode m=0
@@ -239,7 +239,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
-            wt = static_cast<Real>(amrex::second()) - wt;
+            wt = static_cast<amrex::Real>(amrex::second()) - wt;
             amrex::HostDevice::Atomic::Add( &(*cost)[mfi.index()], wt);
         }
     }
@@ -279,12 +279,12 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCartesian (
         auto wt = static_cast<amrex::Real>(amrex::second());
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Jx = Jfield[0]->array(mfi);
-        Array4<Real> const& Jy = Jfield[1]->array(mfi);
-        Array4<Real> const& Jz = Jfield[2]->array(mfi);
-        Array4<Real const> const& Bx = Bfield[0]->const_array(mfi);
-        Array4<Real const> const& By = Bfield[1]->const_array(mfi);
-        Array4<Real const> const& Bz = Bfield[2]->const_array(mfi);
+        Array4<amrex::Real> const& Jx = Jfield[0]->array(mfi);
+        Array4<amrex::Real> const& Jy = Jfield[1]->array(mfi);
+        Array4<amrex::Real> const& Jz = Jfield[2]->array(mfi);
+        Array4<amrex::Real const> const& Bx = Bfield[0]->const_array(mfi);
+        Array4<amrex::Real const> const& By = Bfield[1]->const_array(mfi);
+        Array4<amrex::Real const> const& Bz = Bfield[2]->const_array(mfi);
 
 #ifdef AMREX_USE_EB
         amrex::Array4<amrex::Real> const& lx = edge_lengths[0]->array(mfi);
@@ -293,11 +293,11 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCartesian (
 #endif
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
         auto const n_coefs_x = static_cast<int>(m_stencil_coefs_x.size());
-        Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
         auto const n_coefs_y = static_cast<int>(m_stencil_coefs_y.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // Extract tileboxes for which to loop
@@ -305,7 +305,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCartesian (
         Box const& tjy  = mfi.tilebox(Jfield[1]->ixType().toIntVect());
         Box const& tjz  = mfi.tilebox(Jfield[2]->ixType().toIntVect());
 
-        Real const one_over_mu0 = 1._rt / PhysConst::mu0;
+        amrex::Real const one_over_mu0 = 1._rt / PhysConst::mu0;
 
         // Calculate the total current, using Ampere's law, on the same grid
         // as the E-field
@@ -462,8 +462,8 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
     // Also note that enE_nodal_mf does not need to have any guard cells since
     // these values will be interpolated to the Yee mesh which is contained
     // by the nodal mesh.
-    auto const& ba = convert(rhofield->boxArray(), IntVect::TheNodeVector());
-    MultiFab enE_nodal_mf(ba, rhofield->DistributionMap(), 3, IntVect::TheZeroVector());
+    auto const& ba = convert(rhofield->boxArray(), amrex::IntVect::TheNodeVector());
+    MultiFab enE_nodal_mf(ba, rhofield->DistributionMap(), 3, amrex::IntVect::TheZeroVector());
 
     // Loop through the grids, and over the tiles within each grid for the
     // initial, nodal calculation of E
@@ -475,18 +475,18 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
         {
             amrex::Gpu::synchronize();
         }
-        Real wt = static_cast<Real>(amrex::second());
+        amrex::Real wt = static_cast<amrex::Real>(amrex::second());
 
-        Array4<Real> const& enE_nodal = enE_nodal_mf.array(mfi);
-        Array4<Real const> const& Jr = Jfield[0]->const_array(mfi);
-        Array4<Real const> const& Jt = Jfield[1]->const_array(mfi);
-        Array4<Real const> const& Jz = Jfield[2]->const_array(mfi);
-        Array4<Real const> const& Jir = Jifield[0]->const_array(mfi);
-        Array4<Real const> const& Jit = Jifield[1]->const_array(mfi);
-        Array4<Real const> const& Jiz = Jifield[2]->const_array(mfi);
-        Array4<Real const> const& Br = Bfield[0]->const_array(mfi);
-        Array4<Real const> const& Bt = Bfield[1]->const_array(mfi);
-        Array4<Real const> const& Bz = Bfield[2]->const_array(mfi);
+        Array4<amrex::Real> const& enE_nodal = enE_nodal_mf.array(mfi);
+        Array4<amrex::Real const> const& Jr = Jfield[0]->const_array(mfi);
+        Array4<amrex::Real const> const& Jt = Jfield[1]->const_array(mfi);
+        Array4<amrex::Real const> const& Jz = Jfield[2]->const_array(mfi);
+        Array4<amrex::Real const> const& Jir = Jifield[0]->const_array(mfi);
+        Array4<amrex::Real const> const& Jit = Jifield[1]->const_array(mfi);
+        Array4<amrex::Real const> const& Jiz = Jifield[2]->const_array(mfi);
+        Array4<amrex::Real const> const& Br = Bfield[0]->const_array(mfi);
+        Array4<amrex::Real const> const& Bt = Bfield[1]->const_array(mfi);
+        Array4<amrex::Real const> const& Bz = Bfield[2]->const_array(mfi);
 
         // Loop over the cells and update the nodal E field
         amrex::ParallelFor(mfi.tilebox(), [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
@@ -524,7 +524,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
-            wt = static_cast<Real>(amrex::second()) - wt;
+            wt = static_cast<amrex::Real>(amrex::second()) - wt;
             amrex::HostDevice::Atomic::Add( &(*cost)[mfi.index()], wt);
         }
     }
@@ -539,18 +539,18 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
         {
             amrex::Gpu::synchronize();
         }
-        Real wt = static_cast<Real>(amrex::second());
+        amrex::Real wt = static_cast<amrex::Real>(amrex::second());
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Er = Efield[0]->array(mfi);
-        Array4<Real> const& Et = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
-        Array4<Real const> const& Jr = Jfield[0]->const_array(mfi);
-        Array4<Real const> const& Jt = Jfield[1]->const_array(mfi);
-        Array4<Real const> const& Jz = Jfield[2]->const_array(mfi);
-        Array4<Real const> const& enE = enE_nodal_mf.const_array(mfi);
-        Array4<Real const> const& rho = rhofield->const_array(mfi);
-        Array4<Real> const& Pe = Pefield->array(mfi);
+        Array4<amrex::Real> const& Er = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Et = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real const> const& Jr = Jfield[0]->const_array(mfi);
+        Array4<amrex::Real const> const& Jt = Jfield[1]->const_array(mfi);
+        Array4<amrex::Real const> const& Jz = Jfield[2]->const_array(mfi);
+        Array4<amrex::Real const> const& enE = enE_nodal_mf.const_array(mfi);
+        Array4<amrex::Real const> const& rho = rhofield->const_array(mfi);
+        Array4<amrex::Real> const& Pe = Pefield->array(mfi);
 
 #ifdef AMREX_USE_EB
         amrex::Array4<amrex::Real> const& lr = edge_lengths[0]->array(mfi);
@@ -559,14 +559,14 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
 #endif
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_r = m_stencil_coefs_r.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_r = m_stencil_coefs_r.dataPtr();
         int const n_coefs_r = static_cast<int>(m_stencil_coefs_r.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         int const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         // Extract cylindrical specific parameters
-        Real const dr = m_dr;
-        Real const rmin = m_rmin;
+        amrex::Real const dr = m_dr;
+        amrex::Real const rmin = m_rmin;
 
         Box const& ter  = mfi.tilebox(Efield[0]->ixType().toIntVect());
         Box const& tet  = mfi.tilebox(Efield[1]->ixType().toIntVect());
@@ -582,7 +582,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
                 if (lr(i, j, 0) <= 0) return;
 #endif
                 // Interpolate to get the appropriate charge density in space
-                Real rho_val = Interp(rho, nodal, Er_stag, coarsen, i, j, 0, 0);
+                amrex::Real rho_val = Interp(rho, nodal, Er_stag, coarsen, i, j, 0, 0);
 
                 // safety condition since we divide by rho_val later
                 if (rho_val < rho_floor) rho_val = rho_floor;
@@ -607,7 +607,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
                 if (lr(i, j, 0)<=0 || lr(i-1, j, 0)<=0 || lz(i, j-1, 0)<=0 || lz(i, j, 0)<=0) return;
 #endif
                 // r on a nodal grid (Et is nodal in r)
-                Real const r = rmin + i*dr;
+                amrex::Real const r = rmin + i*dr;
                 // Mode m=0: // Ensure that Et remains 0 on axis
                 if (r < 0.5_rt*dr) {
                     Et(i, j, 0, 0) = 0.;
@@ -615,7 +615,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
                 }
 
                 // Interpolate to get the appropriate charge density in space
-                Real rho_val = Interp(rho, nodal, Er_stag, coarsen, i, j, 0, 0);
+                amrex::Real rho_val = Interp(rho, nodal, Er_stag, coarsen, i, j, 0, 0);
 
                 // safety condition since we divide by rho_val later
                 if (rho_val < rho_floor) rho_val = rho_floor;
@@ -640,7 +640,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
                 if (lz(i,j,0) <= 0) return;
 #endif
                 // Interpolate to get the appropriate charge density in space
-                Real rho_val = Interp(rho, nodal, Ez_stag, coarsen, i, j, k, 0);
+                amrex::Real rho_val = Interp(rho, nodal, Ez_stag, coarsen, i, j, k, 0);
 
                 // safety condition since we divide by rho_val later
                 if (rho_val < rho_floor) rho_val = rho_floor;
@@ -661,7 +661,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
-            wt = static_cast<Real>(amrex::second()) - wt;
+            wt = static_cast<amrex::Real>(amrex::second()) - wt;
             amrex::HostDevice::Atomic::Add( &(*cost)[mfi.index()], wt);
         }
     }
@@ -724,8 +724,8 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
     // Also note that enE_nodal_mf does not need to have any guard cells since
     // these values will be interpolated to the Yee mesh which is contained
     // by the nodal mesh.
-    auto const& ba = convert(rhofield->boxArray(), IntVect::TheNodeVector());
-    MultiFab enE_nodal_mf(ba, rhofield->DistributionMap(), 3, IntVect::TheZeroVector());
+    auto const& ba = convert(rhofield->boxArray(), amrex::IntVect::TheNodeVector());
+    MultiFab enE_nodal_mf(ba, rhofield->DistributionMap(), 3, amrex::IntVect::TheZeroVector());
 
     // Loop through the grids, and over the tiles within each grid for the
     // initial, nodal calculation of E
@@ -739,16 +739,16 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
         }
         auto wt = static_cast<amrex::Real>(amrex::second());
 
-        Array4<Real> const& enE_nodal = enE_nodal_mf.array(mfi);
-        Array4<Real const> const& Jx = Jfield[0]->const_array(mfi);
-        Array4<Real const> const& Jy = Jfield[1]->const_array(mfi);
-        Array4<Real const> const& Jz = Jfield[2]->const_array(mfi);
-        Array4<Real const> const& Jix = Jifield[0]->const_array(mfi);
-        Array4<Real const> const& Jiy = Jifield[1]->const_array(mfi);
-        Array4<Real const> const& Jiz = Jifield[2]->const_array(mfi);
-        Array4<Real const> const& Bx = Bfield[0]->const_array(mfi);
-        Array4<Real const> const& By = Bfield[1]->const_array(mfi);
-        Array4<Real const> const& Bz = Bfield[2]->const_array(mfi);
+        Array4<amrex::Real> const& enE_nodal = enE_nodal_mf.array(mfi);
+        Array4<amrex::Real const> const& Jx = Jfield[0]->const_array(mfi);
+        Array4<amrex::Real const> const& Jy = Jfield[1]->const_array(mfi);
+        Array4<amrex::Real const> const& Jz = Jfield[2]->const_array(mfi);
+        Array4<amrex::Real const> const& Jix = Jifield[0]->const_array(mfi);
+        Array4<amrex::Real const> const& Jiy = Jifield[1]->const_array(mfi);
+        Array4<amrex::Real const> const& Jiz = Jifield[2]->const_array(mfi);
+        Array4<amrex::Real const> const& Bx = Bfield[0]->const_array(mfi);
+        Array4<amrex::Real const> const& By = Bfield[1]->const_array(mfi);
+        Array4<amrex::Real const> const& Bz = Bfield[2]->const_array(mfi);
 
         // Loop over the cells and update the nodal E field
         amrex::ParallelFor(mfi.tilebox(), [=] AMREX_GPU_DEVICE (int i, int j, int k){
@@ -804,15 +804,15 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
         auto wt = static_cast<amrex::Real>(amrex::second());
 
         // Extract field data for this grid/tile
-        Array4<Real> const& Ex = Efield[0]->array(mfi);
-        Array4<Real> const& Ey = Efield[1]->array(mfi);
-        Array4<Real> const& Ez = Efield[2]->array(mfi);
-        Array4<Real const> const& Jx = Jfield[0]->const_array(mfi);
-        Array4<Real const> const& Jy = Jfield[1]->const_array(mfi);
-        Array4<Real const> const& Jz = Jfield[2]->const_array(mfi);
-        Array4<Real const> const& enE = enE_nodal_mf.const_array(mfi);
-        Array4<Real const> const& rho = rhofield->const_array(mfi);
-        Array4<Real> const& Pe = Pefield->array(mfi);
+        Array4<amrex::Real> const& Ex = Efield[0]->array(mfi);
+        Array4<amrex::Real> const& Ey = Efield[1]->array(mfi);
+        Array4<amrex::Real> const& Ez = Efield[2]->array(mfi);
+        Array4<amrex::Real const> const& Jx = Jfield[0]->const_array(mfi);
+        Array4<amrex::Real const> const& Jy = Jfield[1]->const_array(mfi);
+        Array4<amrex::Real const> const& Jz = Jfield[2]->const_array(mfi);
+        Array4<amrex::Real const> const& enE = enE_nodal_mf.const_array(mfi);
+        Array4<amrex::Real const> const& rho = rhofield->const_array(mfi);
+        Array4<amrex::Real> const& Pe = Pefield->array(mfi);
 
 #ifdef AMREX_USE_EB
         amrex::Array4<amrex::Real> const& lx = edge_lengths[0]->array(mfi);
@@ -821,11 +821,11 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
 #endif
 
         // Extract stencil coefficients
-        Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
         auto const n_coefs_x = static_cast<int>(m_stencil_coefs_x.size());
-        Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_y = m_stencil_coefs_y.dataPtr();
         auto const n_coefs_y = static_cast<int>(m_stencil_coefs_y.size());
-        Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
+        amrex::Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
         Box const& tex  = mfi.tilebox(Efield[0]->ixType().toIntVect());
@@ -842,7 +842,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
                 if (lx(i, j, k) <= 0) return;
 #endif
                 // Interpolate to get the appropriate charge density in space
-                Real rho_val = Interp(rho, nodal, Ex_stag, coarsen, i, j, k, 0);
+                amrex::Real rho_val = Interp(rho, nodal, Ex_stag, coarsen, i, j, k, 0);
 
                 // safety condition since we divide by rho_val later
                 if (rho_val < rho_floor) rho_val = rho_floor;
@@ -872,7 +872,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
 #endif
 #endif
                 // Interpolate to get the appropriate charge density in space
-                Real rho_val = Interp(rho, nodal, Ey_stag, coarsen, i, j, k, 0);
+                amrex::Real rho_val = Interp(rho, nodal, Ey_stag, coarsen, i, j, k, 0);
 
                 // safety condition since we divide by rho_val later
                 if (rho_val < rho_floor) rho_val = rho_floor;
@@ -896,7 +896,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
                 if (lz(i,j,k) <= 0) return;
 #endif
                 // Interpolate to get the appropriate charge density in space
-                Real rho_val = Interp(rho, nodal, Ez_stag, coarsen, i, j, k, 0);
+                amrex::Real rho_val = Interp(rho, nodal, Ez_stag, coarsen, i, j, k, 0);
 
                 // safety condition since we divide by rho_val later
                 if (rho_val < rho_floor) rho_val = rho_floor;

@@ -22,17 +22,17 @@
 
 namespace Interpolate
 {
-    using namespace amrex;
+    // using namespace amrex;
 
-    std::unique_ptr<MultiFab>
+    std::unique_ptr<amrex::MultiFab>
     getInterpolatedScalar(
-        const MultiFab& F_cp, const MultiFab& F_fp,
-        const DistributionMapping& dm, const amrex::IntVect r_ratio,
-        const Real* /*dx*/, const IntVect ngrow )
+        const amrex::MultiFab& F_cp, const amrex::MultiFab& F_fp,
+        const amrex::DistributionMapping& dm, const amrex::IntVect r_ratio,
+        const Real* /*dx*/, const amrex::IntVect ngrow )
     {
         // Prepare the structure that will contain the returned fields
-        std::unique_ptr<MultiFab> interpolated_F;
-        interpolated_F = std::make_unique<MultiFab>(F_fp.boxArray(), dm, 1, ngrow);
+        std::unique_ptr<amrex::MultiFab> interpolated_F;
+        interpolated_F = std::make_unique<amrex::MultiFab>(F_fp.boxArray(), dm, 1, ngrow);
         interpolated_F->setVal(0.);
 
         // Loop through the boxes and interpolate the values from the _cp data
@@ -67,27 +67,27 @@ namespace Interpolate
         return interpolated_F;
     }
 
-    std::array<std::unique_ptr<MultiFab>, 3>
+    std::array<std::unique_ptr<amrex::MultiFab>, 3>
     getInterpolatedVector(
-        const MultiFab* Fx_cp,
-        const MultiFab* Fy_cp,
-        const MultiFab* Fz_cp,
-        const MultiFab* Fx_fp,
-        const MultiFab* Fy_fp,
-        const MultiFab* Fz_fp,
-        const DistributionMapping& dm, const amrex::IntVect r_ratio,
-        const Real* /*dx*/, const IntVect ngrow )
+        const amrex::MultiFab* Fx_cp,
+        const amrex::MultiFab* Fy_cp,
+        const amrex::MultiFab* Fz_cp,
+        const amrex::MultiFab* Fx_fp,
+        const amrex::MultiFab* Fy_fp,
+        const amrex::MultiFab* Fz_fp,
+        const amrex::DistributionMapping& dm, const amrex::IntVect r_ratio,
+        const Real* /*dx*/, const amrex::IntVect ngrow )
     {
 
         // Prepare the structure that will contain the returned fields
-        std::array<std::unique_ptr<MultiFab>, 3> interpolated_F;
-        interpolated_F[0] = std::make_unique<MultiFab>(Fx_fp->boxArray(), dm, 1, ngrow);
-        interpolated_F[1] = std::make_unique<MultiFab>(Fy_fp->boxArray(), dm, 1, ngrow);
-        interpolated_F[2] = std::make_unique<MultiFab>(Fz_fp->boxArray(), dm, 1, ngrow);
+        std::array<std::unique_ptr<amrex::MultiFab>, 3> interpolated_F;
+        interpolated_F[0] = std::make_unique<amrex::MultiFab>(Fx_fp->boxArray(), dm, 1, ngrow);
+        interpolated_F[1] = std::make_unique<amrex::MultiFab>(Fy_fp->boxArray(), dm, 1, ngrow);
+        interpolated_F[2] = std::make_unique<amrex::MultiFab>(Fz_fp->boxArray(), dm, 1, ngrow);
 
-        const IntVect fx_type = interpolated_F[0]->ixType().toIntVect();
-        const IntVect fy_type = interpolated_F[1]->ixType().toIntVect();
-        const IntVect fz_type = interpolated_F[2]->ixType().toIntVect();
+        const amrex::IntVect fx_type = interpolated_F[0]->ixType().toIntVect();
+        const amrex::IntVect fy_type = interpolated_F[1]->ixType().toIntVect();
+        const amrex::IntVect fz_type = interpolated_F[2]->ixType().toIntVect();
 
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
@@ -98,12 +98,12 @@ namespace Interpolate
             Box const& boxy = mfi.tilebox(fy_type);
             Box const& boxz = mfi.tilebox(fz_type);
 
-            Array4<Real      > const& fx = interpolated_F[0]->array(mfi);
-            Array4<Real      > const& fy = interpolated_F[1]->array(mfi);
-            Array4<Real      > const& fz = interpolated_F[2]->array(mfi);
-            Array4<Real const> const& cx = Fx_cp->const_array(mfi);
-            Array4<Real const> const& cy = Fy_cp->const_array(mfi);
-            Array4<Real const> const& cz = Fz_cp->const_array(mfi);
+            Array4<amrex::Real      > const& fx = interpolated_F[0]->array(mfi);
+            Array4<amrex::Real      > const& fy = interpolated_F[1]->array(mfi);
+            Array4<amrex::Real      > const& fz = interpolated_F[2]->array(mfi);
+            Array4<amrex::Real const> const& cx = Fx_cp->const_array(mfi);
+            Array4<amrex::Real const> const& cy = Fy_cp->const_array(mfi);
+            Array4<amrex::Real const> const& cz = Fz_cp->const_array(mfi);
 
             amrex::ParallelFor(boxx, boxy, boxz,
                 [=] AMREX_GPU_DEVICE (int j, int k, int l) noexcept

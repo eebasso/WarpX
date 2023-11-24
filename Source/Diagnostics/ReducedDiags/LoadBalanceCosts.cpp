@@ -34,7 +34,7 @@
 #include <string>
 #include <utility>
 
-using namespace amrex;
+// using namespace amrex;
 
 namespace
 {
@@ -110,7 +110,7 @@ void LoadBalanceCosts::ComputeDiags (int step)
     costs.resize(nLevels);
     for (int lev = 0; lev < nLevels; ++lev)
     {
-        costs[lev] = std::make_unique<LayoutData<Real>>(*WarpX::getCosts(lev));
+        costs[lev] = std::make_unique<LayoutData<amrex::Real>>(*WarpX::getCosts(lev));
     }
 
     if (WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Heuristic)
@@ -126,7 +126,7 @@ void LoadBalanceCosts::ComputeDiags (int step)
     for (int lev = 0; lev < nLevels; ++lev)
     {
         const amrex::DistributionMapping& dm = warpx.DistributionMap(lev);
-        const MultiFab & Ex = warpx.getEfield(lev,0);
+        const amrex::MultiFab & Ex = warpx.getEfield(lev,0);
         for (MFIter mfi(Ex, false); mfi.isValid(); ++mfi)
         {
             const Box& tbx = mfi.tilebox();

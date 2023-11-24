@@ -11,7 +11,7 @@
 #include <map>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 ParticleDiag::ParticleDiag(std::string diag_name, std::string name, WarpXParticleContainer* pc, PinnedMemoryParticleContainer* pinned_pc)
     : m_diag_name(diag_name), m_name(name), m_pc(pc), m_pinned_pc(pinned_pc)
@@ -22,7 +22,7 @@ ParticleDiag::ParticleDiag(std::string diag_name, std::string name, WarpXParticl
     // By default output all attributes
     m_plot_flags.resize(plot_flag_size, 1);
 
-    const ParmParse pp_diag_name_species_name(diag_name + "." + name);
+    const amrex::ParmParse pp_diag_name_species_name(diag_name + "." + name);
     amrex::Vector<std::string> variables;
     const int variables_specified = pp_diag_name_species_name.queryarr("variables", variables);
 

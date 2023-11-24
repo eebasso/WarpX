@@ -28,14 +28,14 @@
 #include <map>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 // constructor
 BeamRelevant::BeamRelevant (std::string rd_name)
 : ReducedDiags{rd_name}
 {
     // read beam name
-    const ParmParse pp_rd_name(rd_name);
+    const amrex::ParmParse pp_rd_name(rd_name);
     pp_rd_name.get("species",m_beam_name);
 
     // resize data array
@@ -172,7 +172,7 @@ void BeamRelevant::ComputeDiags (int step)
     auto const species_names = mypc.GetSpeciesNames();
 
     // inverse of speed of light squared
-    Real constexpr inv_c2 = 1.0_rt / (PhysConst::c * PhysConst::c);
+    amrex::Real constexpr inv_c2 = 1.0_rt / (PhysConst::c * PhysConst::c);
 
     // If 2D-XZ, p.pos(1) is z, rather than p.pos(2).
 #if (defined WARPX_DIM_3D)
@@ -261,7 +261,7 @@ void BeamRelevant::ComputeDiags (int step)
         const ParticleReal uz_mean = values_per_rank_1st.at(6) /= w_sum;
         const ParticleReal gm_mean = values_per_rank_1st.at(7) /= w_sum;
 
-        if (w_sum < std::numeric_limits<Real>::min() )
+        if (w_sum < std::numeric_limits<amrex::Real>::min() )
         {
             for (auto& item: m_data) item = 0.0_rt;
 

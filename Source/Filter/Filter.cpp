@@ -21,7 +21,7 @@
 
 #include <algorithm>
 
-using namespace amrex;
+// using namespace amrex;
 
 #ifdef AMREX_USE_GPU
 
@@ -34,9 +34,9 @@ using namespace amrex;
  * \param ncomp Number of components on which the filter is applied.
  */
 void
-Filter::ApplyStencil (MultiFab& dstmf, const MultiFab& srcmf, const int lev, int scomp, int dcomp, int ncomp)
+Filter::ApplyStencil (amrex::MultiFab& dstmf, const amrex::MultiFab& srcmf, const int lev, int scomp, int dcomp, int ncomp)
 {
-    WARPX_PROFILE("Filter::ApplyStencil(MultiFab)");
+    WARPX_PROFILE("Filter::ApplyStencil(amrex::MultiFab)");
     ncomp = std::min(ncomp, srcmf.nComp());
 
     amrex::LayoutData<amrex::Real>* cost = WarpX::getCosts(lev);
@@ -89,8 +89,8 @@ Filter::ApplyStencil (FArrayBox& dstfab, const FArrayBox& srcfab,
 /* \brief Apply stencil (2D/3D, CPU/GPU)
  */
 void Filter::DoFilter (const Box& tbx,
-                       Array4<Real const> const& src,
-                       Array4<Real      > const& dst,
+                       Array4<amrex::Real const> const& src,
+                       Array4<amrex::Real      > const& dst,
                        int scomp, int dcomp, int ncomp)
 {
 #if (AMREX_SPACEDIM >= 2)
@@ -105,7 +105,7 @@ void Filter::DoFilter (const Box& tbx,
 #if defined(WARPX_DIM_3D)
     AMREX_PARALLEL_FOR_4D ( tbx, ncomp, i, j, k, n,
     {
-        Real d = 0.0;
+        amrex::Real d = 0.0;
 
         // Pad source array with zeros beyond ghost cells
         // for out-of-bound accesses due to large-stencil operations
@@ -117,7 +117,7 @@ void Filter::DoFilter (const Box& tbx,
         for         (int iz=0; iz < slen_local.z; ++iz){
             for     (int iy=0; iy < slen_local.y; ++iy){
                 for (int ix=0; ix < slen_local.x; ++ix){
-                    Real sss = sx[ix]*sy[iy]*sz[iz];
+                    amrex::Real sss = sx[ix]*sy[iy]*sz[iz];
                     d += sss*( src_zeropad(i-ix,j-iy,k-iz,scomp+n)
                               +src_zeropad(i+ix,j-iy,k-iz,scomp+n)
                               +src_zeropad(i-ix,j+iy,k-iz,scomp+n)
@@ -135,7 +135,7 @@ void Filter::DoFilter (const Box& tbx,
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
     AMREX_PARALLEL_FOR_4D ( tbx, ncomp, i, j, k, n,
     {
-        Real d = 0.0;
+        amrex::Real d = 0.0;
 
         // Pad source array with zeros beyond ghost cells
         // for out-of-bound accesses due to large-stencil operations
@@ -147,7 +147,7 @@ void Filter::DoFilter (const Box& tbx,
         for         (int iz=0; iz < slen_local.z; ++iz){
             for     (int iy=0; iy < slen_local.y; ++iy){
                 for (int ix=0; ix < slen_local.x; ++ix){
-                    Real sss = sx[ix]*sz[iy];
+                    amrex::Real sss = sx[ix]*sz[iy];
                     d += sss*( src_zeropad(i-ix,j-iy,k,scomp+n)
                               +src_zeropad(i+ix,j-iy,k,scomp+n)
                               +src_zeropad(i-ix,j+iy,k,scomp+n)
@@ -161,7 +161,7 @@ void Filter::DoFilter (const Box& tbx,
 #elif defined(WARPX_DIM_1D_Z)
     AMREX_PARALLEL_FOR_4D ( tbx, ncomp, i, j, k, n,
     {
-        Real d = 0.0;
+        amrex::Real d = 0.0;
 
         // Pad source array with zeros beyond ghost cells
         // for out-of-bound accesses due to large-stencil operations
@@ -173,7 +173,7 @@ void Filter::DoFilter (const Box& tbx,
         for         (int iz=0; iz < slen_local.z; ++iz){
             for     (int iy=0; iy < slen_local.y; ++iy){
                 for (int ix=0; ix < slen_local.x; ++ix){
-                    Real sss = sz[iy];
+                    amrex::Real sss = sz[iy];
                     d += sss*( src_zeropad(i-ix,j,k,scomp+n)
                               +src_zeropad(i+ix,j,k,scomp+n));
                 }
@@ -201,7 +201,7 @@ void Filter::DoFilter (const Box& tbx,
 void
 Filter::ApplyStencil (amrex::MultiFab& dstmf, const amrex::MultiFab& srcmf, const int lev, int scomp, int dcomp, int ncomp)
 {
-    WARPX_PROFILE("Filter::ApplyStencil(MultiFab)");
+    WARPX_PROFILE("Filter::ApplyStencil(amrex::MultiFab)");
     ncomp = std::min(ncomp, srcmf.nComp());
 
     amrex::LayoutData<amrex::Real>* cost = WarpX::getCosts(lev);
@@ -270,8 +270,8 @@ Filter::ApplyStencil (amrex::FArrayBox& dstfab, const amrex::FArrayBox& srcfab,
 }
 
 void Filter::DoFilter (const Box& tbx,
-                       Array4<Real const> const& tmp,
-                       Array4<Real      > const& dst,
+                       Array4<amrex::Real const> const& tmp,
+                       Array4<amrex::Real      > const& dst,
                        int scomp, int dcomp, int ncomp)
 {
     const auto lo = amrex::lbound(tbx);

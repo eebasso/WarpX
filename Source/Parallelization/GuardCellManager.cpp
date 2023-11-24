@@ -28,7 +28,7 @@
 
 #include <algorithm>
 
-using namespace amrex;
+// using namespace amrex;
 
 void
 guardCellManager::Init (
@@ -115,14 +115,14 @@ guardCellManager::Init (
     }
 
 #if defined(WARPX_DIM_3D)
-    ng_alloc_EB = IntVect(ngx,ngy,ngz);
-    ng_alloc_J = IntVect(ngJx,ngJy,ngJz);
+    ng_alloc_EB = amrex::IntVect(ngx,ngy,ngz);
+    ng_alloc_J = amrex::IntVect(ngJx,ngJy,ngJz);
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-    ng_alloc_EB = IntVect(ngx,ngz);
-    ng_alloc_J = IntVect(ngJx,ngJz);
+    ng_alloc_EB = amrex::IntVect(ngx,ngz);
+    ng_alloc_J = amrex::IntVect(ngJx,ngJz);
 #elif defined(WARPX_DIM_1D_Z)
-    ng_alloc_EB = IntVect(ngz);
-    ng_alloc_J = IntVect(ngJz);
+    ng_alloc_EB = amrex::IntVect(ngz);
+    ng_alloc_J = amrex::IntVect(ngJz);
 #endif
 
     // TODO Adding one cell for rho should not be necessary, given that the number of guard cells
@@ -173,12 +173,12 @@ guardCellManager::Init (
     int ng_alloc_F_int = (do_moving_window) ? 2 : 0;
     // CKC solver requires one additional guard cell
     if (electromagnetic_solver_id == ElectromagneticSolverAlgo::CKC) ng_alloc_F_int = std::max( ng_alloc_F_int, 1 );
-    ng_alloc_F = IntVect(AMREX_D_DECL(ng_alloc_F_int, ng_alloc_F_int, ng_alloc_F_int));
+    ng_alloc_F = amrex::IntVect(AMREX_D_DECL(ng_alloc_F_int, ng_alloc_F_int, ng_alloc_F_int));
 
     // Used if warpx.do_divb_cleaning = 1
     int ng_alloc_G_int = (do_moving_window) ? 2 : 1;
     // TODO Does the CKC solver require one additional guard cell (as for F)?
-    ng_alloc_G = IntVect(AMREX_D_DECL(ng_alloc_G_int, ng_alloc_G_int, ng_alloc_G_int));
+    ng_alloc_G = amrex::IntVect(AMREX_D_DECL(ng_alloc_G_int, ng_alloc_G_int, ng_alloc_G_int));
 
     if (electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD)
     {
@@ -202,17 +202,17 @@ guardCellManager::Init (
         int ngFFt_y = (grid_type == GridType::Collocated) ? noy_fft : noy_fft / 2;
         int ngFFt_z = (grid_type == GridType::Collocated || galilean) ? noz_fft : noz_fft / 2;
 
-        const ParmParse pp_psatd("psatd");
+        const amrex::ParmParse pp_psatd("psatd");
         utils::parser::queryWithParser(pp_psatd, "nx_guard", ngFFt_x);
         utils::parser::queryWithParser(pp_psatd, "ny_guard", ngFFt_y);
         utils::parser::queryWithParser(pp_psatd, "nz_guard", ngFFt_z);
 
 #if defined(WARPX_DIM_3D)
-        IntVect ngFFT = IntVect(ngFFt_x, ngFFt_y, ngFFt_z);
+        amrex::IntVect ngFFT = amrex::IntVect(ngFFt_x, ngFFt_y, ngFFt_z);
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-        IntVect ngFFT = IntVect(ngFFt_x, ngFFt_z);
+        amrex::IntVect ngFFT = amrex::IntVect(ngFFt_x, ngFFt_z);
 #elif defined(WARPX_DIM_1D_Z)
-        IntVect ngFFT = IntVect(ngFFt_z);
+        amrex::IntVect ngFFT = amrex::IntVect(ngFFt_z);
 #endif
 
 #ifdef WARPX_DIM_RZ
@@ -242,8 +242,8 @@ guardCellManager::Init (
             ng_alloc_F_int = ng_required;
             ng_alloc_G_int = ng_required;
         }
-        ng_alloc_F = IntVect(AMREX_D_DECL(ng_alloc_F_int, ng_alloc_F_int, ng_alloc_F_int));
-        ng_alloc_G = IntVect(AMREX_D_DECL(ng_alloc_G_int, ng_alloc_G_int, ng_alloc_G_int));
+        ng_alloc_F = amrex::IntVect(AMREX_D_DECL(ng_alloc_F_int, ng_alloc_F_int, ng_alloc_F_int));
+        ng_alloc_G = amrex::IntVect(AMREX_D_DECL(ng_alloc_G_int, ng_alloc_G_int, ng_alloc_G_int));
     }
 
     // Compute number of cells required for Field Solver
@@ -309,11 +309,11 @@ guardCellManager::Init (
         // factor grows symmetrically by half a cell on each side. So every
         // +2 orders, one touches one more cell point.
         int const FGcell = (nox + 1) / 2;  // integer division
-        IntVect ng_FieldGather_noNCI = IntVect(AMREX_D_DECL(FGcell,FGcell,FGcell));
+        amrex::IntVect ng_FieldGather_noNCI = amrex::IntVect(AMREX_D_DECL(FGcell,FGcell,FGcell));
         ng_FieldGather_noNCI = ng_FieldGather_noNCI.min(ng_alloc_EB);
 
         // If NCI filter, add guard cells in the z direction
-        IntVect ng_NCIFilter = IntVect::TheZeroVector();
+        amrex::IntVect ng_NCIFilter = amrex::IntVect::TheZeroVector();
         if (do_fdtd_nci_corr)
             ng_NCIFilter[WARPX_ZINDEX] = NCIGodfreyFilter::m_stencil_width;
 

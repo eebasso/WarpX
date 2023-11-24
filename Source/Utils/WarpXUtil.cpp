@@ -40,13 +40,16 @@
 #include <string>
 #include <limits>
 
-using namespace amrex;
+// using namespace amrex;
+
+using Real = amrex::Real;
+using amrex::ParmParse = amrex::ParmParse;
 
 void PreparseAMReXInputIntArray(amrex::ParmParse& a_pp, char const * const input_str, const bool replace)
 {
     const int cnt = a_pp.countval(input_str);
     if (cnt > 0) {
-        Vector<int> input_array;
+        amrex::Vector<int> input_array;
         utils::parser::getArrWithParser(a_pp, input_str, input_array);
         if (replace) {
             a_pp.remove(input_str);
@@ -62,10 +65,10 @@ void ParseGeometryInput()
 
     // Parse prob_lo and hi, evaluating any expressions since geometry does not
     // parse its input
-    ParmParse pp_geometry("geometry");
+    amrex::ParmParse pp_geometry("geometry");
 
-    Vector<Real> prob_lo(AMREX_SPACEDIM);
-    Vector<Real> prob_hi(AMREX_SPACEDIM);
+    amrex::Vector<amrex::Real> prob_lo(AMREX_SPACEDIM);
+    amrex::Vector<amrex::Real> prob_hi(AMREX_SPACEDIM);
 
     utils::parser::getArrWithParser(
         pp_geometry, "prob_lo", prob_lo, 0, AMREX_SPACEDIM);
@@ -75,7 +78,7 @@ void ParseGeometryInput()
     AMREX_ALWAYS_ASSERT(prob_hi.size() == AMREX_SPACEDIM);
 
 #ifdef WARPX_DIM_RZ
-    const ParmParse pp_algo("algo");
+     const amrex::ParmParse pp_algo("algo");
     const int electromagnetic_solver_id = GetAlgorithmInteger(pp_algo, "maxwell_solver");
     if (electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD)
     {
@@ -93,7 +96,7 @@ void ParseGeometryInput()
     pp_geometry.addarr("prob_hi", prob_hi);
 
     // Parse amr input, evaluating any expressions since amr does not parse its input
-    ParmParse pp_amr("amr");
+    amrex::ParmParse pp_amr("amr");
 
     // Note that n_cell is replaced so that only the parsed version is written out to the
     // warpx_job_info file. This must be done since yt expects to be able to parse
@@ -109,10 +112,10 @@ void ParseGeometryInput()
     PreparseAMReXInputIntArray(pp_amr, "blocking_factor_z", false);
 }
 
-void ReadBoostedFrameParameters(Real& gamma_boost, Real& beta_boost,
-                                Vector<int>& boost_direction)
+void ReadBoostedFrameParameters(Real& gamma_boost, amrex::Real& beta_boost,
+                                amrex::Vector<int>& boost_direction)
 {
-    const ParmParse pp_warpx("warpx");
+     const amrex::ParmParse pp_warpx("warpx");
     utils::parser::queryWithParser(pp_warpx, "gamma_boost", gamma_boost);
     if( gamma_boost > 1. ) {
         beta_boost = std::sqrt(1._rt-1._rt/std::pow(gamma_boost,2._rt));
@@ -140,25 +143,25 @@ void ReadBoostedFrameParameters(Real& gamma_boost, Real& beta_boost,
 
 void ConvertLabParamsToBoost()
 {
-    Real gamma_boost = 1., beta_boost = 0.;
+    amrex::Real gamma_boost = 1., beta_boost = 0.;
     int max_level = 0;
-    Vector<int> boost_direction {0,0,0};
+    amrex::Vector<int> boost_direction {0,0,0};
 
     ReadBoostedFrameParameters(gamma_boost, beta_boost, boost_direction);
 
     if (gamma_boost <= 1.) return;
 
-    Vector<Real> prob_lo(AMREX_SPACEDIM);
-    Vector<Real> prob_hi(AMREX_SPACEDIM);
-    Vector<Real> fine_tag_lo(AMREX_SPACEDIM);
-    Vector<Real> fine_tag_hi(AMREX_SPACEDIM);
-    Vector<Real> slice_lo(AMREX_SPACEDIM);
-    Vector<Real> slice_hi(AMREX_SPACEDIM);
+    amrex::Vector<amrex::Real> prob_lo(AMREX_SPACEDIM);
+    amrex::Vector<amrex::Real> prob_hi(AMREX_SPACEDIM);
+    amrex::Vector<amrex::Real> fine_tag_lo(AMREX_SPACEDIM);
+    amrex::Vector<amrex::Real> fine_tag_hi(AMREX_SPACEDIM);
+    amrex::Vector<amrex::Real> slice_lo(AMREX_SPACEDIM);
+    amrex::Vector<amrex::Real> slice_hi(AMREX_SPACEDIM);
 
-    ParmParse pp_geometry("geometry");
-    ParmParse pp_warpx("warpx");
-    ParmParse pp_slice("slice");
-    const ParmParse pp_amr("amr");
+    amrex::ParmParse pp_geometry("geometry");
+    amrex::ParmParse pp_warpx("warpx");
+    amrex::ParmParse pp_slice("slice");
+     const amrex::ParmParse pp_amr("amr");
 
     utils::parser::getArrWithParser(
         pp_geometry, "prob_lo", prob_lo, 0, AMREX_SPACEDIM);
@@ -183,11 +186,11 @@ void ConvertLabParamsToBoost()
 
 
 #if defined(WARPX_DIM_3D)
-    Vector<int> dim_map {0, 1, 2};
+    amrex::Vector<int> dim_map {0, 1, 2};
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-    Vector<int> dim_map {0, 2};
+    amrex::Vector<int> dim_map {0, 2};
 #else
-    Vector<int> dim_map {2};
+    amrex::Vector<int> dim_map {2};
 #endif
 
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
@@ -245,7 +248,7 @@ void NullifyMF(amrex::MultiFab& mf, int lev, amrex::Real zmin, amrex::Real zmax)
 #endif
         // Check if box intersect with [zmin, zmax]
         if ( (zmax>zmin_box && zmin<=zmax_box) ){
-            const Array4<Real> arr = mf[mfi].array();
+            const Array4<amrex::Real> arr = mf[mfi].array();
             // Set field to 0 between zmin and zmax
             ParallelFor(bx, ncomp,
                 [=] AMREX_GPU_DEVICE(int i, int j, int k, int n) noexcept{
@@ -287,7 +290,7 @@ void CheckDims ()
 #elif defined(WARPX_DIM_RZ)
     std::string const dims_compiled = "RZ";
 #endif
-    const ParmParse pp_geometry("geometry");
+     const amrex::ParmParse pp_geometry("geometry");
     std::string dims;
     pp_geometry.get("dims", dims);
     std::string dims_error = "The selected WarpX executable was built as '";
@@ -303,7 +306,7 @@ void CheckGriddingForRZSpectral ()
     // Ensure that geometry.dims is set properly.
     CheckDims();
 
-    const ParmParse pp_algo("algo");
+     const amrex::ParmParse pp_algo("algo");
     const int electromagnetic_solver_id = GetAlgorithmInteger(pp_algo, "maxwell_solver");
 
     // only check for PSATD in RZ
@@ -311,15 +314,15 @@ void CheckGriddingForRZSpectral ()
         return;
 
     int max_level;
-    Vector<int> n_cell(AMREX_SPACEDIM, -1);
+    amrex::Vector<int> n_cell(AMREX_SPACEDIM, -1);
 
-    ParmParse pp_amr("amr");
+    amrex::ParmParse pp_amr("amr");
 
     pp_amr.get("max_level",max_level);
     pp_amr.getarr("n_cell", n_cell, 0, AMREX_SPACEDIM);
 
-    Vector<int> blocking_factor_x(max_level+1);
-    Vector<int> max_grid_size_x(max_level+1);
+    amrex::Vector<int> blocking_factor_x(max_level+1);
+    amrex::Vector<int> max_grid_size_x(max_level+1);
 
     // Set the radial block size to be the power of 2 greater than or equal to
     // the number of grid cells. The blocking factor must be a power of 2
@@ -354,7 +357,7 @@ void CheckGriddingForRZSpectral ()
 
     // Get the longitudinal blocking factor in case it was set by the user.
     // If not set, use the default value of 8.
-    Vector<int> bf;
+    amrex::Vector<int> bf;
     pp_amr.queryarr("blocking_factor", bf);
     pp_amr.queryarr("blocking_factor_y", bf);
     bf.resize(std::max(static_cast<int>(bf.size()),1),8);
@@ -369,7 +372,7 @@ void CheckGriddingForRZSpectral ()
 
     // Get the longitudinal max grid size in case it was set by the user.
     // If not set, use the default value of 128.
-    Vector<int> mg;
+    amrex::Vector<int> mg;
     pp_amr.queryarr("max_grid_size", mg);
     pp_amr.queryarr("max_grid_size_y", mg);
     mg.resize(std::max(static_cast<int>(mg.size()),1),128);
@@ -393,9 +396,9 @@ void ReadBCParams ()
     amrex::Vector<std::string> particle_BC_lo(AMREX_SPACEDIM,"default");
     amrex::Vector<std::string> particle_BC_hi(AMREX_SPACEDIM,"default");
     amrex::Vector<int> geom_periodicity(AMREX_SPACEDIM,0);
-    ParmParse pp_geometry("geometry");
-    const ParmParse pp_warpx("warpx");
-    const ParmParse pp_algo("algo");
+    amrex::ParmParse pp_geometry("geometry");
+     const amrex::ParmParse pp_warpx("warpx");
+     const amrex::ParmParse pp_algo("algo");
     const int electromagnetic_solver_id = GetAlgorithmInteger(pp_algo, "maxwell_solver");
 
     if (pp_geometry.queryarr("is_periodic", geom_periodicity))
@@ -410,7 +413,7 @@ void ReadBCParams ()
 
     // particle boundary may not be explicitly specified for some applications
     bool particle_boundary_specified = false;
-    const ParmParse pp_boundary("boundary");
+     const amrex::ParmParse pp_boundary("boundary");
     pp_boundary.queryarr("field_lo", field_BC_lo, 0, AMREX_SPACEDIM);
     pp_boundary.queryarr("field_hi", field_BC_hi, 0, AMREX_SPACEDIM);
     if (pp_boundary.queryarr("particle_lo", particle_BC_lo, 0, AMREX_SPACEDIM))

@@ -46,7 +46,7 @@
 #include <utility>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 void
 WarpX::LoadBalance ()
@@ -106,7 +106,7 @@ WarpX::LoadBalance ()
 
         if (doLoadBalance)
         {
-            Vector<int> pmap;
+            amrex::Vector<int> pmap;
             if (ParallelDescriptor::MyProc() == ParallelDescriptor::IOProcessorNumber())
             {
                 pmap = newdm.ProcessorMap();
@@ -147,19 +147,19 @@ WarpX::LoadBalance ()
 
 
 template <typename MultiFabType> void
-RemakeMultiFab (std::unique_ptr<MultiFabType>& mf, const DistributionMapping& dm,
+RemakeMultiFab (std::unique_ptr<amrex::MultiFabType>& mf, const amrex::DistributionMapping& dm,
                 const bool redistribute, const int lev)
 {
     if (mf == nullptr) return;
-    const IntVect& ng = mf->nGrowVect();
-    std::unique_ptr<MultiFabType> pmf;
+    const amrex::IntVect& ng = mf->nGrowVect();
+    std::unique_ptr<amrex::MultiFabType> pmf;
     WarpX::AllocInitMultiFab(pmf, mf->boxArray(), dm, mf->nComp(), ng, lev, mf->tags()[0]);
     if (redistribute) pmf->Redistribute(*mf, 0, 0, mf->nComp(), ng);
     mf = std::move(pmf);
 }
 
 void
-WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const DistributionMapping& dm)
+WarpX::RemakeLevel (int lev, amrex::Real /*time*/, const amrex::BoxArray& ba, const amrex::DistributionMapping& dm)
 {
     if (ba == boxArray(lev))
     {
@@ -227,7 +227,7 @@ WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const Distributi
         if (electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD) {
             if (spectral_solver_fp[lev] != nullptr) {
                 // Get the cell-centered box
-                BoxArray realspace_ba = ba;   // Copy box
+                amrex::BoxArray realspace_ba = ba;   // Copy box
                 realspace_ba.enclosedCells(); // Make it cell-centered
                 auto ngEB = getngEB();
                 auto dx = CellSize(lev);
@@ -261,8 +261,8 @@ WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const Distributi
         if (lev == 0 && Bfield_aux[0][0]->ixType() == Bfield_fp[0][0]->ixType())
         {
             for (int idim = 0; idim < 3; ++idim) {
-                Bfield_aux[lev][idim] = std::make_unique<MultiFab>(*Bfield_fp[lev][idim], amrex::make_alias, 0, Bfield_aux[lev][idim]->nComp());
-                Efield_aux[lev][idim] = std::make_unique<MultiFab>(*Efield_fp[lev][idim], amrex::make_alias, 0, Efield_aux[lev][idim]->nComp());
+                Bfield_aux[lev][idim] = std::make_unique<amrex::MultiFab>(*Bfield_fp[lev][idim], amrex::make_alias, 0, Bfield_aux[lev][idim]->nComp());
+                Efield_aux[lev][idim] = std::make_unique<amrex::MultiFab>(*Efield_fp[lev][idim], amrex::make_alias, 0, Efield_aux[lev][idim]->nComp());
             }
         } else {
             for (int idim=0; idim < 3; ++idim)
@@ -290,12 +290,12 @@ WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const Distributi
 #ifdef WARPX_USE_PSATD
             if (electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD) {
                 if (spectral_solver_cp[lev] != nullptr) {
-                    BoxArray cba = ba;
+                    amrex::BoxArray cba = ba;
                     cba.coarsen(refRatio(lev-1));
-                    const std::array<Real,3> cdx = CellSize(lev-1);
+                    const std::array<amrex::Real,3> cdx = CellSize(lev-1);
 
                     // Get the cell-centered box
-                    BoxArray c_realspace_ba = cba;  // Copy box
+                    amrex::BoxArray c_realspace_ba = cba;  // Copy box
                     c_realspace_ba.enclosedCells(); // Make it cell-centered
 
                     auto ngEB = getngEB();
@@ -343,7 +343,7 @@ WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const Distributi
 
         if (costs[lev] != nullptr)
         {
-            costs[lev] = std::make_unique<LayoutData<Real>>(ba, dm);
+            costs[lev] = std::make_unique<LayoutData<amrex::Real>>(ba, dm);
             const auto iarr = costs[lev]->IndexArray();
             for (const auto& i : iarr)
             {

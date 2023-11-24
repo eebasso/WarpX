@@ -68,7 +68,7 @@
 #include <algorithm>
 #include <cmath>
 
-using namespace amrex;
+// using namespace amrex;
 
 WarpXParIter::WarpXParIter (ContainerType& pc, int level)
     : amrex::ParIter<0,0,PIdx::nattribs>(pc, level,
@@ -127,7 +127,7 @@ WarpXParticleContainer::ReadParameters ()
     static bool initialized = false;
     if (!initialized)
     {
-        const ParmParse pp_particles("particles");
+        const amrex::ParmParse pp_particles("particles");
         pp_particles.query("do_tiling", do_tiling);
         initialized = true;
     }
@@ -305,8 +305,8 @@ WarpXParticleContainer::AddNParticles (int /*lev*/, long n,
  */
 void
 WarpXParticleContainer::DepositCurrent (WarpXParIter& pti,
-                                        RealVector const & wp, RealVector const & uxp,
-                                        RealVector const & uyp, RealVector const & uzp,
+                                        amrex::RealVector const & wp, amrex::RealVector const & uxp,
+                                        amrex::RealVector const & uyp, amrex::RealVector const & uzp,
                                         int const * const ion_lev,
                                         amrex::MultiFab * const jx, amrex::MultiFab * const jy, amrex::MultiFab * const jz,
                                         long const offset, long const np_to_depose,
@@ -358,7 +358,7 @@ WarpXParticleContainer::DepositCurrent (WarpXParIter& pti,
         amrex::numParticlesOutOfRange(pti, range) == 0,
         "Particles shape does not fit within tile (CPU) or guard cells (GPU) used for current deposition");
 
-    const std::array<Real,3>& dx = WarpX::CellSize(std::max(depos_lev,0));
+    const std::array<amrex::Real,3>& dx = WarpX::CellSize(std::max(depos_lev,0));
     const amrex::ParticleReal q = this->charge;
 
     WARPX_PROFILE_VAR_NS("WarpXParticleContainer::DepositCurrent::Sorting", blp_sort);
@@ -378,7 +378,7 @@ WarpXParticleContainer::DepositCurrent (WarpXParIter& pti,
     if (lev == depos_lev) {
         tilebox = pti.tilebox();
     } else {
-        const IntVect& ref_ratio = WarpX::RefRatio(depos_lev);
+        const amrex::IntVect& ref_ratio = WarpX::RefRatio(depos_lev);
         tilebox = amrex::coarsen(pti.tilebox(),ref_ratio);
     }
 
@@ -397,9 +397,9 @@ WarpXParticleContainer::DepositCurrent (WarpXParIter& pti,
     auto & jx_fab = jx->get(pti);
     auto & jy_fab = jy->get(pti);
     auto & jz_fab = jz->get(pti);
-    Array4<Real> const& jx_arr = jx->array(pti);
-    Array4<Real> const& jy_arr = jy->array(pti);
-    Array4<Real> const& jz_arr = jz->array(pti);
+    Array4<amrex::Real> const& jx_arr = jx->array(pti);
+    Array4<amrex::Real> const& jy_arr = jy->array(pti);
+    Array4<amrex::Real> const& jz_arr = jz->array(pti);
 #else
     tbx.grow(ng_J);
     tby.grow(ng_J);
@@ -418,9 +418,9 @@ WarpXParticleContainer::DepositCurrent (WarpXParIter& pti,
     auto & jx_fab = local_jx[thread_num];
     auto & jy_fab = local_jy[thread_num];
     auto & jz_fab = local_jz[thread_num];
-    Array4<Real> const& jx_arr = local_jx[thread_num].array();
-    Array4<Real> const& jy_arr = local_jy[thread_num].array();
-    Array4<Real> const& jz_arr = local_jz[thread_num].array();
+    Array4<amrex::Real> const& jx_arr = local_jx[thread_num].array();
+    Array4<amrex::Real> const& jy_arr = local_jy[thread_num].array();
+    Array4<amrex::Real> const& jz_arr = local_jz[thread_num].array();
 #endif
 
     const auto GetPosition = GetParticlePosition<PIdx>(pti, offset);
@@ -668,7 +668,7 @@ WarpXParticleContainer::DepositCurrent (
  * \param depos_lev   : Level on which particles deposit (if buffers are used)
  */
 void
-WarpXParticleContainer::DepositCharge (WarpXParIter& pti, RealVector const& wp,
+WarpXParticleContainer::DepositCharge (WarpXParIter& pti, amrex::RealVector const& wp,
                                        const int * const ion_lev,
                                        amrex::MultiFab* rho, const int icomp,
                                        const long offset, const long np_to_depose,
@@ -716,7 +716,7 @@ WarpXParticleContainer::DepositCharge (WarpXParIter& pti, RealVector const& wp,
                                   "Particles shape does not fit within tile (CPU) or guard cells (GPU) used for charge deposition");
         amrex::ignore_unused(range); // In case the assertion isn't compiled
 
-        const std::array<Real,3>& dx = WarpX::CellSize(std::max(depos_lev,0));
+        const std::array<amrex::Real,3>& dx = WarpX::CellSize(std::max(depos_lev,0));
         const Real q = this->charge;
 
         WARPX_PROFILE_VAR_NS("WarpXParticleContainer::DepositCharge::Sorting", blp_sort);
@@ -730,7 +730,7 @@ WarpXParticleContainer::DepositCharge (WarpXParIter& pti, RealVector const& wp,
         if (lev == depos_lev) {
             tilebox = pti.tilebox();
         } else {
-            const IntVect& ref_ratio = WarpX::RefRatio(depos_lev);
+            const amrex::IntVect& ref_ratio = WarpX::RefRatio(depos_lev);
             tilebox = amrex::coarsen(pti.tilebox(),ref_ratio);
         }
 
@@ -851,7 +851,7 @@ WarpXParticleContainer::DepositCharge (WarpXParIter& pti, RealVector const& wp,
                            {
                                const Box& box = boxes_ptr[i];
                                if (box.ok()) {
-                                   IntVect si = box.length();
+                                   amrex::IntVect si = box.length();
                                    return {AMREX_D_DECL(si[0], si[1], si[2])};
                                } else {
                                    return {AMREX_D_DECL(0, 0, 0)};
@@ -860,7 +860,7 @@ WarpXParticleContainer::DepositCharge (WarpXParIter& pti, RealVector const& wp,
 
             ReduceTuple hv = reduce_data.value();
 
-            max_tbox_size = IntVect(AMREX_D_DECL(amrex::get<0>(hv),
+            max_tbox_size = amrex::IntVect(AMREX_D_DECL(amrex::get<0>(hv),
                                                  amrex::get<1>(hv),
                                                  amrex::get<2>(hv)));
         }
@@ -910,7 +910,7 @@ WarpXParticleContainer::DepositCharge (WarpXParIter& pti, RealVector const& wp,
         const std::array<amrex::Real,3>& dx = WarpX::CellSize(std::max(depos_lev,0));
         amrex::IntVect ref_ratio;
         if (lev == depos_lev) {
-            ref_ratio = IntVect(AMREX_D_DECL(1, 1, 1 ));
+            ref_ratio = amrex::IntVect(AMREX_D_DECL(1, 1, 1 ));
         } else {
             ref_ratio = WarpX::RefRatio(depos_lev);
         }
@@ -976,10 +976,10 @@ WarpXParticleContainer::DepositCharge (amrex::Vector<std::unique_ptr<amrex::Mult
     if (interpolate_across_levels)
     {
         for (int lev = finest_level - 1; lev >= 0; --lev) {
-            const DistributionMapping& fine_dm = rho[lev+1]->DistributionMap();
-            BoxArray coarsened_fine_BA = rho[lev+1]->boxArray();
+            const amrex::DistributionMapping& fine_dm = rho[lev+1]->DistributionMap();
+            amrex::BoxArray coarsened_fine_BA = rho[lev+1]->boxArray();
             coarsened_fine_BA.coarsen(m_gdb->refRatio(lev));
-            const IntVect ngrow = (rho[lev+1]->nGrowVect()+1)/m_gdb->refRatio(lev);
+            const amrex::IntVect ngrow = (rho[lev+1]->nGrowVect()+1)/m_gdb->refRatio(lev);
             MultiFab coarsened_fine_data(coarsened_fine_BA, fine_dm, rho[lev+1]->nComp(), ngrow );
             coarsened_fine_data.setVal(0.0);
 
@@ -1056,12 +1056,12 @@ WarpXParticleContainer::DepositCharge (std::unique_ptr<amrex::MultiFab>& rho,
 #endif
 }
 
-std::unique_ptr<MultiFab>
+std::unique_ptr<amrex::MultiFab>
 WarpXParticleContainer::GetChargeDensity (int lev, bool local)
 {
     const auto& ba = m_gdb->ParticleBoxArray(lev);
     const auto& dm = m_gdb->DistributionMap(lev);
-    BoxArray nba = ba;
+    amrex::BoxArray nba = ba;
 
 #ifdef WARPX_DIM_RZ
     const bool is_PSATD_RZ =
@@ -1076,7 +1076,7 @@ WarpXParticleContainer::GetChargeDensity (int lev, bool local)
     const WarpX& warpx = WarpX::GetInstance();
     const int ng_rho = warpx.get_ng_depos_rho().max();
 
-    auto rho = std::make_unique<MultiFab>(nba, dm, WarpX::ncomps,ng_rho);
+    auto rho = std::make_unique<amrex::MultiFab>(nba, dm, WarpX::ncomps,ng_rho);
     DepositCharge(rho, lev, local, true, true, 0);
     return rho;
 }

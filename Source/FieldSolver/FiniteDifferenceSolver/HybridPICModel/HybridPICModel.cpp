@@ -9,7 +9,7 @@
 
 #include "HybridPICModel.H"
 
-using namespace amrex;
+// using namespace amrex;
 
 HybridPICModel::HybridPICModel ( int nlevs_max )
 {
@@ -19,7 +19,7 @@ HybridPICModel::HybridPICModel ( int nlevs_max )
 
 void HybridPICModel::ReadParameters ()
 {
-    ParmParse pp_hybrid("hybrid_pic_model");
+    amrex::ParmParse pp_hybrid("hybrid_pic_model");
 
     // The B-field update is subcycled to improve stability - the number
     // of sub steps can be specified by the user (defaults to 50).
@@ -52,12 +52,12 @@ void HybridPICModel::AllocateMFs (int nlevs_max)
     current_fp_ampere.resize(nlevs_max);
 }
 
-void HybridPICModel::AllocateLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm,
-                                       const int ncomps, const IntVect& ngJ, const IntVect& ngRho,
-                                       const IntVect& jx_nodal_flag,
-                                       const IntVect& jy_nodal_flag,
-                                       const IntVect& jz_nodal_flag,
-                                       const IntVect& rho_nodal_flag)
+void HybridPICModel::AllocateLevelMFs (int lev, const amrex::BoxArray& ba, const amrex::DistributionMapping& dm,
+                                       const int ncomps, const amrex::IntVect& ngJ, const amrex::IntVect& ngRho,
+                                       const amrex::IntVect& jx_nodal_flag,
+                                       const amrex::IntVect& jy_nodal_flag,
+                                       const amrex::IntVect& jz_nodal_flag,
+                                       const amrex::IntVect& rho_nodal_flag)
 {
     // The "electron_pressure_fp" multifab stores the electron pressure calculated
     // from the specified equation of state.
@@ -127,15 +127,15 @@ void HybridPICModel::InitData ()
     const bool appropriate_grids = (
 #if   defined(WARPX_DIM_1D_Z)
         // AMReX convention: x = missing dimension, y = missing dimension, z = only dimension
-        Ex_stag == IntVect(1) && Ey_stag == IntVect(1) && Ez_stag == IntVect(0) &&
-        Bx_stag == IntVect(0) && By_stag == IntVect(0) && Bz_stag == IntVect(1) &&
+        Ex_stag == amrex::IntVect(1) && Ey_stag == amrex::IntVect(1) && Ez_stag == amrex::IntVect(0) &&
+        Bx_stag == amrex::IntVect(0) && By_stag == amrex::IntVect(0) && Bz_stag == amrex::IntVect(1) &&
 #elif   defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
         // AMReX convention: x = first dimension, y = missing dimension, z = second dimension
-        Ex_stag == IntVect(0,1) && Ey_stag == IntVect(1,1) && Ez_stag == IntVect(1,0) &&
-        Bx_stag == IntVect(1,0) && By_stag == IntVect(0,0) && Bz_stag == IntVect(0,1) &&
+        Ex_stag == amrex::IntVect(0,1) && Ey_stag == amrex::IntVect(1,1) && Ez_stag == amrex::IntVect(1,0) &&
+        Bx_stag == amrex::IntVect(1,0) && By_stag == amrex::IntVect(0,0) && Bz_stag == amrex::IntVect(0,1) &&
 #elif defined(WARPX_DIM_3D)
-        Ex_stag == IntVect(0,1,1) && Ey_stag == IntVect(1,0,1) && Ez_stag == IntVect(1,1,0) &&
-        Bx_stag == IntVect(1,0,0) && By_stag == IntVect(0,1,0) && Bz_stag == IntVect(0,0,1) &&
+        Ex_stag == amrex::IntVect(0,1,1) && Ey_stag == amrex::IntVect(1,0,1) && Ez_stag == amrex::IntVect(1,1,0) &&
+        Bx_stag == amrex::IntVect(1,0,0) && By_stag == amrex::IntVect(0,1,0) && Bz_stag == amrex::IntVect(0,0,1) &&
 #endif
         Jx_stag == Ex_stag && Jy_stag == Ey_stag && Jz_stag == Ez_stag
     );
@@ -316,8 +316,8 @@ void HybridPICModel::FillElectronPressureMF (
     for ( MFIter mfi(*Pe_field, TilingIfNotGPU()); mfi.isValid(); ++mfi )
     {
         // Extract field data for this grid/tile
-        Array4<Real const> const& rho = rho_field->const_array(mfi);
-        Array4<Real> const& Pe = Pe_field->array(mfi);
+        Array4<amrex::Real const> const& rho = rho_field->const_array(mfi);
+        Array4<amrex::Real> const& Pe = Pe_field->array(mfi);
 
         // Extract tileboxes for which to loop
         const Box& tilebox  = mfi.tilebox();

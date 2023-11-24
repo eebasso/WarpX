@@ -7,7 +7,7 @@
 #include <AMReX.H>
 #include <AMReX_REAL.H>
 
-using namespace amrex;
+// using namespace amrex;
 
 void
 FlushFormatAscent::WriteToFile (
@@ -83,8 +83,8 @@ FlushFormatAscent::WriteParticles(const amrex::Vector<ParticleDiag>& particle_di
     // want to to uniquely name all the fields that can be plotted
 
     for (unsigned i = 0, n = particle_diags.size(); i < n; ++i) {
-        Vector<std::string> particle_varnames;
-        Vector<std::string> particle_int_varnames;
+        amrex::Vector<std::string> particle_varnames;
+        amrex::Vector<std::string> particle_int_varnames;
         std::string prefix = "particle_" + particle_diags[i].getSpeciesName();
 
         // Get pc for species

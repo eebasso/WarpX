@@ -21,7 +21,7 @@
 
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 //NCIGodfreyFilter not implemented in 1D
 #if (AMREX_SPACEDIM >= 2)
@@ -57,8 +57,8 @@ void NCIGodfreyFilter::ComputeStencils()
     auto index = static_cast<int>(tab_length*m_cdtodz);
     index = min(index, tab_length-2);
     index = max(index, 0);
-    Real const weight_right = m_cdtodz - amrex::Real(index)/amrex::Real(tab_length);
-    Real prestencil[4];
+    amrex::Real const weight_right = m_cdtodz - amrex::Real(index)/amrex::Real(tab_length);
+    amrex::Real prestencil[4];
 
     // read prestencil coefficients from table (the stencil is computed from
     // these coefficients)
@@ -97,7 +97,7 @@ void NCIGodfreyFilter::ComputeStencils()
         }
     }
     // Compute stencil_z
-    Vector<Real> h_stencil_z(5);
+    amrex::Vector<amrex::Real> h_stencil_z(5);
     h_stencil_z[0] =  (256 + 128*prestencil[0] + 96*prestencil[1] + 80*prestencil[2] + 70*prestencil[3]) / 256;
     h_stencil_z[1] = -(       64*prestencil[0] + 64*prestencil[1] + 60*prestencil[2] + 56*prestencil[3]) / 256;
     h_stencil_z[2] =  (                          16*prestencil[1] + 24*prestencil[2] + 28*prestencil[3]) / 256;
@@ -106,10 +106,10 @@ void NCIGodfreyFilter::ComputeStencils()
 
     // Compute h_stencil_x and h_stencil_y (no filter in these directions,
     // so only 1 coeff, equal to 1)
-    Vector<Real> h_stencil_x(1);
+    amrex::Vector<amrex::Real> h_stencil_x(1);
     h_stencil_x[0] = 1._rt;
 #  if defined(WARPX_DIM_3D)
-    Vector<Real> h_stencil_y(1);
+    amrex::Vector<amrex::Real> h_stencil_y(1);
     h_stencil_y[0] = 1._rt;
 #  endif
 

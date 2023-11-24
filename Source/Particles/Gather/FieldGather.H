@@ -61,7 +61,7 @@ void doGatherShapeN (const amrex::ParticleReal xp,
                      const amrex::Dim3& lo,
                      const int n_rz_azimuthal_modes)
 {
-    using namespace amrex;
+    // using namespace amrex;
 
 #if defined(WARPX_DIM_XZ)
     amrex::ignore_unused(yp);

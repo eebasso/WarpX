@@ -40,7 +40,7 @@
 #include <sstream>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 void
 LaserParticleContainer::ReadHeader (std::istream& is)
@@ -129,7 +129,7 @@ MultiParticleContainer::Restart (const std::string& dir)
         WarpXParticleContainer* pc = allcontainers.at(i).get();
         const std::string header_fn = dir + "/" + species_names[i] + "/Header";
 
-        Vector<char> fileCharPtr;
+        amrex::Vector<char> fileCharPtr;
         ParallelDescriptor::ReadAndBcastFile(header_fn, fileCharPtr);
         const std::string fileCharPtrString(fileCharPtr.dataPtr());
         std::istringstream is(fileCharPtrString, std::istringstream::in);

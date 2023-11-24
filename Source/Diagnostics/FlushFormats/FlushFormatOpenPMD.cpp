@@ -17,12 +17,12 @@
 #include <set>
 #include <string>
 
-using namespace amrex;
+// using namespace amrex;
 
 
 FlushFormatOpenPMD::FlushFormatOpenPMD (const std::string& diag_name)
 {
-    ParmParse pp_diag_name(diag_name);
+    amrex::ParmParse pp_diag_name(diag_name);
     // Which backend to use (ADIOS, ADIOS2 or HDF5). Default depends on what is available
     std::string openpmd_backend {"default"};
     pp_diag_name.query("openpmd_backend", openpmd_backend);
@@ -73,7 +73,7 @@ FlushFormatOpenPMD::FlushFormatOpenPMD (const std::string& diag_name)
   std::string operator_type;
   pp_diag_name.query("adios2_operator.type", operator_type);
   std::string const prefix = diag_name + ".adios2_operator.parameters";
-  const ParmParse pp;
+  const amrex::ParmParse pp;
   auto entr = amrex::ParmParse::getEntries(prefix);
 
   std::map< std::string, std::string > operator_parameters;
@@ -89,7 +89,7 @@ FlushFormatOpenPMD::FlushFormatOpenPMD (const std::string& diag_name)
   std::string engine_type;
   pp_diag_name.query("adios2_engine.type", engine_type);
   std::string const engine_prefix = diag_name + ".adios2_engine.parameters";
-  const ParmParse ppe;
+  const amrex::ParmParse ppe;
   auto eng_entr = amrex::ParmParse::getEntries(engine_prefix);
 
   std::map< std::string, std::string > engine_parameters;

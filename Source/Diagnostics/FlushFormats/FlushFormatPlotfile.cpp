@@ -46,7 +46,7 @@
 #include <utility>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 namespace
 {
@@ -83,14 +83,14 @@ FlushFormatPlotfile::WriteToFile (
       }
     }
 
-    Vector<std::string> rfs;
+    amrex::Vector<std::string> rfs;
     const VisMF::Header::Version current_version = VisMF::GetHeaderVersion();
     VisMF::SetHeaderVersion(amrex::VisMF::Header::Version_v1);
     if (plot_raw_fields) rfs.emplace_back("raw_fields");
     amrex::WriteMultiLevelPlotfile(filename, nlev,
                                    amrex::GetVecOfConstPtrs(mf),
                                    varnames, geom,
-                                   static_cast<Real>(time), iteration, warpx.refRatio(),
+                                   static_cast<amrex::Real>(time), iteration, warpx.refRatio(),
                                    "HyperCLaw-V1.1",
                                    "Level_",
                                    "Cell",
@@ -224,7 +224,7 @@ FlushFormatPlotfile::WriteJobInfo(const std::string& dir) const
         jobInfoFile << " Inputs File Parameters\n";
         jobInfoFile << PrettyLine;
 
-        ParmParse::dumpTable(jobInfoFile, true);
+        amrex::ParmParse::dumpTable(jobInfoFile, true);
 
         jobInfoFile.close();
     }
@@ -349,10 +349,10 @@ FlushFormatPlotfile::WriteParticles(const std::string& dir,
             pinned_pc->make_alike<amrex::PinnedArenaAllocator>() :
             pc->make_alike<amrex::PinnedArenaAllocator>();
 
-        Vector<std::string> real_names;
-        Vector<std::string> int_names;
-        Vector<int> int_flags;
-        Vector<int> real_flags;
+        amrex::Vector<std::string> real_names;
+        amrex::Vector<std::string> int_names;
+        amrex::Vector<int> int_flags;
+        amrex::Vector<int> real_flags;
 
         real_names.push_back("weight");
 
@@ -425,7 +425,7 @@ FlushFormatPlotfile::WriteParticles(const std::string& dir,
  *  Write guard cells if `plot_guards` is True.
  */
 void
-WriteRawMF ( const MultiFab& F, const DistributionMapping& dm,
+WriteRawMF ( const amrex::MultiFab& F, const amrex::DistributionMapping& dm,
              const std::string& filename,
              const std::string& level_prefix,
              const std::string& field_name,
@@ -451,11 +451,11 @@ WriteRawMF ( const MultiFab& F, const DistributionMapping& dm,
  *  the coarse patch of level 0 (meaningless).
  */
 void
-WriteZeroRawMF( const MultiFab& F, const DistributionMapping& dm,
+WriteZeroRawMF( const amrex::MultiFab& F, const amrex::DistributionMapping& dm,
                 const std::string& filename,
                 const std::string& level_prefix,
                 const std::string& field_name,
-                const int lev, const IntVect ng )
+                const int lev, const amrex::IntVect ng )
 {
     const std::string prefix = amrex::MultiFabFileFullPrefix(lev,
                             filename, level_prefix, field_name);
@@ -472,18 +472,18 @@ WriteZeroRawMF( const MultiFab& F, const DistributionMapping& dm,
  */
 void
 WriteCoarseVector( const std::string field_name,
-    const MultiFab* Fx_cp,
-    const MultiFab* Fy_cp,
-    const MultiFab* Fz_cp,
-    const MultiFab* Fx_fp,
-    const MultiFab* Fy_fp,
-    const MultiFab* Fz_fp,
-    const DistributionMapping& dm,
+    const amrex::MultiFab* Fx_cp,
+    const amrex::MultiFab* Fy_cp,
+    const amrex::MultiFab* Fz_cp,
+    const amrex::MultiFab* Fx_fp,
+    const amrex::MultiFab* Fy_fp,
+    const amrex::MultiFab* Fz_fp,
+    const amrex::DistributionMapping& dm,
     const std::string& filename,
     const std::string& level_prefix,
     const int lev, const bool plot_guards )
 {
-    IntVect ng(0);
+    amrex::IntVect ng(0);
     if (plot_guards) ng = Fx_fp->nGrowVect();
 
     if (lev == 0) {
@@ -512,15 +512,15 @@ WriteCoarseVector( const std::string field_name,
  */
 void
 WriteCoarseScalar( const std::string field_name,
-    const MultiFab* F_cp,
-    const MultiFab* F_fp,
-    const DistributionMapping& dm,
+    const amrex::MultiFab* F_cp,
+    const amrex::MultiFab* F_fp,
+    const amrex::DistributionMapping& dm,
     const std::string& filename,
     const std::string& level_prefix,
     const int lev, const bool plot_guards,
     const int icomp )
 {
-    IntVect ng(0);
+    amrex::IntVect ng(0);
     if (plot_guards) ng = F_fp->nGrowVect();
 
     if (lev == 0) {
@@ -529,7 +529,7 @@ WriteCoarseScalar( const std::string field_name,
         WriteZeroRawMF( *F_fp, dm, filename, level_prefix, field_name+"_cp", lev, ng );
     } else {
         // Create an alias to the component `icomp` of F_cp
-        const MultiFab F_comp(*F_cp, amrex::make_alias, icomp, 1);
+        const amrex::MultiFab F_comp(*F_cp, amrex::make_alias, icomp, 1);
         // Interpolate coarse data onto fine grid
         const amrex::IntVect r_ratio = WarpX::GetInstance().refRatio(lev-1);
         const Real* dx = WarpX::GetInstance().Geom(lev-1).CellSize();
@@ -548,9 +548,9 @@ FlushFormatPlotfile::WriteAllRawFields(
     auto & warpx = WarpX::GetInstance();
     for (int lev = 0; lev < nlevels; ++lev)
     {
-        const std::unique_ptr<MultiFab> empty_ptr;
+        const std::unique_ptr<amrex::MultiFab> empty_ptr;
         const std::string raw_pltname = plotfilename + "/raw_fields";
-        const DistributionMapping& dm = warpx.DistributionMap(lev);
+        const amrex::DistributionMapping& dm = warpx.DistributionMap(lev);
 
         // Auxiliary patch
 
@@ -580,7 +580,7 @@ FlushFormatPlotfile::WriteAllRawFields(
             // rho_fp will have either ncomps or 2*ncomps (2 being the old and new). When 2, return the new so
             // there is time synchronization.
             const int nstart = warpx.getrho_fp(lev).nComp() - WarpX::ncomps;
-            const MultiFab rho_new(warpx.getrho_fp(lev), amrex::make_alias, nstart, WarpX::ncomps);
+            const amrex::MultiFab rho_new(warpx.getrho_fp(lev), amrex::make_alias, nstart, WarpX::ncomps);
             WriteRawMF(rho_new, dm, raw_pltname, default_level_prefix, "rho_fp", lev, plot_raw_fields_guards);
         }
         if (warpx.get_pointer_phi_fp(lev) != nullptr) {

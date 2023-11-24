@@ -27,7 +27,7 @@
 #include <numeric>
 #include <vector>
 
-using namespace amrex;
+// using namespace amrex;
 
 void
 WarpXLaserProfiles::GaussianLaserProfile::init (
@@ -97,8 +97,8 @@ WarpXLaserProfiles::GaussianLaserProfile::init (
  */
 void
 WarpXLaserProfiles::GaussianLaserProfile::fill_amplitude (
-    const int np, Real const * AMREX_RESTRICT const Xp, Real const * AMREX_RESTRICT const Yp,
-    Real t, Real * AMREX_RESTRICT const amplitude) const
+    const int np, amrex::Real const * AMREX_RESTRICT const Xp, amrex::Real const * AMREX_RESTRICT const Yp,
+    amrex::Real t, amrex::Real * AMREX_RESTRICT const amplitude) const
 {
     const Complex I(0,1);
     // Calculate a few factors which are independent of the macroparticle

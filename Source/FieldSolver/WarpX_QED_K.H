@@ -32,7 +32,7 @@ void calc_M(amrex::Real arr [], amrex::Real ex, amrex::Real ey, amrex::Real ez,
             amrex::Real bx, amrex::Real by, amrex::Real bz,
             amrex::Real xi_c2, amrex::Real c2)
 {
-    using namespace amrex;
+    // using namespace amrex;
     const Real ee = ex*ex+ey*ey+ez*ez;
     const Real bb_c2 = c2*(bx*bx+by*by+bz*bz);
     const Real eb = ex*bx+ey*by+ez*bz;
@@ -88,7 +88,7 @@ void warpx_hybrid_QED_push (
     const amrex::Real dz, const amrex::Real dt, const amrex::Real xi_c2)
 {
 
-using namespace amrex;
+// using namespace amrex;
 
 // Defining constants to be used in the calculations
 

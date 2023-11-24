@@ -32,7 +32,7 @@ void warpx_interp (int j, int k, int l,
                    const amrex::IntVect& arr_stag,
                    const amrex::IntVect& rr)
 {
-    using namespace amrex;
+    // using namespace amrex;
 
     // Pad arr_coarse with zeros beyond ghost cells for out-of-bound accesses
     const auto arr_coarse_zeropad = [arr_coarse] (const int jj, const int kk, const int ll) noexcept
@@ -108,7 +108,7 @@ void warpx_interp (int j, int k, int l,
                    const amrex::IntVect& arr_coarse_stag,
                    const amrex::IntVect& rr)
 {
-    using namespace amrex;
+    // using namespace amrex;
 
     // Pad input arrays with zeros beyond ghost cells
     // for out-of-bound accesses due to large-stencil operations
@@ -330,7 +330,7 @@ void warpx_interp (const int j,
                    amrex::Real const* stencil_coeffs_y = nullptr,
                    amrex::Real const* stencil_coeffs_z = nullptr)
 {
-    using namespace amrex;
+    // using namespace amrex;
 
     // Pad input array with zeros beyond ghost cells
     // for out-of-bound accesses due to large-stencil operations
