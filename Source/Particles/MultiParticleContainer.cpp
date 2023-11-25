@@ -811,10 +811,8 @@ MultiParticleContainer::mapSpeciesProduct ()
 
 #ifdef WARPX_QED
     if (m_do_qed_schwinger) {
-    m_qed_schwinger_ele_product =
-        getSpeciesID(m_qed_schwinger_ele_product_name);
-    m_qed_schwinger_pos_product =
-        getSpeciesID(m_qed_schwinger_pos_product_name);
+        m_qed_schwinger_ele_product = getSpeciesID(m_qed_schwinger_ele_product_name);
+        m_qed_schwinger_pos_product = getSpeciesID(m_qed_schwinger_pos_product_name);
     }
 #endif
 }
