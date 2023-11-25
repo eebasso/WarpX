@@ -551,7 +551,7 @@ WarpX::InitPML ()
             do_pml_Hi[0][idim] = 1; // on level 0
         }
     }
-    if (finest_level > 0) do_pml = 1;
+    if (finest_level > 0) { do_pml = 1; }
     if (do_pml)
     {
 #if (defined WARPX_DIM_RZ) && (defined WARPX_USE_PSATD)

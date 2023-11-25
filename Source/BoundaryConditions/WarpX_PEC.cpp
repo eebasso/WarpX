@@ -250,8 +250,8 @@ PEC::ApplyPECtoRhofield (amrex::MultiFab* rho, const int lev, PatchType patch_ty
     for (int idim=0; idim < AMREX_SPACEDIM; ++idim) {
         is_pec[idim][0] = WarpX::field_boundary_lo[idim] == FieldBoundaryType::PEC;
         is_pec[idim][1] = WarpX::field_boundary_hi[idim] == FieldBoundaryType::PEC;
-        if (!is_pec[idim][0]) grown_domain_box.growLo(idim, ng_fieldgather[idim]);
-        if (!is_pec[idim][1]) grown_domain_box.growHi(idim, ng_fieldgather[idim]);
+        if (!is_pec[idim][0]) { grown_domain_box.growLo(idim, ng_fieldgather[idim]); }
+        if (!is_pec[idim][1]) { grown_domain_box.growHi(idim, ng_fieldgather[idim]); }
 
         // rho values inside guard cells are updated the same as tangential
         // components of the current density
@@ -342,8 +342,8 @@ PEC::ApplyPECtoJfield(amrex::MultiFab* Jx, amrex::MultiFab* Jy,
     for (int idim=0; idim < AMREX_SPACEDIM; ++idim) {
         is_pec[idim][0] = WarpX::field_boundary_lo[idim] == FieldBoundaryType::PEC;
         is_pec[idim][1] = WarpX::field_boundary_hi[idim] == FieldBoundaryType::PEC;
-        if (!is_pec[idim][0]) grown_domain_box.growLo(idim, ng_fieldgather[idim]);
-        if (!is_pec[idim][1]) grown_domain_box.growHi(idim, ng_fieldgather[idim]);
+        if (!is_pec[idim][0]) { grown_domain_box.growLo(idim, ng_fieldgather[idim]); }
+        if (!is_pec[idim][1]) { grown_domain_box.growHi(idim, ng_fieldgather[idim]); }
 
         for (int icomp=0; icomp < 3; ++icomp) {
             // Set the psign value correctly for each current component for each
@@ -520,8 +520,8 @@ PEC::ApplyPECtoElectronPressure (amrex::MultiFab* Pefield, const int lev,
     for (int idim=0; idim < AMREX_SPACEDIM; ++idim) {
         is_pec[idim][0] = WarpX::field_boundary_lo[idim] == FieldBoundaryType::PEC;
         is_pec[idim][1] = WarpX::field_boundary_hi[idim] == FieldBoundaryType::PEC;
-        if (!is_pec[idim][0]) grown_domain_box.growLo(idim, ng_fieldgather[idim]);
-        if (!is_pec[idim][1]) grown_domain_box.growHi(idim, ng_fieldgather[idim]);
+        if (!is_pec[idim][0]) { grown_domain_box.growLo(idim, ng_fieldgather[idim]); }
+        if (!is_pec[idim][1]) { grown_domain_box.growHi(idim, ng_fieldgather[idim]); }
 
         mirrorfac[idim][0] = 2*domain_lo[idim] - (1 - Pe_nodal[idim]);
         mirrorfac[idim][1] = 2*domain_hi[idim] + (1 - Pe_nodal[idim]);

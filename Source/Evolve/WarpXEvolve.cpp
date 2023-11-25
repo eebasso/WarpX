@@ -164,8 +164,10 @@ WarpX::Evolve (int numsteps)
         // If needed, deposit the initial ion charge and current densities that
         // will be used to update the E-field in Ohm's law.
         if (step == step_begin &&
-            electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC
-        ) HybridPICDepositInitialRhoAndJ();
+            electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC)
+        {
+            HybridPICDepositInitialRhoAndJ();
+        }
 
         // Run multi-physics modules:
         // ionization, Coulomb collisions, QED

@@ -150,7 +150,7 @@ WarpX::ComputeEdgeLengths (std::array< std::unique_ptr<amrex::MultiFab>, 3 >& ed
             } else {
 #ifdef WARPX_DIM_XZ
                 int idim_amrex = idim;
-                if(idim == 2) idim_amrex = 1;
+                if(idim == 2) { idim_amrex = 1; }
                 auto const &edge_cent = edge_centroid[idim_amrex]->const_array(mfi);
 #elif defined(WARPX_DIM_3D)
                 auto const &edge_cent = edge_centroid[idim]->const_array(mfi);

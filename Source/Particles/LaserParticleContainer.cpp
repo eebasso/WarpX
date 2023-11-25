@@ -541,7 +541,7 @@ LaserParticleContainer::InitData (int lev)
     amrex::Vector<amrex::ParticleReal> particle_uy(np, 0.0);
     amrex::Vector<amrex::ParticleReal> particle_uz(np, 0.0);
 
-    if (Verbose()) amrex::Print() << Utils::TextMsg::Info("Adding laser particles");
+    if (Verbose()) { amrex::Print() << Utils::TextMsg::Info("Adding laser particles"); }
     amrex::Vector<amrex::Vector<ParticleReal>> attr;
     attr.push_back(particle_w);
     amrex::Vector<amrex::Vector<int>> attr_int;

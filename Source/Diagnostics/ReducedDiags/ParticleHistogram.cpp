@@ -223,9 +223,11 @@ void ParticleHistogram::ComputeDiags (int step)
                     auto const uz = d_uz[i] / PhysConst::c;
 
                     // don't count a particle if it is filtered out
-                    if (do_parser_filter)
-                        if (fun_filterparser(t, x, y, z, ux, uy, uz) == 0._rt)
+                    if (do_parser_filter) {
+                        if (fun_filterparser(t, x, y, z, ux, uy, uz) == 0._rt) {
                             return;
+                        }
+                    }
                     // continue function if particle is not filtered out
                     auto const f = fun_partparser(t, x, y, z, ux, uy, uz);
                     // determine particle bin
@@ -260,11 +262,11 @@ void ParticleHistogram::ComputeDiags (int step)
         Real f_max = 0.0_rt;
         for ( int i = 0; i < m_bin_num; ++i )
         {
-            if ( m_data[i] > f_max ) f_max = m_data[i];
+            if ( m_data[i] > f_max ) { f_max = m_data[i]; }
         }
         for ( int i = 0; i < m_bin_num; ++i )
         {
-            if ( f_max > std::numeric_limits<Real>::min() ) m_data[i] /= f_max;
+            if ( f_max > std::numeric_limits<Real>::min() ) { m_data[i] /= f_max; }
         }
         return;
     }
@@ -279,7 +281,7 @@ void ParticleHistogram::ComputeDiags (int step)
         }
         for ( int i = 0; i < m_bin_num; ++i )
         {
-            if ( f_area > std::numeric_limits<Real>::min() ) m_data[i] /= f_area;
+            if ( f_area > std::numeric_limits<Real>::min() ) { m_data[i] /= f_area; }
         }
         return;
     }

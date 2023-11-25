@@ -69,11 +69,13 @@ void WarpX::ApplyBfieldBoundary (const int lev, PatchType patch_type, DtType a_d
                     applySilverMueller = true;
                 }
             }
-            if(applySilverMueller) m_fdtd_solver_fp[0]->ApplySilverMuellerBoundary(
+            if(applySilverMueller) {
+                m_fdtd_solver_fp[0]->ApplySilverMuellerBoundary(
                                          Efield_fp[lev], Bfield_fp[lev],
                                          Geom(lev).Domain(), dt[lev],
                                          WarpX::field_boundary_lo,
                                          WarpX::field_boundary_hi);
+            }
         }
     }
 }

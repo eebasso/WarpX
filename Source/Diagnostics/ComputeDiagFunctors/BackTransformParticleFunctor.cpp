@@ -142,8 +142,9 @@ BackTransformParticleFunctor::operator () (PinnedMemoryParticleContainer& pc_dst
                 amrex::ParallelFor(np,
                 [=] AMREX_GPU_DEVICE(int i)
                 {
-                   if (Flag[i] == 1) GetParticleLorentzTransform(dst_data, src_data, i,
-                                                                 old_size + IndexLocation[i]);
+                    if (Flag[i] == 1) {
+                        GetParticleLorentzTransform(dst_data, src_data, i, old_size + IndexLocation[i]);
+                    }
                 });
                 amrex::Gpu::synchronize();
             }

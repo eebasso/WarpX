@@ -118,9 +118,12 @@ namespace ablastr::coarsen::sample
                                             "source MultiFab converted to staggering of destination MultiFab is not coarsenable" );
         ba_tmp.coarsen( crse_ratio );
 
-        if ( ba_tmp == mf_dst.boxArray() and mf_src.DistributionMap() == mf_dst.DistributionMap() ) {
+        if ( ba_tmp == mf_dst.boxArray() and mf_src.DistributionMap() == mf_dst.DistributionMap() )
+        {
             Loop( mf_dst, mf_src, dcomp, scomp, ncomp, ngrowvect, crse_ratio );
-        } else {
+        }
+        else
+        {
             // Cannot coarsen into MultiFab with different BoxArray or DistributionMapping:
             // 1) create temporary MultiFab on coarsened version of source BoxArray with same DistributionMapping
             amrex::MultiFab mf_tmp( ba_tmp, mf_src.DistributionMap(), ncomp, ngrowvect, amrex::MFInfo(), amrex::FArrayBoxFactory() );

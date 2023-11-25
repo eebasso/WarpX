@@ -129,7 +129,7 @@ computeVectorPotential   (  amrex::Vector<amrex::Array<amrex::MultiFab*, 3> > co
 
     const bool always_use_bnorm = (max_comp_J > 0);
     if (!always_use_bnorm) {
-        if (absolute_tolerance == 0.0) absolute_tolerance = amrex::Real(1e-6);
+        if (absolute_tolerance == 0.0) { absolute_tolerance = amrex::Real(1e-6); }
         ablastr::warn_manager::WMRecordWarning(
                 "MagnetostaticSolver",
                 "Max norm of J is 0",

@@ -111,7 +111,7 @@ namespace detail
 
         std::string op_parameters;
         for (const auto& kv : operator_parameters) {
-            if (!op_parameters.empty()) op_parameters.append(",\n");
+            if (!op_parameters.empty()) { op_parameters.append(",\n"); }
             op_parameters.append(std::string(12, ' '))         /* just pretty alignment */
                     .append("\"").append(kv.first).append("\": ")    /* key */
                     .append("\"").append(kv.second).append("\""); /* value (as string) */
@@ -119,7 +119,7 @@ namespace detail
 
         std::string en_parameters;
         for (const auto& kv : engine_parameters) {
-            if (!en_parameters.empty()) en_parameters.append(",\n");
+            if (!en_parameters.empty()) { en_parameters.append(",\n"); }
             en_parameters.append(std::string(12, ' '))         /* just pretty alignment */
                     .append("\"").append(kv.first).append("\": ")    /* key */
                     .append("\"").append(kv.second).append("\""); /* value (as string) */
@@ -154,8 +154,9 @@ namespace detail
         }
       ]
     })END";
-            if (!engine_type.empty() || !en_parameters.empty())
+            if (!engine_type.empty() || !en_parameters.empty()) {
                 op_block += ",";
+            }
         }  // end operator string block
 
         // add the engine string block
@@ -170,8 +171,9 @@ namespace detail
       "type": ")END";
                 en_block += engine_type + "\"";
 
-                if(!en_parameters.empty())
+                if(!en_parameters.empty()) {
                     en_block += ",";
+                }
             }
 
             // non-default engine parameters
@@ -862,7 +864,7 @@ WarpXOpenPMDPlot::SetupRealProperties (ParticleContainer const * pc,
                       const unsigned long long np, bool const isBTD) const
 {
     std::string options = "{}";
-    if (isBTD) options = "{ \"resizable\": true }";
+    if (isBTD) { options = "{ \"resizable\": true }"; }
     auto dtype_real = openPMD::Dataset(openPMD::determineDatatype<amrex::ParticleReal>(), {np}, options);
     auto dtype_int  = openPMD::Dataset(openPMD::determineDatatype<int>(), {np}, options);
     //
@@ -899,14 +901,17 @@ WarpXOpenPMDPlot::SetupRealProperties (ParticleContainer const * pc,
             [[maybe_unused]] const auto [_, newRecord] = addedRecords.insert(record_name);
             if( newRecord ) {
                 currRecord.setUnitDimension( detail::getUnitDimension(record_name) );
-                if( record_name == "weighting" )
+                if( record_name == "weighting" ) {
                     currRecord.setAttribute( "macroWeighted", 1u );
-                else
+                } else {
                     currRecord.setAttribute( "macroWeighted", 0u );
-                if( record_name == "momentum" || record_name == "weighting" )
+                }
+                if( record_name == "momentum" || record_name == "weighting" ) {
                     currRecord.setAttribute( "weightingPower", 1.0 );
-                else
+                }
+                else {
                     currRecord.setAttribute( "weightingPower", 0.0 );
+                }
             }
         }
     }
@@ -922,10 +927,11 @@ WarpXOpenPMDPlot::SetupRealProperties (ParticleContainer const * pc,
             if( newRecord ) {
                 currRecord.setUnitDimension( detail::getUnitDimension(record_name) );
                 currRecord.setAttribute( "macroWeighted", 0u );
-                if( record_name == "momentum" || record_name == "weighting" )
+                if( record_name == "momentum" || record_name == "weighting" ) {
                     currRecord.setAttribute( "weightingPower", 1.0 );
-                else
+                } else {
                     currRecord.setAttribute( "weightingPower", 0.0 );
+                }
             }
         }
     }
@@ -1007,7 +1013,7 @@ WarpXOpenPMDPlot::SetupPos (
     bool const isBTD)
 {
     std::string options = "{}";
-    if (isBTD) options = "{ \"resizable\": true }";
+    if (isBTD) { options = "{ \"resizable\": true }"; }
     auto realType = openPMD::Dataset(openPMD::determineDatatype<amrex::ParticleReal>(), {np}, options);
     auto idType = openPMD::Dataset(openPMD::determineDatatype< uint64_t >(), {np}, options);
 
@@ -1149,18 +1155,19 @@ WarpXOpenPMDPlot::SetupFields ( openPMD::Container< openPMD::Mesh >& meshes,
 
     const auto HalfFieldBoundarySize = static_cast<int>(fieldBoundary.size() / 2u);
 
-    for (auto i = 0; i < HalfFieldBoundarySize; ++i)
-        if (m_fieldPMLdirections.at(i))
+    for (auto i = 0; i < HalfFieldBoundarySize; ++i) {
+        if (m_fieldPMLdirections.at(i)) {
             fieldBoundary.at(i) = "open";
-
-    for (int i = 0; i < HalfFieldBoundarySize; ++i)
+        }
+    }
+    for (int i = 0; i < HalfFieldBoundarySize; ++i) {
         if (period.isPeriodic(i)) {
             fieldBoundary.at(2u * i) = "periodic";
             fieldBoundary.at(2u * i + 1u) = "periodic";
             particleBoundary.at(2u * i) = "periodic";
             particleBoundary.at(2u * i + 1u) = "periodic";
         }
-
+    }
     meshes.setAttribute("fieldSolver", []() {
         switch (WarpX::electromagnetic_solver_id) {
             case ElectromagneticSolverAlgo::Yee :
@@ -1178,21 +1185,21 @@ WarpXOpenPMDPlot::SetupFields ( openPMD::Container< openPMD::Mesh >& meshes,
     meshes.setAttribute("currentSmoothing", []() {
         if (WarpX::use_filter) { return "Binomial"; }
         else { return "none"; }
-      }());
+    }());
     if (WarpX::use_filter) {
         meshes.setAttribute("currentSmoothingParameters", []() {
             std::stringstream ss;
             ss << "period=1;compensator=false";
 #if (AMREX_SPACEDIM >= 2)
-        ss << ";numPasses_x=" << WarpX::filter_npass_each_dir[0];
+            ss << ";numPasses_x=" << WarpX::filter_npass_each_dir[0];
 #endif
 #if defined(WARPX_DIM_3D)
-        ss << ";numPasses_y=" << WarpX::filter_npass_each_dir[1];
-        ss << ";numPasses_z=" << WarpX::filter_npass_each_dir[2];
+            ss << ";numPasses_y=" << WarpX::filter_npass_each_dir[1];
+            ss << ";numPasses_z=" << WarpX::filter_npass_each_dir[2];
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-        ss << ";numPasses_z=" << WarpX::filter_npass_each_dir[1];
+            ss << ";numPasses_z=" << WarpX::filter_npass_each_dir[1];
 #elif defined(WARPX_DIM_1D_Z)
-        ss << ";numPasses_z=" << WarpX::filter_npass_each_dir[0];
+            ss << ";numPasses_z=" << WarpX::filter_npass_each_dir[0];
 #endif
             std::string currentSmoothingParameters = ss.str();
             return currentSmoothingParameters;
@@ -1231,7 +1238,7 @@ WarpXOpenPMDPlot::SetupMeshComp (openPMD::Mesh& mesh,
     std::vector<double> const global_offset = getReversedVec(full_geom.ProbLo());
 #if defined(WARPX_DIM_RZ)
     if (var_in_theta_mode) {
-            global_size.emplace(global_size.begin(), WarpX::ncomps);
+        global_size.emplace(global_size.begin(), WarpX::ncomps);
     }
 #endif
     // - AxisLabels
@@ -1283,9 +1290,9 @@ WarpXOpenPMDPlot::GetMeshCompNames (int meshLevel,
         }
     }
 
-    if ( 0 == meshLevel )
+    if ( 0 == meshLevel ) {
         return;
-
+    }
     field_name += std::string("_lvl").append(std::to_string(meshLevel));
 }
 
@@ -1373,13 +1380,15 @@ WarpXOpenPMDPlot::WriteOpenPMDFieldsAll ( //const std::string& filename,
     //   note: this is usually the finestLevel, not the maxLevel
     for (int lev=0; lev < output_levels; lev++) {
         amrex::Geometry full_geom = geom[lev];
-        if( isBTD )
+        if( isBTD ) {
             full_geom = full_BTD_snapshot;
+        }
 
         // setup is called once. So it uses property "period" from first
         // geometry for <all> field levels.
-        if ( (0 == lev) && first_write_to_iteration )
+        if ( (0 == lev) && first_write_to_iteration ) {
             SetupFields(meshes, full_geom);
+        }
 
         amrex::Box const & global_box = full_geom.Domain();
 
@@ -1511,9 +1520,9 @@ WarpXParticleCounter::WarpXParticleCounter (ParticleContainer* pc):
         m_ParticleSizeAtRank[currentLevel] = numParticles;
 
         // adjust offset, it should be numbered after particles from previous levels
-        for (auto lv=0; lv<currentLevel; lv++)
+        for (auto lv=0; lv<currentLevel; lv++) {
             m_ParticleOffsetAtRank[currentLevel] += m_ParticleCounterByLevel[lv];
-
+        }
         m_Total += sum;
     }
 }
@@ -1545,8 +1554,9 @@ WarpXParticleCounter::GetParticleOffsetOfProcessor (
     auto const num_results = static_cast<int>(result.size());
     for (int i=0; i<num_results; i++) {
         sum += result[i];
-        if (i<m_MPIRank)
+        if (i<m_MPIRank) {
             offset += result[i];
+        }
     }
 #else
     sum = numParticles;

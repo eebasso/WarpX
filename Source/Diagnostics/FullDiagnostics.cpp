@@ -573,7 +573,7 @@ FullDiagnostics::InitializeBufferData (int i_buffer, int lev, bool restart ) {
     ba.coarsen(m_crse_ratio);
     // Generate a new distribution map if the physical m_lo and m_hi for the output
     // is different from the lo and hi physical co-ordinates of the simulation domain.
-    if (!use_warpxba) dmap = amrex::DistributionMapping{ba};
+    if (!use_warpxba) { dmap = amrex::DistributionMapping{ba}; }
     // Allocate output MultiFab for diagnostics. The data will be stored at cell-centers.
     const int ngrow = (m_format == "sensei" || m_format == "ascent") ? 1 : 0;
     int const ncomp = static_cast<int>(m_varnames.size());

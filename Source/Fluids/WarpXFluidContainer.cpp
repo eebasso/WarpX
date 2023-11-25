@@ -1222,7 +1222,9 @@ void WarpXFluidContainer::DepositCharge (int lev, amrex::MultiFab &rho, int icom
         amrex::ParallelFor(tile_box,
             [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
             {
-                if ( owner_mask_rho_arr(i,j,k) ) rho_arr(i,j,k,icomp) += q*N_arr(i,j,k);
+                if ( owner_mask_rho_arr(i,j,k) ) {
+                    rho_arr(i,j,k,icomp) += q*N_arr(i,j,k);
+                }
             }
         );
     }
@@ -1333,19 +1335,25 @@ void WarpXFluidContainer::DepositCurrent(
             {
                 amrex::Real jx_tmp = ablastr::coarsen::sample::Interp(tmp_jx_fluid_arr,
                     j_nodal_type, jx_type, coarsening_ratio, i, j, k, 0);
-                if ( owner_mask_x_arr(i,j,k) ) jx_arr(i, j, k) += jx_tmp;
+                if ( owner_mask_x_arr(i,j,k) ) {
+                    jx_arr(i, j, k) += jx_tmp;
+                }
             },
             [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
             {
                 amrex::Real jy_tmp = ablastr::coarsen::sample::Interp(tmp_jy_fluid_arr,
                     j_nodal_type, jy_type, coarsening_ratio, i, j, k, 0);
-                if ( owner_mask_y_arr(i,j,k) ) jy_arr(i, j, k) += jy_tmp;
+                if ( owner_mask_y_arr(i,j,k) ) {
+                    jy_arr(i, j, k) += jy_tmp;
+                }
             },
             [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
             {
                 amrex::Real jz_tmp = ablastr::coarsen::sample::Interp(tmp_jz_fluid_arr,
                     j_nodal_type, jz_type, coarsening_ratio, i, j, k, 0);
-                if ( owner_mask_z_arr(i,j,k) ) jz_arr(i, j, k) += jz_tmp;
+                if ( owner_mask_z_arr(i,j,k) ) {
+                    jz_arr(i, j, k) += jz_tmp;
+                }
             }
         );
     }

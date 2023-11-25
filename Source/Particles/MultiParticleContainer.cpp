@@ -482,10 +482,10 @@ MultiParticleContainer::Evolve (int lev,
         jx.setVal(0.0);
         jy.setVal(0.0);
         jz.setVal(0.0);
-        if (cjx)   { cjx->setVal(0.0); }
-        if (cjy)   { cjy->setVal(0.0); }
-        if (cjz)   { cjz->setVal(0.0); }
-        if (rho)   { rho->setVal(0.0); }
+        if (cjx) { cjx->setVal(0.0); }
+        if (cjy) { cjy->setVal(0.0); }
+        if (cjz) { cjz->setVal(0.0); }
+        if (rho) { rho->setVal(0.0); }
         if (crho) { crho->setVal(0.0); }
     }
     for (auto& pc : allcontainers) {
@@ -528,9 +528,9 @@ MultiParticleContainer::GetZeroChargeDensity (const int lev)
     const bool is_PSATD_RZ = false;
 #endif
 
-    if( !is_PSATD_RZ )
+    if( !is_PSATD_RZ ) {
         nba.surroundingNodes();
-
+    }
     auto zero_rho = std::make_unique<MultiFab>(nba, dmap, WarpX::ncomps, ng_rho);
     zero_rho->setVal(amrex::Real(0.0));
     return zero_rho;
@@ -576,7 +576,7 @@ MultiParticleContainer::DepositCharge (
     }
 
     // Push the particles in time, if needed
-    if (relative_time != 0.) PushX(relative_time);
+    if (relative_time != 0.) { PushX(relative_time); }
 
     bool const local = true;
     bool const reset = false;
@@ -591,7 +591,7 @@ MultiParticleContainer::DepositCharge (
     }
 
     // Push the particles back in time
-    if (relative_time != 0.) PushX(-relative_time);
+    if (relative_time != 0.) { PushX(-relative_time); }
 
 #ifdef WARPX_DIM_RZ
     for (int lev = 0; lev < rho.size(); ++lev)

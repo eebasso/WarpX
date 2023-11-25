@@ -856,8 +856,9 @@ WarpX::ReadParameters ()
         const bool shared_tilesize_is_specified = utils::parser::queryArrWithParser(pp_warpx, "shared_tilesize",
                                                             vect_shared_tilesize, 0, AMREX_SPACEDIM);
         if (shared_tilesize_is_specified){
-            for (int i=0; i<AMREX_SPACEDIM; i++)
+            for (int i=0; i<AMREX_SPACEDIM; i++) {
                 shared_tilesize[i] = vect_shared_tilesize[i];
+            }
         }
 
         pp_warpx.query("serialize_initial_conditions", serialize_initial_conditions);
@@ -929,12 +930,16 @@ WarpX::ReadParameters ()
 
         // If WarpX::do_dive_cleaning = true, set also WarpX::do_pml_dive_cleaning = true
         // (possibly overwritten by users in the input file, see query below)
-        if (do_dive_cleaning) { do_pml_dive_cleaning = true; }
+        if (do_dive_cleaning) {
+            do_pml_dive_cleaning = true;
+        }
 
         // If WarpX::do_divb_cleaning = true, set also WarpX::do_pml_divb_cleaning = true
         // (possibly overwritten by users in the input file, see query below)
         // TODO Implement div(B) cleaning in PML with FDTD and remove second if condition
-        if (do_divb_cleaning && electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD) { do_pml_divb_cleaning = true; }
+        if (do_divb_cleaning && electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD) {
+            do_pml_divb_cleaning = true;
+        }
 #endif
 
         // Query input parameters to use div(E) and div(B) cleaning in PMLs
@@ -1035,7 +1040,7 @@ WarpX::ReadParameters ()
         grid_type = static_cast<short>(GetAlgorithmInteger(pp_warpx, "grid_type"));
 
         // Use same shape factors in all directions, for gathering
-        if (grid_type == GridType::Collocated) galerkin_interpolation = false;
+        if (grid_type == GridType::Collocated) { galerkin_interpolation = false; }
 
 #ifdef WARPX_DIM_RZ
         // Only needs to be set with WARPX_DIM_RZ, otherwise defaults to 1
@@ -1050,7 +1055,7 @@ WarpX::ReadParameters ()
             std::vector<std::string> fluid_species_names = {};
             pp_fluids.queryarr("species_names", fluid_species_names);
 
-            if (!fluid_species_names.empty()) do_fluid_species = 1;
+            if (!fluid_species_names.empty()) { do_fluid_species = 1; }
 
             if (do_fluid_species) {
                 WARPX_ALWAYS_ASSERT_WITH_MESSAGE(max_level <= 1,
@@ -1329,8 +1334,9 @@ WarpX::ReadParameters ()
                 pp_warpx, "sort_bin_size",
                 vect_sort_bin_size, 0, AMREX_SPACEDIM);
         if (sort_bin_size_is_specified){
-            for (int i=0; i<AMREX_SPACEDIM; i++)
+            for (int i=0; i<AMREX_SPACEDIM; i++) {
                 sort_bin_size[i] = vect_sort_bin_size[i];
+            }
         }
 
         pp_warpx.query("sort_particles_for_deposition",sort_particles_for_deposition);
@@ -1340,8 +1346,9 @@ WarpX::ReadParameters ()
                 pp_warpx, "sort_idx_type",
                 vect_sort_idx_type, 0, AMREX_SPACEDIM);
         if (sort_idx_type_is_specified){
-            for (int i=0; i<AMREX_SPACEDIM; i++)
+            for (int i=0; i<AMREX_SPACEDIM; i++) {
                 sort_idx_type[i] = vect_sort_idx_type[i];
+            }
         }
 
     }

@@ -35,7 +35,9 @@ namespace {
         for(int ipass=1; ipass< lastpass; ipass++){
             // element 0 has to be treated in its own way
             new_s.at(0) = 0.5_rt * old_s.at(0);
-            if (1<jmax) new_s.at(0) += 0.5_rt * old_s.at(1);
+            if (1<jmax) {
+                new_s.at(0) += 0.5_rt * old_s.at(1);
+            }
             amrex::Real loc = 0._rt;
             // For each element j, apply the filter to
             // old_s to get new_s[j]. loc stores the tmp
@@ -43,7 +45,9 @@ namespace {
             for(int j=1; j<jmax+1; j++){
                 loc = 0.5_rt * old_s[j];
                 loc += 0.25_rt * old_s[j-1];
-                if (j<jmax) loc += 0.25_rt * old_s.at(j+1);
+                if (j<jmax) {
+                    loc += 0.25_rt * old_s.at(j+1);
+                }
                 new_s.at(j) = loc;
             }
             // copy new_s into old_s
