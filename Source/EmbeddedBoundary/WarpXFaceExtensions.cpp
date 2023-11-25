@@ -34,27 +34,27 @@ constexpr
 T
 GetNeigh(const amrex::Array4<T>& arr,
          const int i, const int j, const int k,
-         const int i_n, const int j_n, const int dim){
+         const int i_n, const int j_n, const int dim) {
 
-    if(dim == 0){
+    if (dim == 0) {
         return arr(i, j + i_n, k + j_n);
     }
 #ifdef WARPX_DIM_XZ
-    else if(dim == 1 || (dim == 2)){
+    else if (dim == 1 || (dim == 2)) {
         return arr(i + i_n, j + j_n, k);
     }
 #elif defined(WARPX_DIM_3D)
-    else if(dim == 1){
+    else if (dim == 1) {
         return arr(i + i_n, j, k + j_n);
     }
-    else if(dim == 2){
+    else if (dim == 2) {
         return arr(i + i_n, j + j_n, k);
     }
 #else
-    else if(dim == 1){
+    else if (dim == 1) {
         amrex::Abort("GetNeigh: Only implemented in 2D3V and 3D3V");
     }
-    else if(dim == 2){
+    else if (dim == 2) {
         return arr(i + i_n, j + j_n, k);
     }
 #endif
@@ -85,31 +85,31 @@ constexpr
 void
 SetNeigh(const amrex::Array4<T>& arr, const T val,
          const int i, const int j, const int k,
-         const int i_n, const int j_n, const int dim){
+         const int i_n, const int j_n, const int dim) {
 
-    if(dim == 0){
+    if (dim == 0) {
         arr(i, j + i_n, k + j_n) = val;
         return;
     }
 #ifdef WARPX_DIM_XZ
-    else if(dim == 1 || (dim == 2)){
+    else if (dim == 1 || (dim == 2)) {
         arr(i + i_n, j + j_n, k) = val;
         return;
     }
 #elif defined(WARPX_DIM_3D)
-    else if(dim == 1){
+    else if (dim == 1) {
         arr(i + i_n, j, k + j_n) = val;
         return;
     }
-    else if(dim == 2){
+    else if (dim == 2) {
         arr(i + i_n, j + j_n, k) = val;
         return;
     }
 #else
-    else if(dim == 1){
+    else if (dim == 1) {
         amrex::Abort("SetNeigh: Only implemented in 2D3V and 3D3V");
     }
-    else if(dim == 2){
+    else if (dim == 2) {
         arr(i + i_n, j + j_n, k) = val;
         return;
     }
@@ -134,14 +134,14 @@ ComputeSStab(const int i, const int j, const int k,
              const amrex::Array4<const amrex::Real> ly,
              const amrex::Array4<const amrex::Real> lz,
              const amrex::Real dx, const amrex::Real dy, const amrex::Real dz,
-             const int dim){
+             const int dim) {
 
     using namespace amrex::literals;
 
-    if(dim == 0) {
+    if (dim == 0) {
         return 0.5_rt * std::max({ly(i, j, k) * dz, ly(i, j, k + 1) * dz,
                                   lz(i, j, k) * dy, lz(i, j + 1, k) * dy});
-    }else if(dim == 1){
+    } else if (dim == 1) {
 #ifdef WARPX_DIM_XZ
         return 0.5_rt * std::max({lx(i, j, k) * dz, lx(i, j + 1, k) * dz,
                                   lz(i, j, k) * dx, lz(i + 1, j, k) * dx});
@@ -151,7 +151,7 @@ ComputeSStab(const int i, const int j, const int k,
 #else
         amrex::Abort("ComputeSStab: Only implemented in 2D3V and 3D3V");
 #endif
-    }else if(dim == 2){
+    } else if (dim == 2) {
         return 0.5_rt * std::max({lx(i, j, k) * dy, lx(i, j + 1, k) * dy,
                                   ly(i, j, k) * dx, ly(i + 1, j, k) * dx});
     }
@@ -170,9 +170,9 @@ WarpX::CountExtFaces() {
 
 #ifdef WARPX_DIM_XZ
     // In 2D we change the extrema of the for loop so that we only have the case idim=1
-    for(int idim = 1; idim < AMREX_SPACEDIM; ++idim) {
+    for (int idim = 1; idim < AMREX_SPACEDIM; ++idim) {
 #elif defined(WARPX_DIM_3D)
-        for(int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
+        for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
 #else
         WARPX_ABORT_WITH_MESSAGE(
             "CountExtFaces: Only implemented in 2D3V and 3D3V");
@@ -199,7 +199,7 @@ WarpX::CountExtFaces() {
 }
 
 void
-WarpX::ComputeFaceExtensions(){
+WarpX::ComputeFaceExtensions() {
 #ifdef AMREX_USE_EB
     amrex::Array1D<int, 0, 2> N_ext_faces = CountExtFaces();
     ablastr::warn_manager::WMRecordWarning("Embedded Boundary",
@@ -259,7 +259,7 @@ WarpX::ComputeFaceExtensions(){
     }
 #endif
 
-    if(using_bck) {
+    if (using_bck) {
         ablastr::warn_manager::WMRecordWarning("Embedded Boundary",
                              "Some faces could not be stabilized with the ECT and the BCK correction was used.\n"
                              "The BCK correction will be used for:\n"
@@ -366,8 +366,8 @@ ComputeNBorrowEightFacesExtension(const amrex::Dim3 cell, const amrex::Real S_ex
     int n_borrow = 0;
     amrex::Array2D<int, 0, 2, 0, 2> local_avail{};
 
-    for(int i_loc = 0; i_loc <= 2; i_loc++){
-        for(int j_loc = 0; j_loc <= 2; j_loc++){
+    for (int i_loc = 0; i_loc <= 2; i_loc++) {
+        for (int j_loc = 0; j_loc <= 2; j_loc++) {
             const int flag = GetNeigh(flag_info_face, i, j, k, i_loc - 1, j_loc - 1, idim);
             local_avail(i_loc, j_loc) = flag == 1 || flag == 2;
         }
@@ -384,13 +384,13 @@ ComputeNBorrowEightFacesExtension(const amrex::Dim3 cell, const amrex::Real S_ex
 
     bool neg_face = true;
 
-    while(denom >= S_ext && neg_face && denom > 0){
+    while(denom >= S_ext && neg_face && denom > 0) {
         neg_face = false;
         for (int i_n = -1; i_n < 2; i_n++) {
             for (int j_n = -1; j_n < 2; j_n++) {
-                if(local_avail(i_n + 1, j_n + 1)){
+                if (local_avail(i_n + 1, j_n + 1)) {
                     const amrex::Real patch = S_ext * GetNeigh(S, i, j, k, i_n, j_n, idim) / denom;
-                    if(GetNeigh(S_red, i, j, k, i_n, j_n, idim) - patch <= 0) {
+                    if (GetNeigh(S_red, i, j, k, i_n, j_n, idim) - patch <= 0) {
                         neg_face = true;
                         local_avail(i_n + 1, j_n + 1) = false;
                     }
@@ -410,7 +410,7 @@ ComputeNBorrowEightFacesExtension(const amrex::Dim3 cell, const amrex::Real S_ex
 
     // We count the number of entries in local_avail which are still True, this is the number of
     // neighboring faces which are intruded
-    for(int ii = 0; ii < 3; ii++) {
+    for (int ii = 0; ii < 3; ii++) {
         for (int jj = 0; jj < 3; jj++) {
             n_borrow += local_avail(ii, jj);
         }
@@ -435,9 +435,9 @@ WarpX::ComputeOneWayExtensions() {
     // Do the extensions
 #ifdef WARPX_DIM_XZ
     // In 2D we change the extrema of the for loop so that we only have the case idim=1
-    for(int idim = 1; idim < AMREX_SPACEDIM; ++idim) {
+    for (int idim = 1; idim < AMREX_SPACEDIM; ++idim) {
 #elif defined(WARPX_DIM_3D)
-        for(int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
+        for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
 #else
         WARPX_ABORT_WITH_MESSAGE(
             "ComputeOneWayExtensions: Only implemented in 2D3V and 3D3V");
@@ -486,7 +486,7 @@ WarpX::ComputeOneWayExtensions() {
               borrowing_size(i, j, k) = n_borrow;
                 return n_borrow;
             },
-                                                [=] AMREX_GPU_DEVICE (int icell, int ps){
+                                                [=] AMREX_GPU_DEVICE (int icell, int ps) {
                 const amrex::Dim3 cell = box.atOffset(icell).dim3();
                 const int i = cell.x;
                 const int j = cell.y;
@@ -494,7 +494,7 @@ WarpX::ComputeOneWayExtensions() {
                 const int nborrow = borrowing_size(i, j, k);
                 if (nborrow == 0) {
                     borrowing_inds_pointer(i, j, k) = nullptr;
-                } else{
+                } else {
                     borrowing_inds_pointer(i, j, k) = borrowing_inds + ps;
 
                     const amrex::Real S_stab = ComputeSStab(i, j, k, lx, ly, lz, dx, dy, dz, idim);
@@ -503,7 +503,7 @@ WarpX::ComputeOneWayExtensions() {
                     for (int i_n = -1; i_n < 2; i_n++) {
                         for (int j_n = -1; j_n < 2; j_n++) {
                             //This if makes sure that we don't visit the "diagonal neighbours"
-                            if( !(i_n == j_n || i_n == -j_n)){
+                            if (!(i_n == j_n || i_n == -j_n)) {
                                 // Here a face is available if it doesn't need to be extended itself and if its
                                 // area exceeds Sz_ext. Here we need to take into account if the intruded face
                                 // has given away already some area, so we use Sz_red rather than Sz.
@@ -557,9 +557,9 @@ WarpX::ComputeEightWaysExtensions() {
     // Do the extensions
 #ifdef WARPX_DIM_XZ
     // In 2D we change the extrema of the for loop so that we only have the case idim=1
-    for(int idim = 1; idim < AMREX_SPACEDIM; ++idim) {
+    for (int idim = 1; idim < AMREX_SPACEDIM; ++idim) {
 #elif defined(WARPX_DIM_3D)
-        for(int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
+        for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
 #else
         WARPX_ABORT_WITH_MESSAGE(
             "ComputeEightWaysExtensions: Only implemented in 2D3V and 3D3V");
@@ -586,7 +586,7 @@ WarpX::ComputeEightWaysExtensions() {
             const auto &lz = m_edge_lengths[maxLevel()][2]->array(mfi);
 
             vecs_size += amrex::Scan::PrefixSum<int>(ncells,
-                                                     [=] AMREX_GPU_DEVICE (int icell){
+                                                     [=] AMREX_GPU_DEVICE (int icell) {
                 const amrex::Dim3 cell = box.atOffset(icell).dim3();
                 const int i = cell.x;
                 const int j = cell.y;
@@ -628,8 +628,8 @@ WarpX::ComputeEightWaysExtensions() {
 
                     const amrex::Real S_ext = S_stab - S(i, j, k);
                     amrex::Array2D<amrex::Real, 0, 2, 0, 2> local_avail{};
-                    for(int i_loc = 0; i_loc <= 2; i_loc++){
-                        for(int j_loc = 0; j_loc <= 2; j_loc++){
+                    for (int i_loc = 0; i_loc <= 2; i_loc++) {
+                        for (int j_loc = 0; j_loc <= 2; j_loc++) {
                             auto const flag = GetNeigh(flag_info_face, i, j, k, i_loc - 1, j_loc - 1, idim);
                             local_avail(i_loc, j_loc) = flag == 1 || flag == 2;
                         }
@@ -646,13 +646,13 @@ WarpX::ComputeEightWaysExtensions() {
 
                     bool neg_face = true;
 
-                    while(denom >= S_ext && neg_face && denom > 0){
+                    while(denom >= S_ext && neg_face && denom > 0) {
                         neg_face = false;
                         for (int i_n = -1; i_n < 2; i_n++) {
                             for (int j_n = -1; j_n < 2; j_n++) {
-                                if(local_avail(i_n + 1, j_n + 1)){
+                                if (local_avail(i_n + 1, j_n + 1)) {
                                     const amrex::Real patch = S_ext * GetNeigh(S, i, j, k, i_n, j_n, idim) / denom;
-                                    if(GetNeigh(S_mod, i, j, k, i_n, j_n, idim) - patch <= 0) {
+                                    if (GetNeigh(S_mod, i, j, k, i_n, j_n, idim) - patch <= 0) {
                                         neg_face = true;
                                         local_avail(i_n + 1, j_n + 1) = false;
                                     }
@@ -670,12 +670,12 @@ WarpX::ComputeEightWaysExtensions() {
                                 local_avail(2, 2) * GetNeigh(S, i, j, k, 1, 1, idim);
                     }
 
-                    if(denom >= S_ext){
+                    if (denom >= S_ext) {
                         S_mod(i, j, k) = S(i, j, k);
                         int count = 0;
                         for (int i_n = -1; i_n < 2; i_n++) {
                             for (int j_n = -1; j_n < 2; j_n++) {
-                                if(local_avail(i_n + 1, j_n + 1)){
+                                if (local_avail(i_n + 1, j_n + 1)) {
                                     const amrex::Real patch = S_ext * GetNeigh(S, i, j, k, i_n, j_n, idim) / denom;
                                     borrowing_inds[ps + count] = ps + count;
                                     FaceInfoBox::addConnectedNeighbor(i_n, j_n, ps + count,
@@ -737,7 +737,7 @@ WarpX::ApplyBCKCorrection(const int idim) {
 
 void
 WarpX::ShrinkBorrowing() {
-    for(int idim = 0; idim < AMREX_SPACEDIM; idim++) {
+    for (int idim = 0; idim < AMREX_SPACEDIM; idim++) {
         for (amrex::MFIter mfi(*Bfield_fp[maxLevel()][idim]); mfi.isValid(); ++mfi) {
             auto &borrowing = (*m_borrowing[maxLevel()][idim])[mfi];
             borrowing.inds.resize(borrowing.vecs_size);

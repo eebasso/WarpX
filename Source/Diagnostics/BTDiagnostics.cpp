@@ -123,7 +123,7 @@ void BTDiagnostics::DerivedInitData ()
     // copied and stored in tmp_particle_data before particles are pushed.
     if (m_do_back_transformed_particles) {
         mpc.SetDoBackTransformedParticles(m_do_back_transformed_particles);
-        for (auto const& species : m_output_species_names){
+        for (auto const& species : m_output_species_names) {
             mpc.SetDoBackTransformedParticles(species, m_do_back_transformed_particles);
         }
     }
@@ -252,7 +252,7 @@ BTDiagnostics::ReadParameters ()
     // Read either dz_snapshots_lab or dt_snapshots_lab
     bool snapshot_interval_is_specified = utils::parser::queryWithParser(
         pp_diag_name, "dt_snapshots_lab", m_dt_snapshots_lab);
-    if ( utils::parser::queryWithParser(pp_diag_name, "dz_snapshots_lab", m_dz_snapshots_lab) ) {
+    if (utils::parser::queryWithParser(pp_diag_name, "dz_snapshots_lab", m_dz_snapshots_lab)) {
         m_dt_snapshots_lab = m_dz_snapshots_lab/PhysConst::c;
         snapshot_interval_is_specified = true;
     }
@@ -294,7 +294,7 @@ BTDiagnostics::DoDump (int step, int i_buffer, bool force_flush)
 
     // Do not call dump if timestep < 0, i.e., at initialization time when step == -1
     // or if the snapshot is already full and the files are closed.
-    if (step >= 0 && (m_snapshot_full[i_buffer] != 1)){
+    if (step >= 0 && (m_snapshot_full[i_buffer] != 1)) {
 
         // If buffer for this lab snapshot is full then dump it and continue to collect
         // slices afterwards
@@ -346,7 +346,7 @@ BTDiagnostics::InitializeBufferData ( int i_buffer , int lev, bool restart)
 
     // Define buffer domain in boosted frame at level, lev, with user-defined lo and hi
     amrex::RealBox diag_dom;
-    for (int idim = 0; idim < AMREX_SPACEDIM; ++idim ) {
+    for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         // Setting lo-coordinate for the diag domain by taking the max of user-defined
         // lo-cordinate and lo-coordinat of the simulation domain at level, lev
         diag_dom.setLo(idim, std::max(m_lo[idim],warpx.Geom(lev).ProbLo(idim)) );
@@ -375,7 +375,7 @@ BTDiagnostics::InitializeBufferData ( int i_buffer , int lev, bool restart)
         // Subtracting by 1 because lo,hi indices are set to cell-centered staggering.
         hi[idim] = std::max( 0, hi_index) - 1;
         // if hi<=lo, then hi = lo + 1, to ensure one cell in that dimension
-        if ( hi[idim] <= lo[idim] ) {
+        if (hi[idim] <= lo[idim]) {
              hi[idim]  = lo[idim] + 1;
              WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                 m_crse_ratio[idim]==1, "coarsening ratio in reduced dimension must be 1."
@@ -390,7 +390,7 @@ BTDiagnostics::InitializeBufferData ( int i_buffer , int lev, bool restart)
     diag_ba.maxSize( warpx.maxGridSize( lev ) );
     // Update the physical co-ordinates m_lo and m_hi using the final index values
     // from the coarsenable, cell-centered BoxArray, ba.
-    for ( int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
+    for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         diag_dom.setLo( idim, warpx.Geom(lev).ProbLo(idim) +
             diag_ba.getCellCenteredBox(0).smallEnd(idim) * warpx.Geom(lev).CellSize(idim));
         diag_dom.setHi( idim, warpx.Geom(lev).ProbLo(idim) +
@@ -563,26 +563,26 @@ BTDiagnostics::InitializeFieldFunctors (int lev)
     // cell-center functors for BackTransform Diags
     const auto m_cell_center_functors_at_lev_size = static_cast<int>(
         m_cell_center_functors.at(lev).size());
-    for (int comp=0; comp<m_cell_center_functors_at_lev_size; comp++){
-        if        ( m_cellcenter_varnames[comp] == "Ex" ){
+    for (int comp=0; comp<m_cell_center_functors_at_lev_size; comp++) {
+        if        ( m_cellcenter_varnames[comp] == "Ex") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Efield_aux(lev, 0), lev, m_crse_ratio);
-        } else if ( m_cellcenter_varnames[comp] == "Ey" ){
+        } else if (m_cellcenter_varnames[comp] == "Ey") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Efield_aux(lev, 1), lev, m_crse_ratio);
-        } else if ( m_cellcenter_varnames[comp] == "Ez" ){
+        } else if (m_cellcenter_varnames[comp] == "Ez") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Efield_aux(lev, 2), lev, m_crse_ratio);
-        } else if ( m_cellcenter_varnames[comp] == "Bx" ){
+        } else if (m_cellcenter_varnames[comp] == "Bx") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bfield_aux(lev, 0), lev, m_crse_ratio);
-        } else if ( m_cellcenter_varnames[comp] == "By" ){
+        } else if (m_cellcenter_varnames[comp] == "By") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bfield_aux(lev, 1), lev, m_crse_ratio);
-        } else if ( m_cellcenter_varnames[comp] == "Bz" ){
+        } else if (m_cellcenter_varnames[comp] == "Bz") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bfield_aux(lev, 2), lev, m_crse_ratio);
-        } else if ( m_cellcenter_varnames[comp] == "jx" ){
+        } else if (m_cellcenter_varnames[comp] == "jx") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_current_fp(lev, 0), lev, m_crse_ratio);
-        } else if ( m_cellcenter_varnames[comp] == "jy" ){
+        } else if (m_cellcenter_varnames[comp] == "jy") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_current_fp(lev, 1), lev, m_crse_ratio);
-        } else if ( m_cellcenter_varnames[comp] == "jz" ){
+        } else if (m_cellcenter_varnames[comp] == "jz") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_current_fp(lev, 2), lev, m_crse_ratio);
-        } else if ( m_cellcenter_varnames[comp] == "rho" ){
+        } else if (m_cellcenter_varnames[comp] == "rho") {
             m_cell_center_functors[lev][comp] = std::make_unique<RhoFunctor>(lev, m_crse_ratio);
         }
     }
@@ -634,16 +634,16 @@ BTDiagnostics::UpdateVarnamesForRZopenPMD ()
         const auto m_cellcenter_varnames_fields_size = static_cast<int>(m_cellcenter_varnames_fields.size());
         for (int comp=0; comp<m_cellcenter_varnames_fields_size; comp++)
         {
-            if ( m_cellcenter_varnames_fields[comp] == "Er" ) AddRZModesToOutputNames(std::string("Er"), ncomp, true);
-            if ( m_cellcenter_varnames_fields[comp] == "Et" ) AddRZModesToOutputNames(std::string("Et"), ncomp, true);
-            if ( m_cellcenter_varnames_fields[comp] == "Ez" ) AddRZModesToOutputNames(std::string("Ez"), ncomp, true);
-            if ( m_cellcenter_varnames_fields[comp] == "Br" ) AddRZModesToOutputNames(std::string("Br"), ncomp, true);
-            if ( m_cellcenter_varnames_fields[comp] == "Bt" ) AddRZModesToOutputNames(std::string("Bt"), ncomp, true);
-            if ( m_cellcenter_varnames_fields[comp] == "Bz" ) AddRZModesToOutputNames(std::string("Bz"), ncomp, true);
-            if ( m_cellcenter_varnames_fields[comp] == "jr" ) AddRZModesToOutputNames(std::string("jr"), ncomp, true);
-            if ( m_cellcenter_varnames_fields[comp] == "jt" ) AddRZModesToOutputNames(std::string("jt"), ncomp, true);
-            if ( m_cellcenter_varnames_fields[comp] == "jz" ) AddRZModesToOutputNames(std::string("jz"), ncomp, true);
-            if ( m_cellcenter_varnames_fields[comp] == "rho" ) AddRZModesToOutputNames(std::string("rho"), ncomp, true);
+            if (m_cellcenter_varnames_fields[comp] == "Er" ) AddRZModesToOutputNames(std::string("Er"), ncomp, true);
+            if (m_cellcenter_varnames_fields[comp] == "Et" ) AddRZModesToOutputNames(std::string("Et"), ncomp, true);
+            if (m_cellcenter_varnames_fields[comp] == "Ez" ) AddRZModesToOutputNames(std::string("Ez"), ncomp, true);
+            if (m_cellcenter_varnames_fields[comp] == "Br" ) AddRZModesToOutputNames(std::string("Br"), ncomp, true);
+            if (m_cellcenter_varnames_fields[comp] == "Bt" ) AddRZModesToOutputNames(std::string("Bt"), ncomp, true);
+            if (m_cellcenter_varnames_fields[comp] == "Bz" ) AddRZModesToOutputNames(std::string("Bz"), ncomp, true);
+            if (m_cellcenter_varnames_fields[comp] == "jr" ) AddRZModesToOutputNames(std::string("jr"), ncomp, true);
+            if (m_cellcenter_varnames_fields[comp] == "jt" ) AddRZModesToOutputNames(std::string("jt"), ncomp, true);
+            if (m_cellcenter_varnames_fields[comp] == "jz" ) AddRZModesToOutputNames(std::string("jz"), ncomp, true);
+            if (m_cellcenter_varnames_fields[comp] == "rho" ) AddRZModesToOutputNames(std::string("rho"), ncomp, true);
         }
     }
 
@@ -679,26 +679,26 @@ BTDiagnostics::InitializeFieldFunctorsRZopenPMD (int lev)
     m_cell_center_functors[lev].resize(m_cellcenter_varnames_fields.size());
 
     const auto m_cell_center_functors_at_lev_size = static_cast<int>(m_cell_center_functors.at(lev).size());
-    for (int comp=0; comp<m_cell_center_functors_at_lev_size; comp++){
-        if        ( m_cellcenter_varnames_fields[comp] == "Er" ){
+    for (int comp=0; comp<m_cell_center_functors_at_lev_size; comp++) {
+        if        ( m_cellcenter_varnames_fields[comp] == "Er") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Efield_aux(lev, 0), lev, m_crse_ratio, false, ncomp);
-        } else if ( m_cellcenter_varnames_fields[comp] == "Et" ){
+        } else if (m_cellcenter_varnames_fields[comp] == "Et") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Efield_aux(lev, 1), lev, m_crse_ratio, false, ncomp);
-        } else if ( m_cellcenter_varnames_fields[comp] == "Ez" ){
+        } else if (m_cellcenter_varnames_fields[comp] == "Ez") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Efield_aux(lev, 2), lev, m_crse_ratio, false, ncomp);
-        } else if ( m_cellcenter_varnames_fields[comp] == "Br" ){
+        } else if (m_cellcenter_varnames_fields[comp] == "Br") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bfield_aux(lev, 0), lev, m_crse_ratio, false, ncomp);
-        } else if ( m_cellcenter_varnames_fields[comp] == "Bt" ){
+        } else if (m_cellcenter_varnames_fields[comp] == "Bt") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bfield_aux(lev, 1), lev, m_crse_ratio, false, ncomp);
-        } else if ( m_cellcenter_varnames_fields[comp] == "Bz" ){
+        } else if (m_cellcenter_varnames_fields[comp] == "Bz") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_Bfield_aux(lev, 2), lev, m_crse_ratio, false, ncomp);
-        } else if ( m_cellcenter_varnames_fields[comp] == "jr" ){
+        } else if (m_cellcenter_varnames_fields[comp] == "jr") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_current_fp(lev, 0), lev, m_crse_ratio, false, ncomp);
-        } else if ( m_cellcenter_varnames_fields[comp] == "jt" ){
+        } else if (m_cellcenter_varnames_fields[comp] == "jt") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_current_fp(lev, 1), lev, m_crse_ratio, false, ncomp);
-        } else if ( m_cellcenter_varnames_fields[comp] == "jz" ){
+        } else if (m_cellcenter_varnames_fields[comp] == "jz") {
             m_cell_center_functors[lev][comp] = std::make_unique<CellCenterFunctor>(warpx.get_pointer_current_fp(lev, 2), lev, m_crse_ratio, false, ncomp);
-        } else if ( m_cellcenter_varnames_fields[comp] == "rho" ){
+        } else if (m_cellcenter_varnames_fields[comp] == "rho") {
             m_cell_center_functors[lev][comp] = std::make_unique<RhoFunctor>(lev, m_crse_ratio, -1, false, ncomp);
         }
     }
@@ -825,8 +825,8 @@ BTDiagnostics::PrepareFieldDataForOutput ()
                 // Initialize and define field buffer multifab if buffer is empty
                 const bool kindexInSnapshotBox = GetKIndexInSnapshotBoxFlag (i_buffer, lev);
                 if (kindexInSnapshotBox) {
-                    if ( buffer_empty(i_buffer) ) {
-                        if ( m_buffer_flush_counter[i_buffer] == 0 || m_first_flush_after_restart[i_buffer] == 1) {
+                    if (buffer_empty(i_buffer)) {
+                        if (m_buffer_flush_counter[i_buffer] == 0 || m_first_flush_after_restart[i_buffer] == 1) {
                             // Compute the geometry, snapshot lab-domain extent
                             // and box-indices
                             DefineSnapshotGeometry(i_buffer, lev);
@@ -861,7 +861,7 @@ BTDiagnostics::PrepareFieldDataForOutput ()
 
 
 amrex::Real
-BTDiagnostics::dz_lab (amrex::Real dt, amrex::Real ref_ratio){
+BTDiagnostics::dz_lab (amrex::Real dt, amrex::Real ref_ratio) {
     return PhysConst::c * dt * 1._rt/m_beta_boost * 1._rt/m_gamma_boost * 1._rt/ref_ratio;
 }
 
@@ -940,7 +940,7 @@ BTDiagnostics::DefineFieldBufferMultiFab (const int i_buffer, const int lev)
         m_geom_output[i_buffer][lev].define( domain, &m_buffer_domain_lab[i_buffer],
                                              amrex::CoordSys::cartesian,
                                              BTdiag_periodicity.data() );
-    } else if (lev > 0 ) {
+    } else if (lev > 0) {
         // Refine the geometry object defined at the previous level, lev-1
         m_geom_output[i_buffer][lev] = amrex::refine( m_geom_output[i_buffer][lev-1],
                                                       WarpX::RefRatio(lev-1) );
@@ -1156,11 +1156,11 @@ void BTDiagnostics::MergeBuffersForPlotfile (int i_snapshot)
             // Create directory for each species selected for diagnostic
             for (int i = 0; i < m_particles_buffer[i_snapshot].size(); ++i) {
                 const std::string snapshot_species_path = snapshot_path + "/" + m_output_species_names[i];
-                if ( !amrex::UtilCreateDirectory(snapshot_species_path, permission_flag_rwxrxrx))
+                if (!amrex::UtilCreateDirectory(snapshot_species_path, permission_flag_rwxrxrx))
                     amrex::CreateDirectoryFailed(snapshot_species_path);
                 // Create Level_0 directory for particles to store Particle_H and DATA files
                 const std::string species_Level0_path = snapshot_species_path + "/Level_0";
-                if ( !amrex::UtilCreateDirectory(species_Level0_path, permission_flag_rwxrxrx))
+                if (!amrex::UtilCreateDirectory(species_Level0_path, permission_flag_rwxrxrx))
                     amrex::CreateDirectoryFailed(species_Level0_path);
             }
             const std::string buffer_WarpXHeader_path = recent_Buffer_filepath + "/WarpXHeader";
@@ -1458,9 +1458,9 @@ BTDiagnostics::PrepareParticleDataForOutput()
                 const bool ZSliceInDomain = GetZSliceInDomainFlag (i_buffer, lev);
                 const bool kindexInSnapshotBox = GetKIndexInSnapshotBoxFlag (i_buffer, lev);
                 if (kindexInSnapshotBox) {
-                    if ( buffer_empty(i_buffer) ) {
+                    if (buffer_empty(i_buffer)) {
                         if (!m_do_back_transformed_fields || m_varnames_fields.empty()) {
-                            if ( m_buffer_flush_counter[i_buffer] == 0) {
+                            if (m_buffer_flush_counter[i_buffer] == 0) {
                                 DefineSnapshotGeometry(i_buffer, lev);
                             }
                             DefineFieldBufferMultiFab(i_buffer, lev);

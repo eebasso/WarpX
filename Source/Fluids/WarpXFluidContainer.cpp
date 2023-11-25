@@ -216,7 +216,7 @@ void WarpXFluidContainer::InitData(int lev, amrex::Box init_box, amrex::Real cur
 #endif
 
                 // Lorentz transform z (from boosted to lab frame)
-                if (gamma_boost > 1._rt){
+                if (gamma_boost > 1._rt) {
                     z = gamma_boost*(z + beta_boost*clight*cur_time);
                 }
 
@@ -230,8 +230,8 @@ void WarpXFluidContainer::InitData(int lev, amrex::Box init_box, amrex::Real cur
 
                 // Check if n > 0 and if not, don't compute the boost
                 // Lorentz transform n, u (from lab to boosted frame)
-                if (n > 0.0){
-                    if (gamma_boost > 1._rt){
+                if (n > 0.0) {
+                    if (gamma_boost > 1._rt) {
                         amrex::Real gamma = std::sqrt(1.0_rt + (u.x*u.x + u.y*u.y + u.z*u.z)/(clight*clight));
                         amrex::Real n_boosted = gamma_boost*n*( 1.0_rt - beta_boost*u.z/(gamma*clight) );
                         amrex::Real uz_boosted = gamma_boost*(u.z - beta_boost*clight*gamma);
@@ -268,12 +268,12 @@ void WarpXFluidContainer::Evolve(
     }
 
     // Step the Lorentz Term
-    if(!do_not_gather){
+    if (!do_not_gather) {
         GatherAndPush(lev, Ex, Ey, Ez, Bx, By, Bz, cur_time);
     }
 
     // Cylindrical centrifugal term
-    if(!do_not_push){
+    if (!do_not_push) {
 #if defined(WARPX_DIM_RZ)
         centrifugal_source_rz(lev);
 #endif
@@ -338,31 +338,31 @@ void WarpXFluidContainer::ApplyBcFluidsAndComms (int lev)
 #if defined(WARPX_DIM_3D)
 
                 // Upper end (index 2)
-                if ( (periodic_directions[2] != 1) && (k==domain.bigEnd(2)+1) ){
+                if ((periodic_directions[2] != 1) && (k==domain.bigEnd(2)+1)) {
                     N_arr(i,j,k) = N_arr(i,j,k-2);
                     NUx_arr(i,j,k) = NUx_arr(i,j,k-2);
                     NUy_arr(i,j,k) = NUy_arr(i,j,k-2);
                     NUz_arr(i,j,k) = NUz_arr(i,j,k-2);
 
                 // Lower end (index 2)
-                } else if ( (periodic_directions[2] != 1) && (k==domain.smallEnd(2)-1) ) {
+                } else if ((periodic_directions[2] != 1) && (k==domain.smallEnd(2)-1)) {
                     N_arr(i,j,k) = N_arr(i,j,k+2);
                     NUx_arr(i,j,k) = NUx_arr(i,j,k+2);
                     NUy_arr(i,j,k) = NUy_arr(i,j,k+2);
                     NUz_arr(i,j,k) = NUz_arr(i,j,k+2);
                 }
 
-#elif ( defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ) || defined(WARPX_DIM_3D) )
+#elif (defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ) || defined(WARPX_DIM_3D) )
 
                 // Upper end (index 1)
-                if ( (periodic_directions[1] != 1) && (j==domain.bigEnd(1)+1) ){
+                if ((periodic_directions[1] != 1) && (j==domain.bigEnd(1)+1)) {
                     N_arr(i,j,k) = N_arr(i,j-2,k);
                     NUx_arr(i,j,k) = NUx_arr(i,j-2,k);
                     NUy_arr(i,j,k) = NUy_arr(i,j-2,k);
                     NUz_arr(i,j,k) = NUz_arr(i,j-2,k);
 
                 // Lower end (index 1`)
-                } else if ( (periodic_directions[1] != 1) && (j==domain.smallEnd(1)-1) ) {
+                } else if ((periodic_directions[1] != 1) && (j==domain.smallEnd(1)-1)) {
                     N_arr(i,j,k) = N_arr(i,j+2,k);
                     NUx_arr(i,j,k) = NUx_arr(i,j+2,k);
                     NUy_arr(i,j,k) = NUy_arr(i,j+2,k);
@@ -370,17 +370,17 @@ void WarpXFluidContainer::ApplyBcFluidsAndComms (int lev)
 
                 }
 
-#elif ( defined(WARPX_DIM_1D_Z) || defined(WARPX_DIM_XZ) || defined(WARPX_DIM_3D) )
+#elif (defined(WARPX_DIM_1D_Z) || defined(WARPX_DIM_XZ) || defined(WARPX_DIM_3D) )
 
                 // Upper end (index 0)
-                if ( (periodic_directions[0] != 1) && (i==domain.bigEnd(0)+1) ){
+                if ((periodic_directions[0] != 1) && (i==domain.bigEnd(0)+1)) {
                     N_arr(i,j,k) = N_arr(i-2,j,k);
                     NUx_arr(i,j,k) = NUx_arr(i-2,j,k);
                     NUy_arr(i,j,k) = NUy_arr(i-2,j,k);
                     NUz_arr(i,j,k) = NUz_arr(i-2,j,k);
 
                 // Lower end (index 0)
-                } else if ( (periodic_directions[0] != 1) && (i==domain.smallEnd(0)-1) ) {
+                } else if ((periodic_directions[0] != 1) && (i==domain.smallEnd(0)-1)) {
                     N_arr(i,j,k) = N_arr(i+2,j,k);
                     NUx_arr(i,j,k) = NUx_arr(i+2,j,k);
                     NUy_arr(i,j,k) = NUy_arr(i+2,j,k);
@@ -521,7 +521,7 @@ void WarpXFluidContainer::AdvectivePush_Muscl (int lev)
             {
 
                 // Density positivity check (Makes the algorithm safe from divide by zeros)
-                if( N_arr(i,j,k) > 0.0){
+                if (N_arr(i,j,k) > 0.0) {
 
                     // - Grab local Uz Uy Ux gamma
                     // Isolate U from NU
@@ -991,14 +991,14 @@ void WarpXFluidContainer::GatherAndPush (
     amrex::ParserExecutor<4> Bxfield_parser;
     amrex::ParserExecutor<4> Byfield_parser;
     amrex::ParserExecutor<4> Bzfield_parser;
-    if (external_e_fields){
+    if (external_e_fields) {
         constexpr int num_arguments = 4; //x,y,z,t
         Exfield_parser = m_Ex_parser->compile<num_arguments>();
         Eyfield_parser = m_Ey_parser->compile<num_arguments>();
         Ezfield_parser = m_Ez_parser->compile<num_arguments>();
     }
 
-    if (external_b_fields){
+    if (external_b_fields) {
         constexpr int num_arguments = 4; //x,y,z,t
         Bxfield_parser = m_Bx_parser->compile<num_arguments>();
         Byfield_parser = m_By_parser->compile<num_arguments>();
@@ -1052,7 +1052,7 @@ void WarpXFluidContainer::GatherAndPush (
                         Bz_type, Nodal_type, coarsening_ratio, i, j, k, 0);
 
                     if (gamma_boost > 1._rt) { // Lorentz transform fields due to moving frame
-                        if ( ( external_b_fields ) || ( external_e_fields ) ){
+                        if (( external_b_fields ) || ( external_e_fields )) {
 
                             // Lorentz transform z (from boosted to lab frame)
                             amrex::Real Ex_ext_boost, Ey_ext_boost, Ez_ext_boost;
@@ -1081,20 +1081,20 @@ void WarpXFluidContainer::GatherAndPush (
                             amrex::Real z_lab = gamma_boost*(z + beta_boost*PhysConst::c*t);
 
                             // Grab the external fields in the lab frame:
-                            if ( external_e_fields ) {
+                            if (external_e_fields) {
                                 Ex_ext_lab = Exfield_parser(x, y, z_lab, t_lab);
                                 Ey_ext_lab = Eyfield_parser(x, y, z_lab, t_lab);
                                 Ez_ext_lab = Ezfield_parser(x, y, z_lab, t_lab);
-                            }else{
+                            }else {{
                                 Ex_ext_lab = 0.0;
                                 Ey_ext_lab = 0.0;
                                 Ez_ext_lab = 0.0;
                             }
-                            if ( external_b_fields ) {
+                            if (external_b_fields) {
                                 Bx_ext_lab = Bxfield_parser(x, y, z_lab, t_lab);
                                 By_ext_lab = Byfield_parser(x, y, z_lab, t_lab);
                                 Bz_ext_lab = Bzfield_parser(x, y, z_lab, t_lab);
-                            }else{
+                            }else {{
                                 Bx_ext_lab = 0.0;
                                 By_ext_lab = 0.0;
                                 Bz_ext_lab = 0.0;
@@ -1121,7 +1121,7 @@ void WarpXFluidContainer::GatherAndPush (
                     } else {
 
                         // Added external e fields:
-                        if ( external_e_fields ){
+                        if (external_e_fields) {
 #if defined(WARPX_DIM_3D)
                             amrex::Real x = problo[0] + i * dx[0];
                             amrex::Real y = problo[1] + j * dx[1];
@@ -1142,7 +1142,7 @@ void WarpXFluidContainer::GatherAndPush (
                         }
 
                         // Added external b fields:
-                        if ( external_b_fields ){
+                        if (external_b_fields) {
 #if defined(WARPX_DIM_3D)
                             amrex::Real x = problo[0] + i * dx[0];
                             amrex::Real y = problo[1] + j * dx[1];
@@ -1170,7 +1170,7 @@ void WarpXFluidContainer::GatherAndPush (
 
                     // Enforce RZ boundary conditions
 #if defined(WARPX_DIM_RZ)
-                    if  ( i == 0 ){
+                    if  ( i == 0) {
                         Ex_Nodal = 0.0;
                         Ey_Nodal = 0.0;
                         By_Nodal = 0.0;
@@ -1222,7 +1222,7 @@ void WarpXFluidContainer::DepositCharge (int lev, amrex::MultiFab &rho, int icom
         amrex::ParallelFor(tile_box,
             [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
             {
-                if ( owner_mask_rho_arr(i,j,k) ) rho_arr(i,j,k,icomp) += q*N_arr(i,j,k);
+                if (owner_mask_rho_arr(i,j,k) ) rho_arr(i,j,k,icomp) += q*N_arr(i,j,k);
             }
         );
     }
@@ -1286,7 +1286,7 @@ void WarpXFluidContainer::DepositCurrent(
             {
                 // Calculate J from fluid quantities
                 amrex::Real gamma = 1.0_rt, Ux = 0.0_rt, Uy = 0.0_rt, Uz = 0.0_rt;
-                if (N_arr(i, j, k)>0.0_rt){
+                if (N_arr(i, j, k)>0.0_rt) {
                     Ux = NUx_arr(i, j, k)/N_arr(i, j, k);
                     Uy = NUy_arr(i, j, k)/N_arr(i, j, k);
                     Uz = NUz_arr(i, j, k)/N_arr(i, j, k);
@@ -1333,19 +1333,19 @@ void WarpXFluidContainer::DepositCurrent(
             {
                 amrex::Real jx_tmp = ablastr::coarsen::sample::Interp(tmp_jx_fluid_arr,
                     j_nodal_type, jx_type, coarsening_ratio, i, j, k, 0);
-                if ( owner_mask_x_arr(i,j,k) ) jx_arr(i, j, k) += jx_tmp;
+                if (owner_mask_x_arr(i,j,k) ) jx_arr(i, j, k) += jx_tmp;
             },
             [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
             {
                 amrex::Real jy_tmp = ablastr::coarsen::sample::Interp(tmp_jy_fluid_arr,
                     j_nodal_type, jy_type, coarsening_ratio, i, j, k, 0);
-                if ( owner_mask_y_arr(i,j,k) ) jy_arr(i, j, k) += jy_tmp;
+                if (owner_mask_y_arr(i,j,k) ) jy_arr(i, j, k) += jy_tmp;
             },
             [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
             {
                 amrex::Real jz_tmp = ablastr::coarsen::sample::Interp(tmp_jz_fluid_arr,
                     j_nodal_type, jz_type, coarsening_ratio, i, j, k, 0);
-                if ( owner_mask_z_arr(i,j,k) ) jz_arr(i, j, k) += jz_tmp;
+                if (owner_mask_z_arr(i,j,k) ) jz_arr(i, j, k) += jz_tmp;
             }
         );
     }

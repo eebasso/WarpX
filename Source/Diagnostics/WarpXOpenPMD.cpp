@@ -170,7 +170,7 @@ namespace detail
       "type": ")END";
                 en_block += engine_type + "\"";
 
-                if(!en_parameters.empty())
+                if (!en_parameters.empty())
                     en_block += ",";
             }
 
@@ -204,7 +204,7 @@ namespace detail
 
         // we use "_" as separator in names to group vector records
         const std::size_t startComp = fullName.find_last_of('_');
-        if( startComp != std::string::npos ) {  // non-scalar
+        if (startComp != std::string::npos) {  // non-scalar
             record_name = fullName.substr(0, startComp);
             component_name = fullName.substr(startComp + 1u);
         }
@@ -304,28 +304,28 @@ namespace detail
     getUnitDimension ( std::string const & record_name )
     {
 
-        if( (record_name == "position") || (record_name == "positionOffset") ) return {
+        if ((record_name == "position") || (record_name == "positionOffset") ) return {
             {openPMD::UnitDimension::L,  1.}
         };
-        else if( record_name == "momentum" ) return {
+        else if (record_name == "momentum" ) return {
             {openPMD::UnitDimension::L,  1.},
             {openPMD::UnitDimension::M,  1.},
             {openPMD::UnitDimension::T, -1.}
         };
-        else if( record_name == "charge" ) return {
+        else if (record_name == "charge" ) return {
             {openPMD::UnitDimension::T,  1.},
             {openPMD::UnitDimension::I,  1.}
         };
-        else if( record_name == "mass" ) return {
+        else if (record_name == "mass" ) return {
             {openPMD::UnitDimension::M,  1.}
         };
-        else if( record_name == "E" ) return {
+        else if (record_name == "E" ) return {
             {openPMD::UnitDimension::L,  1.},
             {openPMD::UnitDimension::M,  1.},
             {openPMD::UnitDimension::T, -3.},
             {openPMD::UnitDimension::I, -1.},
         };
-        else if( record_name == "B" ) return {
+        else if (record_name == "B" ) return {
             {openPMD::UnitDimension::M,  1.},
             {openPMD::UnitDimension::I, -1.},
             {openPMD::UnitDimension::T, -2.}
@@ -392,7 +392,7 @@ WarpXOpenPMDPlot::WarpXOpenPMDPlot (
 
 WarpXOpenPMDPlot::~WarpXOpenPMDPlot ()
 {
-  if( m_Series )
+  if (m_Series )
   {
     m_Series->flush();
     m_Series.reset( nullptr );
@@ -429,7 +429,7 @@ void WarpXOpenPMDPlot::SetStep (int ts, const std::string& dirPrefix, int file_m
     m_dirPrefix = dirPrefix;
     m_file_min_digits = file_min_digits;
 
-    if( ! isBTD ) {
+    if (! isBTD) {
         if (m_CurrentStep >= ts) {
             // note m_Series is reset in Init(), so using m_Series->iterations.contains(ts) is only able to check the
             // last written step in m_Series's life time, but not other earlier written steps by other m_Series
@@ -472,7 +472,7 @@ void WarpXOpenPMDPlot::CloseStep (bool isBTD, bool isLastBTDFlush)
 void
 WarpXOpenPMDPlot::Init (openPMD::Access access, bool isBTD)
 {
-    if( isBTD && m_Series != nullptr )
+    if (isBTD && m_Series != nullptr )
         return; // already open for this snapshot (aka timestep in lab frame)
 
     // either for the next ts file,
@@ -482,9 +482,9 @@ WarpXOpenPMDPlot::Init (openPMD::Access access, bool isBTD)
 
     // close a previously open series before creating a new one
     // see ADIOS1 limitation: https://github.com/openPMD/openPMD-api/pull/686
-    if ( m_Encoding == openPMD::IterationEncoding::fileBased )
+    if (m_Encoding == openPMD::IterationEncoding::fileBased )
         m_Series = nullptr;
-    else if ( m_Series != nullptr )
+    else if (m_Series != nullptr )
         return;
 
     if (amrex::ParallelDescriptor::NProcs() > 1) {
@@ -504,7 +504,7 @@ WarpXOpenPMDPlot::Init (openPMD::Access access, bool isBTD)
     m_Series->setIterationEncoding( m_Encoding );
 
     // input file / simulation setup author
-    if( !m_authors.empty())
+    if (!m_authors.empty())
         m_Series->setAuthor( m_authors );
     // more natural naming for PIC
     m_Series->setMeshesPath( "fields" );
@@ -808,8 +808,8 @@ WarpXOpenPMDPlot::DumpToFile (ParticleContainer* pc,
     //   BP4 (ADIOS 2.8): last MPI rank's `Put` meta-data wins
     //   BP5 (ADIOS 2.8): everyone has to write an empty block
     if (is_resizing_flush && !contributed_particles && isBTD && m_Series->backend() == "ADIOS2") {
-        for( auto & [record_name, record] : currSpecies ) {
-            for( auto & [comp_name, comp] : record ) {
+        for (auto & [record_name, record] : currSpecies) {
+            for (auto & [comp_name, comp] : record) {
                 if (comp.constant()) continue;
 
                 auto dtype = comp.getDatatype();
@@ -895,13 +895,13 @@ WarpXOpenPMDPlot::SetupRealProperties (ParticleContainer const * pc,
 
             // meta data for ED-PIC extension
             [[maybe_unused]] const auto [_, newRecord] = addedRecords.insert(record_name);
-            if( newRecord ) {
+            if (newRecord) {
                 currRecord.setUnitDimension( detail::getUnitDimension(record_name) );
-                if( record_name == "weighting" )
+                if (record_name == "weighting" )
                     currRecord.setAttribute( "macroWeighted", 1u );
                 else
                     currRecord.setAttribute( "macroWeighted", 0u );
-                if( record_name == "momentum" || record_name == "weighting" )
+                if (record_name == "momentum" || record_name == "weighting" )
                     currRecord.setAttribute( "weightingPower", 1.0 );
                 else
                     currRecord.setAttribute( "weightingPower", 0.0 );
@@ -917,10 +917,10 @@ WarpXOpenPMDPlot::SetupRealProperties (ParticleContainer const * pc,
 
             // meta data for ED-PIC extension
             [[maybe_unused]] const auto [_, newRecord] = addedRecords.insert(record_name);
-            if( newRecord ) {
+            if (newRecord) {
                 currRecord.setUnitDimension( detail::getUnitDimension(record_name) );
                 currRecord.setAttribute( "macroWeighted", 0u );
-                if( record_name == "momentum" || record_name == "weighting" )
+                if (record_name == "momentum" || record_name == "weighting" )
                     currRecord.setAttribute( "weightingPower", 1.0 );
                 else
                     currRecord.setAttribute( "weightingPower", 0.0 );
@@ -946,8 +946,8 @@ WarpXOpenPMDPlot::SaveRealProperty (ParticleIter& pti,
   // first we concatinate the AoS into contiguous arrays
   {
     // note: WarpX does not yet use extra AoS Real attributes
-    for( auto idx=0; idx<ParticleIter::ContainerType::NStructReal; idx++ ) {  // lgtm [cpp/constant-comparison]
-        if( write_real_comp[idx] ) {
+    for (auto idx=0; idx<ParticleIter::ContainerType::NStructReal; idx++) {  // lgtm [cpp/constant-comparison]
+        if (write_real_comp[idx]) {
             // handle scalar and non-scalar records by name
             const auto [record_name, component_name] = detail::name2openPMD(real_comp_names[idx]);
             auto currRecord = currSpecies[record_name];
@@ -958,7 +958,7 @@ WarpXOpenPMDPlot::SaveRealProperty (ParticleIter& pti,
                 [](amrex::ParticleReal const *p){ delete[] p; }
             );
 
-            for( auto kk=0; kk<numParticleOnTile; kk++ )
+            for (auto kk=0; kk<numParticleOnTile; kk++ )
                 d.get()[kk] = aos[kk].rdata(idx);
 
             currRecordComp.storeChunk(d,
@@ -1010,7 +1010,7 @@ WarpXOpenPMDPlot::SetupPos (
     auto idType = openPMD::Dataset(openPMD::determineDatatype< uint64_t >(), {np}, options);
 
     auto const positionComponents = detail::getParticlePositionComponentLabels();
-    for( auto const& comp : positionComponents ) {
+    for (auto const& comp : positionComponents) {
         currSpecies["position"][comp].resetDataset( realType );
     }
 
@@ -1030,7 +1030,7 @@ WarpXOpenPMDPlot::SetConstParticleRecordsEDPIC (
 
     // define record shape to be number of particles
     auto const positionComponents = detail::getParticlePositionComponentLabels(true);
-    for( auto const& comp : positionComponents ) {
+    for (auto const& comp : positionComponents) {
         currSpecies["positionOffset"][comp].resetDataset( realType );
     }
     currSpecies["charge"][scalar].resetDataset( realType );
@@ -1045,7 +1045,7 @@ WarpXOpenPMDPlot::SetConstParticleRecordsEDPIC (
 
     // make constant
     using namespace amrex::literals;
-    for( auto const& comp : positionComponents ) {
+    for (auto const& comp : positionComponents) {
         currSpecies["positionOffset"][comp].makeConstant( 0._prt );
     }
     currSpecies["charge"][scalar].makeConstant( charge );
@@ -1260,16 +1260,16 @@ WarpXOpenPMDPlot::GetMeshCompNames (int meshLevel,
                                     std::string& comp_name,
                                     bool var_in_theta_mode) const
 {
-    if (varname.size() >= 2u ) {
+    if (varname.size() >= 2u) {
         std::string const varname_1st = varname.substr(0u, 1u); // 1st character
         std::string const varname_2nd = varname.substr(1u, 1u); // 2nd character
 
         // Check if this field is a vector. If so, then extract the field name
         std::vector< std::string > const vector_fields = {"E", "B", "j"};
         std::vector< std::string > const field_components = detail::getFieldComponentLabels(var_in_theta_mode);
-        for( std::string const& vector_field : vector_fields ) {
-            for( std::string const& component : field_components ) {
-                if( vector_field == varname_1st &&
+        for (std::string const& vector_field : vector_fields) {
+            for (std::string const& component : field_components) {
+                if (vector_field == varname_1st &&
                     component == varname_2nd )
                 {
                     field_name = varname_1st + varname.substr(2); // Strip component
@@ -1279,7 +1279,7 @@ WarpXOpenPMDPlot::GetMeshCompNames (int meshLevel,
         }
     }
 
-    if ( 0 == meshLevel )
+    if (0 == meshLevel )
         return;
 
     field_name += std::string("_lvl").append(std::to_string(meshLevel));
@@ -1309,7 +1309,7 @@ GetFieldNameModeInt (const std::string& varname)
     std::smatch sm;
     std::regex_match(varname, sm, e_real_imag, std::regex_constants::match_default);
 
-    if (sm.size() != 4 ) {
+    if (sm.size() != 4) {
         return std::make_tuple(varname, mode_index);
     } else {
         // sm = [varname, field_name, mode, real_imag]
@@ -1363,24 +1363,24 @@ WarpXOpenPMDPlot::WriteOpenPMDFieldsAll ( //const std::string& filename,
     }
 
     // If there are no fields to be written, interrupt the function here
-    if ( varnames.empty() ) return;
+    if (varnames.empty() ) return;
 
     // loop over levels up to output_levels
     //   note: this is usually the finestLevel, not the maxLevel
     for (int lev=0; lev < output_levels; lev++) {
         amrex::Geometry full_geom = geom[lev];
-        if( isBTD )
+        if (isBTD )
             full_geom = full_BTD_snapshot;
 
         // setup is called once. So it uses property "period" from first
         // geometry for <all> field levels.
-        if ( (0 == lev) && first_write_to_iteration )
+        if ((0 == lev) && first_write_to_iteration )
             SetupFields(meshes, full_geom);
 
         amrex::Box const & global_box = full_geom.Domain();
 
         int const ncomp = mf[lev].nComp();
-        for ( int icomp=0; icomp<ncomp; icomp++ ) {
+        for (int icomp=0; icomp<ncomp; icomp++) {
             std::string const & varname = varnames[icomp];
 
             auto [varname_no_mode, mode_index] = GetFieldNameModeInt(varname);
@@ -1389,10 +1389,10 @@ WarpXOpenPMDPlot::WriteOpenPMDFieldsAll ( //const std::string& filename,
             std::string comp_name = openPMD::MeshRecordComponent::SCALAR;
             // assume fields are scalar unless they match the following match of known vector fields
             GetMeshCompNames( lev, varname_no_mode, field_name, comp_name, var_in_theta_mode );
-            if ( first_write_to_iteration )
+            if (first_write_to_iteration )
             {
                 if (comp_name == openPMD::MeshRecordComponent::SCALAR) {
-                    if ( ! meshes.contains(field_name) ) {
+                    if (! meshes.contains(field_name)) {
                         auto mesh = meshes[field_name];
                         SetupMeshComp(  mesh,
                                         full_geom,
@@ -1403,7 +1403,7 @@ WarpXOpenPMDPlot::WriteOpenPMDFieldsAll ( //const std::string& filename,
                     }
                 } else {
                     auto mesh = meshes[field_name];
-                    if ( ! mesh.contains(comp_name) ) {
+                    if (! mesh.contains(comp_name)) {
                         SetupMeshComp(  mesh,
                                         full_geom,
                                         comp_name,
@@ -1415,7 +1415,7 @@ WarpXOpenPMDPlot::WriteOpenPMDFieldsAll ( //const std::string& filename,
             }
         } // icomp setup loop
 
-        for ( int icomp=0; icomp<ncomp; icomp++ ) {
+        for (int icomp=0; icomp<ncomp; icomp++) {
             std::string const & varname = varnames[icomp];
 
             auto [varname_no_mode, mode_index] = GetFieldNameModeInt(varname);
@@ -1431,7 +1431,7 @@ WarpXOpenPMDPlot::WriteOpenPMDFieldsAll ( //const std::string& filename,
 
             // Loop through the multifab, and store each box as a chunk,
             // in the openPMD file.
-            for( amrex::MFIter mfi(mf[lev]); mfi.isValid(); ++mfi )
+            for (amrex::MFIter mfi(mf[lev]); mfi.isValid(); ++mfi )
             {
                 amrex::FArrayBox const& fab = mf[lev][mfi];
                 amrex::Box const& local_box = fab.box();

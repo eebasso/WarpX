@@ -58,7 +58,7 @@ InjectorDensityPredefined::InjectorDensityPredefined (
     pp_species_name.query("predefined_profile_name", which_profile_s);
     std::transform(which_profile_s.begin(), which_profile_s.end(),
                    which_profile_s.begin(), ::tolower);
-    if (which_profile_s == "parabolic_channel"){
+    if (which_profile_s == "parabolic_channel") {
         profile = Profile::parabolic_channel;
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE(v.size() > 5,
             "InjectorDensityPredefined::parabolic_channel: not enough parameters");

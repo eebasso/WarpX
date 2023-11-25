@@ -120,7 +120,7 @@ void doDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
     // Loop over particles and deposit into jx_fab, jy_fab and jz_fab
 #if defined(WARPX_USE_GPUCLOCK)
     amrex::Real* cost_real = nullptr;
-    if( load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
+    if (load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
         cost_real = (amrex::Real *) amrex::The_Managed_Arena()->alloc(sizeof(amrex::Real));
         *cost_real = 0._rt;
     }
@@ -139,7 +139,7 @@ void doDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
                                                         + uyp[ip]*uyp[ip]*clightsq
                                                         + uzp[ip]*uzp[ip]*clightsq);
             amrex::Real wq  = q*wp[ip];
-            if (do_ionization){
+            if (do_ionization) {
                 wq *= ion_lev[ip];
             }
 
@@ -272,7 +272,7 @@ void doDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
 
             // Deposit current into jx_arr, jy_arr and jz_arr
 #if defined(WARPX_DIM_1D_Z)
-            for (int iz=0; iz<=depos_order; iz++){
+            for (int iz=0; iz<=depos_order; iz++) {
                 amrex::Gpu::Atomic::AddNoRet(
                     &jx_arr(lo.x+l_jx+iz, 0, 0, 0),
                     sz_jx[iz]*wqx);
@@ -285,8 +285,8 @@ void doDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
             }
 #endif
 #if defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-            for (int iz=0; iz<=depos_order; iz++){
-                for (int ix=0; ix<=depos_order; ix++){
+            for (int iz=0; iz<=depos_order; iz++) {
+                for (int ix=0; ix<=depos_order; ix++) {
                     amrex::Gpu::Atomic::AddNoRet(
                         &jx_arr(lo.x+j_jx+ix, lo.y+l_jx+iz, 0, 0),
                         sx_jx[ix]*sz_jx[iz]*wqx);
@@ -312,9 +312,9 @@ void doDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
                 }
             }
 #elif defined(WARPX_DIM_3D)
-            for (int iz=0; iz<=depos_order; iz++){
-                for (int iy=0; iy<=depos_order; iy++){
-                    for (int ix=0; ix<=depos_order; ix++){
+            for (int iz=0; iz<=depos_order; iz++) {
+                for (int iy=0; iy<=depos_order; iy++) {
+                    for (int ix=0; ix<=depos_order; ix++) {
                         amrex::Gpu::Atomic::AddNoRet(
                             &jx_arr(lo.x+j_jx+ix, lo.y+k_jx+iy, lo.z+l_jx+iz),
                             sx_jx[ix]*sy_jx[iy]*sz_jx[iz]*wqx);
@@ -331,7 +331,7 @@ void doDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
         }
     );
 #if defined(WARPX_USE_GPUCLOCK)
-    if(cost && load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
+    if (cost && load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
         amrex::Gpu::streamSynchronize();
         *cost += *cost_real;
         amrex::The_Managed_Arena()->free(cost_real);
@@ -489,7 +489,7 @@ void doDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPosition,
 
         // Zero-initialize the temporary array in shared memory
         volatile amrex::Real* vs = shared;
-        for (int i = threadIdx.x; i < npts; i += blockDim.x){
+        for (int i = threadIdx.x; i < npts; i += blockDim.x) {
             vs[i] = 0.0;
         }
         __syncthreads();
@@ -503,7 +503,7 @@ void doDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPosition,
 
         __syncthreads();
         addLocalToGlobal(tbox_x, jx_arr, jx_buff);
-        for (int i = threadIdx.x; i < npts; i += blockDim.x){
+        for (int i = threadIdx.x; i < npts; i += blockDim.x) {
             vs[i] = 0.0;
         }
 
@@ -518,7 +518,7 @@ void doDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPosition,
 
         __syncthreads();
         addLocalToGlobal(tbox_y, jy_arr, jy_buff);
-        for (int i = threadIdx.x; i < npts; i += blockDim.x){
+        for (int i = threadIdx.x; i < npts; i += blockDim.x) {
             vs[i] = 0.0;
         }
 
@@ -650,7 +650,7 @@ void doEsirkepovDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
     // Loop over particles and deposit into Jx_arr, Jy_arr and Jz_arr
 #if defined(WARPX_USE_GPUCLOCK)
     amrex::Real* cost_real = nullptr;
-    if( load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
+    if (load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
         cost_real = (amrex::Real *) amrex::The_Managed_Arena()->alloc(sizeof(amrex::Real));
         *cost_real = 0._rt;
     }
@@ -671,7 +671,7 @@ void doEsirkepovDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
 
             // wqx, wqy wqz are particle current in each direction
             Real wq = q*wp[ip];
-            if (do_ionization){
+            if (do_ionization) {
                 wq *= ion_lev[ip];
             }
 
@@ -919,7 +919,7 @@ void doEsirkepovDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
         }
     );
 #if defined(WARPX_USE_GPUCLOCK)
-    if(cost && load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
+    if (cost && load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
         amrex::Gpu::streamSynchronize();
         *cost += *cost_real;
         amrex::The_Managed_Arena()->free(cost_real);
@@ -1049,7 +1049,7 @@ void doVayDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
     // Loop over particles and deposit (Dx,Dy,Dz) into Dx_fab, Dy_fab and Dz_fab
 #if defined(WARPX_USE_GPUCLOCK)
     amrex::Real* cost_real = nullptr;
-    if( load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
+    if (load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
         cost_real = (amrex::Real *) amrex::The_Managed_Arena()->alloc(sizeof(amrex::Real));
         *cost_real = 0._rt;
     }
@@ -1290,7 +1290,7 @@ void doVayDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
 
 
 #   if defined(WARPX_USE_GPUCLOCK)
-    if( load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
+    if (load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
         amrex::Gpu::streamSynchronize();
         *cost += *cost_real;
         amrex::The_Managed_Arena()->free(cost_real);

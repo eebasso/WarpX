@@ -311,7 +311,7 @@ using namespace amrex;
                         if (is_normal_to_PEC && is_nodal[idim]==1) {
                             OnPECBoundary = true;
                         }
-                    } else if ( ig > 0) {
+                    } else if (ig > 0) {
                         // Mirror location inside the domain by "ig" number of cells
                         // across PEC boundary in direction, idim, and side, iside
                         ijk_mirror[idim] = ( (iside == 0)

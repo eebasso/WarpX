@@ -1010,7 +1010,7 @@ WarpX::EvolveG (int lev, PatchType patch_type, amrex::Real a_dt, DtType /*a_dt_t
 void
 WarpX::MacroscopicEvolveE (amrex::Real a_dt)
 {
-    for (int lev = 0; lev <= finest_level; ++lev ) {
+    for (int lev = 0; lev <= finest_level; ++lev) {
         MacroscopicEvolveE(lev, a_dt);
     }
 }
@@ -1079,7 +1079,7 @@ WarpX::DampFieldsInGuards(const int lev,
             if (iside == 0 && WarpX::field_boundary_lo[dampdir] != FieldBoundaryType::Damped) continue;
             if (iside == 1 && WarpX::field_boundary_hi[dampdir] != FieldBoundaryType::Damped) continue;
 
-            for ( amrex::MFIter mfi(*Efield[0], amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi )
+            for (amrex::MFIter mfi(*Efield[0], amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi )
             {
                 amrex::Array4<amrex::Real> const& Ex_arr = Efield[0]->array(mfi);
                 amrex::Array4<amrex::Real> const& Ey_arr = Efield[1]->array(mfi);
@@ -1222,7 +1222,7 @@ WarpX::ApplyInverseVolumeScalingToCurrentDensity (MultiFab* Jx, MultiFab* Jy, Mu
     // See Verboncoeur JCP 174, 421-427 (2001) for the modified volume factor
     const amrex::Real axis_volume_factor = (verboncoeur_axis_correction ? 1._rt/3._rt : 1._rt/4._rt);
 
-    for ( MFIter mfi(*Jx, TilingIfNotGPU()); mfi.isValid(); ++mfi )
+    for (MFIter mfi(*Jx, TilingIfNotGPU()); mfi.isValid(); ++mfi )
     {
 
         Array4<Real> const& Jr_arr = Jx->array(mfi);
@@ -1397,7 +1397,7 @@ WarpX::ApplyInverseVolumeScalingToChargeDensity (MultiFab* Rho, int lev)
 
     Box tilebox;
 
-    for ( MFIter mfi(*Rho, TilingIfNotGPU()); mfi.isValid(); ++mfi )
+    for (MFIter mfi(*Rho, TilingIfNotGPU()); mfi.isValid(); ++mfi )
     {
 
         Array4<Real> const& Rho_arr = Rho->array(mfi);

@@ -165,7 +165,7 @@ void init_WarpX (py::module& m)
 //            "WarpX version")
         .def_property_readonly_static(
             "have_mpi",
-            [](py::object){
+            [](py::object) {
 #ifdef AMREX_USE_MPI
                 return true;
 #else
@@ -174,7 +174,7 @@ void init_WarpX (py::module& m)
             })
         .def_property_readonly_static(
             "have_gpu",
-            [](py::object){
+            [](py::object) {
 #ifdef AMREX_USE_GPU
                 return true;
 #else
@@ -183,7 +183,7 @@ void init_WarpX (py::module& m)
             })
         .def_property_readonly_static(
             "have_omp",
-            [](py::object){
+            [](py::object) {
 #ifdef AMREX_USE_OMP
                 return true;
 #else
@@ -192,7 +192,7 @@ void init_WarpX (py::module& m)
             })
         .def_property_readonly_static(
             "gpu_backend",
-            [](py::object){
+            [](py::object) {
 #ifdef AMREX_USE_CUDA
                 return "CUDA";
 #elif defined(AMREX_USE_HIP)

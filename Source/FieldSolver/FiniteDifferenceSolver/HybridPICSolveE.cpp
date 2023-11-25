@@ -80,7 +80,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(*Jfield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(*Jfield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi) {
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
@@ -124,7 +124,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
         amrex::ParallelFor(tjr, tjt, tjz,
 
             // Jr calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
                 if (lr(i, j, 0) <= 0) return;
@@ -150,7 +150,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
             },
 
             // Jt calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
 #ifdef AMREX_USE_EB
                 // In RZ Jt is associated with a mesh node, so we need to check if the mesh node is covered
                 amrex::ignore_unused(lt);
@@ -184,7 +184,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
                     Jt(i, j, 0, 0) = 0.;
                     // Higher-order modes
                     for (int m=1; m<nmodes; m++) {
-                        if (m == 1){
+                        if (m == 1) {
                             // The same logic as is used in the E-field update for the fully
                             // electromagnetic FDTD case is used here.
                             Jt(i,j,0,2*m-1) =  Jr(i,j,0,2*m  );
@@ -198,7 +198,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
             },
 
             // Jz calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
                 if (lz(i, j, 0) <= 0) return;
@@ -271,7 +271,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCartesian (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(*Jfield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(*Jfield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi) {
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
@@ -312,7 +312,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCartesian (
         amrex::ParallelFor(tjx, tjy, tjz,
 
             // Jx calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
                 if (lx(i, j, k) <= 0) return;
@@ -324,7 +324,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCartesian (
             },
 
             // Jy calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
 #ifdef WARPX_DIM_3D
@@ -342,7 +342,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCartesian (
             },
 
             // Jz calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
                 if (lz(i,j,k) <= 0) return;
@@ -470,7 +470,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(enE_nodal_mf, TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(enE_nodal_mf, TilingIfNotGPU()); mfi.isValid(); ++mfi) {
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
@@ -489,7 +489,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
         Array4<Real const> const& Bz = Bfield[2]->const_array(mfi);
 
         // Loop over the cells and update the nodal E field
-        amrex::ParallelFor(mfi.tilebox(), [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+        amrex::ParallelFor(mfi.tilebox(), [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
 
             // interpolate the total current to a nodal grid
             auto const jr_interp = Interp(Jr, Jr_stag, nodal, coarsen, i, j, 0, 0);
@@ -534,7 +534,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi) {
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
@@ -576,7 +576,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
         amrex::ParallelFor(ter, tet, tez,
 
             // Er calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
                 if (lr(i, j, 0) <= 0) return;
@@ -600,7 +600,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
             },
 
             // Et calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
 #ifdef AMREX_USE_EB
                 // In RZ Et is associated with a mesh node, so we need to check if the mesh node is covered
                 amrex::ignore_unused(lt);
@@ -634,7 +634,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
             },
 
             // Ez calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip field solve if this cell is fully covered by embedded boundaries
                 if (lz(i,j,0) <= 0) return;
@@ -732,7 +732,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(enE_nodal_mf, TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(enE_nodal_mf, TilingIfNotGPU()); mfi.isValid(); ++mfi) {
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
@@ -751,7 +751,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
         Array4<Real const> const& Bz = Bfield[2]->const_array(mfi);
 
         // Loop over the cells and update the nodal E field
-        amrex::ParallelFor(mfi.tilebox(), [=] AMREX_GPU_DEVICE (int i, int j, int k){
+        amrex::ParallelFor(mfi.tilebox(), [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 
             // interpolate the total current to a nodal grid
             auto const jx_interp = Interp(Jx, Jx_stag, nodal, coarsen, i, j, k, 0);
@@ -796,7 +796,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi) {
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
@@ -836,7 +836,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
         amrex::ParallelFor(tex, tey, tez,
 
             // Ex calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
                 if (lx(i, j, k) <= 0) return;
@@ -860,7 +860,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
             },
 
             // Ey calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip field solve if this cell is fully covered by embedded boundaries
 #ifdef WARPX_DIM_3D
@@ -890,7 +890,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
             },
 
             // Ez calculation
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip field solve if this cell is fully covered by embedded boundaries
                 if (lz(i,j,k) <= 0) return;

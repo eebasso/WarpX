@@ -50,7 +50,7 @@ void FiniteDifferenceSolver::EvolveEPML (
     std::array< amrex::MultiFab*, 3 > const edge_lengths,
     amrex::MultiFab* const Ffield,
     MultiSigmaBox const& sigba,
-    amrex::Real const dt, bool pml_has_particles ) {
+    amrex::Real const dt, bool pml_has_particles) {
 
     // Select algorithm (The choice of algorithm is a runtime option,
     // but we compile code for each algorithm, using templates)
@@ -91,7 +91,7 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
     std::array< amrex::MultiFab*, 3 > const edge_lengths,
     amrex::MultiFab* const Ffield,
     MultiSigmaBox const& sigba,
-    amrex::Real const dt, bool pml_has_particles ) {
+    amrex::Real const dt, bool pml_has_particles) {
 
     Real constexpr c2 = PhysConst::c * PhysConst::c;
 
@@ -99,7 +99,7 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi) {
 
         // Extract field data for this grid/tile
         Array4<Real> const& Ex = Efield[0]->array(mfi);
@@ -131,9 +131,9 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
         // Loop over the cells and update the fields
         amrex::ParallelFor(tex, tey, tez,
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
-                if(lx(i, j, k) <= 0) return;
+                if (lx(i, j, k) <= 0) return;
 #endif
 
                 Ex(i, j, k, PMLComp::xz) -= c2 * dt * (
@@ -144,7 +144,7 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
                   + T_Algo::DownwardDy(Bz, coefs_y, n_coefs_y, i, j, k, PMLComp::zy) );
             },
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
 #ifdef WARPX_DIM_3D
@@ -163,9 +163,9 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
                   + T_Algo::DownwardDz(Bx, coefs_z, n_coefs_z, i, j, k, PMLComp::xz) );
             },
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
-                if(lz(i, j, k) <= 0) return;
+                if (lz(i, j, k) <= 0) return;
 #endif
 
                 Ez(i, j, k, PMLComp::zy) -= c2 * dt * (
@@ -187,19 +187,19 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
             // Loop over the cells and update the fields
             amrex::ParallelFor(tex, tey, tez,
 
-                [=] AMREX_GPU_DEVICE (int i, int j, int k){
+                [=] AMREX_GPU_DEVICE (int i, int j, int k) {
                     Ex(i, j, k, PMLComp::xx) += c2 * dt * (
                         T_Algo::UpwardDx(F, coefs_x, n_coefs_x, i, j, k, PMLComp::x)
                       + T_Algo::UpwardDx(F, coefs_x, n_coefs_x, i, j, k, PMLComp::y)
                       + T_Algo::UpwardDx(F, coefs_x, n_coefs_x, i, j, k, PMLComp::z) );
                 },
-                [=] AMREX_GPU_DEVICE (int i, int j, int k){
+                [=] AMREX_GPU_DEVICE (int i, int j, int k) {
                     Ey(i, j, k, PMLComp::yy) += c2 * dt * (
                         T_Algo::UpwardDy(F, coefs_y, n_coefs_y, i, j, k, PMLComp::x)
                       + T_Algo::UpwardDy(F, coefs_y, n_coefs_y, i, j, k, PMLComp::y)
                       + T_Algo::UpwardDy(F, coefs_y, n_coefs_y, i, j, k, PMLComp::z) );
                 },
-                [=] AMREX_GPU_DEVICE (int i, int j, int k){
+                [=] AMREX_GPU_DEVICE (int i, int j, int k) {
                     Ez(i, j, k, PMLComp::zz) += c2 * dt * (
                         T_Algo::UpwardDz(F, coefs_z, n_coefs_z, i, j, k, PMLComp::x)
                       + T_Algo::UpwardDz(F, coefs_z, n_coefs_z, i, j, k, PMLComp::y)

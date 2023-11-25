@@ -70,7 +70,7 @@ void FiniteDifferenceSolver::EvolveRhoCartesianECT (
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& Efield,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& edge_lengths,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& face_areas,
-    std::array< std::unique_ptr<amrex::MultiFab>, 3 >& ECTRhofield, const int lev ) {
+    std::array< std::unique_ptr<amrex::MultiFab>, 3 >& ECTRhofield, const int lev) {
 #ifdef AMREX_USE_EB
 
 #if !(defined(WARPX_DIM_3D) || defined(WARPX_DIM_XZ))
@@ -84,7 +84,7 @@ void FiniteDifferenceSolver::EvolveRhoCartesianECT (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for (amrex::MFIter mfi(*ECTRhofield[0], amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (amrex::MFIter mfi(*ECTRhofield[0], amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi) {
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers) {
             amrex::Gpu::synchronize();
         }

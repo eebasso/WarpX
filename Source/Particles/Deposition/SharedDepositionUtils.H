@@ -23,7 +23,7 @@
  * \param tilesize : The 1D tilesize in the direction to be considered
  */
 AMREX_FORCE_INLINE
-int getMaxTboxAlongDim (int nCells, int tilesize){
+int getMaxTboxAlongDim (int nCells, int tilesize) {
     int maxTilesize = 0;
     const int nTiles = nCells / tilesize;
     const int remainder = nCells % tilesize;
@@ -119,7 +119,7 @@ void depositComponent (const GetParticlePosition<PIdx>& GetPosition,
                                                 + uyp[ip]*uyp[ip]*clightsq
                                                 + uzp[ip]*uzp[ip]*clightsq);
     amrex::Real wq  = q*wp[ip];
-    if (do_ionization){
+    if (do_ionization) {
         wq *= ion_lev[ip];
     }
 
@@ -244,15 +244,15 @@ void depositComponent (const GetParticlePosition<PIdx>& GetPosition,
 
     // Deposit current into j_buff
 #if defined(WARPX_DIM_1D_Z)
-    for (int iz=0; iz<=depos_order; iz++){
+    for (int iz=0; iz<=depos_order; iz++) {
         amrex::Gpu::Atomic::AddNoRet(
                                      &j_buff(lo.x+l_j+iz, 0, 0, 0),
                                      sz_j[iz]*pcurrent);
     }
 #endif
 #if defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-    for (int iz=0; iz<=depos_order; iz++){
-        for (int ix=0; ix<=depos_order; ix++){
+    for (int iz=0; iz<=depos_order; iz++) {
+        for (int ix=0; ix<=depos_order; ix++) {
             amrex::Gpu::Atomic::AddNoRet(
                                          &j_buff(lo.x+j_j+ix, lo.y+l_j+iz, 0, 0),
                                          sx_j[ix]*sz_j[iz]*pcurrent);
@@ -268,9 +268,9 @@ void depositComponent (const GetParticlePosition<PIdx>& GetPosition,
         }
     }
 #elif defined(WARPX_DIM_3D)
-    for (int iz=0; iz<=depos_order; iz++){
-        for (int iy=0; iy<=depos_order; iy++){
-            for (int ix=0; ix<=depos_order; ix++){
+    for (int iz=0; iz<=depos_order; iz++) {
+        for (int iy=0; iy<=depos_order; iy++) {
+            for (int ix=0; ix<=depos_order; ix++) {
                 amrex::Gpu::Atomic::AddNoRet(
                                              &j_buff(lo.x+j_j+ix, lo.y+k_j+iy, lo.z+l_j+iz),
                                              sx_j[ix]*sy_j[iy]*sz_j[iz]*pcurrent);

@@ -29,7 +29,7 @@ namespace AnyFFT
 
         // Initialize fft_plan.m_plan with the vendor fft plan.
         cufftResult result;
-        if (dir == direction::R2C){
+        if (dir == direction::R2C) {
             if (dim == 3) {
                 result = cufftPlan3d(
                     &(fft_plan.m_plan), real_size[2], real_size[1], real_size[0], VendorR2C);
@@ -51,7 +51,7 @@ namespace AnyFFT
             }
         }
 
-        if ( result != CUFFT_SUCCESS ) {
+        if (result != CUFFT_SUCCESS) {
             amrex::Print() << Utils::TextMsg::Err(
                     "cufftplan failed! Error: "
                     + cufftErrorToString(result));
@@ -71,18 +71,18 @@ namespace AnyFFT
         cufftDestroy( fft_plan.m_plan );
     }
 
-    void Execute(FFTplan& fft_plan){
+    void Execute(FFTplan& fft_plan) {
         // make sure that this is done on the same GPU stream as the above copy
         cudaStream_t stream = amrex::Gpu::Device::cudaStream();
         cufftSetStream ( fft_plan.m_plan, stream);
         cufftResult result;
-        if (fft_plan.m_dir == direction::R2C){
+        if (fft_plan.m_dir == direction::R2C) {
 #ifdef AMREX_USE_FLOAT
             result = cufftExecR2C(fft_plan.m_plan, fft_plan.m_real_array, fft_plan.m_complex_array);
 #else
             result = cufftExecD2Z(fft_plan.m_plan, fft_plan.m_real_array, fft_plan.m_complex_array);
 #endif
-        } else if (fft_plan.m_dir == direction::C2R){
+        } else if (fft_plan.m_dir == direction::C2R) {
 #ifdef AMREX_USE_FLOAT
             result = cufftExecC2R(fft_plan.m_plan, fft_plan.m_complex_array, fft_plan.m_real_array);
 #else
@@ -92,7 +92,7 @@ namespace AnyFFT
             WARPX_ABORT_WITH_MESSAGE(
                 "direction must be AnyFFT::direction::R2C or AnyFFT::direction::C2R");
         }
-        if ( result != CUFFT_SUCCESS ) {
+        if (result != CUFFT_SUCCESS) {
             WARPX_ABORT_WITH_MESSAGE(
                 "forward transform using cufftExec failed ! Error: "
                 +cufftErrorToString(result));
@@ -120,10 +120,10 @@ namespace AnyFFT
             {CUFFT_UNALIGNED_DATA,"CUFFT_UNALIGNED_DATA"}};
 
         const auto it = res2string.find(err);
-        if(it != res2string.end()){
+        if (it != res2string.end()) {
             return it->second;
         }
-        else{
+        else {
             return std::to_string(err) +
                 " (unknown error code)";
         }

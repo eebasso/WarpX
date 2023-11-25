@@ -65,7 +65,7 @@ SpectralBaseAlgorithm::ComputeSpectralDivE (
     field_data.ForwardTransform(lev, *Efield[2], Idx.Ez, 0 );
 
     // Loop over boxes
-    for (MFIter mfi(field_data.fields); mfi.isValid(); ++mfi){
+    for (MFIter mfi(field_data.fields); mfi.isValid(); ++mfi) {
 
         const Box& bx = field_data.fields[mfi].box();
 

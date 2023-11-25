@@ -62,15 +62,15 @@ void NCIGodfreyFilter::ComputeStencils()
 
     // read prestencil coefficients from table (the stencil is computed from
     // these coefficients)
-    for(int i=0; i<tab_width; i++){
+    for (int i=0; i<tab_width; i++) {
         if (!m_nodal_gather)
         {
             // If gather from staggered grid, use coefficients for Galerkin gather
-            if        (m_coeff_set == godfrey_coeff_set::Ex_Ey_Bz){
+            if        (m_coeff_set == godfrey_coeff_set::Ex_Ey_Bz) {
                 // Set of coefficients for Ex, Ey and Bz
                 prestencil[i] = (1_rt-weight_right)*table_nci_godfrey_galerkin_Ex_Ey_Bz[index  ][i] +
                                    weight_right    *table_nci_godfrey_galerkin_Ex_Ey_Bz[index+1][i];
-            } else if (m_coeff_set == godfrey_coeff_set::Bx_By_Ez){
+            } else if (m_coeff_set == godfrey_coeff_set::Bx_By_Ez) {
                 // Set of coefficients for Bx, By and Ez
                 prestencil[i] = (1_rt-weight_right)*table_nci_godfrey_galerkin_Bx_By_Ez[index  ][i] +
                                    weight_right    *table_nci_godfrey_galerkin_Bx_By_Ez[index+1][i];
@@ -82,7 +82,7 @@ void NCIGodfreyFilter::ComputeStencils()
         else
         {
             // If gather from node-centered grid, use coefficients for momentum-conserving gather
-            if        (m_coeff_set == godfrey_coeff_set::Ex_Ey_Bz){
+            if        (m_coeff_set == godfrey_coeff_set::Ex_Ey_Bz) {
                 // Set of coefficients for Ex, Ey and Bz
                 prestencil[i] = (1_rt-weight_right)*table_nci_godfrey_momentum_Ex_Ey_Bz[index  ][i] +
                                    weight_right    *table_nci_godfrey_momentum_Ex_Ey_Bz[index+1][i];

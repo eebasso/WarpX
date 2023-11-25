@@ -44,7 +44,7 @@ void init_WarpXParticleContainer (py::module& m)
                 const int nattr_real, py::array_t<double> &attr_real,
                 const int nattr_int, py::array_t<int> &attr_int,
                 int uniqueparticles, int id
-            ) {
+           ) {
                 amrex::Vector<amrex::ParticleReal> xp(x.data(), x.data() + n);
                 amrex::Vector<amrex::ParticleReal> yp(y.data(), y.data() + n);
                 amrex::Vector<amrex::ParticleReal> zp(z.data(), z.data() + n);

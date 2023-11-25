@@ -69,12 +69,12 @@ void ElasticCollisionPerez (
 
     // get local T1t and T2t
     T_PR T1t; T_PR T2t;
-    if ( T1 <= T_PR(0.0) && L <= T_PR(0.0) )
+    if (T1 <= T_PR(0.0) && L <= T_PR(0.0) )
     {
         T1t = ComputeTemperature(I1s,I1e,I1,u1x,u1y,u1z,m1);
     }
     else { T1t = T1; }
-    if ( T2 <= T_PR(0.0) && L <= T_PR(0.0) )
+    if (T2 <= T_PR(0.0) && L <= T_PR(0.0) )
     {
         T2t = ComputeTemperature(I2s,I2e,I2,u2x,u2y,u2z,m2);
     }
@@ -98,8 +98,8 @@ void ElasticCollisionPerez (
       for (T_index k = 0; k < amrex::max(NI1,NI2); ++k)
       {
         n12 += amrex::min( w1[ I1[i1] ], w2[ I2[i2] ] );
-        ++i1; if ( i1 == I1e ) { i1 = I1s; }
-        ++i2; if ( i2 == I2e ) { i2 = I2s; }
+        ++i1; if (i1 == I1e) { i1 = I1s; }
+        ++i2; if (i2 == I2e) { i2 = I2s; }
       }
       n12 = n12 / dV;
     }
@@ -108,7 +108,7 @@ void ElasticCollisionPerez (
 
     // compute Debye length lmdD
     T_PR lmdD;
-    if ( T1t < T_PR(0.0) || T2t < T_PR(0.0) ) {
+    if (T1t < T_PR(0.0) || T2t < T_PR(0.0)) {
         lmdD = T_PR(0.0);
     }
     else {
@@ -159,8 +159,8 @@ void ElasticCollisionPerez (
           u1y[I1[i1]] = u1xbuf_new*std::sin(-theta) + u1y[I1[i1]]*std::cos(-theta);
 #endif
 
-          ++i1; if ( i1 == I1e ) { i1 = I1s; }
-          ++i2; if ( i2 == I2e ) { i2 = I2s; }
+          ++i1; if (i1 == I1e) { i1 = I1s; }
+          ++i2; if (i2 == I2e) { i2 = I2s; }
       }
     }
 

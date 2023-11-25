@@ -708,7 +708,7 @@ void PsatdAlgorithmJConstantInTime::CurrentCorrection (SpectralFieldData& field_
     const SpectralFieldIndex& Idx = m_spectral_index;
 
     // Loop over boxes
-    for (amrex::MFIter mfi(field_data.fields); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(field_data.fields); mfi.isValid(); ++mfi) {
 
         const amrex::Box& bx = field_data.fields[mfi].box();
 
@@ -768,7 +768,7 @@ void PsatdAlgorithmJConstantInTime::CurrentCorrection (SpectralFieldData& field_
                 const amrex::Real k_dot_vg = kx_c * vgx + ky_c * vgy + kz_c * vgz;
 
                 // k_dot_vg = 0 always with standard PSATD (zero Galilean velocity)
-                if ( k_dot_vg != 0._rt )
+                if (k_dot_vg != 0._rt )
                 {
                     const Complex rho_old_mod = rho_old * amrex::exp(I * k_dot_vg * dt);
                     const Complex den = 1._rt - amrex::exp(I * k_dot_vg * dt);

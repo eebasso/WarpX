@@ -194,7 +194,7 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
     // and store the result in arrNumPartCreation. If the result is strictly greater than
     // 0, the mask is set to true at the given cell position.
     amrex::ParallelForRNG(box,
-    [=] AMREX_GPU_DEVICE (int i, int j, int k, amrex::RandomEngine const& engine){
+    [=] AMREX_GPU_DEVICE (int i, int j, int k, amrex::RandomEngine const& engine) {
         arrNumPartCreation(i,j,k) = filter(src_FABs,i,j,k,engine);
         const IntVect iv(AMREX_D_DECL(i,j,k));
         const auto mask_position = box.index(iv);

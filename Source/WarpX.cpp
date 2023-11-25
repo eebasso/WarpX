@@ -250,7 +250,7 @@ WarpX::GetInstance ()
 void
 WarpX::ResetInstance ()
 {
-    if (m_instance){
+    if (m_instance) {
         delete m_instance;
         m_instance = nullptr;
     }
@@ -544,8 +544,9 @@ WarpX::ReadParameters ()
         ablastr::warn_manager::GetWMInstance().SetAlwaysWarnImmediately(always_warn_immediately);
 
         // Set the WarnPriority threshold to decide if WarpX has to abort when a warning is recorded
-        if(std::string str_abort_on_warning_threshold;
-            pp_warpx.query("abort_on_warning_threshold", str_abort_on_warning_threshold)){
+        if (std::string str_abort_on_warning_threshold;
+            pp_warpx.query("abort_on_warning_threshold", str_abort_on_warning_threshold))
+        {
             std::optional<ablastr::warn_manager::WarnPriority> abort_on_warning_threshold = std::nullopt;
             if (str_abort_on_warning_threshold == "high")
                 abort_on_warning_threshold = ablastr::warn_manager::WarnPriority::high;
@@ -633,15 +634,15 @@ WarpX::ReadParameters ()
         // set random seed
         std::string random_seed = "default";
         pp_warpx.query("random_seed", random_seed);
-        if ( random_seed != "default" ) {
+        if (random_seed != "default") {
             const unsigned long myproc_1 = ParallelDescriptor::MyProc() + 1;
-            if ( random_seed == "random" ) {
+            if (random_seed == "random") {
                 std::random_device rd;
                 std::uniform_int_distribution<int> dist(2, INT_MAX);
                 const unsigned long cpu_seed = myproc_1 * dist(rd);
                 const unsigned long gpu_seed = myproc_1 * dist(rd);
                 ResetRandomSeed(cpu_seed, gpu_seed);
-            } else if ( std::stoi(random_seed) > 0 ) {
+            } else if (std::stoi(random_seed) > 0) {
                 const unsigned long nprocs = ParallelDescriptor::NProcs();
                 const unsigned long seed_long = std::stoul(random_seed);
                 const unsigned long cpu_seed = myproc_1 * seed_long;
@@ -821,7 +822,7 @@ WarpX::ReadParameters ()
 
         utils::parser::queryWithParser(
             pp_warpx, "num_mirrors", num_mirrors);
-        if (num_mirrors>0){
+        if (num_mirrors>0) {
             mirror_z.resize(num_mirrors);
             utils::parser::getArrWithParser(
                 pp_warpx, "mirror_z", mirror_z, 0, num_mirrors);
@@ -855,7 +856,7 @@ WarpX::ReadParameters ()
         Vector<int> vect_shared_tilesize(AMREX_SPACEDIM, 1);
         const bool shared_tilesize_is_specified = utils::parser::queryArrWithParser(pp_warpx, "shared_tilesize",
                                                             vect_shared_tilesize, 0, AMREX_SPACEDIM);
-        if (shared_tilesize_is_specified){
+        if (shared_tilesize_is_specified) {
             for (int i=0; i<AMREX_SPACEDIM; i++)
                 shared_tilesize[i] = vect_shared_tilesize[i];
         }
@@ -1013,7 +1014,7 @@ WarpX::ReadParameters ()
                                                 warpx.fine_tag_lo and warpx.fine_tag_hi\
                                                 or warpx.ref_patch_function(x,y,z)");
 
-            if ( (fine_tag_lo_specified && fine_tag_hi_specified) && parser_specified) {
+            if ((fine_tag_lo_specified && fine_tag_hi_specified) && parser_specified) {
                ablastr::warn_manager::WMRecordWarning("Refined patch", "Both fine_tag_lo,fine_tag_hi\
                    and ref_patch_function(x,y,z) are provided. Note that fine_tag_lo/fine_tag_hi will\
                    override the ref_patch_function(x,y,z) for defining the refinement patches");
@@ -1136,7 +1137,7 @@ WarpX::ReadParameters ()
             "The problem must not be periodic in the radial direction");
 
         // Ensure code aborts if PEC is specified at r=0 for RZ
-        if (Geom(0).ProbLo(0) == 0){
+        if (Geom(0).ProbLo(0) == 0) {
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                 WarpX::field_boundary_lo[0] == FieldBoundaryType::None,
                 "Error : Field boundary at r=0 must be ``none``. \n");
@@ -1232,7 +1233,7 @@ WarpX::ReadParameters ()
         }
 
         em_solver_medium = GetAlgorithmInteger(pp_algo, "em_solver_medium");
-        if (em_solver_medium == MediumForEM::Macroscopic ) {
+        if (em_solver_medium == MediumForEM::Macroscopic) {
             macroscopic_solver_algo = GetAlgorithmInteger(pp_algo,"macroscopic_sigma_method");
         }
 
@@ -1285,7 +1286,7 @@ WarpX::ReadParameters ()
         std::vector<std::string> sort_intervals_string_vec = {"-1"};
         int particle_shape;
         if (!species_names.empty() || !lasers_names.empty()) {
-            if (utils::parser::queryWithParser(pp_algo, "particle_shape", particle_shape)){
+            if (utils::parser::queryWithParser(pp_algo, "particle_shape", particle_shape)) {
 
                 WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                     (particle_shape >= 1) && (particle_shape <=3),
@@ -1296,7 +1297,7 @@ WarpX::ReadParameters ()
                 noy = particle_shape;
                 noz = particle_shape;
             }
-            else{
+            else {
                 WARPX_ABORT_WITH_MESSAGE(
                     "algo.particle_shape must be set in the input file:"
                     " please set algo.particle_shape to 1, 2, or 3");
@@ -1327,7 +1328,7 @@ WarpX::ReadParameters ()
             utils::parser::queryArrWithParser(
                 pp_warpx, "sort_bin_size",
                 vect_sort_bin_size, 0, AMREX_SPACEDIM);
-        if (sort_bin_size_is_specified){
+        if (sort_bin_size_is_specified) {
             for (int i=0; i<AMREX_SPACEDIM; i++)
                 sort_bin_size[i] = vect_sort_bin_size[i];
         }
@@ -1338,7 +1339,7 @@ WarpX::ReadParameters ()
             utils::parser::queryArrWithParser(
                 pp_warpx, "sort_idx_type",
                 vect_sort_idx_type, 0, AMREX_SPACEDIM);
-        if (sort_idx_type_is_specified){
+        if (sort_idx_type_is_specified) {
             for (int i=0; i<AMREX_SPACEDIM; i++)
                 sort_idx_type[i] = vect_sort_idx_type[i];
         }
@@ -1402,17 +1403,17 @@ WarpX::ReadParameters ()
         pp_psatd.query("noy", noy_str);
         pp_psatd.query("noz", noz_str);
 
-        if(nox_str == "inf") {
+        if (nox_str == "inf") {
             nox_fft = -1;
         } else {
             utils::parser::queryWithParser(pp_psatd, "nox", nox_fft);
         }
-        if(noy_str == "inf") {
+        if (noy_str == "inf") {
             noy_fft = -1;
         } else {
             utils::parser::queryWithParser(pp_psatd, "noy", noy_fft);
         }
-        if(noz_str == "inf") {
+        if (noz_str == "inf") {
             noz_fft = -1;
         } else {
             utils::parser::queryWithParser(pp_psatd, "noz", noz_fft);
@@ -1626,7 +1627,8 @@ WarpX::ReadParameters ()
         for (int dir = 0; dir < AMREX_SPACEDIM; dir++)
         {
             if (WarpX::field_boundary_lo[dir] == FieldBoundaryType::Damped ||
-                WarpX::field_boundary_hi[dir] == FieldBoundaryType::Damped ) {
+                WarpX::field_boundary_hi[dir] == FieldBoundaryType::Damped)
+            {
                 WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                     WarpX::field_boundary_lo[dir] == WarpX::field_boundary_hi[dir],
                     "field boundary in both lo and hi must be set to Damped for PSATD"
@@ -1656,7 +1658,7 @@ WarpX::ReadParameters ()
         }
     }
 
-    if (electromagnetic_solver_id != ElectromagneticSolverAlgo::PSATD ) {
+    if (electromagnetic_solver_id != ElectromagneticSolverAlgo::PSATD) {
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                 (WarpX::field_boundary_lo[idim] != FieldBoundaryType::Damped) &&
@@ -1690,7 +1692,7 @@ WarpX::ReadParameters ()
         slice_cr_ratio = IntVect(AMREX_D_DECL(1,1,1));
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
         {
-            if (slice_crse_ratio[idim] > 1 ) {
+            if (slice_crse_ratio[idim] > 1) {
                 slice_cr_ratio[idim] = slice_crse_ratio[idim];
             }
         }
@@ -1887,7 +1889,7 @@ WarpX::BackwardCompatibility ()
 
     const ParmParse pp_particles("particles");
     int nspecies;
-    if (pp_particles.query("nspecies", nspecies)){
+    if (pp_particles.query("nspecies", nspecies)) {
         ablastr::warn_manager::WMRecordWarning("Species",
             "particles.nspecies is ignored. Just use particles.species_names please.",
             ablastr::warn_manager::WarnPriority::low);
@@ -1895,7 +1897,7 @@ WarpX::BackwardCompatibility ()
 
     std::vector<std::string> backward_sp_names;
     pp_particles.queryarr("species_names", backward_sp_names);
-    for(const std::string& speciesiter : backward_sp_names){
+    for (const std::string& speciesiter : backward_sp_names) {
         const ParmParse pp_species(speciesiter);
         std::vector<amrex::Real> backward_vel;
         std::stringstream ssspecies;
@@ -1923,7 +1925,7 @@ WarpX::BackwardCompatibility ()
 
     const ParmParse pp_collisions("collisions");
     int ncollisions;
-    if (pp_collisions.query("ncollisions", ncollisions)){
+    if (pp_collisions.query("ncollisions", ncollisions)) {
         ablastr::warn_manager::WMRecordWarning("Collisions",
             "collisions.ncollisions is ignored. Just use particles.collision_names please.",
             ablastr::warn_manager::WarnPriority::low);
@@ -1931,7 +1933,7 @@ WarpX::BackwardCompatibility ()
 
     const ParmParse pp_lasers("lasers");
     int nlasers;
-    if (pp_lasers.query("nlasers", nlasers)){
+    if (pp_lasers.query("nlasers", nlasers)) {
         ablastr::warn_manager::WMRecordWarning("Laser",
             "lasers.nlasers is ignored. Just use lasers.names please.",
             ablastr::warn_manager::WarnPriority::low);
@@ -2316,7 +2318,7 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
             AllocInitMultiFab(m_face_areas[lev][1], amrex::convert(ba, By_nodal_flag), dm, ncomps, guard_cells.ng_FieldSolver, lev, "m_face_areas[y]");
             AllocInitMultiFab(m_face_areas[lev][2], amrex::convert(ba, Bz_nodal_flag), dm, ncomps, guard_cells.ng_FieldSolver, lev, "m_face_areas[z]");
         }
-        if(WarpX::electromagnetic_solver_id == ElectromagneticSolverAlgo::ECT) {
+        if (WarpX::electromagnetic_solver_id == ElectromagneticSolverAlgo::ECT) {
             AllocInitMultiFab(m_edge_lengths[lev][0], amrex::convert(ba, Ex_nodal_flag), dm, ncomps, guard_cells.ng_FieldSolver, lev, "m_edge_lengths[x]");
             AllocInitMultiFab(m_edge_lengths[lev][1], amrex::convert(ba, Ey_nodal_flag), dm, ncomps, guard_cells.ng_FieldSolver, lev, "m_edge_lengths[y]");
             AllocInitMultiFab(m_edge_lengths[lev][2], amrex::convert(ba, Ez_nodal_flag), dm, ncomps, guard_cells.ng_FieldSolver, lev, "m_edge_lengths[z]");
@@ -2347,9 +2349,10 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
 #endif
 
     int rho_ncomps = 0;
-    if( (electrostatic_solver_id == ElectrostaticSolverAlgo::LabFrame) ||
+    if ((electrostatic_solver_id == ElectrostaticSolverAlgo::LabFrame) ||
         (electrostatic_solver_id == ElectrostaticSolverAlgo::LabFrameElectroMagnetostatic) ||
-        (electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC) ) {
+        (electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC) )
+    {
         rho_ncomps = ncomps;
     }
     if (do_dive_cleaning) {
@@ -2417,7 +2420,7 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
         realspace_ba.enclosedCells(); // Make it cell-centered
         // Define spectral solver
 #   ifdef WARPX_DIM_RZ
-        if ( !fft_periodic_single_box ) {
+        if (!fft_periodic_single_box) {
             realspace_ba.grow(1, ngEB[1]); // add guard cells only in z
         }
         if (field_boundary_hi[0] == FieldBoundaryType::PML && !do_pml_in_domain) {
@@ -2431,7 +2434,7 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
                                    dm,
                                    dx);
 #   else
-        if ( !fft_periodic_single_box ) {
+        if (!fft_periodic_single_box) {
             realspace_ba.grow(ngEB);   // add guard cells
         }
         bool const pml_flag_false = false;
@@ -2901,7 +2904,7 @@ WarpX::ComputeDivB (amrex::MultiFab& divB, int const dcomp,
 void
 WarpX::ComputeDivE(amrex::MultiFab& divE, const int lev)
 {
-    if ( WarpX::electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD ) {
+    if (WarpX::electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD) {
 #ifdef WARPX_USE_PSATD
         spectral_solver_fp[lev]->ComputeSpectralDivE( lev, Efield_aux[lev], divE );
 #else
@@ -2944,9 +2947,9 @@ WarpX::getPMLdirections() const
 #if AMREX_SPACEDIM!=3
     dirsWithPML.resize( 4 );
 #endif
-    if( do_pml )
+    if (do_pml)
     {
-        for( int i = 0; i < static_cast<int>(dirsWithPML.size()) / 2; ++i )
+        for (int i = 0; i < static_cast<int>(dirsWithPML.size()) / 2; ++i )
         {
             dirsWithPML.at( 2u*i      ) = bool(do_pml_Lo[0][i]); // on level 0
             dirsWithPML.at( 2u*i + 1u ) = bool(do_pml_Hi[0][i]); // on level 0
@@ -3044,7 +3047,7 @@ WarpX::BuildBufferMasksInBox ( const amrex::Box tbx, amrex::IArrayBox &buffer_ma
         for         (int kk = k-ng3.z; kk <= k+ng3.z; ++kk) {
             for     (int jj = j-ng3.y; jj <= j+ng3.y; ++jj) {
                 for (int ii = i-ng3.x; ii <= i+ng3.x; ++ii) {
-                    if ( gmsk(ii,jj,kk) == 0 ) {
+                    if (gmsk(ii,jj,kk) == 0) {
                         msk(i,j,k) = 0;
                         return;
                     }
@@ -3206,8 +3209,8 @@ bool
 WarpX::isAnyBoundaryPML()
 {
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-        if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::PML) return true;
-        if ( WarpX::field_boundary_hi[idim] == FieldBoundaryType::PML) return true;
+        if (WarpX::field_boundary_lo[idim] == FieldBoundaryType::PML) return true;
+        if (WarpX::field_boundary_hi[idim] == FieldBoundaryType::PML) return true;
     }
     return false;
 }

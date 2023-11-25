@@ -102,12 +102,12 @@ CreateSlice( const MultiFab& mf, const Vector<Geometry> &dom_geom,
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
 
         // Flag for interpolation if required //
-        if ( interp_lo[idim] == 1) {
+        if (interp_lo[idim] == 1) {
             interpolate = 1;
         }
 
         // For the case when a dimension is reduced //
-        if ( ( slice_hi[idim] - slice_lo[idim]) == 1) {
+        if (( slice_hi[idim] - slice_lo[idim]) == 1) {
             slice_ncells[idim] = 1;
         }
         else {
@@ -115,11 +115,11 @@ CreateSlice( const MultiFab& mf, const Vector<Geometry> &dom_geom,
                                     / slice_cr_ratio[idim];
 
             const int refined_ncells = slice_hi[idim] - slice_lo[idim] + 1 ;
-            if ( slice_cr_ratio[idim] > 1) {
+            if (slice_cr_ratio[idim] > 1) {
                 coarsen = true;
 
                 // modify slice_grid_size if >= refines_cells //
-                if ( slice_grid_size >= refined_ncells ) {
+                if (slice_grid_size >= refined_ncells) {
                     slice_grid_size = refined_ncells - 1;
                 }
 
@@ -152,7 +152,7 @@ CreateSlice( const MultiFab& mf, const Vector<Geometry> &dom_geom,
     ablastr::utils::communication::ParallelCopy(*smf, mf, 0, 0, ncomp, nghost_vect, nghost_vect, WarpX::do_single_precision_comms);
 
     // inteprolate if required on refined slice //
-    if (interpolate == 1 ) {
+    if (interpolate == 1) {
        InterpolateSliceValues( *smf, interp_lo, slice_cc_nd_box, dom_geom,
                                ncomp, nghost, slice_lo, slice_hi, SliceType, real_box);
     }
@@ -186,41 +186,41 @@ CreateSlice( const MultiFab& mf, const Vector<Geometry> &dom_geom,
             const int dcomp = 0;
 
             const IntVect cctype(AMREX_D_DECL(0,0,0));
-            if( SliceType==cctype ) {
+            if (SliceType==cctype) {
                 amrex::amrex_avgdown(Dst_bx, Dst_fabox, Src_fabox, dcomp, scomp,
                                      ncomp, slice_cr_ratio);
             }
             const IntVect ndtype(AMREX_D_DECL(1,1,1));
-            if( SliceType == ndtype ) {
+            if (SliceType == ndtype) {
                 amrex::amrex_avgdown_nodes(Dst_bx, Dst_fabox, Src_fabox, dcomp,
                                            scomp, ncomp, slice_cr_ratio);
             }
-            if( SliceType == WarpX::GetInstance().getEfield(0,0).ixType().toIntVect() ) {
+            if (SliceType == WarpX::GetInstance().getEfield(0,0).ixType().toIntVect()) {
                 amrex::amrex_avgdown_edges(Dst_bx, Dst_fabox, Src_fabox, dcomp,
                                            scomp, ncomp, slice_cr_ratio, 0);
             }
-            if( SliceType == WarpX::GetInstance().getEfield(0,1).ixType().toIntVect() ) {
+            if (SliceType == WarpX::GetInstance().getEfield(0,1).ixType().toIntVect()) {
                 amrex::amrex_avgdown_edges(Dst_bx, Dst_fabox, Src_fabox, dcomp,
                                            scomp, ncomp, slice_cr_ratio, 1);
             }
-            if( SliceType == WarpX::GetInstance().getEfield(0,2).ixType().toIntVect() ) {
+            if (SliceType == WarpX::GetInstance().getEfield(0,2).ixType().toIntVect()) {
                 amrex::amrex_avgdown_edges(Dst_bx, Dst_fabox, Src_fabox, dcomp,
                                            scomp, ncomp, slice_cr_ratio, 2);
             }
-            if( SliceType == WarpX::GetInstance().getBfield(0,0).ixType().toIntVect() ) {
+            if (SliceType == WarpX::GetInstance().getBfield(0,0).ixType().toIntVect()) {
                 amrex::amrex_avgdown_faces(Dst_bx, Dst_fabox, Src_fabox, dcomp,
                                            scomp, ncomp, slice_cr_ratio, 0);
             }
-            if( SliceType == WarpX::GetInstance().getBfield(0,1).ixType().toIntVect() ) {
+            if (SliceType == WarpX::GetInstance().getBfield(0,1).ixType().toIntVect()) {
                 amrex::amrex_avgdown_faces(Dst_bx, Dst_fabox, Src_fabox, dcomp,
                                            scomp, ncomp, slice_cr_ratio, 1);
             }
-            if( SliceType == WarpX::GetInstance().getBfield(0,2).ixType().toIntVect() ) {
+            if (SliceType == WarpX::GetInstance().getBfield(0,2).ixType().toIntVect()) {
                 amrex::amrex_avgdown_faces(Dst_bx, Dst_fabox, Src_fabox, dcomp,
                                            scomp, ncomp, slice_cr_ratio, 2);
             }
 
-            if ( mfi_dst.isValid() ) {
+            if (mfi_dst.isValid()) {
                 ++mfi_dst;
             }
 
@@ -266,10 +266,10 @@ CheckSliceInput( const RealBox real_box, RealBox &slice_cc_nd_box,
 {
 
     IntVect slice_lo2(AMREX_D_DECL(0,0,0));
-    for ( int idim = 0; idim < AMREX_SPACEDIM; ++idim)
+    for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
     {
         // Modify coarsening ratio if the input value is not an exponent of 2 for AMR //
-        if ( slice_cr_ratio[idim] > 0 ) {
+        if (slice_cr_ratio[idim] > 0) {
             const int log_cr_ratio =
                static_cast<int>(floor ( log2( double(slice_cr_ratio[idim]))));
             slice_cr_ratio[idim] =
@@ -278,7 +278,7 @@ CheckSliceInput( const RealBox real_box, RealBox &slice_cc_nd_box,
 
         //// Default coarsening ratio is 1 //
         // Modify lo if input is out of bounds //
-        if ( slice_realbox.lo(idim) < real_box.lo(idim) ) {
+        if (slice_realbox.lo(idim) < real_box.lo(idim)) {
             slice_realbox.setLo( idim, real_box.lo(idim));
             std::stringstream warnMsg;
             warnMsg << " slice lo is out of bounds. " <<
@@ -289,7 +289,7 @@ CheckSliceInput( const RealBox real_box, RealBox &slice_cc_nd_box,
         }
 
         // Modify hi if input in out od bounds //
-        if ( slice_realbox.hi(idim) > real_box.hi(idim) ) {
+        if (slice_realbox.hi(idim) > real_box.hi(idim)) {
             slice_realbox.setHi( idim, real_box.hi(idim));
             std::stringstream warnMsg;
             warnMsg << " slice hi is out of bounds. " <<
@@ -304,15 +304,15 @@ CheckSliceInput( const RealBox real_box, RealBox &slice_cc_nd_box,
         // Factor to ensure index values computation depending on index type //
         const double fac = ( 1.0 - SliceType[idim] )*dom_geom[0].CellSize(idim)*0.5;
         // if dimension is reduced to one cell length //
-        if ( slice_realbox.hi(idim) - slice_realbox.lo(idim) <= 0)
+        if (slice_realbox.hi(idim) - slice_realbox.lo(idim) <= 0)
         {
             slice_cc_nd_box.setLo( idim, slice_realbox.lo(idim) );
             slice_cc_nd_box.setHi( idim, slice_realbox.hi(idim) );
 
-            if ( slice_cr_ratio[idim] > 1) slice_cr_ratio[idim] = 1;
+            if (slice_cr_ratio[idim] > 1) slice_cr_ratio[idim] = 1;
 
             // check for interpolation -- compute index lo with floor and ceil
-            if ( slice_cc_nd_box.lo(idim) - real_box.lo(idim) >= fac ) {
+            if (slice_cc_nd_box.lo(idim) - real_box.lo(idim) >= fac) {
                 slice_lo[idim] = static_cast<int>(
                                  floor( ( (slice_cc_nd_box.lo(idim)
                                  - (real_box.lo(idim) + fac ) )
@@ -335,8 +335,8 @@ CheckSliceInput( const RealBox real_box, RealBox &slice_cc_nd_box,
 
             // flag for interpolation -- if reduced dimension location  //
             //                           does not align with data point //
-            if ( slice_lo[idim] == slice_lo2[idim]) {
-               if ( slice_cc_nd_box.lo(idim) - real_box.lo(idim) < fac ) {
+            if (slice_lo[idim] == slice_lo2[idim]) {
+               if (slice_cc_nd_box.lo(idim) - real_box.lo(idim) < fac) {
                   interp_lo[idim] = 1;
                }
             }
@@ -357,7 +357,7 @@ CheckSliceInput( const RealBox real_box, RealBox &slice_cc_nd_box,
 
             bool modify_cr = true;
 
-            while ( modify_cr ) {
+            while ( modify_cr) {
                 int lo_new = index_lo;
                 int hi_new = index_hi;
                 const int mod_lo = index_lo % slice_cr_ratio[idim];
@@ -365,24 +365,24 @@ CheckSliceInput( const RealBox real_box, RealBox &slice_cc_nd_box,
                 modify_cr = false;
 
                 // To ensure that the index.lo is coarsenable //
-                if ( mod_lo > 0) {
+                if (mod_lo > 0) {
                    lo_new = index_lo - mod_lo;
                 }
                 // To ensure that the index.hi is coarsenable //
-                if ( mod_hi > 0) {
+                if (mod_hi > 0) {
                    hi_new = index_hi + (slice_cr_ratio[idim] - mod_hi);
                 }
 
                 // If modified index.hi is > baselinebox.hi, move the point  //
                 // to the previous coarsenable point                         //
                 const auto small_number = 0.01;
-                if ( (hi_new * dom_geom[0].CellSize(idim))
+                if ((hi_new * dom_geom[0].CellSize(idim))
                       > real_box.hi(idim) - real_box.lo(idim) + dom_geom[0].CellSize(idim)*small_number)
                 {
                    hi_new = index_hi - mod_hi;
                 }
 
-                if ( (hi_new - lo_new) == 0 ){
+                if ((hi_new - lo_new) == 0) {
                    std::stringstream warnMsg;
                    warnMsg << " Coarsening ratio  " << slice_cr_ratio[idim] << " in dim "<< idim <<
                      "is leading to zero cells for slice." << " Thus reducing cr_ratio by half.\n";
@@ -394,7 +394,7 @@ CheckSliceInput( const RealBox real_box, RealBox &slice_cc_nd_box,
                     modify_cr = true;
                 }
 
-                if ( !modify_cr ) {
+                if (!modify_cr) {
                    index_lo = lo_new;
                    index_hi = hi_new;
                 }
@@ -428,8 +428,8 @@ InterpolateSliceValues(MultiFab& smf, IntVect interp_lo, RealBox slice_realbox,
         const Box& bx = mfi.tilebox();
         FArrayBox& fabox = smf[mfi];
 
-        for ( int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-            if ( interp_lo[idim] == 1 ) {
+        for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
+            if (interp_lo[idim] == 1) {
                 InterpolateLo( bx, fabox, slice_lo, geom, idim, SliceType,
                                slice_realbox, 0, ncomp, nghost, real_box);
             }
@@ -456,7 +456,7 @@ InterpolateLo(const Box& bx, FArrayBox &fabox, IntVect slice_lo,
     switch (idir) {
     case 0:
     {
-        if ( imin >= lo.x && imin <= lo.x) {
+        if (imin >= lo.x && imin <= lo.x) {
            for (int n = srccomp; n < srccomp + ncomp; ++n) {
               for (int k = lo.z; k <= hi.z; ++k) {
                  for (int j = lo.y; j <= hi.y; ++j) {
@@ -476,7 +476,7 @@ InterpolateLo(const Box& bx, FArrayBox &fabox, IntVect slice_lo,
     }
     case 1:
     {
-        if ( imin >= lo.y && imin <= lo.y) {
+        if (imin >= lo.y && imin <= lo.y) {
            for (int n = srccomp; n < srccomp+ncomp; ++n) {
               for (int k = lo.z; k <= hi.z; ++k) {
                  for (int j = lo.y; j <= hi.y; ++j) {
@@ -496,7 +496,7 @@ InterpolateLo(const Box& bx, FArrayBox &fabox, IntVect slice_lo,
     }
     case 2:
     {
-        if ( imin >= lo.z && imin <= lo.z) {
+        if (imin >= lo.z && imin <= lo.z) {
            for (int n = srccomp; n < srccomp+ncomp; ++n) {
               for (int k = lo.z; k <= hi.z; ++k) {
                  for (int j = lo.y; j <= hi.y; ++j) {

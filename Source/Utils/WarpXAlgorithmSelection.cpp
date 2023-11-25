@@ -137,7 +137,7 @@ const std::map<std::string, int> ReductionType_algo_to_int = {
 };
 
 int
-GetAlgorithmInteger(const amrex::ParmParse& pp, const char* pp_search_key ){
+GetAlgorithmInteger(const amrex::ParmParse& pp, const char* pp_search_key) {
 
     // Read user input ; use "default" if it is not found
     std::string algo = "default";
@@ -190,8 +190,8 @@ GetAlgorithmInteger(const amrex::ParmParse& pp, const char* pp_search_key ){
         const std::string pp_search_string = pp_search_key;
         std::string error_message = "Invalid string for algo." + pp_search_string
             + ": " + algo + ".\nThe valid values are:\n";
-        for ( const auto &valid_pair : algo_to_int ) {
-            if (valid_pair.first != "default"){
+        for (const auto &valid_pair : algo_to_int) {
+            if (valid_pair.first != "default") {
                 error_message += " - " + valid_pair.first + "\n";
             }
         }
@@ -203,13 +203,13 @@ GetAlgorithmInteger(const amrex::ParmParse& pp, const char* pp_search_key ){
 }
 
 int
-GetFieldBCTypeInteger( std::string BCType ){
+GetFieldBCTypeInteger( std::string BCType) {
     std::transform(BCType.begin(), BCType.end(), BCType.begin(), ::tolower);
 
     if (FieldBCType_algo_to_int.count(BCType) == 0) {
         std::string error_message = "Invalid string for field/particle BC. : " + BCType                         + "\nThe valid values are : \n";
         for (const auto &valid_pair : FieldBCType_algo_to_int) {
-            if (valid_pair.first != "default"){
+            if (valid_pair.first != "default") {
                 error_message += " - " + valid_pair.first + "\n";
             }
         }
@@ -220,13 +220,13 @@ GetFieldBCTypeInteger( std::string BCType ){
 }
 
 ParticleBoundaryType
-GetParticleBCTypeInteger( std::string BCType ){
+GetParticleBCTypeInteger( std::string BCType) {
     std::transform(BCType.begin(), BCType.end(), BCType.begin(), ::tolower);
 
     if (ParticleBCType_algo_to_enum.count(BCType) == 0) {
         std::string error_message = "Invalid string for particle BC. : " + BCType + "\nThe valid values are : \n";
         for (const auto &valid_pair : ParticleBCType_algo_to_enum) {
-            if (valid_pair.first != "default"){
+            if (valid_pair.first != "default") {
                 error_message += " - " + valid_pair.first + "\n";
             }
         }

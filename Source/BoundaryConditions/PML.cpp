@@ -571,10 +571,10 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& gri
     Box domain0 = grid_ba.minimalBox();
     if (do_pml_in_domain) {
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-            if (do_pml_Lo[idim]){
+            if (do_pml_Lo[idim]) {
                 domain0.growLo(idim, -ncell);
             }
-            if (do_pml_Hi[idim]){
+            if (do_pml_Hi[idim]) {
                 domain0.growHi(idim, -ncell);
             }
         }
@@ -724,7 +724,7 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& gri
     if (WarpX::electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD) {
 #ifndef WARPX_USE_PSATD
         amrex::ignore_unused(lev, dt, psatd_solution_type, J_in_time, rho_in_time);
-#   if(AMREX_SPACEDIM!=3)
+#   if (AMREX_SPACEDIM!=3)
         amrex::ignore_unused(noy_fft);
 #   endif
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE(false,
@@ -762,12 +762,12 @@ PML::PML (const int lev, const BoxArray& grid_ba, const DistributionMapping& gri
         amrex::Box cdomain = grid_cba.minimalBox();
         if (do_pml_in_domain) {
             for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-                if (do_pml_Lo[idim]){
+                if (do_pml_Lo[idim]) {
                     // ncell is divided by refinement ratio to ensure that the
                     // physical width of the PML region is equal in fine and coarse patch
                     cdomain.growLo(idim, -ncell/ref_ratio[idim]);
                 }
-                if (do_pml_Hi[idim]){
+                if (do_pml_Hi[idim]) {
                     // ncell is divided by refinement ratio to ensure that the
                     // physical width of the PML region is equal in fine and coarse patch
                     cdomain.growHi(idim, -ncell/ref_ratio[idim]);
@@ -919,10 +919,10 @@ PML::MakeBoxArray_multiple (const amrex::Geometry& geom, const amrex::BoxArray& 
 {
     Box domain = geom.Domain();
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-        if (do_pml_Lo[idim]){
+        if (do_pml_Lo[idim]) {
             domain.growLo(idim, ncell[idim]);
         }
-        if (do_pml_Hi[idim]){
+        if (do_pml_Hi[idim]) {
             domain.growHi(idim, ncell[idim]);
         }
     }
@@ -1163,7 +1163,7 @@ PML::Exchange (MultiFab& pml, MultiFab& reg, const Geometry& geom,
     }
 
     // Copy from the sum of PML split field to valid cells of regular grid
-    if (do_pml_in_domain){
+    if (do_pml_in_domain) {
         // Valid cells of the PML and of the regular grid overlap
         // Copy from valid cells of the PML to valid cells of the regular grid
         ablastr::utils::communication::ParallelCopy(reg, totpmlmf, 0, 0, 1, IntVect(0), IntVect(0),
@@ -1207,7 +1207,7 @@ PML::Exchange (MultiFab& pml, MultiFab& reg, const Geometry& geom,
     // Zero out the second (and third) component
     MultiFab::Copy(tmpregmf,reg,0,0,1,0); // Fill first component of tmpregmf
     tmpregmf.setVal(0.0, 1, ncp-1, 0); // Zero out the second (and third) component
-    if (do_pml_in_domain){
+    if (do_pml_in_domain) {
         // Where valid cells of tmpregmf overlap with PML valid cells,
         // copy the PML (this is order to avoid overwriting PML valid cells,
         // in the next `ParallelCopy`)

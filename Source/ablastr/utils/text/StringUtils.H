@@ -39,16 +39,16 @@ namespace ablastr::utils::text
         std::size_t current = instr.find(separator);
         std::size_t previous = 0;
         while (current != std::string::npos) {
-            if (trim){
+            if (trim) {
                 cont.push_back(amrex::trim(instr.substr(previous, current - previous),trim_space));}
-            else{
+            else {
                 cont.push_back(instr.substr(previous, current - previous));}
             previous = current + separator.size();
             current = instr.find(separator, previous);
         }
-        if (trim){
+        if (trim) {
             cont.push_back(amrex::trim(instr.substr(previous, current - previous),trim_space));}
-        else{
+        else {
             cont.push_back(instr.substr(previous, current - previous));}
         return cont;
     }

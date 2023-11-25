@@ -87,7 +87,7 @@ BTDPlotfileHeaderImpl::ReadHeaderData ()
     m_glo.resize(m_numFabs);
     m_ghi.resize(m_numFabs);
     for (int igrid = 0; igrid < m_numFabs; ++igrid) {
-        for (int idim = 0; idim < m_spacedim; ++idim ) {
+        for (int idim = 0; idim < m_spacedim; ++idim) {
             is >> m_glo[igrid][idim] >> m_ghi[igrid][idim];
         }
     }
@@ -111,14 +111,14 @@ BTDPlotfileHeaderImpl::AppendNewFabHi (amrex::Array<amrex::Real, AMREX_SPACEDIM>
 void
 BTDPlotfileHeaderImpl::WriteHeader ()
 {
-    if ( amrex::FileExists(m_Header_path) ) {
+    if (amrex::FileExists(m_Header_path)) {
         amrex::FileSystem::Remove(m_Header_path);
     }
     std::ofstream HeaderFile;
     HeaderFile.open(m_Header_path.c_str(), std::ofstream::out |
                                            std::ofstream::trunc |
                                            std::ofstream::binary);
-    if ( !HeaderFile.good()) amrex::FileOpenFailed(m_Header_path);
+    if (!HeaderFile.good()) amrex::FileOpenFailed(m_Header_path);
 
     HeaderFile.precision(17);
 
@@ -241,7 +241,7 @@ BTDMultiFabHeaderImpl::ReadMultiFabHeader ()
         m_minval[ifab].resize(m_ncomp);
         for (int icomp = 0; icomp < m_ncomp; ++icomp) {
             is >> m_minval[ifab][icomp] >> ch;
-            if( ch != ',' ) amrex::Error("Expected a ',' got something else");
+            if (ch != ',' ) amrex::Error("Expected a ',' got something else");
         }
     }
     ablastr::utils::text::goto_next_line(is);
@@ -251,7 +251,7 @@ BTDMultiFabHeaderImpl::ReadMultiFabHeader ()
         m_maxval[ifab].resize(m_ncomp);
         for (int icomp = 0; icomp < m_ncomp; ++icomp) {
             is >> m_maxval[ifab][icomp] >> ch;
-            if( ch != ',' ) amrex::Error("Expected a ',' got something else");
+            if (ch != ',' ) amrex::Error("Expected a ',' got something else");
         }
     }
 
@@ -261,14 +261,14 @@ BTDMultiFabHeaderImpl::ReadMultiFabHeader ()
 void
 BTDMultiFabHeaderImpl::WriteMultiFabHeader ()
 {
-    if ( amrex::FileExists(m_Header_path) ) {
+    if (amrex::FileExists(m_Header_path)) {
         amrex::FileSystem::Remove(m_Header_path);
     }
     std::ofstream FabHeaderFile;
     FabHeaderFile.open(m_Header_path.c_str(), std::ofstream::out |
                                            std::ofstream::trunc |
                                            std::ofstream::binary);
-    if ( !FabHeaderFile.good()) amrex::FileOpenFailed(m_Header_path);
+    if (!FabHeaderFile.good()) amrex::FileOpenFailed(m_Header_path);
 
     FabHeaderFile.precision(17);
 
@@ -421,7 +421,7 @@ BTDSpeciesHeaderImpl::WriteHeader ()
     HeaderFile.open(m_Header_path.c_str(), std::ofstream::out |
                                            std::ofstream::trunc |
                                            std::ofstream::binary);
-    if ( !HeaderFile.good()) amrex::FileOpenFailed(m_Header_path);
+    if (!HeaderFile.good()) amrex::FileOpenFailed(m_Header_path);
 
     HeaderFile.precision(17);
 
@@ -525,7 +525,7 @@ BTDParticleDataHeaderImpl::WriteHeader ()
     HeaderFile.open(m_Header_path.c_str(), std::ofstream::out |
                                            std::ofstream::trunc |
                                            std::ofstream::binary);
-    if ( !HeaderFile.good()) amrex::FileOpenFailed(m_Header_path);
+    if (!HeaderFile.good()) amrex::FileOpenFailed(m_Header_path);
 
     HeaderFile.precision(17);
     m_ba.writeOn(HeaderFile);

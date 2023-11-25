@@ -123,7 +123,7 @@ class SpectralSolver
           */
         void ComputeSpectralDivE ( int lev,
                                    const std::array<std::unique_ptr<amrex::MultiFab>,3>& Efield,
-                                   amrex::MultiFab& divE ) {
+                                   amrex::MultiFab& divE) {
             algorithm->ComputeSpectralDivE( lev, field_data, Efield, divE );
         }
 

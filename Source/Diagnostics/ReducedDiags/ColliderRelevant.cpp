@@ -131,7 +131,7 @@ ColliderRelevant::ColliderRelevant (std::string rd_name)
         // get WarpXParticleContainer class object
         const WarpXParticleContainer& myspc = mypc.GetParticleContainerFromName(m_beam_name[i_s]);
 
-        if (myspc.DoQED()){
+        if (myspc.DoQED()) {
             add_diag("chimin_"+m_beam_name[i_s], "chi_min_"+m_beam_name[i_s]+"()");
             add_diag("chiave_"+m_beam_name[i_s], "chi_ave_"+m_beam_name[i_s]+"()");
             add_diag("chimax_"+m_beam_name[i_s], "chi_max_"+m_beam_name[i_s]+"()");
@@ -163,7 +163,7 @@ ColliderRelevant::ColliderRelevant (std::string rd_name)
 
     if (amrex::ParallelDescriptor::IOProcessor())
     {
-        if ( m_write_header )
+        if (m_write_header )
         {
             // open file
             std::ofstream ofs;
@@ -175,7 +175,7 @@ ColliderRelevant::ColliderRelevant (std::string rd_name)
             ofs << "[" << off++ << "]step()";
             ofs << m_sep;
             ofs << "[" << off++ << "]time(s)";
-            for (const auto& name : all_diag_names){
+            for (const auto& name : all_diag_names) {
                 const auto& el = m_headers_indices[name];
                 ofs << m_sep << "[" << el.idx + off << "]" << el.header;
             }
@@ -205,7 +205,7 @@ void ColliderRelevant::ComputeDiags (int step)
     amrex::Geometry const & geom = warpx.Geom(0);
     amrex::Real dV = AMREX_D_TERM(geom.CellSize(0), *geom.CellSize(1), *geom.CellSize(2));
 
-    const auto get_idx = [&](const std::string& name){
+    const auto get_idx = [&](const std::string& name) {
         return m_headers_indices.at(name).idx;
     };
 

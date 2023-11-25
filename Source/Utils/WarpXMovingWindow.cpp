@@ -178,13 +178,13 @@ WarpX::MoveWindow (const int step, bool move_j)
 
     // Moving slice coordinates - lo and hi - with moving window //
     // slice box is modified only if slice diagnostics is initialized in input //
-    if ( slice_plot_int > 0 )
+    if (slice_plot_int > 0 )
     {
         amrex::Real new_slice_lo[AMREX_SPACEDIM];
         amrex::Real new_slice_hi[AMREX_SPACEDIM];
         const amrex::Real* current_slice_lo = slice_realbox.lo();
         const amrex::Real* current_slice_hi = slice_realbox.hi();
-        for ( int i = 0; i < AMREX_SPACEDIM; i++) {
+        for (int i = 0; i < AMREX_SPACEDIM; i++) {
             new_slice_lo[i] = current_slice_lo[i];
             new_slice_hi[i] = current_slice_hi[i];
         }
@@ -350,10 +350,10 @@ WarpX::MoveWindow (const int step, bool move_j)
 
         // Shift scalar component rho
         if (move_j) {
-            if (rho_fp[lev]){
+            if (rho_fp[lev]) {
                 // Fine grid
                 shiftMF(*rho_fp[lev],   geom[lev], num_shift, dir, lev, do_update_cost);
-                if (lev > 0){
+                if (lev > 0) {
                     // Coarse grid
                     shiftMF(*rho_cp[lev], geom[lev-1], num_shift_crse, dir, lev, do_update_cost);
                 }
@@ -415,7 +415,7 @@ WarpX::MoveWindow (const int step, bool move_j)
                 particleBox.setHi( dir, pc.m_current_injection_position );
             }
 
-            if (particleBox.ok() and (pc.m_current_injection_position != new_injection_position)){
+            if (particleBox.ok() and (pc.m_current_injection_position != new_injection_position)) {
                 // Performs continuous injection of all WarpXParticleContainer
                 // in mypc.
                 pc.ContinuousInjection(particleBox);
@@ -469,7 +469,7 @@ WarpX::shiftMF (amrex::MultiFab& mf, const amrex::Geometry& geom,
     amrex::MultiFab tmpmf(ba, dm, nc, ng);
     amrex::MultiFab::Copy(tmpmf, mf, 0, 0, nc, ng);
 
-    if ( WarpX::safe_guard_cells ) {
+    if (WarpX::safe_guard_cells) {
         // Fill guard cells.
         ablastr::utils::communication::FillBoundary(tmpmf, WarpX::do_single_precision_comms, geom.periodicity());
     } else {

@@ -145,7 +145,7 @@ guardCellManager::Init (
             amrex::Real dt_J = 0.5_rt*dt;
             if (do_multi_J) {
                 // With multi_J + time averaging, particles can move during 2*dt per PIC cycle.
-                if (fft_do_time_averaging){
+                if (fft_do_time_averaging) {
                     dt_Rho = 2._rt*dt;
                     dt_J = 2._rt*dt;
                 }
@@ -255,7 +255,7 @@ guardCellManager::Init (
 #ifdef WARPX_DIM_RZ
     else if (electromagnetic_solver_id == ElectromagneticSolverAlgo::None ||
              electromagnetic_solver_id == ElectromagneticSolverAlgo::Yee ||
-             electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC ) {
+             electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC) {
         ng_FieldSolver  = CylindricalYeeAlgorithm::GetMaxGuardCell();
         ng_FieldSolverF = CylindricalYeeAlgorithm::GetMaxGuardCell();
         ng_FieldSolverG = CylindricalYeeAlgorithm::GetMaxGuardCell();
@@ -269,7 +269,7 @@ guardCellManager::Init (
         } else if (electromagnetic_solver_id == ElectromagneticSolverAlgo::None ||
                    electromagnetic_solver_id == ElectromagneticSolverAlgo::Yee ||
                    electromagnetic_solver_id == ElectromagneticSolverAlgo::ECT ||
-                   electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC ) {
+                   electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC) {
             ng_FieldSolver  = CartesianYeeAlgorithm::GetMaxGuardCell();
             ng_FieldSolverF = CartesianYeeAlgorithm::GetMaxGuardCell();
             ng_FieldSolverG = CartesianYeeAlgorithm::GetMaxGuardCell();
@@ -291,7 +291,7 @@ guardCellManager::Init (
         ng_afterPushPSATD = ng_alloc_EB;
     }
 
-    if (safe_guard_cells){
+    if (safe_guard_cells) {
         // Run in safe mode: exchange all allocated guard cells at each
         // call of FillBoundary
         ng_FieldSolver = ng_alloc_EB;
@@ -300,7 +300,7 @@ guardCellManager::Init (
         ng_FieldGather = ng_alloc_EB;
         ng_UpdateAux = ng_alloc_EB;
         ng_afterPushPSATD = ng_alloc_EB;
-        if (do_moving_window){
+        if (do_moving_window) {
             ng_MovingWindow = ng_alloc_EB;
         }
     } else {
@@ -333,7 +333,7 @@ guardCellManager::Init (
         // for the field solve too.
         ng_FieldGather = ng_FieldGather.max(ng_FieldSolver);
 
-        if (do_moving_window){
+        if (do_moving_window) {
             ng_MovingWindow[moving_window_dir] = 1;
         }
     }

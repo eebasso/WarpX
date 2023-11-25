@@ -97,7 +97,7 @@ namespace {
     AMREX_FORCE_INLINE
     AMREX_GPU_HOST_DEVICE
     amrex::Real
-    generateGaussianFluxDist( amrex::Real u_m, amrex::Real u_th, amrex::RandomEngine const& engine ) {
+    generateGaussianFluxDist( amrex::Real u_m, amrex::Real u_th, amrex::RandomEngine const& engine) {
 
         using namespace amrex::literals;
 
@@ -308,7 +308,7 @@ struct InjectorMomentumBoltzmann
         // initialize the particle positions and densities in the frame moving
         // at speed beta, and then perform a Lorentz transform on the positions
         // and MB sampled velocities to the simulation frame.
-        if(-beta*u[dir]/gamma > amrex::Random(engine))
+        if (-beta*u[dir]/gamma > amrex::Random(engine))
         {
           u[dir] = -u[dir];
         }
@@ -409,7 +409,7 @@ struct InjectorMomentumJuttner
         // would be to initialize the particle positions and densities in the
         // frame moving at speed beta, and then perform a Lorentz transform
         // on their positions and MJ sampled velocities to the simulation frame.
-        if(-beta*u[dir]/gamma>x1)
+        if (-beta*u[dir]/gamma>x1)
         {
             u[dir] = -u[dir];
         }

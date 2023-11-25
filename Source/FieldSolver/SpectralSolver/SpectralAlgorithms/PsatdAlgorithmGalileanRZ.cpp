@@ -62,7 +62,7 @@ PsatdAlgorithmGalileanRZ::pushSpectralFields (SpectralFieldDataRZ & f)
     const SpectralFieldIndex& Idx = m_spectral_index;
 
     // Loop over boxes
-    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi) {
 
         amrex::Box const & bx = f.fields[mfi].box();
 
@@ -178,7 +178,7 @@ void PsatdAlgorithmGalileanRZ::InitializeSpectralCoefficients (SpectralFieldData
     // Fill them with the right values:
     // Loop over boxes and allocate the corresponding coefficients
     // for each box owned by the local MPI proc
-    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi) {
 
         amrex::Box const & bx = f.fields[mfi].box();
 
@@ -219,7 +219,7 @@ void PsatdAlgorithmGalileanRZ::InitializeSpectralCoefficients (SpectralFieldData
             amrex::Real const k_norm = std::sqrt(kr*kr + kz*kz);
 
             // Calculate coefficients
-            if (k_norm != 0._rt){
+            if (k_norm != 0._rt) {
 
                 C(i,j,k,mode) = std::cos(c*k_norm*dt);
                 S_ck(i,j,k,mode) = std::sin(c*k_norm*dt)/(c*k_norm);
@@ -240,7 +240,7 @@ void PsatdAlgorithmGalileanRZ::InitializeSpectralCoefficients (SpectralFieldData
                     T_rho(i,j,k,mode) = (1._rt - theta*theta)/(I*kz*vz);
                 }
 
-                if ( (nu != 1._rt) && (nu != 0._rt) ) {
+                if ((nu != 1._rt) && (nu != 0._rt)) {
 
                     // Note: the coefficients X1, X2, X do not correspond
                     // exactly to the original Galilean paper, but the
@@ -266,7 +266,7 @@ void PsatdAlgorithmGalileanRZ::InitializeSpectralCoefficients (SpectralFieldData
                     X3(i,j,k,mode) = (C(i,j,k,mode) - S_ck(i,j,k,mode)/dt)/(ep0 * k_norm*k_norm);
                     X4(i,j,k,mode) = -S_ck(i,j,k,mode)/ep0;
 
-                } else if ( nu == 1._rt) {
+                } else if (nu == 1._rt) {
                     X1(i,j,k,mode) = (1._rt - e_theta*e_theta + 2._rt*I*c*k_norm*dt) / (4._rt*c*c*ep0*k_norm*k_norm);
                     X2(i,j,k,mode) = (3._rt - 4._rt*e_theta + e_theta*e_theta + 2._rt*I*c*k_norm*dt) / (4._rt*ep0*k_norm*k_norm*(1._rt - e_theta));
                     X3(i,j,k,mode) = (3._rt - 2._rt/e_theta - 2._rt*e_theta + e_theta*e_theta - 2._rt*I*c*k_norm*dt) / (4._rt*ep0*(e_theta - 1._rt)*k_norm*k_norm);
@@ -295,7 +295,7 @@ PsatdAlgorithmGalileanRZ::CurrentCorrection (SpectralFieldDataRZ& field_data)
     const SpectralFieldIndex& Idx = m_spectral_index;
 
     // Loop over boxes
-    for (amrex::MFIter mfi(field_data.fields); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(field_data.fields); mfi.isValid(); ++mfi) {
 
         amrex::Box const & bx = field_data.fields[mfi].box();
 
@@ -341,7 +341,7 @@ PsatdAlgorithmGalileanRZ::CurrentCorrection (SpectralFieldDataRZ& field_data)
             constexpr Complex I = Complex{0._rt,1._rt};
 
             // Correct J
-            if ( k_norm2 != 0._rt )
+            if (k_norm2 != 0._rt )
             {
                 Complex const theta2 = amrex::exp(I*kz*vz*dt);
                 Complex const inv_1_T2 = 1._rt/(kz*vz == 0._rt ?  1._rt : 1._rt - theta2);

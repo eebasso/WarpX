@@ -30,7 +30,7 @@ struct CartesianYeeAlgorithm {
         std::array<amrex::Real,3>& cell_size,
         amrex::Vector<amrex::Real>& stencil_coefs_x,
         amrex::Vector<amrex::Real>& stencil_coefs_y,
-        amrex::Vector<amrex::Real>& stencil_coefs_z ) {
+        amrex::Vector<amrex::Real>& stencil_coefs_z) {
 
         using namespace amrex;
         // Store the inverse cell size along each direction in the coefficients
@@ -45,7 +45,7 @@ struct CartesianYeeAlgorithm {
     /**
      * Compute the maximum timestep, for which the scheme remains stable
      * (Courant-Friedrichs-Levy limit) */
-    static amrex::Real ComputeMaxDt ( amrex::Real const * const dx ) {
+    static amrex::Real ComputeMaxDt ( amrex::Real const * const dx) {
         using namespace amrex::literals;
         amrex::Real const delta_t  = 1._rt / ( std::sqrt( AMREX_D_TERM(
                                            1._rt / (dx[0]*dx[0]),
@@ -69,7 +69,7 @@ struct CartesianYeeAlgorithm {
     static amrex::Real UpwardDx (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_x, int const /*n_coefs_x*/,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 #if (defined WARPX_DIM_1D_Z)
@@ -88,7 +88,7 @@ struct CartesianYeeAlgorithm {
     static amrex::Real DownwardDx (
         T_Field const& F,
         amrex::Real const * const coefs_x, int const /*n_coefs_x*/,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 #if (defined WARPX_DIM_1D_Z)
@@ -106,7 +106,7 @@ struct CartesianYeeAlgorithm {
     static amrex::Real UpwardDy (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_y, int const n_coefs_y,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 #if defined WARPX_DIM_3D
@@ -130,7 +130,7 @@ struct CartesianYeeAlgorithm {
     static amrex::Real DownwardDy (
         T_Field const& F,
         amrex::Real const * const coefs_y, int const n_coefs_y,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 #if defined WARPX_DIM_3D
@@ -153,7 +153,7 @@ struct CartesianYeeAlgorithm {
     static amrex::Real UpwardDz (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_z, int const /*n_coefs_z*/,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
         Real const inv_dz = coefs_z[0];
@@ -173,7 +173,7 @@ struct CartesianYeeAlgorithm {
     static amrex::Real DownwardDz (
         T_Field const& F,
         amrex::Real const * const coefs_z, int const /*n_coefs_z*/,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
         Real const inv_dz = coefs_z[0];

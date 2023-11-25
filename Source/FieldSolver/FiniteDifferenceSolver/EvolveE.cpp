@@ -53,7 +53,7 @@ void FiniteDifferenceSolver::EvolveE (
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& face_areas,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 >& ECTRhofield,
     std::unique_ptr<amrex::MultiFab> const& Ffield,
-    int lev, amrex::Real const dt ) {
+    int lev, amrex::Real const dt) {
 
 #ifdef AMREX_USE_EB
     if (m_fdtd_algo != ElectromagneticSolverAlgo::ECT) {
@@ -66,7 +66,7 @@ void FiniteDifferenceSolver::EvolveE (
     // Select algorithm (The choice of algorithm is a runtime option,
     // but we compile code for each algorithm, using templates)
 #ifdef WARPX_DIM_RZ
-    if (m_fdtd_algo == ElectromagneticSolverAlgo::Yee){
+    if (m_fdtd_algo == ElectromagneticSolverAlgo::Yee) {
         ignore_unused(edge_lengths);
         EvolveECylindrical <CylindricalYeeAlgorithm> ( Efield, Bfield, Jfield, Ffield, lev, dt );
 #else
@@ -99,7 +99,7 @@ void FiniteDifferenceSolver::EvolveECartesian (
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& Jfield,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& edge_lengths,
     std::unique_ptr<amrex::MultiFab> const& Ffield,
-    int lev, amrex::Real const dt ) {
+    int lev, amrex::Real const dt) {
 
 #ifndef AMREX_USE_EB
     amrex::ignore_unused(edge_lengths);
@@ -112,7 +112,7 @@ void FiniteDifferenceSolver::EvolveECartesian (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi) {
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
@@ -152,7 +152,7 @@ void FiniteDifferenceSolver::EvolveECartesian (
         // Loop over the cells and update the fields
         amrex::ParallelFor(tex, tey, tez,
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
                 if (lx(i, j, k) <= 0) return;
@@ -163,7 +163,7 @@ void FiniteDifferenceSolver::EvolveECartesian (
                     - PhysConst::mu0 * jx(i, j, k) );
             },
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
 #ifdef WARPX_DIM_3D
@@ -180,7 +180,7 @@ void FiniteDifferenceSolver::EvolveECartesian (
                     - PhysConst::mu0 * jy(i, j, k) );
             },
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 
 #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
@@ -204,13 +204,13 @@ void FiniteDifferenceSolver::EvolveECartesian (
             // Loop over the cells and update the fields
             amrex::ParallelFor(tex, tey, tez,
 
-                [=] AMREX_GPU_DEVICE (int i, int j, int k){
+                [=] AMREX_GPU_DEVICE (int i, int j, int k) {
                     Ex(i, j, k) += c2 * dt * T_Algo::UpwardDx(F, coefs_x, n_coefs_x, i, j, k);
                 },
-                [=] AMREX_GPU_DEVICE (int i, int j, int k){
+                [=] AMREX_GPU_DEVICE (int i, int j, int k) {
                     Ey(i, j, k) += c2 * dt * T_Algo::UpwardDy(F, coefs_y, n_coefs_y, i, j, k);
                 },
-                [=] AMREX_GPU_DEVICE (int i, int j, int k){
+                [=] AMREX_GPU_DEVICE (int i, int j, int k) {
                     Ez(i, j, k) += c2 * dt * T_Algo::UpwardDz(F, coefs_z, n_coefs_z, i, j, k);
                 }
 
@@ -236,7 +236,7 @@ void FiniteDifferenceSolver::EvolveECylindrical (
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& Bfield,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& Jfield,
     std::unique_ptr<amrex::MultiFab> const& Ffield,
-    int lev, amrex::Real const dt ) {
+    int lev, amrex::Real const dt) {
 
     amrex::LayoutData<amrex::Real>* cost = WarpX::getCosts(lev);
 
@@ -244,7 +244,7 @@ void FiniteDifferenceSolver::EvolveECylindrical (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi) {
         if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
         {
             amrex::Gpu::synchronize();
@@ -283,7 +283,7 @@ void FiniteDifferenceSolver::EvolveECylindrical (
         // Loop over the cells and update the fields
         amrex::ParallelFor(ter, tet, tez,
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
                 Real const r = rmin + (i + 0.5_rt)*dr; // r on cell-centered point (Er is cell-centered in r)
                 Er(i, j, 0, 0) +=  c2 * dt*(
                     - T_Algo::DownwardDz(Bt, coefs_z, n_coefs_z, i, j, 0, 0)
@@ -300,7 +300,7 @@ void FiniteDifferenceSolver::EvolveECylindrical (
                 }
             },
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
                 Real const r = rmin + i*dr; // r on a nodal grid (Et is nodal in r)
                 if (r != 0) { // Off-axis, regular Maxwell equations
                     Et(i, j, 0, 0) += c2 * dt*(
@@ -321,7 +321,7 @@ void FiniteDifferenceSolver::EvolveECylindrical (
                     // Ensure that Et remains 0 on axis (except for m=1)
                     Et(i, j, 0, 0) = 0.; // Mode m=0
                     for (int m=1; m<nmodes; m++) { // Higher-order modes
-                        if (m == 1){
+                        if (m == 1) {
                             // The bulk equation could in principle be used here since it does not diverge
                             // on axis. However, it typically gives poor results e.g. for the propagation
                             // of a laser pulse (the field is spuriously reduced on axis). For this reason
@@ -341,7 +341,7 @@ void FiniteDifferenceSolver::EvolveECylindrical (
                 }
             },
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
                 Real const r = rmin + i*dr; // r on a nodal grid (Ez is nodal in r)
                 if (r != 0) { // Off-axis, regular Maxwell equations
                     Ez(i, j, 0, 0) += c2 * dt*(
@@ -383,14 +383,14 @@ void FiniteDifferenceSolver::EvolveECylindrical (
             // Loop over the cells and update the fields
             amrex::ParallelFor(ter, tet, tez,
 
-                [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+                [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
                     Er(i, j, 0, 0) += c2 * dt * T_Algo::UpwardDr(F, coefs_r, n_coefs_r, i, j, 0, 0);
                     for (int m=1; m<nmodes; m++) { // Higher-order modes
                         Er(i, j, 0, 2*m-1) += c2 * dt * T_Algo::UpwardDr(F, coefs_r, n_coefs_r, i, j, 0, 2*m-1); // Real part
                         Er(i, j, 0, 2*m  ) += c2 * dt * T_Algo::UpwardDr(F, coefs_r, n_coefs_r, i, j, 0, 2*m  ); // Imaginary part
                     }
                 },
-                [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+                [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
                     // Mode m=0: no update
                     Real const r = rmin + i*dr; // r on a nodal grid (Et is nodal in r)
                     if (r != 0){ // Off-axis, regular Maxwell equations
@@ -408,7 +408,7 @@ void FiniteDifferenceSolver::EvolveECylindrical (
                         }
                     }
                 },
-                [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+                [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
                     Ez(i, j, 0, 0) += c2 * dt * T_Algo::UpwardDz(F, coefs_z, n_coefs_z, i, j, 0, 0);
                     for (int m=1; m<nmodes; m++) { // Higher-order modes
                         Ez(i, j, 0, 2*m-1) += c2 * dt * T_Algo::UpwardDz(F, coefs_z, n_coefs_z, i, j, 0, 2*m-1); // Real part

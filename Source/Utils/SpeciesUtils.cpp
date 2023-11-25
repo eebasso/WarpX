@@ -27,7 +27,7 @@ namespace SpeciesUtils {
         const amrex::ParmParse pp_species_name(species_name);
         std::string physical_species_s;
         const bool species_is_specified = pp_species_name.query("species_type", physical_species_s);
-        if (species_is_specified){
+        if (species_is_specified) {
             const auto physical_species_from_string = species::from_string( physical_species_s );
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(physical_species_from_string,
                 physical_species_s + " does not exist!");
@@ -58,7 +58,7 @@ namespace SpeciesUtils {
             species_name + "'."
         );
 
-        if ( charge_is_specified && species_is_specified ){
+        if (charge_is_specified && species_is_specified) {
             ablastr::warn_manager::WMRecordWarning("Species",
                 "Both '" + species_name +  ".charge' and " +
                     species_name + ".species_type' are specified.\n" +
@@ -66,7 +66,7 @@ namespace SpeciesUtils {
 
         }
 
-        if ( mass_is_specified && species_is_specified ){
+        if (mass_is_specified && species_is_specified) {
             ablastr::warn_manager::WMRecordWarning("Species",
                 "Both '" + species_name +  ".mass' and " +
                     species_name + ".species_type' are specified.\n" +
@@ -202,14 +202,14 @@ namespace SpeciesUtils {
             // Construct InjectorMomentum with InjectorMomentumUniform.
             h_inj_mom.reset(new InjectorMomentum((InjectorMomentumUniform*)nullptr,
                                                 ux_min, uy_min, uz_min, ux_max, uy_max, uz_max));
-        } else if (mom_dist_s == "maxwell_boltzmann"){
+        } else if (mom_dist_s == "maxwell_boltzmann") {
             h_mom_temp = std::make_unique<TemperatureProperties>(pp_species_name);
             const GetTemperature getTemp(*h_mom_temp);
             h_mom_vel = std::make_unique<VelocityProperties>(pp_species_name);
             const GetVelocity getVel(*h_mom_vel);
             // Construct InjectorMomentum with InjectorMomentumBoltzmann.
             h_inj_mom.reset(new InjectorMomentum((InjectorMomentumBoltzmann*)nullptr, getTemp, getVel));
-        } else if (mom_dist_s == "maxwell_juttner"){
+        } else if (mom_dist_s == "maxwell_juttner") {
             h_mom_temp = std::make_unique<TemperatureProperties>(pp_species_name);
             const GetTemperature getTemp(*h_mom_temp);
             h_mom_vel = std::make_unique<VelocityProperties>(pp_species_name);

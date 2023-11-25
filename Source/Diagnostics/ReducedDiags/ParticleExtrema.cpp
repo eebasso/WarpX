@@ -113,7 +113,7 @@ ParticleExtrema::ParticleExtrema (std::string rd_name)
         add_diag("wmin", "wmin(1/m^2)");
         add_diag("wmax", "wmax(1/m^2)");
 #endif
-        if (myspc.DoQED()){
+        if (myspc.DoQED()) {
             add_diag("chimin", "chimin()");
             add_diag("chimax", "chimax()");
         }
@@ -122,7 +122,7 @@ ParticleExtrema::ParticleExtrema (std::string rd_name)
 
         if (ParallelDescriptor::IOProcessor())
         {
-            if ( m_write_header )
+            if (m_write_header )
             {
                 // open file
                 std::ofstream ofs;
@@ -134,7 +134,7 @@ ParticleExtrema::ParticleExtrema (std::string rd_name)
                 ofs << "[" << off++ << "]step()";
                 ofs << m_sep;
                 ofs << "[" << off++ << "]time(s)";
-                for (const auto& name : all_diag_names){
+                for (const auto& name : all_diag_names) {
                     const auto& el = m_headers_indices[name];
                     ofs << m_sep << "[" << el.idx + off << "]" << el.header;
                 }
@@ -186,7 +186,7 @@ void ParticleExtrema::ComputeDiags (int step)
         // get mass (Real)
         auto m = myspc.getMass();
         auto is_photon = myspc.AmIA<PhysicalSpecies::photon>();
-        if ( is_photon ) {
+        if (is_photon) {
             m = PhysConst::m_e;
         }
 
@@ -286,7 +286,7 @@ void ParticleExtrema::ComputeDiags (int step)
 
         // gmin
         Real gmin = 0.0_rt;
-        if ( is_photon ) {
+        if (is_photon) {
             gmin = ReduceMin( myspc,
             [=] AMREX_GPU_HOST_DEVICE (const PType& p)
             {
@@ -310,7 +310,7 @@ void ParticleExtrema::ComputeDiags (int step)
 
         // gmax
         Real gmax = 0.0_rt;
-        if ( is_photon ) {
+        if (is_photon) {
             gmax = ReduceMax( myspc,
             [=] AMREX_GPU_HOST_DEVICE (const PType& p)
             {
@@ -436,7 +436,7 @@ void ParticleExtrema::ComputeDiags (int step)
                             n_rz_azimuthal_modes, nox, galerkin_interpolation);
                         // compute chi
                         Real chi = 0.0_rt;
-                        if ( is_photon ) {
+                        if (is_photon) {
                             chi = QedUtils::chi_photon(ux[i]*m, uy[i]*m, uz[i]*m,
                                              ex, ey, ez, bx, by, bz);
                         } else {
@@ -457,7 +457,7 @@ void ParticleExtrema::ComputeDiags (int step)
         }
 #endif
 
-        const auto get_idx = [&](const std::string& name){
+        const auto get_idx = [&](const std::string& name) {
             return m_headers_indices.at(name).idx;
         };
 

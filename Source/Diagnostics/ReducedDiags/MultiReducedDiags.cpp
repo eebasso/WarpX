@@ -46,7 +46,7 @@ MultiReducedDiags::MultiReducedDiags ()
     m_plot_rd = pp_warpx.queryarr("reduced_diags_names", m_rd_names);
 
     // if names are not given, reduced diags will not be done
-    if ( m_plot_rd == 0 ) { return; }
+    if (m_plot_rd == 0) { return; }
 
     using CS = const std::string& ;
     const auto reduced_diags_dictionary =
@@ -71,7 +71,7 @@ MultiReducedDiags::MultiReducedDiags ()
     };
     // loop over all reduced diags and fill m_multi_rd with requested reduced diags
     std::transform(m_rd_names.begin(), m_rd_names.end(), std::back_inserter(m_multi_rd),
-        [&](const auto& rd_name){
+        [&](const auto& rd_name) {
             const ParmParse pp_rd_name(rd_name);
 
             // read reduced diags type
@@ -124,7 +124,7 @@ void MultiReducedDiags::ComputeDiags (int step)
 void MultiReducedDiags::WriteToFile (int step)
 {
     // Only the I/O rank does
-    if ( !ParallelDescriptor::IOProcessor() ) { return; }
+    if (!ParallelDescriptor::IOProcessor()) { return; }
 
     // loop over all reduced diags
     for (int i_rd = 0; i_rd < static_cast<int>(m_rd_names.size()); ++i_rd)

@@ -34,23 +34,23 @@ struct FaceInfoBox {
     * \brief add the neighbor i, j to the list of intruded neighbors.
     */
     AMREX_GPU_HOST_DEVICE
-    static void addConnectedNeighbor(int i, int j, int ind, Neighbours* neigh_face_ptr){
+    static void addConnectedNeighbor(int i, int j, int ind, Neighbours* neigh_face_ptr) {
 
-        if(i == -1 && j == -1){
+        if (i == -1 && j == -1) {
             *(neigh_face_ptr + ind) = nw;
-        }else if(i == -1 && j == 0){
+        } else if (i == -1 && j == 0) {
             *(neigh_face_ptr + ind) = w;
-        }else if(i == -1 && j == 1){
+        } else if (i == -1 && j == 1) {
             *(neigh_face_ptr + ind) = sw;
-        }else if(i == 0 && j == -1){
+        } else if (i == 0 && j == -1) {
             *(neigh_face_ptr + ind) = n;
-        }else if(i == 0 && j == 1){
+        } else if (i == 0 && j == 1) {
             *(neigh_face_ptr + ind) = s;
-        }else if(i == 1 && j == -1){
+        } else if (i == 1 && j == -1) {
             *(neigh_face_ptr + ind) = ne;
-        }else if(i == 1 && j == 0){
+        } else if (i == 1 && j == 0) {
             *(neigh_face_ptr + ind) = e;
-        }else if(i == 1 && j == 1){
+        } else if (i == 1 && j == 1) {
             *(neigh_face_ptr + ind) = se;
         }
     }
@@ -59,31 +59,31 @@ struct FaceInfoBox {
     * \brief writes into i_face and j_face the intruded neighbors indices;
     */
     AMREX_GPU_HOST_DEVICE
-    static amrex::Array1D<int, 0, 1> uint8_to_inds(Neighbours mask){
+    static amrex::Array1D<int, 0, 1> uint8_to_inds(Neighbours mask) {
         amrex::Array1D<int, 0, 1> res;
 
-        if(mask == Neighbours::nw){
+        if (mask == Neighbours::nw) {
             res(0) = -1;
             res(1) = -1;
-        }else if(mask == Neighbours::w){
+        } else if (mask == Neighbours::w) {
             res(0) = -1;
             res(1) = 0;
-        }else if(mask == Neighbours::sw){
+        } else if (mask == Neighbours::sw) {
             res(0) = -1;
             res(1) = 1;
-        }else if(mask == Neighbours::n){
+        } else if (mask == Neighbours::n) {
             res(0) = 0;
             res(1) = -1;
-        }else if(mask == Neighbours::s){
+        } else if (mask == Neighbours::s) {
             res(0) = 0;
             res(1) = 1;
-        }else if(mask == Neighbours::ne){
+        } else if (mask == Neighbours::ne) {
             res(0) = 1;
             res(1) = -1;
-        }else if(mask == Neighbours::e){
+        } else if (mask == Neighbours::e) {
             res(0) = 1;
             res(1) = 0;
-        }else if(mask == Neighbours::se){
+        } else if (mask == Neighbours::se) {
             res(0) = 1;
             res(1) = 1;
         }

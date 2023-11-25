@@ -204,14 +204,14 @@ amrex::Real dU0x, amrex::Real dU1x, amrex::Real dU2x, amrex::Real dU3x, int comp
     int ip, jp, kp;
     plus_index_offsets(i, j, k, ip, jp, kp, comp);
 
-    if ( box.contains(i,j,k) ) {
+    if (box.contains(i,j,k)) {
         Um(i,j,k,0) = U_tilde0 + dU0x/2.0_rt;
         Um(i,j,k,1) = U_tilde1 + dU1x/2.0_rt;
         Um(i,j,k,2) = U_tilde2 + dU2x/2.0_rt;
         Um(i,j,k,3) = U_tilde3 + dU3x/2.0_rt;
     }
 
-    if ( box.contains(ip,jp,kp) ) {
+    if (box.contains(ip,jp,kp)) {
         Up(ip,jp,kp,0) = U_tilde0 - dU0x/2.0_rt;
         Up(ip,jp,kp,1) = U_tilde1 - dU1x/2.0_rt;
         Up(ip,jp,kp,2) = U_tilde2 - dU2x/2.0_rt;
@@ -228,14 +228,14 @@ const amrex::Array4<amrex::Real>& Up, int i, int j, int k, amrex::Box box, int c
     int ip, jp, kp;
     plus_index_offsets(i, j, k, ip, jp, kp, comp);
 
-    if ( box.contains(i,j,k) ) {
+    if (box.contains(i,j,k)) {
         Um(i,j,k,0) = 0.0_rt;
         Um(i,j,k,1) = 0.0_rt;
         Um(i,j,k,2) = 0.0_rt;
         Um(i,j,k,3) = 0.0_rt;
     }
 
-    if ( box.contains(ip,jp,kp) ) {
+    if (box.contains(ip,jp,kp)) {
         Up(ip,jp,kp,0) = 0.0_rt;
         Up(ip,jp,kp,1) = 0.0_rt;
         Up(ip,jp,kp,2) = 0.0_rt;
@@ -278,7 +278,7 @@ int comp)
             U_edge_minus(i,j,k,3) = Uz;
         }
     } else if (( box.contains(i,j,k) != 1 ) && ( box.contains(ip,jp,kp) )) {
-        if (U_edge_plus(ip,jp,kp,0) < 0.0_rt){
+        if (U_edge_plus(ip,jp,kp,0) < 0.0_rt) {
             U_edge_plus(ip,jp,kp,0) = N_arr(i,j,k);
             U_edge_plus(ip,jp,kp,1) = Ux;
             U_edge_plus(ip,jp,kp,2) = Uy;
@@ -499,11 +499,11 @@ const amrex::Array4<amrex::Real>& U_plus,int i,int j,int k,amrex::Real clight, i
     amrex::Real V_I_plus = V_calc(U_plus,i,j,k,dir,clight);
 
     // Flux differences depending on the component to compute
-    if (comp == 0){
+    if (comp == 0) {
         return flux_N(  U_minus, U_plus, i, j, k, V_I_minus, V_I_plus) - flux_N(  U_minus, U_plus, ip, jp, kp, V_L_minus, V_L_plus);
-    } else if (comp == 1){
+    } else if (comp == 1) {
         return flux_NUx(  U_minus, U_plus, i, j, k, V_I_minus, V_I_plus) - flux_NUx(  U_minus, U_plus, ip, jp, kp, V_L_minus, V_L_plus);
-    } else if (comp == 2){
+    } else if (comp == 2) {
         return flux_NUy(  U_minus, U_plus, i, j, k, V_I_minus, V_I_plus) - flux_NUy(  U_minus, U_plus, ip, jp, kp, V_L_minus, V_L_plus);
     } else { //if (comp == 3)
         return flux_NUz(  U_minus, U_plus, i, j, k, V_I_minus, V_I_plus) - flux_NUz(  U_minus, U_plus, ip, jp, kp, V_L_minus, V_L_plus);

@@ -91,7 +91,7 @@ WarpX::AddMagnetostaticFieldLabFrame()
     }
 
     // Deposit current density (source of Poisson solver)
-    for (int ispecies=0; ispecies<mypc->nSpecies(); ispecies++){
+    for (int ispecies=0; ispecies<mypc->nSpecies(); ispecies++) {
         WarpXParticleContainer& species = mypc->GetParticleContainer(ispecies);
         if (!species.do_not_deposit) {
             species.DepositCurrent(current_fp, dt[0], 0.);
@@ -219,14 +219,14 @@ WarpX::setVectorPotentialBC ( amrex::Vector<amrex::Array<std::unique_ptr<amrex::
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-            for ( MFIter mfi(*A[lev][adim], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+            for (MFIter mfi(*A[lev][adim], TilingIfNotGPU()); mfi.isValid(); ++mfi) {
                 // Extract the vector potential
                 auto A_arr = A[lev][adim]->array(mfi);
                 // Extract tileboxes for which to loop
                 const Box& tb  = mfi.tilebox( A[lev][adim]->ixType().toIntVect());
 
                 // loop over dimensions
-                for (int idim=0; idim<AMREX_SPACEDIM; idim++){
+                for (int idim=0; idim<AMREX_SPACEDIM; idim++) {
                     // check if neither boundaries in this dimension should be set
                     if (!(dirichlet_flag[adim][2*idim] || dirichlet_flag[adim][2*idim+1])) continue;
 
@@ -261,7 +261,7 @@ void MagnetostaticSolver::VectorPoissonBoundaryHandler::defineVectorPotentialBCs
         int dim_start = 0;
         WarpX& warpx = WarpX::GetInstance();
         auto geom = warpx.Geom(0);
-        if (geom.ProbLo(0) == 0){
+        if (geom.ProbLo(0) == 0) {
             lobc[adim][0] = LinOpBCType::Neumann;
             dirichlet_flag[adim][0] = false;
             dim_start = 1;
@@ -271,7 +271,7 @@ void MagnetostaticSolver::VectorPoissonBoundaryHandler::defineVectorPotentialBCs
                 if (adim == 0) {
                     hibc[adim][0] = LinOpBCType::Neumann;
                     dirichlet_flag[adim][1] = false;
-                } else{
+                } else {
                     hibc[adim][0] = LinOpBCType::Dirichlet;
                     dirichlet_flag[adim][1] = true;
                 }
@@ -285,15 +285,15 @@ void MagnetostaticSolver::VectorPoissonBoundaryHandler::defineVectorPotentialBCs
         const int dim_start = 0;
 #endif
         bool ndotA = false;
-        for (int idim=dim_start; idim<AMREX_SPACEDIM; idim++){
+        for (int idim=dim_start; idim<AMREX_SPACEDIM; idim++) {
             ndotA = (adim == idim);
 
 #if defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
             if (idim == 1) ndotA = (adim == 2);
 #endif
 
-            if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::Periodic
-                && WarpX::field_boundary_hi[idim] == FieldBoundaryType::Periodic ) {
+            if (WarpX::field_boundary_lo[idim] == FieldBoundaryType::Periodic
+                && WarpX::field_boundary_hi[idim] == FieldBoundaryType::Periodic) {
                 lobc[adim][idim] = LinOpBCType::Periodic;
                 hibc[adim][idim] = LinOpBCType::Periodic;
                 dirichlet_flag[adim][idim*2] = false;
@@ -301,7 +301,7 @@ void MagnetostaticSolver::VectorPoissonBoundaryHandler::defineVectorPotentialBCs
             }
             else {
                 has_non_periodic = true;
-                if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::PEC ) {
+                if (WarpX::field_boundary_lo[idim] == FieldBoundaryType::PEC) {
                     if (ndotA) {
                         lobc[adim][idim] = LinOpBCType::Neumann;
                         dirichlet_flag[adim][idim*2] = false;
@@ -311,7 +311,7 @@ void MagnetostaticSolver::VectorPoissonBoundaryHandler::defineVectorPotentialBCs
                     }
                 }
 
-                else if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::Neumann ) {
+                else if (WarpX::field_boundary_lo[idim] == FieldBoundaryType::Neumann) {
                     lobc[adim][idim] = LinOpBCType::Neumann;
                     dirichlet_flag[adim][idim*2] = false;
                 }
@@ -322,7 +322,7 @@ void MagnetostaticSolver::VectorPoissonBoundaryHandler::defineVectorPotentialBCs
                     );
                 }
 
-                if ( WarpX::field_boundary_hi[idim] == FieldBoundaryType::PEC ) {
+                if (WarpX::field_boundary_hi[idim] == FieldBoundaryType::PEC) {
                     if (ndotA) {
                         hibc[adim][idim] = LinOpBCType::Neumann;
                         dirichlet_flag[adim][idim*2+1] = false;
@@ -331,7 +331,7 @@ void MagnetostaticSolver::VectorPoissonBoundaryHandler::defineVectorPotentialBCs
                         dirichlet_flag[adim][idim*2+1] = true;
                     }
                 }
-                else if ( WarpX::field_boundary_hi[idim] == FieldBoundaryType::Neumann ) {
+                else if (WarpX::field_boundary_hi[idim] == FieldBoundaryType::Neumann) {
                     hibc[adim][idim] = LinOpBCType::Neumann;
                     dirichlet_flag[adim][idim*2+1] = false;
                 }

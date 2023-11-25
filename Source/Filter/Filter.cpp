@@ -114,9 +114,9 @@ void Filter::DoFilter (const Box& tbx,
             return src.contains(jj,kk,ll) ? src(jj,kk,ll,nn) : 0.0_rt;
         };
 
-        for         (int iz=0; iz < slen_local.z; ++iz){
-            for     (int iy=0; iy < slen_local.y; ++iy){
-                for (int ix=0; ix < slen_local.x; ++ix){
+        for         (int iz=0; iz < slen_local.z; ++iz) {
+            for     (int iy=0; iy < slen_local.y; ++iy) {
+                for (int ix=0; ix < slen_local.x; ++ix) {
                     Real sss = sx[ix]*sy[iy]*sz[iz];
                     d += sss*( src_zeropad(i-ix,j-iy,k-iz,scomp+n)
                               +src_zeropad(i+ix,j-iy,k-iz,scomp+n)
@@ -144,9 +144,9 @@ void Filter::DoFilter (const Box& tbx,
             return src.contains(jj,kk,ll) ? src(jj,kk,ll,nn) : 0.0_rt;
         };
 
-        for         (int iz=0; iz < slen_local.z; ++iz){
-            for     (int iy=0; iy < slen_local.y; ++iy){
-                for (int ix=0; ix < slen_local.x; ++ix){
+        for         (int iz=0; iz < slen_local.z; ++iz) {
+            for     (int iy=0; iy < slen_local.y; ++iy) {
+                for (int ix=0; ix < slen_local.x; ++ix) {
                     Real sss = sx[ix]*sz[iy];
                     d += sss*( src_zeropad(i-ix,j-iy,k,scomp+n)
                               +src_zeropad(i+ix,j-iy,k,scomp+n)
@@ -170,9 +170,9 @@ void Filter::DoFilter (const Box& tbx,
             return src.contains(jj,kk,ll) ? src(jj,kk,ll,nn) : 0.0_rt;
         };
 
-        for         (int iz=0; iz < slen_local.z; ++iz){
-            for     (int iy=0; iy < slen_local.y; ++iy){
-                for (int ix=0; ix < slen_local.x; ++ix){
+        for         (int iz=0; iz < slen_local.z; ++iz) {
+            for     (int iy=0; iy < slen_local.y; ++iy) {
+                for (int ix=0; ix < slen_local.x; ++ix) {
                     Real sss = sz[iy];
                     d += sss*( src_zeropad(i-ix,j,k,scomp+n)
                               +src_zeropad(i+ix,j,k,scomp+n));
@@ -212,7 +212,7 @@ Filter::ApplyStencil (amrex::MultiFab& dstmf, const amrex::MultiFab& srcmf, cons
 #endif
     {
         FArrayBox tmpfab;
-        for (MFIter mfi(dstmf,true); mfi.isValid(); ++mfi){
+        for (MFIter mfi(dstmf,true); mfi.isValid(); ++mfi) {
 
             if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
             {
@@ -294,9 +294,9 @@ void Filter::DoFilter (const Box& tbx,
             }
         }
         // 3 nested loop on 3D stencil
-        for         (int iz=0; iz < slen.z; ++iz){
-            for     (int iy=0; iy < slen.y; ++iy){
-                for (int ix=0; ix < slen.x; ++ix){
+        for         (int iz=0; iz < slen.z; ++iz) {
+            for     (int iy=0; iy < slen.y; ++iy) {
+                for (int ix=0; ix < slen.x; ++ix) {
 #if defined(WARPX_DIM_3D)
                     const Real sss = sx[ix]*sy[iy]*sz[iz];
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)

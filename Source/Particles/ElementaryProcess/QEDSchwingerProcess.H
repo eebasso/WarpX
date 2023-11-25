@@ -80,7 +80,7 @@ struct SchwingerTransformFunc
                        const int i_dst2, const int N,
                         const amrex::Real total_weight) const noexcept
     {
-        for (int n = 0; n < N; ++n){
+        for (int n = 0; n < N; ++n) {
 #if defined(WARPX_DIM_1D_Z)
         amrex::ignore_unused(dst1, dst2, i_dst1, i_dst2, N, total_weight);
         amrex::Abort("SchwingerTransformFunc not implemented in 1D");

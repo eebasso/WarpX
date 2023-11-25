@@ -19,7 +19,7 @@ VelocityProperties::VelocityProperties (const amrex::ParmParse& pp):
     std::string vel_dir_s = "x";
 
     pp.query("bulk_vel_dir", vel_dir_s);
-    if(vel_dir_s[0] == '-'){
+    if (vel_dir_s[0] == '-') {
         m_sign_dir = -1;
     }
     else {
@@ -27,11 +27,11 @@ VelocityProperties::VelocityProperties (const amrex::ParmParse& pp):
     }
 
     if ((vel_dir_s == "x" || vel_dir_s[1] == 'x') ||
-       (vel_dir_s == "X" || vel_dir_s[1] == 'X')){
+       (vel_dir_s == "X" || vel_dir_s[1] == 'X')) {
         m_dir = 0;
     }
     else if ((vel_dir_s == "y" || vel_dir_s[1] == 'y') ||
-               (vel_dir_s == "Y" || vel_dir_s[1] == 'Y')){
+               (vel_dir_s == "Y" || vel_dir_s[1] == 'Y')) {
         m_dir = 1;
     }
     else if ((vel_dir_s == "z" || vel_dir_s[1] == 'z') ||

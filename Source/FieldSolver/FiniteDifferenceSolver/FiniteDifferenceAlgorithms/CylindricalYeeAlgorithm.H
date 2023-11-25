@@ -28,7 +28,7 @@ struct CylindricalYeeAlgorithm {
     static void InitializeStencilCoefficients (
         std::array<amrex::Real,3>& cell_size,
         amrex::Vector<amrex::Real>& stencil_coefs_r,
-        amrex::Vector<amrex::Real>& stencil_coefs_z ) {
+        amrex::Vector<amrex::Real>& stencil_coefs_z) {
 
         using namespace amrex;
         // Store the inverse cell size along each direction in the coefficients
@@ -44,7 +44,7 @@ struct CylindricalYeeAlgorithm {
      * under the Courant-Friedrichs-Levy limit.
      */
     static amrex::Real ComputeMaxDt ( amrex::Real const * const dx,
-                                      int const n_rz_azimuthal_modes ) {
+                                      int const n_rz_azimuthal_modes) {
         using namespace amrex::literals;
         // In the rz case, the Courant limit has been evaluated
         // semi-analytically by R. Lehe, and resulted in the following
@@ -77,7 +77,7 @@ struct CylindricalYeeAlgorithm {
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const r, amrex::Real const dr,
         amrex::Real const * const coefs_r, int const n_coefs_r,
-        int const i, int const j, int const k, int const comp ) {
+        int const i, int const j, int const k, int const comp) {
 
         using namespace amrex;
         ignore_unused(n_coefs_r);
@@ -95,7 +95,7 @@ struct CylindricalYeeAlgorithm {
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const r, amrex::Real const dr,
         amrex::Real const * const coefs_r, int const n_coefs_r,
-        int const i, int const j, int const k, int const comp ) {
+        int const i, int const j, int const k, int const comp) {
 
         using namespace amrex;
         ignore_unused(n_coefs_r);
@@ -110,7 +110,7 @@ struct CylindricalYeeAlgorithm {
     static amrex::Real UpwardDr (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_r, int const n_coefs_r,
-        int const i, int const j, int const k, int const comp ) {
+        int const i, int const j, int const k, int const comp) {
 
         using namespace amrex;
         ignore_unused(n_coefs_r);
@@ -125,7 +125,7 @@ struct CylindricalYeeAlgorithm {
     static amrex::Real DownwardDr (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_r, int const n_coefs_r,
-        int const i, int const j, int const k, int const comp ) {
+        int const i, int const j, int const k, int const comp) {
 
         using namespace amrex;
         ignore_unused(n_coefs_r);
@@ -140,7 +140,7 @@ struct CylindricalYeeAlgorithm {
     static amrex::Real UpwardDz (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_z, int const n_coefs_z,
-        int const i, int const j, int const k, int const comp ) {
+        int const i, int const j, int const k, int const comp) {
 
         amrex::ignore_unused(n_coefs_z);
 
@@ -154,7 +154,7 @@ struct CylindricalYeeAlgorithm {
     static amrex::Real DownwardDz (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_z, int const n_coefs_z,
-        int const i, int const j, int const k, int const comp ) {
+        int const i, int const j, int const k, int const comp) {
 
         amrex::ignore_unused(n_coefs_z);
 

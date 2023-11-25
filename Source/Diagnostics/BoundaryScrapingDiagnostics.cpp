@@ -96,7 +96,7 @@ BoundaryScrapingDiagnostics::InitializeParticleBuffer ()
     // Initialize one ParticleDiag per species requested
     ParticleBoundaryBuffer& particle_buffer = warpx.GetParticleBoundaryBuffer();
     for (int i_buffer = 0; i_buffer < m_num_buffers; ++i_buffer) {
-        for (auto const& species_name : m_output_species_names){
+        for (auto const& species_name : m_output_species_names) {
             WarpXParticleContainer* pc = &mpc.GetParticleContainerFromName(species_name);
             PinnedMemoryParticleContainer* bnd_buffer = particle_buffer.getParticleBufferPointer(species_name, i_buffer);
             m_output_species[i_buffer].push_back(ParticleDiag(m_diag_name, species_name, pc, bnd_buffer));

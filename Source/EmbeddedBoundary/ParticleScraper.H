@@ -164,7 +164,7 @@ scrapeParticles (PC& pc, const amrex::Vector<const amrex::MultiFab*>& distance_t
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-        for(WarpXParIter pti(pc, lev); pti.isValid(); ++pti)
+        for (WarpXParIter pti(pc, lev); pti.isValid(); ++pti)
         {
             const auto getPosition = GetParticlePosition<PIdx>(pti);
             auto& tile = pti.GetParticleTile();

@@ -42,7 +42,7 @@ using namespace amrex;
 void FiniteDifferenceSolver::EvolveFPML (
     amrex::MultiFab* Ffield,
     std::array< amrex::MultiFab*, 3 > const Efield,
-    amrex::Real const dt ) {
+    amrex::Real const dt) {
 
     // Select algorithm (The choice of algorithm is a runtime option,
     // but we compile code for each algorithm, using templates)
@@ -76,13 +76,13 @@ template<typename T_Algo>
 void FiniteDifferenceSolver::EvolveFPMLCartesian (
     amrex::MultiFab* Ffield,
     std::array< amrex::MultiFab*, 3 > const Efield,
-    amrex::Real const dt ) {
+    amrex::Real const dt) {
 
     // Loop through the grids, and over the tiles within each grid
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(*Ffield, TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(*Ffield, TilingIfNotGPU()); mfi.isValid(); ++mfi) {
 
         // Extract field data for this grid/tile
         Array4<Real> const& F = Ffield->array(mfi);
@@ -104,7 +104,7 @@ void FiniteDifferenceSolver::EvolveFPMLCartesian (
         // Loop over the cells and update the fields
         amrex::ParallelFor(tf,
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 
                 F(i, j, k, PMLComp::x) += dt * (
                       T_Algo::DownwardDx(Ex, coefs_x, n_coefs_x, i, j, k, PMLComp::xx)

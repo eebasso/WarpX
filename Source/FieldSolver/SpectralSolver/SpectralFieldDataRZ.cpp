@@ -70,7 +70,7 @@ SpectralFieldDataRZ::SpectralFieldDataRZ (const int lev,
 
     // Loop over boxes and allocate the corresponding plan
     // for each box owned by the local MPI proc.
-    for (amrex::MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi) {
         amrex::IntVect grid_size = realspace_ba[mfi].length();
 #if defined(AMREX_USE_CUDA)
         // Create cuFFT plan.
@@ -203,8 +203,8 @@ SpectralFieldDataRZ::SpectralFieldDataRZ (const int lev,
 
 SpectralFieldDataRZ::~SpectralFieldDataRZ()
 {
-    if (!fields.empty()){
-        for (amrex::MFIter mfi(fields); mfi.isValid(); ++mfi){
+    if (!fields.empty()) {
+        for (amrex::MFIter mfi(fields); mfi.isValid(); ++mfi) {
 #if defined(AMREX_USE_CUDA)
             // Destroy cuFFT plans.
             cufftDestroy(forward_plan[mfi]);
@@ -464,7 +464,7 @@ SpectralFieldDataRZ::ForwardTransform (const int lev,
     amrex::MultiFab tempHTransformedSplit(tempHTransformed.boxArray(), tempHTransformed.DistributionMap(), 2*n_rz_azimuthal_modes, 0);
 
     // Loop over boxes.
-    for (amrex::MFIter mfi(field_mf); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(field_mf); mfi.isValid(); ++mfi) {
 
         if (do_costs)
         {
@@ -477,7 +477,7 @@ SpectralFieldDataRZ::ForwardTransform (const int lev,
         // field_mf does not.
         amrex::Box const& realspace_bx = tempHTransformed[mfi].box();
 
-        if ( !(field_mf[mfi].box().contains(field_mf_copy[mfi].box())) ) {
+        if (!(field_mf[mfi].box().contains(field_mf_copy[mfi].box()))) {
             // If field_mf[mfi] is smaller than field_mf_copy[mfi], then fill field_mf_copy[mfi] with
             // zeros so that all of it is initialized.
             field_mf_copy[mfi].setVal<amrex::RunOn::Device>(0._rt, realspace_bx, 0, m_ncomps);
@@ -521,7 +521,7 @@ SpectralFieldDataRZ::ForwardTransform (const int lev,
     amrex::MultiFab tempHTransformedSplit_m(tempHTransformed.boxArray(), tempHTransformed.DistributionMap(), 2*n_rz_azimuthal_modes, 0);
 
     // Loop over boxes.
-    for (amrex::MFIter mfi(field_mf_r); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(field_mf_r); mfi.isValid(); ++mfi) {
 
         if (do_costs)
         {
@@ -531,7 +531,7 @@ SpectralFieldDataRZ::ForwardTransform (const int lev,
 
         amrex::Box const& realspace_bx = tempHTransformed[mfi].box();
 
-        if ( !(field_mf_r[mfi].box().contains(field_mf_r_copy[mfi].box())) ) {
+        if (!(field_mf_r[mfi].box().contains(field_mf_r_copy[mfi].box()))) {
             // If field_mf_r[mfi] is smaller than field_mf_r_copy[mfi], then fill field_mf_r_copy[mfi] with
             // zeros so that all of it is initialized.
             field_mf_r_copy[mfi].setVal<amrex::RunOn::Device>(0._rt, realspace_bx, 0, 2*n_rz_azimuthal_modes);
@@ -583,7 +583,7 @@ SpectralFieldDataRZ::BackwardTransform (const int lev,
     amrex::MultiFab field_mf_copy(tempHTransformed.boxArray(), tempHTransformed.DistributionMap(), m_ncomps, 0);
 
     // Loop over boxes.
-    for (amrex::MFIter mfi(field_mf); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(field_mf); mfi.isValid(); ++mfi) {
 
         if (do_costs)
         {
@@ -668,7 +668,7 @@ SpectralFieldDataRZ::BackwardTransform (const int lev,
     amrex::MultiFab field_mf_t_copy(tempHTransformed.boxArray(), field_mf_t.DistributionMap(), 2*n_rz_azimuthal_modes, 0);
 
     // Loop over boxes.
-    for (amrex::MFIter mfi(field_mf_r); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(field_mf_r); mfi.isValid(); ++mfi) {
 
         if (do_costs)
         {
@@ -754,7 +754,7 @@ SpectralFieldDataRZ::InitFilter (amrex::IntVect const & filter_npass_each_dir, b
     auto const & dx = k_space.getCellSize();
     auto const & kz = k_space.getKzArray();
 
-    for (amrex::MFIter mfi(binomialfilter); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(binomialfilter); mfi.isValid(); ++mfi) {
         binomialfilter[mfi].InitFilterArray(multi_spectral_hankel_transformer[mfi].getKrArray(),
                                             kz[mfi], dx, filter_npass_each_dir, compensation);
     }
@@ -767,7 +767,7 @@ SpectralFieldDataRZ::ApplyFilter (const int lev, int const field_index)
     amrex::LayoutData<amrex::Real>* cost = WarpX::getCosts(lev);
     bool do_costs = WarpXUtilLoadBalance::doCosts(cost, binomialfilter.boxArray(), binomialfilter.DistributionMap());
 
-    for (amrex::MFIter mfi(binomialfilter); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(binomialfilter); mfi.isValid(); ++mfi) {
 
         if (do_costs)
         {
@@ -812,7 +812,7 @@ SpectralFieldDataRZ::ApplyFilter (const int lev, int const field_index1,
     amrex::LayoutData<amrex::Real>* cost = WarpX::getCosts(lev);
     bool do_costs = WarpXUtilLoadBalance::doCosts(cost, binomialfilter.boxArray(), binomialfilter.DistributionMap());
 
-    for (amrex::MFIter mfi(binomialfilter); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(binomialfilter); mfi.isValid(); ++mfi) {
 
         if (do_costs)
         {

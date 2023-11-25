@@ -49,7 +49,7 @@ BackTransformFunctor::operator ()(amrex::MultiFab& mf_dst, int /*dcomp*/, const 
 {
     // Perform back-transformation only if z slice is within the domain stored as 0/1
     // in m_perform_backtransform[i_buffer]
-    if ( m_perform_backtransform[i_buffer] == 1) {
+    if (m_perform_backtransform[i_buffer] == 1) {
         auto& warpx = WarpX::GetInstance();
         auto geom = warpx.Geom(m_lev);
         const amrex::Real gamma_boost = WarpX::gamma_boost;

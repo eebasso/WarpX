@@ -126,7 +126,7 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(*Efield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi) {
 
         // Extract field data for this grid/tile
         Array4<Real> const& Ex = Efield[0]->array(mfi);
@@ -173,7 +173,7 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
         const int scomp = 0;
         // Loop over the cells and update the fields
         amrex::ParallelFor(tex, tey, tez,
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
                 if (lx(i, j, k) <= 0) return;
@@ -192,7 +192,7 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
                                      ) - beta * jx(i, j, k);
             },
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
 #ifdef WARPX_DIM_3D
                 if (ly(i,j,k) <= 0) return;
@@ -217,7 +217,7 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
                                      ) - beta * jy(i, j, k);
             },
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
                 if (lz(i,j,k) <= 0) return;

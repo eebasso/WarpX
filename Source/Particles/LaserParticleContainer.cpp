@@ -112,7 +112,7 @@ LaserParticleContainer::LaserParticleContainer (AmrCore* amr_core, int ispecies,
     Real a0;
     const bool a0_is_specified =
         utils::parser::queryWithParser(pp_laser_name, "a0", a0);
-    if (a0_is_specified){
+    if (a0_is_specified) {
         const Real omega = 2._rt*MathConst::pi*PhysConst::c/m_wavelength;
         m_e_max = PhysConst::m_e * omega * PhysConst::c * a0 / PhysConst::q_e;
     }
@@ -125,7 +125,7 @@ LaserParticleContainer::LaserParticleContainer (AmrCore* amr_core, int ispecies,
     utils::parser::queryWithParser(pp_laser_name,
         "min_particles_per_mode", m_min_particles_per_mode);
 
-    if (m_e_max == amrex::Real(0.)){
+    if (m_e_max == amrex::Real(0.)) {
         ablastr::warn_manager::WMRecordWarning("Laser",
             m_laser_name + " with zero amplitude disabled.",
             ablastr::warn_manager::WarnPriority::low);
@@ -139,7 +139,7 @@ LaserParticleContainer::LaserParticleContainer (AmrCore* amr_core, int ispecies,
     std::vector<std::string> backward_laser_names;
     const ParmParse pp_lasers("lasers");
     pp_lasers.queryarr("names", backward_laser_names);
-    for(const std::string& lasersiter : backward_laser_names){
+    for (const std::string& lasersiter : backward_laser_names) {
         const ParmParse pp_name(lasersiter);
         std::string backward_profile;
         std::stringstream lasers;
@@ -156,7 +156,7 @@ LaserParticleContainer::LaserParticleContainer (AmrCore* amr_core, int ispecies,
     }
 
     //Check if profile exists
-    if(laser_profiles_dictionary.count(laser_type_s) == 0 ){
+    if (laser_profiles_dictionary.count(laser_type_s) == 0) {
         WARPX_ABORT_WITH_MESSAGE(std::string("Unknown laser type: ").append(laser_type_s));
     }
     m_up_laser_profile = laser_profiles_dictionary.at(laser_type_s)();
@@ -227,7 +227,7 @@ LaserParticleContainer::LaserParticleContainer (AmrCore* amr_core, int ispecies,
         }
     }
 
-    if (do_continuous_injection){
+    if (do_continuous_injection) {
         // If laser antenna initially outside of the box, store its theoretical
         // position in z_antenna_th
         m_updated_position = m_position;
@@ -247,7 +247,7 @@ LaserParticleContainer::LaserParticleContainer (AmrCore* amr_core, int ispecies,
             (m_nvec[0]-windir[0]) + (m_nvec[1]-windir[1]) + (m_nvec[2]-windir[2])
             < 1.e-12, "do_continous_injection for laser particle only works" +
             " if moving window direction and laser propagation direction are the same");
-        if ( WarpX::gamma_boost>1 ){
+        if (WarpX::gamma_boost>1) {
             AMREX_ALWAYS_ASSERT_WITH_MESSAGE(
                 (WarpX::boost_direction[0]-0)*(WarpX::boost_direction[0]-0) +
                 (WarpX::boost_direction[1]-0)*(WarpX::boost_direction[1]-0) +
@@ -324,7 +324,7 @@ LaserParticleContainer::UpdateAntennaPosition (const amrex::Real dt)
     if (!m_enabled) return;
 
     const int dir = WarpX::moving_window_dir;
-    if (do_continuous_injection and (WarpX::gamma_boost > 1)){
+    if (do_continuous_injection and (WarpX::gamma_boost > 1)) {
         // In boosted-frame simulations, the antenna has moved since the last
         // call to this function, and injection position needs to be updated
 #if defined(WARPX_DIM_3D)
@@ -356,7 +356,7 @@ LaserParticleContainer::InitData ()
     // finest cell.
     InitData(maxLevel());
 
-    if(!do_continuous_injection && (TotalNumberOfParticles() == 0)){
+    if (!do_continuous_injection && (TotalNumberOfParticles() == 0)) {
         ablastr::warn_manager::WMRecordWarning("Laser",
             "The antenna is completely out of the simulation box for laser " + m_laser_name,
             ablastr::warn_manager::WarnPriority::high);
@@ -378,7 +378,7 @@ LaserParticleContainer::InitData (int lev)
     // LaserParticleContainer::position contains the initial position of the
     // laser antenna. In the boosted frame, the antenna is moving.
     // Update its position with updated_position.
-    if (do_continuous_injection){
+    if (do_continuous_injection) {
         m_position = m_updated_position;
     }
 
@@ -422,7 +422,7 @@ LaserParticleContainer::InitData (int lev)
     Vector<int> plane_lo(2, std::numeric_limits<int>::max());
     Vector<int> plane_hi(2, std::numeric_limits<int>::min());
     {
-        auto compute_min_max = [&](Real x, Real y, Real z){
+        auto compute_min_max = [&](Real x, Real y, Real z) {
             const Vector<Real>& pos_plane = InverseTransform({x, y, z});
             auto i = static_cast<int>(pos_plane[0]/S_X);
             auto j = static_cast<int>(pos_plane[1]/S_Y);
@@ -879,7 +879,7 @@ LaserParticleContainer::update_laser_particle (WarpXParIter& pti,
             Real vy = PhysConst::c * v_over_c * tmp_p_X_1;
             Real vz = PhysConst::c * v_over_c * tmp_p_X_2;
             // When running in the boosted-frame, their is additional velocity along nvec
-            if (gamma_boost > 1.){
+            if (gamma_boost > 1.) {
                 vx -= PhysConst::c * beta_boost * tmp_nvec_0;
                 vy -= PhysConst::c * beta_boost * tmp_nvec_1;
                 vz -= PhysConst::c * beta_boost * tmp_nvec_2;

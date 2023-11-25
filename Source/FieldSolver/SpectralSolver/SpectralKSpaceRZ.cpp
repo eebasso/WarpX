@@ -31,7 +31,7 @@ SpectralKSpaceRZ::SpectralKSpaceRZ (const amrex::BoxArray& realspace_ba,
     amrex::BoxList spectral_bl; // Create empty box list
 
     // Loop over boxes and fill the box list
-    for (int i=0; i < realspace_ba.size(); i++ ) {
+    for (int i=0; i < realspace_ba.size(); i++) {
         // For local FFTs, boxes in spectral space start at 0 in
         // each direction and have the same number of points as the
         // (cell-centered) real space box

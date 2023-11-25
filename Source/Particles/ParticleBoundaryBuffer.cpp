@@ -247,10 +247,10 @@ void ParticleBoundaryBuffer::gatherParticles (MultiParticleContainer& mypc,
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-                    for(PIter pti(pc, lev); pti.isValid(); ++pti)
+                    for (PIter pti(pc, lev); pti.isValid(); ++pti)
                     {
                         auto index = std::make_pair(pti.index(), pti.LocalTileIndex());
-                        if(plevel.find(index) == plevel.end()) continue;
+                        if (plevel.find(index) == plevel.end()) continue;
 
                         auto& ptile_buffer = species_buffer.DefineAndReturnParticleTile(
                                                         lev, pti.index(), pti.LocalTileIndex());
@@ -313,11 +313,11 @@ void ParticleBoundaryBuffer::gatherParticles (MultiParticleContainer& mypc,
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-            for(PIter pti(pc, lev); pti.isValid(); ++pti)
+            for (PIter pti(pc, lev); pti.isValid(); ++pti)
             {
                 auto phiarr = (*distance_to_eb[lev])[pti].array();  // signed distance function
                 auto index = std::make_pair(pti.index(), pti.LocalTileIndex());
-                if(plevel.find(index) == plevel.end()) continue;
+                if (plevel.find(index) == plevel.end()) continue;
 
                 const auto getPosition = GetParticlePosition<PIdx>(pti);
                 auto& ptile_buffer = species_buffer.DefineAndReturnParticleTile(lev, pti.index(),
@@ -376,10 +376,10 @@ int ParticleBoundaryBuffer::getNumParticlesInContainer(
     auto& buffer = m_particle_containers[boundary];
     auto index = WarpX::GetInstance().GetPartContainer().getSpeciesID(species_name);
 
-    if (buffer[index].isDefined()){
+    if (buffer[index].isDefined()) {
         return static_cast<int>(buffer[index].TotalNumberOfParticles(false, local));
     }
-    else{
+    else {
         return 0;
     }
 }

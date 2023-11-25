@@ -156,7 +156,7 @@ FieldProbe::FieldProbe (std::string rd_name)
                                      "Field probe interp_order should be less than or equal to algo.particle_shape");
     if (ParallelDescriptor::IOProcessor())
     {
-        if ( m_write_header )
+        if (m_write_header )
         {
             // open file
             std::ofstream ofs{m_path + m_rd_name + "." + m_extension, std::ofstream::out};
@@ -255,7 +255,7 @@ void FieldProbe::InitData ()
                     (x1_probe - x_probe) / (m_resolution - 1),
                     (y1_probe - y_probe) / (m_resolution - 1),
                     (z1_probe - z_probe) / (m_resolution - 1)};
-            for ( int step = 0; step < m_resolution; step++)
+            for (int step = 0; step < m_resolution; step++)
             {
                 xpos.push_back(x_probe + (DetLineStepSize[0] * step));
                 ypos.push_back(y_probe + (DetLineStepSize[1] * step));
@@ -311,9 +311,9 @@ void FieldProbe::InitData ()
             amrex::Real temp_pos[3]{};
             // Starting at the lowercorner point, step sideways and up to form
             // a grid of equally spaced coordinate points
-            for ( int sidestep = 0; sidestep < m_resolution; sidestep++)
+            for (int sidestep = 0; sidestep < m_resolution; sidestep++)
             {
-                for ( int upstep = 0; upstep < m_resolution; upstep++)
+                for (int upstep = 0; upstep < m_resolution; upstep++)
                 {
                     temp_pos[0] = lowercorner[0] + SideStepSize[0] * sidestep + UpStepSize[0] * upstep;
                     temp_pos[1] = lowercorner[1] + SideStepSize[1] * sidestep + UpStepSize[1] * upstep;
@@ -456,7 +456,7 @@ void FieldProbe::ComputeDiags (int step)
                     }
                 });
             }
-            if( ProbeInDomain() )
+            if (ProbeInDomain() )
             {
                 const auto &arrEx = Ex[pti].array();
                 const auto &arrEy = Ey[pti].array();

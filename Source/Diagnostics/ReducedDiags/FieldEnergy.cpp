@@ -46,7 +46,7 @@ FieldEnergy::FieldEnergy (std::string rd_name)
 
     if (ParallelDescriptor::IOProcessor())
     {
-        if ( m_write_header )
+        if (m_write_header )
         {
             // open file
             std::ofstream ofs{m_path + m_rd_name + "." + m_extension, std::ofstream::out};
@@ -171,7 +171,7 @@ FieldEnergy::ComputeNorm2RZ(const amrex::MultiFab& field, const int lev)
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( amrex::MFIter mfi(field, amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi )
+    for (amrex::MFIter mfi(field, amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi )
     {
 
         amrex::Array4<const amrex::Real> const& field_arr = field.array(mfi);

@@ -18,8 +18,8 @@ using namespace amrex::literals;
 bool
 PEC::isAnyBoundaryPEC() {
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-        if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::PEC) return true;
-        if ( WarpX::field_boundary_hi[idim] == FieldBoundaryType::PEC) return true;
+        if (WarpX::field_boundary_lo[idim] == FieldBoundaryType::PEC) return true;
+        if (WarpX::field_boundary_hi[idim] == FieldBoundaryType::PEC) return true;
     }
     return false;
 }
@@ -361,7 +361,7 @@ PEC::ApplyPECtoJfield(amrex::MultiFab* Jx, amrex::MultiFab* Jy,
             is_tangent_to_bndy[icomp][idim] = (icomp != idim);
 #endif
 
-            if (is_tangent_to_bndy[icomp][idim]){
+            if (is_tangent_to_bndy[icomp][idim]) {
                 psign[icomp][idim][0] = (WarpX::particle_boundary_lo[idim] == ParticleBoundaryType::Reflecting)
                                         ? 1._rt : -1._rt;
                 psign[icomp][idim][1] = (WarpX::particle_boundary_hi[idim] == ParticleBoundaryType::Reflecting)

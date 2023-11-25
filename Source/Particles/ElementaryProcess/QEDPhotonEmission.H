@@ -249,7 +249,7 @@ void cleanLowEnergyPhotons(
         constexpr amrex::ParticleReal me_c = PhysConst::m_e*PhysConst::c;
         const auto phot_energy2 = (ux*ux + uy*uy + uz*uz)*me_c*me_c;
 
-        if (phot_energy2 < energy_threshold2){
+        if (phot_energy2 < energy_threshold2) {
             p.id() = - 1;
         }
     });

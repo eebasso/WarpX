@@ -86,7 +86,7 @@ void FiniteDifferenceSolver::EvolveBPMLCartesian (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(*Bfield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(*Bfield[0], TilingIfNotGPU()); mfi.isValid(); ++mfi) {
 
         // Extract field data for this grid/tile
         Array4<Real> const& Bx = Bfield[0]->array(mfi);
@@ -112,7 +112,7 @@ void FiniteDifferenceSolver::EvolveBPMLCartesian (
         // Loop over the cells and update the fields
         amrex::ParallelFor(tbx, tby, tbz,
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 
                 amrex::Real UpwardDz_Ey_yy = 0._rt;
                 amrex::Real UpwardDy_Ez_zz = 0._rt;
@@ -133,7 +133,7 @@ void FiniteDifferenceSolver::EvolveBPMLCartesian (
                   + UpwardDy_Ez_zz);
             },
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 
                 amrex::Real UpwardDx_Ez_zz = 0._rt;
                 amrex::Real UpwardDz_Ex_xx = 0._rt;
@@ -154,7 +154,7 @@ void FiniteDifferenceSolver::EvolveBPMLCartesian (
                   + T_Algo::UpwardDz(Ex, coefs_z, n_coefs_z, i, j, k, PMLComp::xz));
             },
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 
                 amrex::Real UpwardDy_Ex_xx = 0._rt;
                 amrex::Real UpwardDx_Ey_yy = 0._rt;

@@ -47,7 +47,7 @@ MacroscopicProperties::ReadParameters ()
         m_sigma_s = "constant";
         sigma_specified = true;
     }
-    if (pp_macroscopic.query("sigma_function(x,y,z)", m_str_sigma_function) ) {
+    if (pp_macroscopic.query("sigma_function(x,y,z)", m_str_sigma_function)) {
         m_sigma_s = "parse_sigma_function";
         sigma_specified = true;
     }
@@ -71,7 +71,7 @@ MacroscopicProperties::ReadParameters ()
         m_epsilon_s = "constant";
         epsilon_specified = true;
     }
-    if (pp_macroscopic.query("epsilon_function(x,y,z)", m_str_epsilon_function) ) {
+    if (pp_macroscopic.query("epsilon_function(x,y,z)", m_str_epsilon_function)) {
         m_epsilon_s = "parse_epsilon_function";
         epsilon_specified = true;
     }
@@ -97,7 +97,7 @@ MacroscopicProperties::ReadParameters ()
         m_mu_s = "constant";
         mu_specified = true;
     }
-    if (pp_macroscopic.query("mu_function(x,y,z)", m_str_mu_function) ) {
+    if (pp_macroscopic.query("mu_function(x,y,z)", m_str_mu_function)) {
         m_mu_s = "parse_mu_function";
         mu_specified = true;
     }
@@ -183,7 +183,7 @@ MacroscopicProperties::InitData ()
     amrex::IntVect Ey_stag = warpx.getEfield_fp(0,1).ixType().toIntVect();
     amrex::IntVect Ez_stag = warpx.getEfield_fp(0,2).ixType().toIntVect();
 
-    for ( int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
+    for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         sigma_IndexType[idim]   = sigma_stag[idim];
         epsilon_IndexType[idim] = epsilon_stag[idim];
         mu_IndexType[idim]      = mu_stag[idim];
@@ -211,7 +211,7 @@ MacroscopicProperties::InitializeMacroMultiFabUsingParser (
                        const amrex::RealBox& prob_domain_lev)
 {
     const amrex::IntVect iv = macro_mf->ixType().toIntVect();
-    for ( amrex::MFIter mfi(*macro_mf, TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (amrex::MFIter mfi(*macro_mf, TilingIfNotGPU()); mfi.isValid(); ++mfi) {
         // Initialize ghost cells in addition to valid cells
 
         const amrex::Box& tb = mfi.tilebox( iv, macro_mf->nGrowVect());

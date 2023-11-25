@@ -114,7 +114,7 @@ void ReadBoostedFrameParameters(Real& gamma_boost, Real& beta_boost,
 {
     const ParmParse pp_warpx("warpx");
     utils::parser::queryWithParser(pp_warpx, "gamma_boost", gamma_boost);
-    if( gamma_boost > 1. ) {
+    if (gamma_boost > 1.) {
         beta_boost = std::sqrt(1._rt-1._rt/std::pow(gamma_boost,2._rt));
         std::string s;
         pp_warpx.get("boost_direction", s);
@@ -174,7 +174,7 @@ void ConvertLabParamsToBoost()
 
 
     pp_amr.query("max_level", max_level);
-    if (max_level > 0){
+    if (max_level > 0) {
       utils::parser::getArrWithParser(
         pp_warpx, "fine_tag_lo", fine_tag_lo);
       utils::parser::getArrWithParser(
@@ -198,7 +198,7 @@ void ConvertLabParamsToBoost()
             convert_factor = 1._rt/( gamma_boost * ( 1 - beta_boost ) );
             prob_lo[idim] *= convert_factor;
             prob_hi[idim] *= convert_factor;
-            if (max_level > 0){
+            if (max_level > 0) {
               fine_tag_lo[idim] *= convert_factor;
               fine_tag_hi[idim] *= convert_factor;
             }
@@ -210,7 +210,7 @@ void ConvertLabParamsToBoost()
 
     pp_geometry.addarr("prob_lo", prob_lo);
     pp_geometry.addarr("prob_hi", prob_hi);
-    if (max_level > 0){
+    if (max_level > 0) {
       pp_warpx.addarr("fine_tag_lo", fine_tag_lo);
       pp_warpx.addarr("fine_tag_hi", fine_tag_hi);
     }
@@ -223,13 +223,13 @@ void ConvertLabParamsToBoost()
 /* \brief Function that sets the value of MultiFab MF to zero for z between
  * zmin and zmax.
  */
-void NullifyMF(amrex::MultiFab& mf, int lev, amrex::Real zmin, amrex::Real zmax){
+void NullifyMF(amrex::MultiFab& mf, int lev, amrex::Real zmin, amrex::Real zmax) {
     WARPX_PROFILE("WarpXUtil::NullifyMF()");
     int const ncomp = mf.nComp();
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (Gpu::notInLaunchRegion())
 #endif
-    for(amrex::MFIter mfi(mf, amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(mf, amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi) {
         const amrex::Box& bx = mfi.tilebox();
         // Get box lower and upper physical z bound, and dz
         const amrex::Real zmin_box = WarpX::LowerCorner(bx, lev, 0._rt)[2];
@@ -244,7 +244,7 @@ void NullifyMF(amrex::MultiFab& mf, int lev, amrex::Real zmin, amrex::Real zmax)
         const int lo_ind = bx.loVect()[0];
 #endif
         // Check if box intersect with [zmin, zmax]
-        if ( (zmax>zmin_box && zmin<=zmax_box) ){
+        if ((zmax>zmin_box && zmin<=zmax_box)) {
             const Array4<Real> arr = mf[mfi].array();
             // Set field to 0 between zmin and zmax
             ParallelFor(bx, ncomp,
@@ -256,7 +256,7 @@ void NullifyMF(amrex::MultiFab& mf, int lev, amrex::Real zmin, amrex::Real zmax)
 #else
                     const Real z_gridpoint = zmin_box+(i-lo_ind)*dz;
 #endif
-                    if ( (z_gridpoint >= zmin) && (z_gridpoint < zmax) ) {
+                    if ((z_gridpoint >= zmin) && (z_gridpoint < zmax)) {
                         arr(i,j,k,n) = 0.;
                     }
                 }
@@ -433,7 +433,7 @@ void ReadBCParams ()
         if (WarpX::field_boundary_lo[idim] == FieldBoundaryType::Periodic ||
             WarpX::field_boundary_hi[idim] == FieldBoundaryType::Periodic ||
             WarpX::particle_boundary_lo[idim] == ParticleBoundaryType::Periodic ||
-            WarpX::particle_boundary_hi[idim] == ParticleBoundaryType::Periodic ) {
+            WarpX::particle_boundary_hi[idim] == ParticleBoundaryType::Periodic) {
             geom_periodicity[idim] = 1;
             // to ensure both lo and hi are set to periodic consistently for both field and particles.
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(

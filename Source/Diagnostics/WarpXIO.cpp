@@ -66,7 +66,7 @@ WarpX::GetRestartDMap (const std::string& chkfile, const amrex::BoxArray& ba, in
     ParallelDescriptor::ReadAndBcastFile(DMFileName, fileCharPtr);
     const std::string fileCharPtrString(fileCharPtr.dataPtr());
     std::istringstream DMFile(fileCharPtrString, std::istringstream::in);
-    if ( ! DMFile.good()) amrex::FileOpenFailed(DMFileName);
+    if (! DMFile.good()) amrex::FileOpenFailed(DMFileName);
     DMFile.exceptions(std::ios_base::failbit | std::ios_base::badbit);
 
     int nprocs_in_checkpoint;
@@ -225,12 +225,12 @@ WarpX::InitFromCheckpoint ()
 
         for (int idiag = 0; idiag < multi_diags->GetTotalDiags(); ++idiag)
         {
-            if( multi_diags->diagstypes(idiag) == DiagTypes::BackTransformed )
+            if (multi_diags->diagstypes(idiag) == DiagTypes::BackTransformed )
             {
                 auto& diag = multi_diags->GetDiag(idiag);
                 if (diag.getnumbuffers() > 0) {
                     diag.InitDataBeforeRestart();
-                    for (int i_buffer=0; i_buffer<diag.getnumbuffers(); ++i_buffer){
+                    for (int i_buffer=0; i_buffer<diag.getnumbuffers(); ++i_buffer) {
                         amrex::Real tlab;
                         is >> tlab;
                         diag.settlab(i_buffer, tlab);

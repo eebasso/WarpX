@@ -132,7 +132,7 @@ namespace {
 
         // Convert momentum of first product to lab frame, using equation (13) of F. Perez et al.,
         // Phys.Plasmas.19.083104 (2012)
-        if ( vc_sq > std::numeric_limits<amrex::ParticleReal>::min() )
+        if (vc_sq > std::numeric_limits<amrex::ParticleReal>::min() )
         {
             const amrex::ParticleReal gc = 1._prt / std::sqrt( 1._prt - vc_sq*inv_csq );
             const amrex::ParticleReal g_star = std::sqrt(1._prt + p_star_f_sq / (m1_out*m1_out*c_sq));

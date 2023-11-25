@@ -32,7 +32,7 @@ namespace {
         int jmax = 1;
         // Convolve the filter with itself npass times
         int const lastpass = static_cast<int>(npass+1u);
-        for(int ipass=1; ipass< lastpass; ipass++){
+        for (int ipass=1; ipass< lastpass; ipass++) {
             // element 0 has to be treated in its own way
             new_s.at(0) = 0.5_rt * old_s.at(0);
             if (1<jmax) new_s.at(0) += 0.5_rt * old_s.at(1);
@@ -40,7 +40,7 @@ namespace {
             // For each element j, apply the filter to
             // old_s to get new_s[j]. loc stores the tmp
             // filtered value.
-            for(int j=1; j<jmax+1; j++){
+            for (int j=1; j<jmax+1; j++) {
                 loc = 0.5_rt * old_s[j];
                 loc += 0.25_rt * old_s[j-1];
                 if (j<jmax) loc += 0.25_rt * old_s.at(j+1);
@@ -60,7 +60,7 @@ namespace {
     }
 }
 
-void BilinearFilter::ComputeStencils(){
+void BilinearFilter::ComputeStencils() {
     WARPX_PROFILE("BilinearFilter::ComputeStencils()");
     int i = 0;
     for (const auto& el : npass_each_dir )

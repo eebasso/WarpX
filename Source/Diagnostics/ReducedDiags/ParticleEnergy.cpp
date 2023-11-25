@@ -54,7 +54,7 @@ ParticleEnergy::ParticleEnergy (std::string rd_name)
 
     if (ParallelDescriptor::IOProcessor())
     {
-        if ( m_write_header )
+        if (m_write_header )
         {
             // open file
             std::ofstream ofs{m_path + m_rd_name + "." + m_extension, std::ofstream::out};
@@ -116,7 +116,7 @@ void ParticleEnergy::ComputeDiags (int step)
         // held by the current MPI rank for this species (loop over all boxes held by this MPI rank):
         // the result r is the tuple (Etot, Ws)
         amrex::ReduceOps<ReduceOpSum, ReduceOpSum> reduce_ops;
-        if(myspc.AmIA<PhysicalSpecies::photon>())
+        if (myspc.AmIA<PhysicalSpecies::photon>())
         {
             auto r = amrex::ParticleReduce<amrex::ReduceData<Real, Real>>(
                 myspc,

@@ -131,7 +131,7 @@ public:
         auto jxtype = amrex::GpuArray<int,3>{0,0,0};
         auto jytype = amrex::GpuArray<int,3>{0,0,0};
         auto jztype = amrex::GpuArray<int,3>{0,0,0};
-        for (int i = 0; i < AMREX_SPACEDIM; ++i){
+        for (int i = 0; i < AMREX_SPACEDIM; ++i) {
             Extype[i] = Ex.ixType()[i];
             Eytype[i] = Ey.ixType()[i];
             Eztype[i] = Ez.ixType()[i];
@@ -151,7 +151,7 @@ public:
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-        for ( amrex::MFIter mfi(Ex, amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi )
+        for (amrex::MFIter mfi(Ex, amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi )
         {
             // Make the box cell centered in preparation for the interpolation (and to avoid
             // including ghost cells in the calculation)

@@ -55,7 +55,7 @@ PhotonParticleContainer::PhotonParticleContainer (AmrCore* amr_core, int ispecie
 
         //If Breit Wheeler process is enabled, look for the target electron and positron
         //species
-        if(m_do_qed_breit_wheeler){
+        if (m_do_qed_breit_wheeler) {
             pp_species_name.get("qed_breit_wheeler_ele_product_species", m_qed_breit_wheeler_ele_product_name);
             pp_species_name.get("qed_breit_wheeler_pos_product_species", m_qed_breit_wheeler_pos_product_name);
         }
@@ -185,7 +185,7 @@ PhotonParticleContainer::PushPX (WarpXParIter& pti,
             amrex::ParticleReal Exp=0, Eyp=0, Ezp=0;
             amrex::ParticleReal Bxp=0, Byp=0, Bzp=0;
 
-            if(!t_do_not_gather){
+            if (!t_do_not_gather) {
                 // first gather E and B to the particle positions
                 doGatherShapeN(x, y, z, Exp, Eyp, Ezp, Bxp, Byp, Bzp,
                                ex_arr, ey_arr, ez_arr, bx_arr, by_arr, bz_arr,

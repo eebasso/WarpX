@@ -59,12 +59,12 @@ void WarnManager::RecordWarning(
             WarnPriority priority)
 {
     auto msg_priority = abl_msg_logger::Priority::high;
-    if(priority == WarnPriority::low)
+    if (priority == WarnPriority::low)
         msg_priority = abl_msg_logger::Priority::low;
-    else if(priority == WarnPriority::medium)
+    else if (priority == WarnPriority::medium)
         msg_priority = abl_msg_logger::Priority::medium;
 
-    if(m_always_warn_immediately){
+    if (m_always_warn_immediately) {
 
         amrex::Warning(
             ablastr::utils::TextMsg::Warn(
@@ -83,12 +83,12 @@ void WarnManager::RecordWarning(
         m_p_logger->record_msg(abl_msg_logger::Msg{topic, text, msg_priority});
     }
 
-    if(m_abort_on_warning_threshold){
+    if (m_abort_on_warning_threshold) {
 
         auto abort_priority = abl_msg_logger::Priority::high;
-        if(m_abort_on_warning_threshold == WarnPriority::low)
+        if (m_abort_on_warning_threshold == WarnPriority::low)
             abort_priority = abl_msg_logger::Priority::low;
-        else if(m_abort_on_warning_threshold == WarnPriority::medium)
+        else if (m_abort_on_warning_threshold == WarnPriority::medium)
             abort_priority = abl_msg_logger::Priority::medium;
 
         ABLASTR_ALWAYS_ASSERT_WITH_MESSAGE(
@@ -110,11 +110,11 @@ std::string WarnManager::PrintLocalWarnings(const std::string& when) const
 
     ss << "\n" << WarnManager::GetHeader(when, warn_line_size, false);
 
-    if(all_warnings.empty()){
+    if (all_warnings.empty()) {
         ss << "* No recorded warnings.\n";
     }
     else{
-        for(const auto& warn_msg : all_warnings){
+    else {or(const auto& warn_msg : all_warnings) {
             ss << PrintWarnMsg(warn_msg);
             ss << "*\n";
         }
@@ -130,22 +130,22 @@ std::string WarnManager::PrintGlobalWarnings(const std::string& when) const
     auto all_warnings =
         m_p_logger->collective_gather_msgs_with_counter_and_ranks();
 
-    if(m_rank != amrex::ParallelDescriptor::IOProcessorNumber())
+    if (m_rank != amrex::ParallelDescriptor::IOProcessorNumber())
         return "[see I/O rank message]";
 
     std::sort(all_warnings.begin(), all_warnings.end(),
-        [](const auto& a, const auto& b){
+        [](const auto& a, const auto& b) {
             return a.msg_with_counter.msg < b.msg_with_counter.msg;});
 
     std::stringstream ss;
 
     ss << "\n" << WarnManager::GetHeader(when, warn_line_size, true);
 
-    if(all_warnings.empty()){
+    if (all_warnings.empty()) {
         ss << "* No recorded warnings.\n";
     }
     else{
-        for(const auto& warn_msg : all_warnings){
+    else {or(const auto& warn_msg : all_warnings) {
             ss << PrintWarnMsg(warn_msg);
             ss << "*\n";
         }
@@ -181,7 +181,7 @@ void WarnManager::debug_read_warnings_from_input(const amrex::ParmParse& params)
     std::vector<std::string> warnings;
     params.queryarr("test_warnings", warnings);
 
-    for (const auto& warn : warnings){
+    for (const auto& warn : warnings) {
         const amrex::ParmParse pp_warn(warn);
 
         std::string topic;
@@ -197,14 +197,14 @@ void WarnManager::debug_read_warnings_from_input(const amrex::ParmParse& params)
 
         int all_involved = 0;
         pp_warn.query("all_involved", all_involved);
-        if(all_involved != 0){
+        if (all_involved != 0) {
             this->RecordWarning(topic, msg, wpriority);
         }
         else{
-            std::vector<int> who_involved;
+        else {td::vector<int> who_involved;
             pp_warn.queryarr("who_involved", who_involved);
-            if(std::find (who_involved.begin(), who_involved.end(), m_rank)
-                != who_involved.end()){
+            if (std::find (who_involved.begin(), who_involved.end(), m_rank)
+                != who_involved.end()) {
                 this->RecordWarning(topic, msg, wpriority);
             }
         }
@@ -228,9 +228,9 @@ std::string WarnManager::PrintWarnMsg(
 
     ss << " [" + msg_with_counter.msg.topic << "] ";
 
-    if(msg_with_counter.counter == 2)
+    if (msg_with_counter.counter == 2)
         ss << "[raised twice]\n";
-    else if(msg_with_counter.counter == 1)
+    else if (msg_with_counter.counter == 1)
         ss << "[raised once]\n";
     else
         ss << "[raised " << msg_with_counter.counter << " times]\n";
@@ -247,12 +247,12 @@ std::string WarnManager::PrintWarnMsg(
     ss << this->PrintWarnMsg(msg_with_counter_and_ranks.msg_with_counter);
 
     std::string raised_by = "@ Raised by: ";
-    if (!msg_with_counter_and_ranks.all_ranks){
+    if (!msg_with_counter_and_ranks.all_ranks) {
         for (const auto rr : msg_with_counter_and_ranks.ranks)
             raised_by += " " + std::to_string(rr);
     }
     else{
-        raised_by += "ALL\n";
+    else {aised_by += "ALL\n";
     }
     ss << WarnManager::MsgFormatter(raised_by, warn_line_size, warn_tab_size);
 
@@ -271,11 +271,11 @@ std::string WarnManager::GetHeader(
     ss << warn_header <<
         std::string(line_size - static_cast<int>(warn_header.length()), '*') << "\n" ;
 
-    if(is_global){
+    if (is_global) {
         ss << "* GLOBAL warning list  after " << " [ " <<  when << " ]\n*\n";
     }
     else{
-        auto const mpi_rank = amrex::ParallelDescriptor::MyProc();
+    else {uto const mpi_rank = amrex::ParallelDescriptor::MyProc();
         ss << "* LOCAL" << " ( rank # " << mpi_rank << " ) "
             << " warning list  after " <<  when << "\n*\n";
     }

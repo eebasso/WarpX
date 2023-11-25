@@ -57,7 +57,7 @@ CollisionHandler::CollisionHandler(MultiParticleContainer const * const mypc)
                std::make_unique<BinaryCollision<NuclearFusionFunc, ParticleCreationFunc>>(
                                                                         collision_names[i], mypc);
         }
-        else{
+        else {
             WARPX_ABORT_WITH_MESSAGE("Unknown collision type.");
         }
 
@@ -77,7 +77,7 @@ void CollisionHandler::doCollisions ( amrex::Real cur_time, amrex::Real dt, Mult
 
     for (auto& collision : allcollisions) {
         int const ndt = collision->get_ndt();
-        if ( int(std::floor(cur_time/dt)) % ndt == 0 ) {
+        if (int(std::floor(cur_time/dt)) % ndt == 0) {
             collision->doCollisions(cur_time, dt*ndt, mypc);
         }
     }

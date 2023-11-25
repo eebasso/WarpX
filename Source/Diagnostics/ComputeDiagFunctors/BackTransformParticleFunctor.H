@@ -54,7 +54,7 @@ struct SelectParticles
         amrex::ParticleReal xp, yp, zp;
         m_get_position(i, xp, yp, zp);
         int Flag = 0;
-        if ( ( (zp >= m_current_z_boost) && (zpold[i] <= m_old_z_boost) ) ||
+        if (( (zp >= m_current_z_boost) && (zpold[i] <= m_old_z_boost) ) ||
              ( (zp <= m_current_z_boost) && (zpold[i] >= m_old_z_boost) ))
         {    Flag = 1;
         }

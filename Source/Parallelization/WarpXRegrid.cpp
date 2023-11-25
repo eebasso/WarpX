@@ -192,7 +192,7 @@ WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const Distributi
             if (WarpX::electromagnetic_solver_id != ElectromagneticSolverAlgo::PSATD) {
                 RemakeMultiFab(m_edge_lengths[lev][idim], dm, false ,lev);
                 RemakeMultiFab(m_face_areas[lev][idim], dm, false ,lev);
-                if(WarpX::electromagnetic_solver_id == ElectromagneticSolverAlgo::ECT){
+                if (WarpX::electromagnetic_solver_id == ElectromagneticSolverAlgo::ECT) {
                     RemakeMultiFab(Venl[lev][idim], dm, false ,lev);
                     RemakeMultiFab(m_flag_info_face[lev][idim], dm, false ,lev);
                     RemakeMultiFab(m_flag_ext_face[lev][idim], dm, false ,lev);
@@ -233,7 +233,7 @@ WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const Distributi
                 auto dx = CellSize(lev);
 
 #   ifdef WARPX_DIM_RZ
-                if ( !fft_periodic_single_box ) {
+                if (!fft_periodic_single_box) {
                     realspace_ba.grow(1, ngEB[1]); // add guard cells only in z
                 }
                 AllocLevelSpectralSolverRZ(spectral_solver_fp,
@@ -242,7 +242,7 @@ WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const Distributi
                                            dm,
                                            dx);
 #   else
-                if ( !fft_periodic_single_box ) {
+                if (!fft_periodic_single_box) {
                     realspace_ba.grow(ngEB);   // add guard cells
                 }
                 bool const pml_flag_false = false;

@@ -33,7 +33,7 @@ namespace
         const int msg_line_length,
         const bool do_text_wrapping)
     {
-        if(!do_text_wrapping){
+        if (!do_text_wrapping) {
             return msg_prefix + msg + "\n";
         }
 

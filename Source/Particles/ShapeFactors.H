@@ -33,19 +33,19 @@ struct Compute_shape_factor
         T* const sx,
         T xmid) const
     {
-        if constexpr (depos_order == 0){
+        if constexpr (depos_order == 0) {
             const auto j = static_cast<int>(xmid + T(0.5));
             sx[0] = T(1.0);
             return j;
         }
-        else if constexpr (depos_order == 1){
+        else if constexpr (depos_order == 1) {
             const auto j = static_cast<int>(xmid);
             const T xint = xmid - T(j);
             sx[0] = T(1.0) - xint;
             sx[1] = xint;
             return j;
         }
-        else if constexpr (depos_order == 2){
+        else if constexpr (depos_order == 2) {
             const auto j = static_cast<int>(xmid + T(0.5));
             const T xint = xmid - T(j);
             sx[0] = T(0.5)*(T(0.5) - xint)*(T(0.5) - xint);
@@ -54,7 +54,7 @@ struct Compute_shape_factor
             // index of the leftmost cell where particle deposits
             return j-1;
         }
-        else if constexpr (depos_order == 3){
+        else if constexpr (depos_order == 3) {
             const auto j = static_cast<int>(xmid);
             const T xint = xmid - T(j);
             sx[0] = (T(1.0))/(T(6.0))*(T(1.0) - xint)*(T(1.0) - xint)*(T(1.0) - xint);
@@ -64,7 +64,7 @@ struct Compute_shape_factor
             // index of the leftmost cell where particle deposits
             return j-1;
         }
-        else{
+        else {
             WARPX_ABORT_WITH_MESSAGE("Unknown particle shape selected in Compute_shape_factor");
             amrex::ignore_unused(sx, xmid);
         }
@@ -89,7 +89,7 @@ struct Compute_shifted_shape_factor
         const T x_old,
         const int i_new) const
     {
-        if constexpr (depos_order == 1){
+        if constexpr (depos_order == 1) {
             const auto i = static_cast<int>(x_old);
             const int i_shift = i - i_new;
             const T xint = x_old - T(i);
@@ -97,7 +97,7 @@ struct Compute_shifted_shape_factor
             sx[2+i_shift] = xint;
             return i;
         }
-        else if constexpr (depos_order == 2){
+        else if constexpr (depos_order == 2) {
             const auto i = static_cast<int>(x_old + T(0.5));
             const int i_shift = i - (i_new + 1);
             const T xint = x_old - T(i);
@@ -107,7 +107,7 @@ struct Compute_shifted_shape_factor
             // index of the leftmost cell where particle deposits
             return i - 1;
         }
-        else if constexpr (depos_order == 3){
+        else if constexpr (depos_order == 3) {
             const auto i = static_cast<int>(x_old);
             const int i_shift = i - (i_new + 1);
             const T xint = x_old - i;
@@ -118,7 +118,7 @@ struct Compute_shifted_shape_factor
             // index of the leftmost cell where particle deposits
             return i - 1;
         }
-        else{
+        else {
             WARPX_ABORT_WITH_MESSAGE("Unknown particle shape selected in Compute_shifted_shape_factor");
             amrex::ignore_unused(sx, x_old, i_new);
         }

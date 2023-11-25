@@ -46,7 +46,7 @@ namespace AnyFFT
 
         // Initialize fft_plan.m_plan with the vendor fft plan.
         // Swap dimensions: AMReX FAB are Fortran-order but FFTW is C-order
-        if (dir == direction::R2C){
+        if (dir == direction::R2C) {
             if (dim == 3) {
                 fft_plan.m_plan = VendorCreatePlanR2C3D(
                     real_size[2], real_size[1], real_size[0], real_array, complex_array, FFTW_ESTIMATE);
@@ -57,7 +57,7 @@ namespace AnyFFT
                 WARPX_ABORT_WITH_MESSAGE(
                     "only dim=2 and dim=3 have been implemented");
             }
-        } else if (dir == direction::C2R){
+        } else if (dir == direction::C2R) {
             if (dim == 3) {
                 fft_plan.m_plan = VendorCreatePlanC2R3D(
                     real_size[2], real_size[1], real_size[0], complex_array, real_array, FFTW_ESTIMATE);
@@ -88,7 +88,7 @@ namespace AnyFFT
 #  endif
     }
 
-    void Execute(FFTplan& fft_plan){
+    void Execute(FFTplan& fft_plan) {
 #  ifdef AMREX_USE_FLOAT
         fftwf_execute( fft_plan.m_plan );
 #  else

@@ -61,7 +61,7 @@ ParticleHistogram2D::ParticleHistogram2D (std::string rd_name)
 
     pp_rd_name.query("openpmd_backend", m_openpmd_backend);
     // pick first available backend if default is chosen
-    if( m_openpmd_backend == "default" )
+    if (m_openpmd_backend == "default" )
         m_openpmd_backend = WarpXOpenPMDFileType();
     pp_rd_name.add("openpmd_backend", m_openpmd_backend);
 
@@ -94,14 +94,14 @@ ParticleHistogram2D::ParticleHistogram2D (std::string rd_name)
     // get species names (std::vector<std::string>)
     auto const species_names = mypc.GetSpeciesNames();
     // select species
-    for ( int i = 0; i < mypc.nSpecies(); ++i )
+    for (int i = 0; i < mypc.nSpecies(); ++i )
     {
-        if ( selected_species_name == species_names[i] ){
+        if (selected_species_name == species_names[i]) {
             m_selected_species_id = i;
         }
     }
     // if m_selected_species_id is not modified
-    if ( m_selected_species_id == -1 ){
+    if (m_selected_species_id == -1) {
         WARPX_ABORT_WITH_MESSAGE("Unknown species for ParticleHistogram2D reduced diagnostic.");
     }
 
@@ -216,7 +216,7 @@ void ParticleHistogram2D::ComputeDiags (int step)
 
                                        // don't count a particle if it is filtered out
                                        if (do_parser_filter)
-                                           if(!static_cast<bool>(fun_filterparser(t, x, y, z, ux, uy, uz, w)))
+                                           if (!static_cast<bool>(fun_filterparser(t, x, y, z, ux, uy, uz, w)))
                                                return;
 
                                        // continue function if particle is not filtered out
@@ -226,10 +226,10 @@ void ParticleHistogram2D::ComputeDiags (int step)
 
                                        // determine particle bin
                                        int const bin_abs = int(Math::floor((f_abs-bin_min_abs)/bin_size_abs));
-                                       if ( bin_abs<0 || bin_abs>=num_bins_abs ) return; // discard if out-of-range
+                                       if (bin_abs<0 || bin_abs>=num_bins_abs ) return; // discard if out-of-range
 
                                        int const bin_ord = int(Math::floor((f_ord-bin_min_ord)/bin_size_ord));
-                                       if ( bin_ord<0 || bin_ord>=num_bins_ord ) return; // discard if out-of-range
+                                       if (bin_ord<0 || bin_ord>=num_bins_ord ) return; // discard if out-of-range
 
                                        amrex::Real &data = d_table(bin_abs, bin_ord);
                                        amrex::HostDevice::Atomic::Add(&data, weight);
@@ -247,7 +247,7 @@ void ParticleHistogram2D::ComputeDiags (int step)
             (h_table_data.p, size, ParallelDescriptor::IOProcessorNumber());
 
     // Return for all that are not IO processor
-    if ( !ParallelDescriptor::IOProcessor() ) { return; }
+    if (!ParallelDescriptor::IOProcessor()) { return; }
 }
 // end void ParticleHistogram2D::ComputeDiags
 
@@ -255,7 +255,7 @@ void ParticleHistogram2D::WriteToFile (int step) const
 {
 #ifdef WARPX_USE_OPENPMD
     // only IO processor writes
-    if ( !ParallelDescriptor::IOProcessor() ) { return; }
+    if (!ParallelDescriptor::IOProcessor()) { return; }
 
     // Create the OpenPMD series
     auto series = io::Series(

@@ -70,7 +70,7 @@ PsatdAlgorithmComoving::pushSpectralFields (SpectralFieldData& f) const
     const SpectralFieldIndex& Idx = m_spectral_index;
 
     // Loop over boxes
-    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi) {
 
         const amrex::Box& bx = f.fields[mfi].box();
 
@@ -252,7 +252,7 @@ void PsatdAlgorithmComoving::InitializeSpectralCoefficients (const SpectralKSpac
 
                 T2(i,j,k) = theta * theta;
 
-                if ( (nu != om_mod/om) && (nu != -om_mod/om) && (nu != 0.) ) {
+                if ((nu != om_mod/om) && (nu != -om_mod/om) && (nu != 0.)) {
 
                     const Complex x1 = om2 / (om2_mod - nu * nu * om2)
                         * (theta_star - theta * C(i,j,k) + I * nu * om * theta * S_ck(i,j,k));
@@ -419,7 +419,7 @@ void PsatdAlgorithmComoving::CurrentCorrection (SpectralFieldData& field_data)
     const SpectralFieldIndex& Idx = m_spectral_index;
 
     // Loop over boxes
-    for (amrex::MFIter mfi(field_data.fields); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(field_data.fields); mfi.isValid(); ++mfi) {
 
         const amrex::Box& bx = field_data.fields[mfi].box();
 
@@ -478,7 +478,7 @@ void PsatdAlgorithmComoving::CurrentCorrection (SpectralFieldData& field_data)
                 const Complex kmod_dot_J = kx_mod * Jx + ky_mod * Jy + kz_mod * Jz;
                 const amrex::Real k_dot_v = kx * vx + ky * vy + kz * vz;
 
-                if ( k_dot_v != 0._rt ) {
+                if (k_dot_v != 0._rt) {
 
                     const Complex theta = amrex::exp(- I * k_dot_v * dt * 0.5_rt);
                     const Complex den = 1._rt - theta * theta;

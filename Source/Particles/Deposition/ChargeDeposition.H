@@ -89,7 +89,7 @@ void doChargeDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
     // Loop over particles and deposit into rho_fab
 #if defined(WARPX_USE_GPUCLOCK)
     amrex::Real* cost_real = nullptr;
-    if( load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
+    if (load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
         cost_real = (amrex::Real *) amrex::The_Managed_Arena()->alloc(sizeof(amrex::Real));
         *cost_real = 0.;
     }
@@ -104,7 +104,7 @@ void doChargeDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
 #endif
             // --- Get particle quantities
             amrex::Real wq = q*wp[ip]*invvol;
-            if (do_ionization){
+            if (do_ionization) {
                 wq *= ion_lev[ip];
             }
 
@@ -166,15 +166,15 @@ void doChargeDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
 
             // Deposit charge into rho_arr
 #if defined(WARPX_DIM_1D_Z)
-            for (int iz=0; iz<=depos_order; iz++){
+            for (int iz=0; iz<=depos_order; iz++) {
                 amrex::Gpu::Atomic::AddNoRet(
                     &rho_arr(lo.x+k+iz, 0, 0, 0),
                     sz[iz]*wq);
             }
 #endif
 #if defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-            for (int iz=0; iz<=depos_order; iz++){
-                for (int ix=0; ix<=depos_order; ix++){
+            for (int iz=0; iz<=depos_order; iz++) {
+                for (int ix=0; ix<=depos_order; ix++) {
                     amrex::Gpu::Atomic::AddNoRet(
                         &rho_arr(lo.x+i+ix, lo.y+k+iz, 0, 0),
                         sx[ix]*sz[iz]*wq);
@@ -190,9 +190,9 @@ void doChargeDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
                 }
             }
 #elif defined(WARPX_DIM_3D)
-            for (int iz=0; iz<=depos_order; iz++){
-                for (int iy=0; iy<=depos_order; iy++){
-                    for (int ix=0; ix<=depos_order; ix++){
+            for (int iz=0; iz<=depos_order; iz++) {
+                for (int iy=0; iy<=depos_order; iy++) {
+                    for (int ix=0; ix<=depos_order; ix++) {
                         amrex::Gpu::Atomic::AddNoRet(
                             &rho_arr(lo.x+i+ix, lo.y+j+iy, lo.z+k+iz),
                             sx[ix]*sy[iy]*sz[iz]*wq);
@@ -301,7 +301,7 @@ void doChargeDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPositio
     // Loop over particles and deposit into rho_fab
 #if defined(WARPX_USE_GPUCLOCK)
     amrex::Real* cost_real = nullptr;
-    if( load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
+    if (load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
         cost_real = (amrex::Real *) amrex::The_Managed_Arena()->alloc(sizeof(amrex::Real));
         *cost_real = 0.;
     }
@@ -401,7 +401,7 @@ void doChargeDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPositio
 #endif
             // --- Get particle quantities
             amrex::Real wq = q*wp[ip]*invvol;
-            if (do_ionization){
+            if (do_ionization) {
                 wq *= ion_lev[ip];
             }
 
@@ -463,15 +463,15 @@ void doChargeDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPositio
 
             // Deposit charge into buf
 #if defined(WARPX_DIM_1D_Z)
-            for (int iz=0; iz<=depos_order; iz++){
+            for (int iz=0; iz<=depos_order; iz++) {
                 amrex::Gpu::Atomic::AddNoRet(
                     &buf(lo.x+k+iz, 0, 0, 0),
                     sz[iz]*wq);
             }
 #endif
 #if defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-            for (int iz=0; iz<=depos_order; iz++){
-                for (int ix=0; ix<=depos_order; ix++){
+            for (int iz=0; iz<=depos_order; iz++) {
+                for (int ix=0; ix<=depos_order; ix++) {
                     amrex::Gpu::Atomic::AddNoRet(
                         &buf(lo.x+i+ix, lo.y+k+iz, 0, 0),
                         sx[ix]*sz[iz]*wq);
@@ -487,9 +487,9 @@ void doChargeDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPositio
                 }
             }
 #elif defined(WARPX_DIM_3D)
-            for (int iz=0; iz<=depos_order; iz++){
-                for (int iy=0; iy<=depos_order; iy++){
-                    for (int ix=0; ix<=depos_order; ix++){
+            for (int iz=0; iz<=depos_order; iz++) {
+                for (int iy=0; iy<=depos_order; iy++) {
+                    for (int ix=0; ix<=depos_order; ix++) {
                         amrex::Gpu::Atomic::AddNoRet(
                             &buf(lo.x+i+ix, lo.y+j+iy, lo.z+k+iz),
                             sx[ix]*sy[iy]*sz[iz]*wq);
@@ -507,7 +507,7 @@ void doChargeDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPositio
       }
       );
 #if defined(WARPX_USE_GPUCLOCK)
-        if(cost && load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
+        if (cost && load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::GpuClock) {
             amrex::Gpu::streamSynchronize();
             *cost += *cost_real;
             amrex::The_Managed_Arena()->free(cost_real);

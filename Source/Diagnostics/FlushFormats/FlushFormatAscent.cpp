@@ -99,7 +99,7 @@ FlushFormatAscent::WriteParticles(const amrex::Vector<ParticleDiag>& particle_di
 
         // WarpXParticleContainer compile-time extra SoA attributes (Real): PIdx::nattribs
         // not an efficient search, but N is small...
-        for(int j = 0; j < PIdx::nattribs; ++j)
+        for (int j = 0; j < PIdx::nattribs; ++j)
         {
             auto rvn_it = real_comps_map.begin();
             for (; rvn_it != real_comps_map.end(); ++rvn_it)

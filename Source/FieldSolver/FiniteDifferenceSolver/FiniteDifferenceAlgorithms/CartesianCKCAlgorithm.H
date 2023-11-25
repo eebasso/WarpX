@@ -29,7 +29,7 @@ struct CartesianCKCAlgorithm {
         std::array<amrex::Real,3>& cell_size,
         amrex::Vector<amrex::Real>& stencil_coefs_x,
         amrex::Vector<amrex::Real>& stencil_coefs_y,
-        amrex::Vector<amrex::Real>& stencil_coefs_z ) {
+        amrex::Vector<amrex::Real>& stencil_coefs_z) {
 
         using namespace amrex;
 
@@ -104,7 +104,7 @@ struct CartesianCKCAlgorithm {
     /**
      * Compute the maximum timestep, for which the scheme remains stable
      * (Courant-Friedrichs-Levy limit) */
-    static amrex::Real ComputeMaxDt ( amrex::Real const * const dx ) {
+    static amrex::Real ComputeMaxDt ( amrex::Real const * const dx) {
 #if (defined WARPX_DIM_1D_Z)
             amrex::Real const delta_t = dx[0]/PhysConst::c;
 #elif (defined WARPX_DIM_XZ)
@@ -131,7 +131,7 @@ struct CartesianCKCAlgorithm {
     static amrex::Real UpwardDx (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_x, int const /*n_coefs_x*/,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 #if (defined WARPX_DIM_3D || WARPX_DIM_XZ)
@@ -170,7 +170,7 @@ struct CartesianCKCAlgorithm {
     static amrex::Real DownwardDx (
         T_Field const& F,
         amrex::Real const * const coefs_x, int const /*n_coefs_x*/,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 #if (defined WARPX_DIM_1D_Z)
@@ -188,7 +188,7 @@ struct CartesianCKCAlgorithm {
     static amrex::Real UpwardDy (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_y, int const n_coefs_y,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 #if defined WARPX_DIM_3D
@@ -223,7 +223,7 @@ struct CartesianCKCAlgorithm {
     static amrex::Real DownwardDy (
         T_Field const& F,
         amrex::Real const * const coefs_y, int const n_coefs_y,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 #if defined WARPX_DIM_3D
@@ -246,7 +246,7 @@ struct CartesianCKCAlgorithm {
     static amrex::Real UpwardDz (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_z, int const n_coefs_z,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 

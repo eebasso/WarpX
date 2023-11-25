@@ -177,17 +177,17 @@ deposit_charge (typename T_PC::ParIterType& pti,
 
     ABLASTR_PROFILE_VAR_START(blp_ppc_chd, do_device_synchronize);
 
-    if        (nox == 1){
+    if        (nox == 1) {
         doChargeDepositionShapeN<1>(GetPosition, wp.dataPtr()+offset, ion_lev,
                                     rho_fab, np_to_depose.value(), dx, xyzmin, lo, charge,
                                     n_rz_azimuthal_modes, cost,
                                     load_balance_costs_update_algo);
-    } else if (nox == 2){
+    } else if (nox == 2) {
         doChargeDepositionShapeN<2>(GetPosition, wp.dataPtr()+offset, ion_lev,
                                     rho_fab, np_to_depose.value(), dx, xyzmin, lo, charge,
                                     n_rz_azimuthal_modes, cost,
                                     load_balance_costs_update_algo);
-    } else if (nox == 3){
+    } else if (nox == 3) {
         doChargeDepositionShapeN<3>(GetPosition, wp.dataPtr()+offset, ion_lev,
                                     rho_fab, np_to_depose.value(), dx, xyzmin, lo, charge,
                                     n_rz_azimuthal_modes, cost,

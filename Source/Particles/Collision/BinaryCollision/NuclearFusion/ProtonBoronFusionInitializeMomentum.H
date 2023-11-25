@@ -129,7 +129,7 @@ namespace {
 
         // Convert momentum of second alpha to lab frame, using equation (13) of F. Perez et al.,
         // Phys.Plasmas.19.083104 (2012)
-        if ( v_Be_sq > std::numeric_limits<amrex::ParticleReal>::min() )
+        if (v_Be_sq > std::numeric_limits<amrex::ParticleReal>::min() )
         {
             const amrex::ParticleReal vcDps = v_Bex*px_Bestar + v_Bey*py_Bestar + v_Bez*pz_Bestar;
             const amrex::ParticleReal factor0 = (g_Be-1._prt)/v_Be_sq;

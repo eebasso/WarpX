@@ -88,10 +88,10 @@ struct InjectorDensityPredefined
 
             // Longitudinal profile, normalized to 1
             if        ((z-z_start)>=0               and
-                       (z-z_start)<ramp_up ) {
+                       (z-z_start)<ramp_up) {
                 n = 0.5*(1.-std::cos(MathConst::pi*(z-z_start)/ramp_up));
             } else if ((z-z_start)>=ramp_up         and
-                       (z-z_start)< ramp_up+plateau ) {
+                       (z-z_start)< ramp_up+plateau) {
                 n = 1.;
             } else if ((z-z_start)>=ramp_up+plateau and
                        (z-z_start)< ramp_up+plateau+ramp_down) {

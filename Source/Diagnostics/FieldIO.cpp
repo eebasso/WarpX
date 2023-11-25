@@ -217,9 +217,9 @@ AverageAndPackScalarField (MultiFab& mf_avg,
     // Check the type of staggering of the 3-component `vector_field`
     // and average accordingly:
     // - Fully cell-centered field (no average needed; simply copy)
-    if ( scalar_total->is_cell_centered() ){
+    if (scalar_total->is_cell_centered()) {
         MultiFab::Copy( mf_avg, *scalar_total, 0, dcomp, 1, ngrow);
-    } else if ( scalar_total->is_nodal() ){
+    } else if (scalar_total->is_nodal()) {
         // - Fully nodal
         ablastr::coarsen::sample::Coarsen(mf_avg, *scalar_total, dcomp, 0, 1, ngrow );
     } else {

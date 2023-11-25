@@ -88,7 +88,7 @@ WarpX::InitEB ()
     pp_warpx.query("eb_implicit_function", impf);
     if (! impf.empty()) {
         auto eb_if_parser = utils::parser::makeParser(impf, {"x", "y", "z"});
-        ParserIF pif(eb_if_parser.compile<3>());
+        ParserIF pif (eb_if_parser.compile<3>());
         auto gshop = amrex::EB2::makeShop(pif, eb_if_parser);
          // The last argument of amrex::EB2::Build is the maximum coarsening level
          // to which amrex should try to coarsen the EB.  It will stop after coarsening
@@ -122,12 +122,12 @@ WarpX::ComputeEdgeLengths (std::array< std::unique_ptr<amrex::MultiFab>, 3 >& ed
 #ifdef WARPX_DIM_XZ
     edge_lengths[1]->setVal(0.);
 #endif
-    for (amrex::MFIter mfi(flags); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(flags); mfi.isValid(); ++mfi) {
 #ifdef WARPX_DIM_XZ
-        for (int idim = 0; idim < 3; ++idim){
-            if(idim == 1) continue;
+        for (int idim = 0; idim < 3; ++idim) {
+            if (idim == 1) continue;
 #elif defined(WARPX_DIM_3D)
-        for (int idim = 0; idim < AMREX_SPACEDIM; ++idim){
+        for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
 #else
         WARPX_ABORT_WITH_MESSAGE(
             "ComputeEdgeLengths: Only implemented in 2D3V and 3D3V");
@@ -150,7 +150,7 @@ WarpX::ComputeEdgeLengths (std::array< std::unique_ptr<amrex::MultiFab>, 3 >& ed
             } else {
 #ifdef WARPX_DIM_XZ
                 int idim_amrex = idim;
-                if(idim == 2) idim_amrex = 1;
+                if (idim == 2) idim_amrex = 1;
                 auto const &edge_cent = edge_centroid[idim_amrex]->const_array(mfi);
 #elif defined(WARPX_DIM_3D)
                 auto const &edge_cent = edge_centroid[idim]->const_array(mfi);
@@ -251,10 +251,10 @@ WarpX::ScaleEdges (std::array< std::unique_ptr<amrex::MultiFab>, 3 >& edge_lengt
 
     for (amrex::MFIter mfi(*edge_lengths[0]); mfi.isValid(); ++mfi) {
 #ifdef WARPX_DIM_XZ
-        for (int idim = 0; idim < 3; ++idim){
-            if(idim == 1) continue;
+        for (int idim = 0; idim < 3; ++idim) {
+            if (idim == 1) continue;
 #elif defined(WARPX_DIM_3D)
-        for (int idim = 0; idim < AMREX_SPACEDIM; ++idim){
+        for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
 #else
         WARPX_ABORT_WITH_MESSAGE(
             "ScaleEdges: Only implemented in 2D3V and 3D3V");
@@ -317,7 +317,7 @@ WarpX::ScaleAreas(std::array< std::unique_ptr<amrex::MultiFab>, 3 >& face_areas,
 
 
 void
-WarpX::MarkCells(){
+WarpX::MarkCells() {
 #ifndef WARPX_DIM_RZ
     auto const &cell_size = CellSize(maxLevel());
 
@@ -355,10 +355,10 @@ WarpX::MarkCells(){
                 // Minimal area for this cell to be stable
                 mod_areas_dim(i, j, k) = S(i, j, k);
                 double S_stab;
-                if(idim == 0){
+                if (idim == 0) {
                     S_stab = 0.5 * std::max({ly(i, j, k) * dz, ly(i, j, k + 1) * dz,
                                                     lz(i, j, k) * dy, lz(i, j + 1, k) * dy});
-                }else if(idim == 1){
+                } else if (idim == 1) {
 #ifdef WARPX_DIM_XZ
                     S_stab = 0.5 * std::max({lx(i, j, k) * dz, lx(i, j + 1, k) * dz,
                                              lz(i, j, k) * dx, lz(i + 1, j, k) * dx});
@@ -369,7 +369,7 @@ WarpX::MarkCells(){
                     WARPX_ABORT_WITH_MESSAGE(
                         "MarkCells: Only implemented in 2D3V and 3D3V");
 #endif
-                }else {
+                } else {
                     S_stab = 0.5 * std::max({lx(i, j, k) * dy, lx(i, j + 1, k) * dy,
                                              ly(i, j, k) * dx, ly(i + 1, j, k) * dx});
                 }
@@ -389,12 +389,12 @@ WarpX::MarkCells(){
                 //       corresponding entries in flag_ext_face are set to zero. This helps to keep
                 //       track of which cells could not be extended
                 flag_ext_face(i, j, k) = int(S(i, j, k) < S_stab && S(i, j, k) > 0);
-                if(flag_ext_face(i, j, k)){
+                if (flag_ext_face(i, j, k)) {
                     flag_info_face(i, j, k) = 0;
                 }
                 // Is this face available to lend area to other faces?
                 // The criterion is that the face has to be interior and not already unstable itself
-                if(int(S(i, j, k) > 0 && !flag_ext_face(i, j, k))) {
+                if (int(S(i, j, k) > 0 && !flag_ext_face(i, j, k))) {
                     flag_info_face(i, j, k) = 1;
                 }
             });

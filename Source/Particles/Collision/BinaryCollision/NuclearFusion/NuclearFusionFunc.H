@@ -206,8 +206,8 @@ public:
 
                 p_pair_indices_1[pair_index] = I1[i1];
                 p_pair_indices_2[pair_index] = I2[i2];
-                ++i1; if ( i1 == I1e ) { i1 = I1s; }
-                ++i2; if ( i2 == I2e ) { i2 = I2s; }
+                ++i1; if (i1 == I1e) { i1 = I1s; }
+                ++i2; if (i2 == I2e) { i2 = I2s; }
                 ++pair_index;
             }
 

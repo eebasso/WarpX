@@ -93,7 +93,7 @@ PsatdAlgorithmRZ::pushSpectralFields(SpectralFieldDataRZ & f)
     const SpectralFieldIndex& Idx = m_spectral_index;
 
     // Loop over boxes
-    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi) {
 
         amrex::Box const & bx = f.fields[mfi].box();
 
@@ -339,7 +339,7 @@ void PsatdAlgorithmRZ::InitializeSpectralCoefficients (SpectralFieldDataRZ const
     // Fill them with the right values:
     // Loop over boxes and allocate the corresponding coefficients
     // for each box owned by the local MPI proc
-    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi) {
 
         amrex::Box const & bx = f.fields[mfi].box();
 
@@ -380,7 +380,7 @@ void PsatdAlgorithmRZ::InitializeSpectralCoefficients (SpectralFieldDataRZ const
             // Calculate coefficients
             constexpr amrex::Real c = PhysConst::c;
             constexpr amrex::Real ep0 = PhysConst::ep0;
-            if (k_norm != 0){
+            if (k_norm != 0) {
                 C(i,j,k,mode) = std::cos(c*k_norm*dt);
                 S_ck(i,j,k,mode) = std::sin(c*k_norm*dt)/(c*k_norm);
                 X1(i,j,k,mode) = (1._rt - C(i,j,k,mode))/(ep0 * c*c * k_norm*k_norm);
@@ -427,7 +427,7 @@ PsatdAlgorithmRZ::CurrentCorrection (SpectralFieldDataRZ& field_data)
     const SpectralFieldIndex& Idx = m_spectral_index;
 
     // Loop over boxes
-    for (amrex::MFIter mfi(field_data.fields); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(field_data.fields); mfi.isValid(); ++mfi) {
 
         amrex::Box const & bx = field_data.fields[mfi].box();
 
@@ -472,7 +472,7 @@ PsatdAlgorithmRZ::CurrentCorrection (SpectralFieldDataRZ& field_data)
             constexpr Complex I = Complex{0._rt,1._rt};
 
             // Correct J
-            if ( k_norm2 != 0._rt )
+            if (k_norm2 != 0._rt )
             {
                 Complex const F = - ((rho_new - rho_old)/dt + I*kz*Jz + kr*(Jp - Jm))/k_norm2;
 

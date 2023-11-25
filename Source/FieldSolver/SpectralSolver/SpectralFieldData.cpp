@@ -167,7 +167,7 @@ SpectralFieldData::SpectralFieldData( const int lev,
     backward_plan = AnyFFT::FFTplans(spectralspace_ba, dm);
     // Loop over boxes and allocate the corresponding plan
     // for each box owned by the local MPI proc
-    for ( MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi ){
+    for (MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi) {
         if (do_costs)
         {
             amrex::Gpu::synchronize();
@@ -201,8 +201,8 @@ SpectralFieldData::SpectralFieldData( const int lev,
 
 SpectralFieldData::~SpectralFieldData()
 {
-    if (!tmpRealField.empty()){
-        for ( MFIter mfi(tmpRealField); mfi.isValid(); ++mfi ){
+    if (!tmpRealField.empty()) {
+        for (MFIter mfi(tmpRealField); mfi.isValid(); ++mfi) {
             AnyFFT::DestroyPlan(forward_plan[mfi]);
             AnyFFT::DestroyPlan(backward_plan[mfi]);
         }
@@ -236,7 +236,7 @@ SpectralFieldData::ForwardTransform (const int lev,
     // Loop over boxes
     // Note: we do NOT OpenMP parallelize here, since we use OpenMP threads for
     //       the FFTs on each box!
-    for ( MFIter mfi(mf); mfi.isValid(); ++mfi ){
+    for (MFIter mfi(mf); mfi.isValid(); ++mfi) {
         if (do_costs)
         {
             amrex::Gpu::synchronize();
@@ -361,7 +361,7 @@ SpectralFieldData::BackwardTransform (const int lev,
     // Loop over boxes
     // Note: we do NOT OpenMP parallelize here, since we use OpenMP threads for
     //       the iFFTs on each box!
-    for ( MFIter mfi(mf); mfi.isValid(); ++mfi ){
+    for (MFIter mfi(mf); mfi.isValid(); ++mfi) {
         if (do_costs)
         {
             amrex::Gpu::synchronize();

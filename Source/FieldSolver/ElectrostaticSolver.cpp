@@ -79,7 +79,7 @@ WarpX::ComputeSpaceChargeField (bool const reset_fields)
         // Loop over the species and add their space-charge contribution to E and B.
         // Note that the fields calculated here does not include the E field
         // due to simulation boundary potentials
-        for (int ispecies=0; ispecies<mypc->nSpecies(); ispecies++){
+        for (int ispecies=0; ispecies<mypc->nSpecies(); ispecies++) {
             WarpXParticleContainer& species = mypc->GetParticleContainer(ispecies);
             if (species.initialize_self_fields ||
                 (electrostatic_solver_id == ElectrostaticSolverAlgo::Relativistic)) {
@@ -88,7 +88,7 @@ WarpX::ComputeSpaceChargeField (bool const reset_fields)
         }
 
         // Add the field due to the boundary potentials
-        if (electrostatic_solver_id == ElectrostaticSolverAlgo::Relativistic){
+        if (electrostatic_solver_id == ElectrostaticSolverAlgo::Relativistic) {
             AddBoundaryField();
         }
     }
@@ -173,7 +173,7 @@ WarpX::AddSpaceChargeField (WarpXParticleContainer& pc)
     bool const local = false;
     bool const reset = false;
     bool const apply_boundary_and_scale_volume = true;
-    if ( !pc.do_not_deposit) {
+    if (!pc.do_not_deposit) {
         pc.DepositCharge(rho, local, reset, apply_boundary_and_scale_volume);
     }
 
@@ -256,7 +256,7 @@ WarpX::AddSpaceChargeFieldLabFrame ()
 #ifndef AMREX_USE_EB
     computeE( Efield_fp, phi_fp, beta );
 #else
-    if ( IsPythonCallbackInstalled("poissonsolver") ) computeE( Efield_fp, phi_fp, beta );
+    if (IsPythonCallbackInstalled("poissonsolver") ) computeE( Efield_fp, phi_fp, beta );
 #endif
 
     // Compute the magnetic field
@@ -408,14 +408,14 @@ WarpX::setPhiBC ( amrex::Vector<std::unique_ptr<amrex::MultiFab>>& phi ) const
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-        for ( MFIter mfi(*phi[lev], TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+        for (MFIter mfi(*phi[lev], TilingIfNotGPU()); mfi.isValid(); ++mfi) {
             // Extract the potential
             auto phi_arr = phi[lev]->array(mfi);
             // Extract tileboxes for which to loop
             const Box& tb  = mfi.tilebox( phi[lev]->ixType().toIntVect() );
 
             // loop over dimensions
-            for (int idim=0; idim<AMREX_SPACEDIM; idim++){
+            for (int idim=0; idim<AMREX_SPACEDIM; idim++) {
                 // check if neither boundaries in this dimension should be set
                 if (!(dirichlet_flag[2*idim] || dirichlet_flag[2*idim+1])) continue;
 
@@ -429,7 +429,7 @@ WarpX::setPhiBC ( amrex::Vector<std::unique_ptr<amrex::MultiFab>>& phi ) const
 
                             IntVect iv(AMREX_D_DECL(i,j,k));
 
-                            if (dirichlet_flag[2*idim] && iv[idim] == domain.smallEnd(idim)){
+                            if (dirichlet_flag[2*idim] && iv[idim] == domain.smallEnd(idim)) {
                                 phi_arr(i,j,k) = phi_bc_values_lo[idim];
                             }
                             if (dirichlet_flag[2*idim+1] && iv[idim] == domain.bigEnd(idim)) {
@@ -470,7 +470,7 @@ WarpX::computeE (amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>, 3> >
 #ifdef AMREX_USE_OMP
 #    pragma omp parallel if (Gpu::notInLaunchRegion())
 #endif
-        for ( MFIter mfi(*phi[lev], TilingIfNotGPU()); mfi.isValid(); ++mfi )
+        for (MFIter mfi(*phi[lev], TilingIfNotGPU()); mfi.isValid(); ++mfi )
         {
 #if defined(WARPX_DIM_3D)
             const Real inv_dx = 1._rt/dx[0];
@@ -650,7 +650,7 @@ WarpX::computeB (amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>, 3> >
 #ifdef AMREX_USE_OMP
 #    pragma omp parallel if (Gpu::notInLaunchRegion())
 #endif
-        for ( MFIter mfi(*phi[lev], TilingIfNotGPU()); mfi.isValid(); ++mfi )
+        for (MFIter mfi(*phi[lev], TilingIfNotGPU()); mfi.isValid(); ++mfi )
         {
 #if defined(WARPX_DIM_3D)
             const Real inv_dx = 1._rt/dx[0];
@@ -969,7 +969,7 @@ WarpX::computePhiTriDiagonal (const amrex::Vector<std::unique_ptr<amrex::MultiFa
 void ElectrostaticSolver::PoissonBoundaryHandler::definePhiBCs (const amrex::Geometry& geom)
 {
 #ifdef WARPX_DIM_RZ
-    if (geom.ProbLo(0) == 0){
+    if (geom.ProbLo(0) == 0) {
         lobc[0] = LinOpBCType::Neumann;
         dirichlet_flag[0] = false;
 
@@ -994,9 +994,9 @@ void ElectrostaticSolver::PoissonBoundaryHandler::definePhiBCs (const amrex::Geo
     const int dim_start = 0;
     amrex::ignore_unused(geom);
 #endif
-    for (int idim=dim_start; idim<AMREX_SPACEDIM; idim++){
-        if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::Periodic
-             && WarpX::field_boundary_hi[idim] == FieldBoundaryType::Periodic ) {
+    for (int idim=dim_start; idim<AMREX_SPACEDIM; idim++) {
+        if (WarpX::field_boundary_lo[idim] == FieldBoundaryType::Periodic
+             && WarpX::field_boundary_hi[idim] == FieldBoundaryType::Periodic) {
             lobc[idim] = LinOpBCType::Periodic;
             hibc[idim] = LinOpBCType::Periodic;
             dirichlet_flag[idim*2] = false;
@@ -1004,11 +1004,11 @@ void ElectrostaticSolver::PoissonBoundaryHandler::definePhiBCs (const amrex::Geo
         }
         else {
             has_non_periodic = true;
-            if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::PEC ) {
+            if (WarpX::field_boundary_lo[idim] == FieldBoundaryType::PEC) {
                 lobc[idim] = LinOpBCType::Dirichlet;
                 dirichlet_flag[idim*2] = true;
             }
-            else if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::Neumann ) {
+            else if (WarpX::field_boundary_lo[idim] == FieldBoundaryType::Neumann) {
                 lobc[idim] = LinOpBCType::Neumann;
                 dirichlet_flag[idim*2] = false;
             }
@@ -1019,11 +1019,11 @@ void ElectrostaticSolver::PoissonBoundaryHandler::definePhiBCs (const amrex::Geo
                 );
             }
 
-            if ( WarpX::field_boundary_hi[idim] == FieldBoundaryType::PEC ) {
+            if (WarpX::field_boundary_hi[idim] == FieldBoundaryType::PEC) {
                 hibc[idim] = LinOpBCType::Dirichlet;
                 dirichlet_flag[idim*2+1] = true;
             }
-            else if ( WarpX::field_boundary_hi[idim] == FieldBoundaryType::Neumann ) {
+            else if (WarpX::field_boundary_hi[idim] == FieldBoundaryType::Neumann) {
                 hibc[idim] = LinOpBCType::Neumann;
                 dirichlet_flag[idim*2+1] = false;
             }

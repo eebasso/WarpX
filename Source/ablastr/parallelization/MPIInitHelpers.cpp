@@ -88,7 +88,7 @@ namespace ablastr::parallelization
         auto mtn = amrex::ParallelDescriptor::mpi_level_to_string;
 
         std::stringstream ss;
-        if( thread_provided < thread_required ){
+        if (thread_provided < thread_required) {
             ss << "WARNING: Provided MPI thread safety level ("
                            << mtn(thread_provided) << ") is LOWER than requested "
                            << mtn(thread_required) << "). This might lead to undefined "
@@ -96,7 +96,7 @@ namespace ablastr::parallelization
             ablastr::warn_manager::WMRecordWarning(
                     "MPI", ss.str(), ablastr::warn_manager::WarnPriority::high);
         }
-        if( thread_provided > thread_required ){
+        if (thread_provided > thread_required) {
             ss << "NOTE: Provided MPI thread safety level ("
                            << mtn(thread_provided) << ") is stricter than requested "
                            << mtn(thread_required) << "). This might reduce multi-node "

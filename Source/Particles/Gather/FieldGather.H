@@ -231,7 +231,7 @@ void doGatherShapeN (const amrex::ParticleReal xp,
     // Gather field on particle Eyp from field on grid ey_arr
     // Gather field on particle Exp from field on grid ex_arr
     // Gather field on particle Bzp from field on grid bz_arr
-    for (int iz=0; iz<=depos_order; iz++){
+    for (int iz=0; iz<=depos_order; iz++) {
         Eyp += sz_ey[iz]*
             ey_arr(lo.x+l_ey+iz, 0, 0, 0);
         Exp += sz_ex[iz]*
@@ -243,7 +243,7 @@ void doGatherShapeN (const amrex::ParticleReal xp,
     // Gather field on particle Byp from field on grid by_arr
     // Gather field on particle Ezp from field on grid ez_arr
     // Gather field on particle Bxp from field on grid bx_arr
-    for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++){
+    for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++) {
         Ezp += sz_ez[iz]*
             ez_arr(lo.x+l_ez+iz, 0, 0, 0);
         Bxp += sz_bx[iz]*
@@ -254,16 +254,16 @@ void doGatherShapeN (const amrex::ParticleReal xp,
 
 #elif defined(WARPX_DIM_XZ)
     // Gather field on particle Eyp from field on grid ey_arr
-    for (int iz=0; iz<=depos_order; iz++){
-        for (int ix=0; ix<=depos_order; ix++){
+    for (int iz=0; iz<=depos_order; iz++) {
+        for (int ix=0; ix<=depos_order; ix++) {
             Eyp += sx_ey[ix]*sz_ey[iz]*
                 ey_arr(lo.x+j_ey+ix, lo.y+l_ey+iz, 0, 0);
         }
     }
     // Gather field on particle Exp from field on grid ex_arr
     // Gather field on particle Bzp from field on grid bz_arr
-    for (int iz=0; iz<=depos_order; iz++){
-        for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++){
+    for (int iz=0; iz<=depos_order; iz++) {
+        for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++) {
             Exp += sx_ex[ix]*sz_ex[iz]*
                 ex_arr(lo.x+j_ex+ix, lo.y+l_ex+iz, 0, 0);
             Bzp += sx_bz[ix]*sz_bz[iz]*
@@ -272,8 +272,8 @@ void doGatherShapeN (const amrex::ParticleReal xp,
     }
     // Gather field on particle Ezp from field on grid ez_arr
     // Gather field on particle Bxp from field on grid bx_arr
-    for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++){
-        for (int ix=0; ix<=depos_order; ix++){
+    for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++) {
+        for (int ix=0; ix<=depos_order; ix++) {
             Ezp += sx_ez[ix]*sz_ez[iz]*
                 ez_arr(lo.x+j_ez+ix, lo.y+l_ez+iz, 0, 0);
             Bxp += sx_bx[ix]*sz_bx[iz]*
@@ -281,8 +281,8 @@ void doGatherShapeN (const amrex::ParticleReal xp,
         }
     }
     // Gather field on particle Byp from field on grid by_arr
-    for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++){
-        for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++){
+    for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++) {
+        for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++) {
             Byp += sx_by[ix]*sz_by[iz]*
                 by_arr(lo.x+j_by+ix, lo.y+l_by+iz, 0, 0);
         }
@@ -296,16 +296,16 @@ void doGatherShapeN (const amrex::ParticleReal xp,
     amrex::ParticleReal Bthetap = 0.;
 
     // Gather field on particle Ethetap from field on grid ey_arr
-    for (int iz=0; iz<=depos_order; iz++){
-        for (int ix=0; ix<=depos_order; ix++){
+    for (int iz=0; iz<=depos_order; iz++) {
+        for (int ix=0; ix<=depos_order; ix++) {
             Ethetap += sx_ey[ix]*sz_ey[iz]*
                 ey_arr(lo.x+j_ey+ix, lo.y+l_ey+iz, 0, 0);
         }
     }
     // Gather field on particle Erp from field on grid ex_arr
     // Gather field on particle Bzp from field on grid bz_arr
-    for (int iz=0; iz<=depos_order; iz++){
-        for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++){
+    for (int iz=0; iz<=depos_order; iz++) {
+        for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++) {
             Erp += sx_ex[ix]*sz_ex[iz]*
                 ex_arr(lo.x+j_ex+ix, lo.y+l_ex+iz, 0, 0);
             Bzp += sx_bz[ix]*sz_bz[iz]*
@@ -314,8 +314,8 @@ void doGatherShapeN (const amrex::ParticleReal xp,
     }
     // Gather field on particle Ezp from field on grid ez_arr
     // Gather field on particle Brp from field on grid bx_arr
-    for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++){
-        for (int ix=0; ix<=depos_order; ix++){
+    for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++) {
+        for (int ix=0; ix<=depos_order; ix++) {
             Ezp += sx_ez[ix]*sz_ez[iz]*
                 ez_arr(lo.x+j_ez+ix, lo.y+l_ez+iz, 0, 0);
             Brp += sx_bx[ix]*sz_bx[iz]*
@@ -323,8 +323,8 @@ void doGatherShapeN (const amrex::ParticleReal xp,
         }
     }
     // Gather field on particle Bthetap from field on grid by_arr
-    for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++){
-        for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++){
+    for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++) {
+        for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++) {
             Bthetap += sx_by[ix]*sz_by[iz]*
                 by_arr(lo.x+j_by+ix, lo.y+l_by+iz, 0, 0);
         }
@@ -345,8 +345,8 @@ void doGatherShapeN (const amrex::ParticleReal xp,
     for (int imode=1 ; imode < n_rz_azimuthal_modes ; imode++) {
 
         // Gather field on particle Ethetap from field on grid ey_arr
-        for (int iz=0; iz<=depos_order; iz++){
-            for (int ix=0; ix<=depos_order; ix++){
+        for (int iz=0; iz<=depos_order; iz++) {
+            for (int ix=0; ix<=depos_order; ix++) {
                 const amrex::Real dEy = (+ ey_arr(lo.x+j_ey+ix, lo.y+l_ey+iz, 0, 2*imode-1)*xy.real()
                                          - ey_arr(lo.x+j_ey+ix, lo.y+l_ey+iz, 0, 2*imode)*xy.imag());
                 Ethetap += sx_ey[ix]*sz_ey[iz]*dEy;
@@ -354,8 +354,8 @@ void doGatherShapeN (const amrex::ParticleReal xp,
         }
         // Gather field on particle Erp from field on grid ex_arr
         // Gather field on particle Bzp from field on grid bz_arr
-        for (int iz=0; iz<=depos_order; iz++){
-            for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++){
+        for (int iz=0; iz<=depos_order; iz++) {
+            for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++) {
                 const amrex::Real dEx = (+ ex_arr(lo.x+j_ex+ix, lo.y+l_ex+iz, 0, 2*imode-1)*xy.real()
                                          - ex_arr(lo.x+j_ex+ix, lo.y+l_ex+iz, 0, 2*imode)*xy.imag());
                 Erp += sx_ex[ix]*sz_ex[iz]*dEx;
@@ -366,8 +366,8 @@ void doGatherShapeN (const amrex::ParticleReal xp,
         }
         // Gather field on particle Ezp from field on grid ez_arr
         // Gather field on particle Brp from field on grid bx_arr
-        for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++){
-            for (int ix=0; ix<=depos_order; ix++){
+        for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++) {
+            for (int ix=0; ix<=depos_order; ix++) {
                 const amrex::Real dEz = (+ ez_arr(lo.x+j_ez+ix, lo.y+l_ez+iz, 0, 2*imode-1)*xy.real()
                                          - ez_arr(lo.x+j_ez+ix, lo.y+l_ez+iz, 0, 2*imode)*xy.imag());
                 Ezp += sx_ez[ix]*sz_ez[iz]*dEz;
@@ -377,8 +377,8 @@ void doGatherShapeN (const amrex::ParticleReal xp,
             }
         }
         // Gather field on particle Bthetap from field on grid by_arr
-        for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++){
-            for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++){
+        for (int iz=0; iz<=depos_order-galerkin_interpolation; iz++) {
+            for (int ix=0; ix<=depos_order-galerkin_interpolation; ix++) {
                 const amrex::Real dBy = (+ by_arr(lo.x+j_by+ix, lo.y+l_by+iz, 0, 2*imode-1)*xy.real()
                                          - by_arr(lo.x+j_by+ix, lo.y+l_by+iz, 0, 2*imode)*xy.imag());
                 Bthetap += sx_by[ix]*sz_by[iz]*dBy;
@@ -395,54 +395,54 @@ void doGatherShapeN (const amrex::ParticleReal xp,
 
 #else // defined(WARPX_DIM_3D)
     // Gather field on particle Exp from field on grid ex_arr
-    for (int iz=0; iz<=depos_order; iz++){
-        for (int iy=0; iy<=depos_order; iy++){
-            for (int ix=0; ix<= depos_order - galerkin_interpolation; ix++){
+    for (int iz=0; iz<=depos_order; iz++) {
+        for (int iy=0; iy<=depos_order; iy++) {
+            for (int ix=0; ix<= depos_order - galerkin_interpolation; ix++) {
                 Exp += sx_ex[ix]*sy_ex[iy]*sz_ex[iz]*
                     ex_arr(lo.x+j_ex+ix, lo.y+k_ex+iy, lo.z+l_ex+iz);
             }
         }
     }
     // Gather field on particle Eyp from field on grid ey_arr
-    for (int iz=0; iz<=depos_order; iz++){
-        for (int iy=0; iy<= depos_order - galerkin_interpolation; iy++){
-            for (int ix=0; ix<=depos_order; ix++){
+    for (int iz=0; iz<=depos_order; iz++) {
+        for (int iy=0; iy<= depos_order - galerkin_interpolation; iy++) {
+            for (int ix=0; ix<=depos_order; ix++) {
                 Eyp += sx_ey[ix]*sy_ey[iy]*sz_ey[iz]*
                     ey_arr(lo.x+j_ey+ix, lo.y+k_ey+iy, lo.z+l_ey+iz);
             }
         }
     }
     // Gather field on particle Ezp from field on grid ez_arr
-    for (int iz=0; iz<= depos_order - galerkin_interpolation; iz++){
-        for (int iy=0; iy<=depos_order; iy++){
-            for (int ix=0; ix<=depos_order; ix++){
+    for (int iz=0; iz<= depos_order - galerkin_interpolation; iz++) {
+        for (int iy=0; iy<=depos_order; iy++) {
+            for (int ix=0; ix<=depos_order; ix++) {
                 Ezp += sx_ez[ix]*sy_ez[iy]*sz_ez[iz]*
                     ez_arr(lo.x+j_ez+ix, lo.y+k_ez+iy, lo.z+l_ez+iz);
             }
         }
     }
     // Gather field on particle Bzp from field on grid bz_arr
-    for (int iz=0; iz<=depos_order; iz++){
-        for (int iy=0; iy<= depos_order - galerkin_interpolation; iy++){
-            for (int ix=0; ix<= depos_order - galerkin_interpolation; ix++){
+    for (int iz=0; iz<=depos_order; iz++) {
+        for (int iy=0; iy<= depos_order - galerkin_interpolation; iy++) {
+            for (int ix=0; ix<= depos_order - galerkin_interpolation; ix++) {
                 Bzp += sx_bz[ix]*sy_bz[iy]*sz_bz[iz]*
                     bz_arr(lo.x+j_bz+ix, lo.y+k_bz+iy, lo.z+l_bz+iz);
             }
         }
     }
     // Gather field on particle Byp from field on grid by_arr
-    for (int iz=0; iz<= depos_order - galerkin_interpolation; iz++){
-        for (int iy=0; iy<=depos_order; iy++){
-            for (int ix=0; ix<= depos_order - galerkin_interpolation; ix++){
+    for (int iz=0; iz<= depos_order - galerkin_interpolation; iz++) {
+        for (int iy=0; iy<=depos_order; iy++) {
+            for (int ix=0; ix<= depos_order - galerkin_interpolation; ix++) {
                 Byp += sx_by[ix]*sy_by[iy]*sz_by[iz]*
                     by_arr(lo.x+j_by+ix, lo.y+k_by+iy, lo.z+l_by+iz);
             }
         }
     }
     // Gather field on particle Bxp from field on grid bx_arr
-    for (int iz=0; iz<= depos_order - galerkin_interpolation; iz++){
-        for (int iy=0; iy<= depos_order - galerkin_interpolation; iy++){
-            for (int ix=0; ix<=depos_order; ix++){
+    for (int iz=0; iz<= depos_order - galerkin_interpolation; iz++) {
+        for (int iy=0; iy<= depos_order - galerkin_interpolation; iy++) {
+            for (int ix=0; ix<=depos_order; ix++) {
                 Bxp += sx_bx[ix]*sy_bx[iy]*sz_bx[iz]*
                     bx_arr(lo.x+j_bx+ix, lo.y+k_bx+iy, lo.z+l_bx+iz);
             }

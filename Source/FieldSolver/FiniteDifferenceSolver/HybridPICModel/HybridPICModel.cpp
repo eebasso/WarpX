@@ -144,7 +144,7 @@ void HybridPICModel::InitData ()
         "Ohm's law E-solve only works with staggered (Yee) grids.");
 
     // copy data to device
-    for ( int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
+    for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         Jx_IndexType[idim]    = Jx_stag[idim];
         Jy_IndexType[idim]    = Jy_stag[idim];
         Jz_IndexType[idim]    = Jz_stag[idim];
@@ -313,7 +313,7 @@ void HybridPICModel::FillElectronPressureMF (
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(*Pe_field, TilingIfNotGPU()); mfi.isValid(); ++mfi )
+    for (MFIter mfi(*Pe_field, TilingIfNotGPU()); mfi.isValid(); ++mfi )
     {
         // Extract field data for this grid/tile
         Array4<Real const> const& rho = rho_field->const_array(mfi);

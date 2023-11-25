@@ -61,7 +61,7 @@ FieldMaximum::FieldMaximum (std::string rd_name)
 
     if (ParallelDescriptor::IOProcessor())
     {
-        if ( m_write_header )
+        if (m_write_header )
         {
             // open file
             std::ofstream ofs{m_path + m_rd_name + "." + m_extension, std::ofstream::out};
@@ -151,7 +151,7 @@ void FieldMaximum::ComputeDiags (int step)
         auto Bxtype = amrex::GpuArray<int,3>{0,0,0};
         auto Bytype = amrex::GpuArray<int,3>{0,0,0};
         auto Bztype = amrex::GpuArray<int,3>{0,0,0};
-        for (int i = 0; i < AMREX_SPACEDIM; ++i){
+        for (int i = 0; i < AMREX_SPACEDIM; ++i) {
             Extype[i] = Ex.ixType()[i];
             Eytype[i] = Ey.ixType()[i];
             Eztype[i] = Ez.ixType()[i];
@@ -164,7 +164,7 @@ void FieldMaximum::ComputeDiags (int step)
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-        for ( MFIter mfi(Ex, TilingIfNotGPU()); mfi.isValid(); ++mfi )
+        for (MFIter mfi(Ex, TilingIfNotGPU()); mfi.isValid(); ++mfi )
         {
             // Make the box cell centered in preparation for the interpolation (and to avoid
             // including ghost cells in the calculation)

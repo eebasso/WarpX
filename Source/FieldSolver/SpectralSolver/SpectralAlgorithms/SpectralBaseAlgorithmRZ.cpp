@@ -33,7 +33,7 @@ SpectralBaseAlgorithmRZ::ComputeSpectralDivE (
                                  *Efield[2], Idx.Ez, 0 );
 
     // Loop over boxes
-    for (MFIter mfi(field_data.fields); mfi.isValid(); ++mfi){
+    for (MFIter mfi(field_data.fields); mfi.isValid(); ++mfi) {
 
         Box const & bx = field_data.fields[mfi].box();
 

@@ -47,7 +47,7 @@ void UpdateMomentumPerezElastic (
     T_PR const summm = std::sqrt(u1x*u1x+u1y*u1y+u1z*u1z) + std::sqrt(u2x*u2x+u2y*u2y+u2z*u2z);
     // If g = u1 - u2 = 0, do not collide.
     // Or if the relative difference is less than 1.0e-10.
-    if ( diffm < std::numeric_limits<T_PR>::min() || diffm/summm < 1.0e-10 ) { return; }
+    if (diffm < std::numeric_limits<T_PR>::min() || diffm/summm < 1.0e-10) { return; }
 
     T_PR constexpr inv_c2 = T_PR(1.0) / ( PhysConst::c * PhysConst::c );
 
@@ -79,7 +79,7 @@ void UpdateMomentumPerezElastic (
     T_PR p1sx;
     T_PR p1sy;
     T_PR p1sz;
-    if ( vcms > std::numeric_limits<T_PR>::min() )
+    if (vcms > std::numeric_limits<T_PR>::min() )
     {
         /* lorentz_transform_factor = ( (gc-1.0)/vcms*vcDv1 - gc )*m1*g1;
          * Rewrite to avoid loss of precision from subtracting similar
@@ -111,7 +111,7 @@ void UpdateMomentumPerezElastic (
 
         // Compute the Coulomb log lnLmd first
         T_PR lnLmd;
-        if ( L > T_PR(0.0) ) { lnLmd = L; }
+        if (L > T_PR(0.0)) { lnLmd = L; }
         else
         {
             // Compute b0 according to eq (22) from Perez et al., Phys.Plasmas.19.083104 (2012)
@@ -161,17 +161,17 @@ void UpdateMomentumPerezElastic (
         // Compute scattering angle
         T_PR cosXs;
         T_PR sinXs;
-        if ( s <= T_PR(0.1) )
+        if (s <= T_PR(0.1) )
         {
             while ( true )
             {
                 cosXs = T_PR(1.0) + s * std::log(r);
                 // Avoid the bug when r is too small such that cosXs < -1
-                if ( cosXs >= T_PR(-1.0) ) { break; }
+                if (cosXs >= T_PR(-1.0)) { break; }
                 r = amrex::Random(engine);
             }
         }
-        else if ( s > T_PR(0.1) && s <= T_PR(3.0) )
+        else if (s > T_PR(0.1) && s <= T_PR(3.0) )
         {
             T_PR const Ainv = static_cast<T_PR>(
                 0.0056958 + 0.9560202*s - 0.508139*s*s +
@@ -179,7 +179,7 @@ void UpdateMomentumPerezElastic (
             cosXs = Ainv * std::log( std::exp(T_PR(-1.0)/Ainv) +
                     T_PR(2.0) * r * std::sinh(T_PR(1.0)/Ainv) );
         }
-        else if ( s > T_PR(3.0) && s <= T_PR(6.0) )
+        else if (s > T_PR(3.0) && s <= T_PR(6.0) )
         {
             T_PR const A = T_PR(3.0) * std::exp(-s);
             cosXs = T_PR(1.0)/A * std::log( std::exp(-A) +
@@ -203,7 +203,7 @@ void UpdateMomentumPerezElastic (
         // p1sp is the p1s perpendicular
         T_PR p1sp = std::sqrt( p1sx*p1sx + p1sy*p1sy );
         // Make sure p1sp is not almost zero
-        if ( p1sp > std::numeric_limits<T_PR>::min() )
+        if (p1sp > std::numeric_limits<T_PR>::min() )
         {
             p1fsx = ( p1sx*p1sz/p1sp ) * sinXs*cosphis +
                     ( p1sy*p1sm/p1sp ) * sinXs*sinphis +
@@ -243,7 +243,7 @@ void UpdateMomentumPerezElastic (
         T_PR p1fx;    T_PR p2fx;
         T_PR p1fy;    T_PR p2fy;
         T_PR p1fz;    T_PR p2fz;
-        if ( vcms > std::numeric_limits<T_PR>::min() )
+        if (vcms > std::numeric_limits<T_PR>::min() )
         {
             T_PR const vcDp1fs = vcx*p1fsx + vcy*p1fsy + vcz*p1fsz;
             T_PR const vcDp2fs = vcx*p2fsx + vcy*p2fsy + vcz*p2fsz;
@@ -270,14 +270,14 @@ void UpdateMomentumPerezElastic (
 
         // Rejection method
         r = amrex::Random(engine);
-        if ( w2 > r*amrex::max(w1, w2) )
+        if (w2 > r*amrex::max(w1, w2) )
         {
             u1x  = p1fx / m1;
             u1y  = p1fy / m1;
             u1z  = p1fz / m1;
         }
         r = amrex::Random(engine);
-        if ( w1 > r*amrex::max(w1, w2) )
+        if (w1 > r*amrex::max(w1, w2) )
         {
             u2x  = p2fx / m2;
             u2y  = p2fy / m2;

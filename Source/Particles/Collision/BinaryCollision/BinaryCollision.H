@@ -87,7 +87,7 @@ public:
     BinaryCollision (std::string collision_name, MultiParticleContainer const * const mypc)
         : CollisionBase(collision_name)
     {
-        if(m_species_names.size() != 2)
+        if (m_species_names.size() != 2)
             WARPX_ABORT_WITH_MESSAGE("Binary collision " + collision_name + " must have exactly two species.");
 
         m_isSameSpecies = (m_species_names[0] == m_species_names[1]);
@@ -159,7 +159,7 @@ public:
         auto copy_species1_data = copy_species1.data();
         auto copy_species2_data = copy_species2.data();
 #endif
-        if (m_have_product_species){
+        if (m_have_product_species) {
             species1.defineAllParticleTiles();
             species2.defineAllParticleTiles();
         }
@@ -169,7 +169,7 @@ public:
         if (amrex::Gpu::notInLaunchRegion()) info.EnableTiling(species1.tile_size);
 
         // Loop over refinement levels
-        for (int lev = 0; lev <= species1.finestLevel(); ++lev){
+        for (int lev = 0; lev <= species1.finestLevel(); ++lev) {
 
         amrex::LayoutData<amrex::Real>* cost = WarpX::getCosts(lev);
 
@@ -178,7 +178,7 @@ public:
             info.SetDynamic(true);
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-            for (amrex::MFIter mfi = species1.MakeMFIter(lev, info); mfi.isValid(); ++mfi){
+            for (amrex::MFIter mfi = species1.MakeMFIter(lev, info); mfi.isValid(); ++mfi) {
                 if (cost && WarpX::load_balance_costs_update_algo == LoadBalanceCostsUpdateAlgo::Timers)
                 {
                     amrex::Gpu::synchronize();
@@ -241,7 +241,7 @@ public:
         }
         auto tile_products_data = tile_products.data();
 
-        if ( m_isSameSpecies ) // species_1 == species_2
+        if (m_isSameSpecies ) // species_1 == species_2
         {
             // Extract particles in the tile that `mfi` points to
             ParticleTileType& ptile_1 = species_1.ParticlesAt(lev, mfi);
@@ -341,7 +341,7 @@ public:
                                                            p_pair_offsets[i_cell] : 0;
 
                     // Do not collide if there is only one particle in the cell
-                    if ( cell_stop_1 - cell_start_1 <= 1 ) return;
+                    if (cell_stop_1 - cell_start_1 <= 1 ) return;
 
                     // shuffle
                     ShuffleFisherYates(
@@ -501,7 +501,7 @@ public:
                     // cell_start_1 (inclusive) and cell_start_2 (exclusive)
 
                     // Do not collide if one species is missing in the cell
-                    if ( cell_stop_1 - cell_start_1 < 1 ||
+                    if (cell_stop_1 - cell_start_1 < 1 ||
                         cell_stop_2 - cell_start_2 < 1 ) return;
 
                     // shuffle
@@ -540,7 +540,7 @@ public:
                 setNewParticleIDs(*(tile_products_data[i]), static_cast<int>(products_np[i]), num_added[i]);
             }
 
-        } // end if ( m_isSameSpecies)
+        } // end if (m_isSameSpecies)
 
     }
 

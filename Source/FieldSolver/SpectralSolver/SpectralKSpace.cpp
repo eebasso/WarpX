@@ -47,7 +47,7 @@ SpectralKSpace::SpectralKSpace( const BoxArray& realspace_ba,
     // Create the box array that corresponds to spectral space
     BoxList spectral_bl; // Create empty box list
     // Loop over boxes and fill the box list
-    for (int i=0; i < realspace_ba.size(); i++ ) {
+    for (int i=0; i < realspace_ba.size(); i++) {
         // For local FFTs, boxes in spectral space start at 0 in
         // each direction and have the same number of points as the
         // (cell-centered) real space box
@@ -89,7 +89,7 @@ SpectralKSpace::getKComponent( const DistributionMapping& dm,
     KVectorComponent k_comp(spectralspace_ba, dm);
     // Loop over boxes and allocate the corresponding DeviceVector
     // for each box owned by the local MPI proc
-    for ( MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi ){
+    for (MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi) {
         const Box bx = spectralspace_ba[mfi];
         Gpu::DeviceVector<Real>& k = k_comp[mfi];
 
@@ -105,7 +105,7 @@ SpectralKSpace::getKComponent( const DistributionMapping& dm,
             "Expected box to start at 0, in spectral space.");
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE( bx.bigEnd(i_dim) == N-1,
             "Expected different box end index in spectral space.");
-        if (only_positive_k){
+        if (only_positive_k) {
             // Fill the full axis with positive k values
             // (typically: first axis, in a real-to-complex FFT)
             amrex::ParallelFor(N, [=] AMREX_GPU_DEVICE (int i) noexcept
@@ -149,7 +149,7 @@ SpectralKSpace::getSpectralShiftFactor( const DistributionMapping& dm,
     SpectralShiftFactor shift_factor( spectralspace_ba, dm );
     // Loop over boxes and allocate the corresponding DeviceVector
     // for each box owned by the local MPI proc
-    for ( MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi ){
+    for (MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi) {
         const Gpu::DeviceVector<Real>& k = k_vec[i_dim][mfi];
         Gpu::DeviceVector<Complex>& shift = shift_factor[mfi];
 
@@ -161,7 +161,7 @@ SpectralKSpace::getSpectralShiftFactor( const DistributionMapping& dm,
 
         // Fill the shift coefficients
         Real sign = 0;
-        switch (shift_type){
+        switch (shift_type) {
             case ShiftType::TransformFromCellCentered: sign = -1.; break;
             case ShiftType::TransformToCellCentered: sign = 1.;
         }
@@ -197,7 +197,7 @@ SpectralKSpace::getModifiedKComponent( const DistributionMapping& dm,
     KVectorComponent modified_k_comp(spectralspace_ba, dm);
 
     if (n_order == -1) { // Infinite-order case
-        for ( MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi ){
+        for (MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi) {
             const Gpu::DeviceVector<Real>& k = k_vec[i_dim][mfi];
             Gpu::DeviceVector<Real>& modified_k = modified_k_comp[mfi];
 
@@ -221,7 +221,7 @@ SpectralKSpace::getModifiedKComponent( const DistributionMapping& dm,
 
         // Loop over boxes and allocate the corresponding DeviceVector
         // for each box owned by the local MPI proc
-        for ( MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi ){
+        for (MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi) {
             const Real delta_x = dx[i_dim];
             const Gpu::DeviceVector<Real>& k = k_vec[i_dim][mfi];
             Gpu::DeviceVector<Real>& modified_k = modified_k_comp[mfi];
@@ -236,8 +236,8 @@ SpectralKSpace::getModifiedKComponent( const DistributionMapping& dm,
             amrex::ParallelFor(N, [=] AMREX_GPU_DEVICE (int i) noexcept
             {
                 p_modified_k[i] = 0;
-                for (int n=0; n<nstencil; n++){
-                    if (grid_type == GridType::Collocated){
+                for (int n=0; n<nstencil; n++) {
+                    if (grid_type == GridType::Collocated) {
                         p_modified_k[i] += p_stencil_coef[n]*
                             std::sin( p_k[i]*(n+1)*delta_x )/( (n+1)*delta_x );
                     } else {
@@ -251,8 +251,8 @@ SpectralKSpace::getModifiedKComponent( const DistributionMapping& dm,
                 // (i.e. highest *real* k) is 0. However, the above calculation
                 // based on stencil coefficients does not give 0 to machine precision.
                 // Therefore, we need to enforce the fact that the modified k be 0 here.
-                if (grid_type == GridType::Collocated){
-                    if (i_dim == 0){
+                if (grid_type == GridType::Collocated) {
+                    if (i_dim == 0) {
                         // Because of the real-to-complex FFTs, the first axis (idim=0)
                         // contains only the positive k, and the Nyquist frequency is
                         // the last element of the array.
@@ -262,7 +262,7 @@ SpectralKSpace::getModifiedKComponent( const DistributionMapping& dm,
                     } else {
                         // The other axes contains both positive and negative k ;
                         // the Nyquist frequency is in the middle of the array.
-                        if ( (N%2==0) && (i == N/2) ){
+                        if ((N%2==0) && (i == N/2)) {
                             p_modified_k[i] = 0.0_rt;
                         }
                     }

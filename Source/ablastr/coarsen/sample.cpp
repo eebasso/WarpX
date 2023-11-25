@@ -41,7 +41,7 @@ namespace ablastr::coarsen::sample
         const amrex::IntVect stag_src = mf_src.boxArray().ixType().toIntVect();
         const amrex::IntVect stag_dst = mf_dst.boxArray().ixType().toIntVect();
 
-        if ( crse_ratio > amrex::IntVect(1) )
+        if (crse_ratio > amrex::IntVect(1) )
             ABLASTR_ALWAYS_ASSERT_WITH_MESSAGE( ngrowvect == amrex::IntVect(0),
                                                 "option of filling guard cells of destination MultiFab with coarsening not supported for this interpolation" );
 
@@ -118,8 +118,10 @@ namespace ablastr::coarsen::sample
                                             "source MultiFab converted to staggering of destination MultiFab is not coarsenable" );
         ba_tmp.coarsen( crse_ratio );
 
-        if ( ba_tmp == mf_dst.boxArray() and mf_src.DistributionMap() == mf_dst.DistributionMap() )
+        if (ba_tmp == mf_dst.boxArray() and mf_src.DistributionMap() == mf_dst.DistributionMap())
+        {
             Loop( mf_dst, mf_src, dcomp, scomp, ncomp, ngrowvect, crse_ratio );
+        }
         else
         {
             // Cannot coarsen into MultiFab with different BoxArray or DistributionMapping:

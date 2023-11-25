@@ -29,7 +29,7 @@ struct CartesianNodalAlgorithm {
         std::array<amrex::Real,3>& cell_size,
         amrex::Vector<amrex::Real>& stencil_coefs_x,
         amrex::Vector<amrex::Real>& stencil_coefs_y,
-        amrex::Vector<amrex::Real>& stencil_coefs_z ) {
+        amrex::Vector<amrex::Real>& stencil_coefs_z) {
 
         using namespace amrex;
 
@@ -45,7 +45,7 @@ struct CartesianNodalAlgorithm {
     /**
      * Compute the maximum timestep, for which the scheme remains stable
      * (Courant-Friedrichs-Levy limit) */
-    static amrex::Real ComputeMaxDt ( amrex::Real const * const dx ) {
+    static amrex::Real ComputeMaxDt ( amrex::Real const * const dx) {
         using namespace amrex::literals;
         amrex::Real const delta_t  = 1._rt / ( std::sqrt( AMREX_D_TERM(
                                            1._rt/(dx[0]*dx[0]),
@@ -71,7 +71,7 @@ struct CartesianNodalAlgorithm {
     static amrex::Real UpwardDx (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_x, int const /*n_coefs_x*/,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 #if (defined WARPX_DIM_1D_Z)
@@ -91,7 +91,7 @@ struct CartesianNodalAlgorithm {
     static amrex::Real DownwardDx (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_x, int const n_coefs_x,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 #if (defined WARPX_DIM_1D_Z)
@@ -111,7 +111,7 @@ struct CartesianNodalAlgorithm {
     static amrex::Real UpwardDy (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_y, int const /*n_coefs_y*/,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
 #if defined WARPX_DIM_3D
@@ -131,7 +131,7 @@ struct CartesianNodalAlgorithm {
     static amrex::Real DownwardDy (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_y, int const n_coefs_y,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         return UpwardDy( F, coefs_y, n_coefs_y, i, j, k ,ncomp);
         // For CartesianNodalAlgorithm, UpwardDy and DownwardDy are equivalent
@@ -145,7 +145,7 @@ struct CartesianNodalAlgorithm {
     static amrex::Real UpwardDz (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_z, int const /*n_coefs_z*/,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         using namespace amrex;
         Real const inv_dz = coefs_z[0];
@@ -166,7 +166,7 @@ struct CartesianNodalAlgorithm {
     static amrex::Real DownwardDz (
         amrex::Array4<amrex::Real> const& F,
         amrex::Real const * const coefs_z, int const n_coefs_z,
-        int const i, int const j, int const k, int const ncomp=0 ) {
+        int const i, int const j, int const k, int const ncomp=0) {
 
         return UpwardDz( F, coefs_z, n_coefs_z, i, j, k ,ncomp);
         // For CartesianNodalAlgorithm, UpwardDz and DownwardDz are equivalent

@@ -41,13 +41,13 @@ using namespace amrex;
  */
 void FiniteDifferenceSolver::ComputeDivE (
     const std::array<std::unique_ptr<amrex::MultiFab>,3>& Efield,
-    amrex::MultiFab& divEfield ) {
+    amrex::MultiFab& divEfield) {
 
     // Select algorithm (The choice of algorithm is a runtime option,
     // but we compile code for each algorithm, using templates)
 #ifdef WARPX_DIM_RZ
     if (m_fdtd_algo == ElectromagneticSolverAlgo::Yee ||
-        m_fdtd_algo == ElectromagneticSolverAlgo::HybridPIC){
+        m_fdtd_algo == ElectromagneticSolverAlgo::HybridPIC) {
 
         ComputeDivECylindrical <CylindricalYeeAlgorithm> ( Efield, divEfield );
 
@@ -78,13 +78,13 @@ void FiniteDifferenceSolver::ComputeDivE (
 template<typename T_Algo>
 void FiniteDifferenceSolver::ComputeDivECartesian (
     const std::array<std::unique_ptr<amrex::MultiFab>,3>& Efield,
-    amrex::MultiFab& divEfield ) {
+    amrex::MultiFab& divEfield) {
 
     // Loop through the grids, and over the tiles within each grid
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(divEfield, TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(divEfield, TilingIfNotGPU()); mfi.isValid(); ++mfi) {
 
         // Extract field data for this grid/tile
         Array4<Real> const& divE = divEfield.array(mfi);
@@ -106,7 +106,7 @@ void FiniteDifferenceSolver::ComputeDivECartesian (
         // Loop over the cells and update the fields
         amrex::ParallelFor(tdive,
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int k){
+            [=] AMREX_GPU_DEVICE (int i, int j, int k) {
                 divE(i, j, k) =
                       T_Algo::DownwardDx(Ex, coefs_x, n_coefs_x, i, j, k)
                     + T_Algo::DownwardDy(Ey, coefs_y, n_coefs_y, i, j, k)
@@ -124,13 +124,13 @@ void FiniteDifferenceSolver::ComputeDivECartesian (
 template<typename T_Algo>
 void FiniteDifferenceSolver::ComputeDivECylindrical (
     const std::array<std::unique_ptr<amrex::MultiFab>,3>& Efield,
-    amrex::MultiFab& divEfield ) {
+    amrex::MultiFab& divEfield) {
 
     // Loop through the grids, and over the tiles within each grid
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for ( MFIter mfi(divEfield, TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
+    for (MFIter mfi(divEfield, TilingIfNotGPU()); mfi.isValid(); ++mfi) {
 
         // Extract field data for this grid/tile
         Array4<Real> divE = divEfield.array(mfi);
@@ -155,7 +155,7 @@ void FiniteDifferenceSolver::ComputeDivECylindrical (
         // Loop over the cells and update the fields
         amrex::ParallelFor(tdive,
 
-            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
+            [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/) {
                 Real const r = rmin + i*dr; // r on a nodal grid (F is nodal in r)
                 if (r != 0) { // Off-axis, regular equations
                     divE(i, j, 0, 0) =

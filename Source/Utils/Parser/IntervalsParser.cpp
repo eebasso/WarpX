@@ -23,15 +23,15 @@ utils::parser::SliceParser::SliceParser (const std::string& instr, const bool is
     auto insplit = ablastr::utils::text::split_string<std::vector<std::string>>(
         instr, m_separator, true);
 
-    if(insplit.size() == 1){ // no colon in input string. The input is the period.
+    if (insplit.size() == 1){ // no colon in input string. The input is the period.
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE(!m_isBTD, "must specify interval stop for BTD");
         m_period = parseStringtoInt(insplit[0], "interval period");}
-    else if(insplit.size() == 2) // 1 colon in input string. The input is start:stop
+    else if (insplit.size() == 2) // 1 colon in input string. The input is start:stop
     {
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE(!m_isBTD || !insplit[1].empty(), "must specify interval stop for BTD");
-        if (!insplit[0].empty()){
+        if (!insplit[0].empty()) {
             m_start = parseStringtoInt(insplit[0], "interval start");}
-        if (!insplit[1].empty()){
+        if (!insplit[1].empty()) {
             m_stop = parseStringtoInt(insplit[1], "interval stop");}
     }
     else // 2 colons in input string. The input is start:stop:period
@@ -40,11 +40,11 @@ utils::parser::SliceParser::SliceParser (const std::string& instr, const bool is
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
             insplit.size() == 3,
             instr + "' is not a valid syntax for a slice.");
-        if (!insplit[0].empty()){
+        if (!insplit[0].empty()) {
             m_start = parseStringtoInt(insplit[0], "interval start");}
-        if (!insplit[1].empty()){
+        if (!insplit[1].empty()) {
             m_stop = parseStringtoInt(insplit[1], "interval stop");}
-        if (!insplit[2].empty()){
+        if (!insplit[2].empty()) {
             m_period = parseStringtoInt(insplit[2], "interval period");}
     }
 }
@@ -97,7 +97,7 @@ utils::parser::IntervalsParser::IntervalsParser (
     auto insplit = ablastr::utils::text::split_string<std::vector<std::string>>(
         inconcatenated, m_separator);
 
-    for(const auto& inslc : insplit)
+    for (const auto& inslc : insplit)
     {
         const SliceParser temp_slice(inslc);
         m_slices.push_back(temp_slice);
@@ -117,7 +117,7 @@ bool utils::parser::IntervalsParser::contains (const int n) const
 int utils::parser::IntervalsParser::nextContains (const int n) const
 {
     int next = std::numeric_limits<int>::max();
-    for(const auto& slice: m_slices){
+    for (const auto& slice: m_slices) {
         next = std::min(slice.nextContains(n),next);
     }
     return next;
@@ -127,7 +127,7 @@ int utils::parser::IntervalsParser::nextContains (const int n) const
 int utils::parser::IntervalsParser::previousContains (const int n) const
 {
     int previous = 0;
-    for(const auto& slice: m_slices){
+    for (const auto& slice: m_slices) {
         previous = std::max(slice.previousContains(n),previous);
     }
     return previous;
@@ -162,7 +162,7 @@ utils::parser::BTDIntervalsParser::BTDIntervalsParser (
 
     // parse the Intervals string into Slices and store each slice in m_slices,
     // in order of increasing Slice start value
-    for(const auto& inslc : insplit)
+    for (const auto& inslc : insplit)
     {
         const bool isBTD = true;
         const SliceParser temp_slice(inslc, isBTD);

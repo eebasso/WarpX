@@ -97,7 +97,7 @@ MCCProcess::readCrossSectionFile (
                                   amrex::Gpu::HostVector<amrex::ParticleReal>& sigmas )
 {
     std::ifstream infile(cross_section_file);
-    if(!infile.is_open()) WARPX_ABORT_WITH_MESSAGE("Failed to open cross-section data file");
+    if (!infile.is_open()) WARPX_ABORT_WITH_MESSAGE("Failed to open cross-section data file");
 
     amrex::ParticleReal energy, sigma;
     while (infile >> energy >> sigma) {

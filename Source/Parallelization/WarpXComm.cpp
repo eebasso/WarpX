@@ -679,7 +679,7 @@ WarpX::FillBoundaryE_avg (int lev, PatchType patch_type, IntVect ng)
         }
 
         const amrex::Periodicity& period = Geom(lev).periodicity();
-        if ( safe_guard_cells ){
+        if (safe_guard_cells) {
             const Vector<MultiFab*> mf{Efield_avg_fp[lev][0].get(),Efield_avg_fp[lev][1].get(),Efield_avg_fp[lev][2].get()};
             ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, period);
         } else {
@@ -699,7 +699,7 @@ WarpX::FillBoundaryE_avg (int lev, PatchType patch_type, IntVect ng)
         }
 
         const amrex::Periodicity& cperiod = Geom(lev-1).periodicity();
-        if ( safe_guard_cells ) {
+        if (safe_guard_cells) {
             const Vector<MultiFab*> mf{Efield_avg_cp[lev][0].get(),Efield_avg_cp[lev][1].get(),Efield_avg_cp[lev][2].get()};
             ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, cperiod);
 
@@ -732,7 +732,7 @@ WarpX::FillBoundaryB_avg (int lev, PatchType patch_type, IntVect ng)
             WARPX_ABORT_WITH_MESSAGE("Averaged Galilean PSATD with PML is not yet implemented");
         }
         const amrex::Periodicity& period = Geom(lev).periodicity();
-        if ( safe_guard_cells ) {
+        if (safe_guard_cells) {
             const Vector<MultiFab*> mf{Bfield_avg_fp[lev][0].get(),Bfield_avg_fp[lev][1].get(),Bfield_avg_fp[lev][2].get()};
             ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, period);
         } else {
@@ -752,7 +752,7 @@ WarpX::FillBoundaryB_avg (int lev, PatchType patch_type, IntVect ng)
         }
 
         const amrex::Periodicity& cperiod = Geom(lev-1).periodicity();
-        if ( safe_guard_cells ){
+        if (safe_guard_cells) {
             const Vector<MultiFab*> mf{Bfield_avg_cp[lev][0].get(),Bfield_avg_cp[lev][1].get(),Bfield_avg_cp[lev][2].get()};
             ablastr::utils::communication::FillBoundary(mf, WarpX::do_single_precision_comms, cperiod);
         } else {
@@ -1377,7 +1377,7 @@ void WarpX::AddRhoFromFineLevelandSumBoundary (
 
     ApplyFilterandSumBoundaryRho(charge_fp, charge_cp, lev, PatchType::fine, icomp, ncomp);
 
-    if (lev < finest_level){
+    if (lev < finest_level) {
 
         const amrex::Periodicity& period = Geom(lev).periodicity();
         MultiFab mf(charge_fp[lev]->boxArray(),

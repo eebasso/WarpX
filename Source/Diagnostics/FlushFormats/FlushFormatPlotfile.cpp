@@ -245,7 +245,7 @@ FlushFormatPlotfile::WriteWarpXHeader(
         HeaderFile.open(HeaderFileName.c_str(), std::ofstream::out   |
                                                 std::ofstream::trunc |
                                                 std::ofstream::binary);
-        if( ! HeaderFile.good())
+        if (! HeaderFile.good())
             amrex::FileOpenFailed(HeaderFileName);
 
         HeaderFile.precision(17);
@@ -315,10 +315,10 @@ FlushFormatPlotfile::WriteWarpXHeader(
 
         for (int idiag = 0; idiag < warpx.GetMultiDiags().GetTotalDiags(); ++idiag)
         {
-            if( warpx.GetMultiDiags().diagstypes(idiag) == DiagTypes::BackTransformed )
+            if (warpx.GetMultiDiags().diagstypes(idiag) == DiagTypes::BackTransformed )
             {
                 auto& diag = warpx.GetMultiDiags().GetDiag(idiag);
-                for (int i_buffer=0; i_buffer<diag.getnumbuffers(); ++i_buffer){
+                for (int i_buffer=0; i_buffer<diag.getnumbuffers(); ++i_buffer) {
                     HeaderFile << diag.gettlab(i_buffer) << "\n";
                     HeaderFile << diag.get_buffer_k_index_hi(i_buffer) << "\n";
                     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {

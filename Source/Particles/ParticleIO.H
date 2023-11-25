@@ -41,16 +41,16 @@ particlesConvertUnits (ConvertDirection convert_direction, T_ParticleContainer* 
     // Compute conversion factor
     auto factor = 1_rt;
 
-    if (convert_direction == ConvertDirection::WarpX_to_SI){
+    if (convert_direction == ConvertDirection::WarpX_to_SI) {
         factor = mass;
-    } else if (convert_direction == ConvertDirection::SI_to_WarpX){
+    } else if (convert_direction == ConvertDirection::SI_to_WarpX) {
         factor = 1._rt/mass;
     }
 
     using PinnedParIter = typename T_ParticleContainer::ParIterType;
 
     const int nLevels = pc->finestLevel();
-    for (int lev=0; lev<=nLevels; lev++){
+    for (int lev=0; lev<=nLevels; lev++) {
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (Gpu::notInLaunchRegion())
 #endif

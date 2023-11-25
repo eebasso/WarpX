@@ -20,12 +20,12 @@ MultiDiagnostics::MultiDiagnostics ()
      * diagnostics. Calls the corresponding diagnostics constructor.
      */
     alldiags.resize( ndiags );
-    for (int i=0; i<ndiags; i++){
-        if ( diags_types[i] == DiagTypes::Full ){
+    for (int i=0; i<ndiags; i++) {
+        if (diags_types[i] == DiagTypes::Full) {
             alldiags[i] = std::make_unique<FullDiagnostics>(i, diags_names[i]);
-        } else if ( diags_types[i] == DiagTypes::BackTransformed ){
+        } else if (diags_types[i] == DiagTypes::BackTransformed) {
             alldiags[i] = std::make_unique<BTDiagnostics>(i, diags_names[i]);
-        } else if ( diags_types[i] == DiagTypes::BoundaryScraping ){
+        } else if (diags_types[i] == DiagTypes::BoundaryScraping) {
             alldiags[i] = std::make_unique<BoundaryScrapingDiagnostics>(i, diags_names[i]);
         } else {
             WARPX_ABORT_WITH_MESSAGE("Unknown diagnostic type");
@@ -36,7 +36,7 @@ MultiDiagnostics::MultiDiagnostics ()
 void
 MultiDiagnostics::InitData ()
 {
-    for( auto& diag : alldiags ){
+    for (auto& diag : alldiags) {
         diag->InitData();
     }
 }
@@ -44,7 +44,7 @@ MultiDiagnostics::InitData ()
 void
 MultiDiagnostics::InitializeFieldFunctors ( int lev )
 {
-    for( auto& diag : alldiags ){
+    for (auto& diag : alldiags) {
         // Initialize functors to store pointers to fields.
         diag->InitializeFieldFunctors( lev );
     }
@@ -63,7 +63,7 @@ MultiDiagnostics::ReadParameters ()
     }
 
     diags_types.resize( ndiags );
-    for (int i=0; i<ndiags; i++){
+    for (int i=0; i<ndiags; i++) {
         const ParmParse pp_diag_name(diags_names[i]);
         std::string diag_type_str;
         pp_diag_name.get("diag_type", diag_type_str);
@@ -80,7 +80,7 @@ void
 MultiDiagnostics::FilterComputePackFlush (int step, bool force_flush, bool BackTransform)
 {
     int i = 0;
-    for (auto& diag : alldiags){
+    for (auto& diag : alldiags) {
         if (BackTransform) {
             if (diags_types[i] == DiagTypes::BackTransformed)
                 diag->FilterComputePackFlush (step, force_flush);
@@ -95,8 +95,8 @@ MultiDiagnostics::FilterComputePackFlush (int step, bool force_flush, bool BackT
 void
 MultiDiagnostics::FilterComputePackFlushLastTimestep (int step)
 {
-    for (auto& diag : alldiags){
-        if (diag->DoDumpLastTimestep()){
+    for (auto& diag : alldiags) {
+        if (diag->DoDumpLastTimestep()) {
             constexpr bool force_flush = true;
             diag->FilterComputePackFlush (step, force_flush);
         }
@@ -106,7 +106,7 @@ MultiDiagnostics::FilterComputePackFlushLastTimestep (int step)
 void
 MultiDiagnostics::NewIteration ()
 {
-    for( auto& diag : alldiags ){
+    for (auto& diag : alldiags) {
         diag->NewIteration();
     }
 }

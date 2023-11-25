@@ -48,7 +48,7 @@ PsatdAlgorithmPmlRZ::pushSpectralFields (SpectralFieldDataRZ & f)
     const SpectralFieldIndex& Idx = m_spectral_index;
 
     // Loop over boxes
-    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi) {
 
         amrex::Box const & bx = f.fields[mfi].box();
 
@@ -117,7 +117,7 @@ void PsatdAlgorithmPmlRZ::InitializeSpectralCoefficients (SpectralFieldDataRZ co
     // Fill them with the right values:
     // Loop over boxes and allocate the corresponding coefficients
     // for each box owned by the local MPI proc
-    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi){
+    for (amrex::MFIter mfi(f.fields); mfi.isValid(); ++mfi) {
 
         amrex::Box const & bx = f.fields[mfi].box();
 
@@ -146,7 +146,7 @@ void PsatdAlgorithmPmlRZ::InitializeSpectralCoefficients (SpectralFieldDataRZ co
 
             // Calculate coefficients
             constexpr amrex::Real c = PhysConst::c;
-            if (k_norm != 0._rt){
+            if (k_norm != 0._rt) {
                 C(i,j,k,mode) = std::cos(c*k_norm*dt);
                 S_ck(i,j,k,mode) = std::sin(c*k_norm*dt)/(c*k_norm);
             } else { // Handle k_norm = 0, by using the analytical limit

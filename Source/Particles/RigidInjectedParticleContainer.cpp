@@ -214,7 +214,7 @@ RigidInjectedParticleContainer::PushPX (WarpXParIter& pti,
         amrex::ParticleReal* const AMREX_RESTRICT uzp_save_ptr = uzp_save.dataPtr();
 
 #ifdef WARPX_QED
-        if(loc_has_quantum_sync){
+        if (loc_has_quantum_sync) {
             p_optical_depth = pti.GetAttribs(particle_comps["opticalDepthQSR"]).dataPtr()
                               + offset;
             optical_depth_save.resize(np_to_push);
@@ -233,7 +233,7 @@ RigidInjectedParticleContainer::PushPX (WarpXParIter& pti,
                                 uyp_save_ptr[i] = uy[i];
                                 uzp_save_ptr[i] = uz[i];
 #ifdef WARPX_QED
-                                if(loc_has_quantum_sync){
+                                if (loc_has_quantum_sync) {
                                     p_optical_depth_save[i] = p_optical_depth[i];}
 #endif
                             });
@@ -282,7 +282,7 @@ RigidInjectedParticleContainer::PushPX (WarpXParIter& pti,
                                     }
                                     SetPosition(i, xp, yp, zp);
 #ifdef WARPX_QED
-                                    if(loc_has_quantum_sync){
+                                    if (loc_has_quantum_sync) {
                                         p_optical_depth[i] = p_optical_depth_save[i];}
 #endif
                                 }

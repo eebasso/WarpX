@@ -184,7 +184,7 @@ WarpX::Evolve (int numsteps)
         ExecutePythonCallback("particleinjection");
         // Electrostatic or hybrid-PIC case: only gather fields and push
         // particles, deposition and calculation of fields done further below
-        if ( electromagnetic_solver_id == ElectromagneticSolverAlgo::None ||
+        if (electromagnetic_solver_id == ElectromagneticSolverAlgo::None ||
              electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC )
         {
             const bool skip_deposition = true;
@@ -220,7 +220,7 @@ WarpX::Evolve (int numsteps)
         // value of step in code (first step is 0)
         mypc->doResampling(istep[0]+1, verbose);
 
-        if (num_mirrors>0){
+        if (num_mirrors>0) {
             applyMirrors(cur_time);
             // E : guard cells are NOT up-to-date
             // B : guard cells are NOT up-to-date
@@ -286,7 +286,7 @@ WarpX::Evolve (int numsteps)
         m_particle_boundary_buffer->gatherParticles(*mypc, amrex::GetVecOfConstPtrs(m_distance_to_eb));
 
         // Non-Maxwell solver: particles can move by an arbitrary number of cells
-        if( electromagnetic_solver_id == ElectromagneticSolverAlgo::None ||
+        if (electromagnetic_solver_id == ElectromagneticSolverAlgo::None ||
             electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC )
         {
             mypc->Redistribute();
@@ -319,7 +319,7 @@ WarpX::Evolve (int numsteps)
         }
 
         // Field solve step for electrostatic or hybrid-PIC solvers
-        if( electrostatic_solver_id != ElectrostaticSolverAlgo::None ||
+        if (electrostatic_solver_id != ElectrostaticSolverAlgo::None ||
             electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC )
         {
             ExecutePythonCallback("beforeEsolve");
@@ -863,7 +863,7 @@ WarpX::OneStep_sub1 (Real curtime)
         FillBoundaryE(fine_lev, PatchType::fine, guard_cells.ng_FieldSolver);
     }
 
-    if ( safe_guard_cells )
+    if (safe_guard_cells )
         FillBoundaryF(fine_lev, PatchType::fine, guard_cells.ng_FieldSolver);
     FillBoundaryB(fine_lev, PatchType::fine, guard_cells.ng_FieldSolver);
 
@@ -900,7 +900,7 @@ WarpX::OneStep_sub1 (Real curtime)
     EvolveF(coarse_lev, PatchType::fine, 0.5_rt*dt[coarse_lev], DtType::SecondHalf);
 
     if (do_pml) {
-        if (moving_window_active(istep[0]+1)){
+        if (moving_window_active(istep[0]+1)) {
             // Exchange guard cells of PMLs only (0 cells are exchanged for the
             // regular B field MultiFab). This is required as B and F have just been
             // evolved.
@@ -910,11 +910,11 @@ WarpX::OneStep_sub1 (Real curtime)
                           WarpX::sync_nodal_points);
         }
         DampPML(coarse_lev, PatchType::fine);
-        if ( safe_guard_cells )
+        if (safe_guard_cells )
             FillBoundaryE(coarse_lev, PatchType::fine, guard_cells.ng_FieldSolver,
                           WarpX::sync_nodal_points);
     }
-    if ( safe_guard_cells )
+    if (safe_guard_cells )
         FillBoundaryB(coarse_lev, PatchType::fine, guard_cells.ng_FieldSolver,
                       WarpX::sync_nodal_points);
 }
@@ -1038,7 +1038,7 @@ void
 WarpX::applyMirrors(Real time)
 {
     // Loop over the mirrors
-    for(int i_mirror=0; i_mirror<num_mirrors; ++i_mirror)
+    for (int i_mirror=0; i_mirror<num_mirrors; ++i_mirror)
     {
         // Get mirror properties (lower and upper z bounds)
         amrex::Real z_min = mirror_z[i_mirror];
@@ -1052,7 +1052,7 @@ WarpX::applyMirrors(Real time)
         }
 
         // Loop over levels
-        for(int lev=0; lev<=finest_level; lev++)
+        for (int lev=0; lev<=finest_level; lev++)
         {
             // Mirror must contain at least mirror_z_npoints[i_mirror] cells
             const amrex::Real dz = WarpX::CellSize(lev)[2];

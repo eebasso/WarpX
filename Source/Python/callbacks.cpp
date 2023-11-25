@@ -28,7 +28,7 @@ bool IsPythonCallbackInstalled ( std::string name )
 // Execute Python callbacks of the type given by the input string
 void ExecutePythonCallback ( std::string name )
 {
-    if ( IsPythonCallbackInstalled(name) ) {
+    if (IsPythonCallbackInstalled(name)) {
         WARPX_PROFILE("warpx_py_" + name);
         try {
             warpx_callback_py_map[name]();

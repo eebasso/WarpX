@@ -26,13 +26,13 @@ ParticleDiag::ParticleDiag(std::string diag_name, std::string name, WarpXParticl
     amrex::Vector<std::string> variables;
     const int variables_specified = pp_diag_name_species_name.queryarr("variables", variables);
 
-    if (variables_specified){
+    if (variables_specified) {
         // If only specific variables have been specified, fill m_plot_flags with zero and only set
         // requested variables to one
         std::fill(m_plot_flags.begin(), m_plot_flags.end(), 0);
-        if (variables[0] != "none"){
+        if (variables[0] != "none") {
             const std::map<std::string, int> existing_variable_names = pc->getParticleComps();
-            for (const auto& var : variables){
+            for (const auto& var : variables) {
                 const auto search = existing_variable_names.find(var);
                 WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                     search != existing_variable_names.end(),

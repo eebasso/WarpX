@@ -82,13 +82,13 @@ ParticleHistogram::ParticleHistogram (std::string rd_name):
     pp_rd_name.query("normalization",norm_string);
 
     // set normalization type
-    if ( norm_string == "default" ) {
+    if (norm_string == "default") {
         m_norm = NormalizationType::no_normalization;
-    } else if ( norm_string == "unity_particle_weight" ) {
+    } else if (norm_string == "unity_particle_weight") {
         m_norm = NormalizationType::unity_particle_weight;
-    } else if ( norm_string == "max_to_unity" ) {
+    } else if (norm_string == "max_to_unity") {
         m_norm = NormalizationType::max_to_unity;
-    } else if ( norm_string == "area_to_unity" ) {
+    } else if (norm_string == "area_to_unity") {
         m_norm = NormalizationType::area_to_unity;
     } else {
         WARPX_ABORT_WITH_MESSAGE(
@@ -100,14 +100,14 @@ ParticleHistogram::ParticleHistogram (std::string rd_name):
     // get species names (std::vector<std::string>)
     auto const species_names = mypc.GetSpeciesNames();
     // select species
-    for ( int i = 0; i < mypc.nSpecies(); ++i )
+    for (int i = 0; i < mypc.nSpecies(); ++i )
     {
-        if ( selected_species_name == species_names[i] ){
+        if (selected_species_name == species_names[i]) {
             m_selected_species_id = i;
         }
     }
     // if m_selected_species_id is not modified
-    if ( m_selected_species_id == -1 ){
+    if (m_selected_species_id == -1) {
         WARPX_ABORT_WITH_MESSAGE(
             "Unknown species for ParticleHistogram reduced diagnostic.");
     }
@@ -128,7 +128,7 @@ ParticleHistogram::ParticleHistogram (std::string rd_name):
 
     if (ParallelDescriptor::IOProcessor())
     {
-        if ( m_write_header )
+        if (m_write_header )
         {
             // open file
             std::ofstream ofs{m_path + m_rd_name + "." + m_extension, std::ofstream::out};
@@ -230,13 +230,13 @@ void ParticleHistogram::ComputeDiags (int step)
                     auto const f = fun_partparser(t, x, y, z, ux, uy, uz);
                     // determine particle bin
                     int const bin = int(Math::floor((f-bin_min)/bin_size));
-                    if ( bin<0 || bin>=num_bins ) return; // discard if out-of-range
+                    if (bin<0 || bin>=num_bins ) return; // discard if out-of-range
 
                     // add particle to histogram bin
                     //! @todo performance: on CPU, we are probably faster by
                     //        letting each thread compute its own histogram and
                     //        then we reduce the histograms after the loop
-                    if ( is_unity_particle_weight ) {
+                    if (is_unity_particle_weight) {
                         amrex::HostDevice::Atomic::Add(&dptr_data[bin], 1.0_rt);
                     } else {
                         amrex::HostDevice::Atomic::Add(&dptr_data[bin], w);
@@ -255,31 +255,31 @@ void ParticleHistogram::ComputeDiags (int step)
         (m_data.data(), static_cast<int>(m_data.size()), ParallelDescriptor::IOProcessorNumber());
 
     // normalize the maximum value to be one
-    if ( m_norm == NormalizationType::max_to_unity )
+    if (m_norm == NormalizationType::max_to_unity )
     {
         Real f_max = 0.0_rt;
-        for ( int i = 0; i < m_bin_num; ++i )
+        for (int i = 0; i < m_bin_num; ++i )
         {
-            if ( m_data[i] > f_max ) f_max = m_data[i];
+            if (m_data[i] > f_max ) f_max = m_data[i];
         }
-        for ( int i = 0; i < m_bin_num; ++i )
+        for (int i = 0; i < m_bin_num; ++i )
         {
-            if ( f_max > std::numeric_limits<Real>::min() ) m_data[i] /= f_max;
+            if (f_max > std::numeric_limits<Real>::min() ) m_data[i] /= f_max;
         }
         return;
     }
 
     // normalize the area (integral) to be one
-    if ( m_norm == NormalizationType::area_to_unity )
+    if (m_norm == NormalizationType::area_to_unity )
     {
         Real f_area = 0.0_rt;
-        for ( int i = 0; i < m_bin_num; ++i )
+        for (int i = 0; i < m_bin_num; ++i )
         {
             f_area += m_data[i] * m_bin_size;
         }
-        for ( int i = 0; i < m_bin_num; ++i )
+        for (int i = 0; i < m_bin_num; ++i )
         {
-            if ( f_area > std::numeric_limits<Real>::min() ) m_data[i] /= f_area;
+            if (f_area > std::numeric_limits<Real>::min() ) m_data[i] /= f_area;
         }
         return;
     }

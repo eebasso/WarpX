@@ -528,7 +528,7 @@ MultiParticleContainer::GetZeroChargeDensity (const int lev)
     const bool is_PSATD_RZ = false;
 #endif
 
-    if( !is_PSATD_RZ )
+    if (!is_PSATD_RZ )
         nba.surroundingNodes();
 
     auto zero_rho = std::make_unique<MultiFab>(nba, dmap, WarpX::ncomps, ng_rho);
@@ -731,8 +731,8 @@ MultiParticleContainer::SetParticleDistributionMap (int lev, DistributionMapping
 void
 MultiParticleContainer::ContinuousInjection (const RealBox& injection_box) const
 {
-    for (auto& pc : allcontainers){
-        if (pc->do_continuous_injection){
+    for (auto& pc : allcontainers) {
+        if (pc->do_continuous_injection) {
             pc->ContinuousInjection(injection_box);
         }
     }
@@ -741,8 +741,8 @@ MultiParticleContainer::ContinuousInjection (const RealBox& injection_box) const
 void
 MultiParticleContainer::UpdateAntennaPosition (const amrex::Real dt) const
 {
-    for (auto& pc : allcontainers){
-        if (pc->do_continuous_injection){
+    for (auto& pc : allcontainers) {
+        if (pc->do_continuous_injection) {
             pc->UpdateAntennaPosition(dt);
         }
     }
@@ -752,8 +752,8 @@ int
 MultiParticleContainer::doContinuousInjection () const
 {
     int warpx_do_continuous_injection = 0;
-    for (auto& pc : allcontainers){
-        if (pc->do_continuous_injection){
+    for (auto& pc : allcontainers) {
+        if (pc->do_continuous_injection) {
             warpx_do_continuous_injection = 1;
         }
     }
@@ -767,7 +767,7 @@ MultiParticleContainer::doContinuousInjection () const
 void
 MultiParticleContainer::ContinuousFluxInjection (amrex::Real t, amrex::Real dt) const
 {
-    for (auto& pc : allcontainers){
+    for (auto& pc : allcontainers) {
         pc->ContinuousFluxInjection(t, dt);
     }
 }
@@ -779,18 +779,18 @@ MultiParticleContainer::ContinuousFluxInjection (amrex::Real t, amrex::Real dt) 
 void
 MultiParticleContainer::mapSpeciesProduct ()
 {
-    for (int i=0; i < static_cast<int>(species_names.size()); i++){
+    for (int i=0; i < static_cast<int>(species_names.size()); i++) {
         auto& pc = allcontainers[i];
         // If species pc has ionization on, find species with name
         // pc->ionization_product_name and store its ID into
         // pc->ionization_product.
-        if (pc->do_field_ionization){
+        if (pc->do_field_ionization) {
             const int i_product = getSpeciesID(pc->ionization_product_name);
             pc->ionization_product = i_product;
         }
 
 #ifdef WARPX_QED
-        if (pc->has_breit_wheeler()){
+        if (pc->has_breit_wheeler()) {
             const int i_product_ele = getSpeciesID(
                 pc->m_qed_breit_wheeler_ele_product_name);
             pc->m_qed_breit_wheeler_ele_product = i_product_ele;
@@ -800,7 +800,7 @@ MultiParticleContainer::mapSpeciesProduct ()
             pc->m_qed_breit_wheeler_pos_product = i_product_pos;
         }
 
-        if(pc->has_quantum_sync()){
+        if (pc->has_quantum_sync()) {
             const int i_product_phot = getSpeciesID(
                 pc->m_qed_quantum_sync_phot_product_name);
             pc->m_qed_quantum_sync_phot_product = i_product_phot;
@@ -828,10 +828,10 @@ MultiParticleContainer::getSpeciesID (std::string product_str) const
     int i_product = 0;
     bool found = 0;
     // Loop over species
-    for (int i=0; i < static_cast<int>(species_and_lasers_names.size()); i++){
+    for (int i=0; i < static_cast<int>(species_and_lasers_names.size()); i++) {
         // If species name matches, store its ID
         // into i_product
-        if (species_and_lasers_names[i] == product_str){
+        if (species_and_lasers_names[i] == product_str) {
             found = 1;
             i_product = i;
         }
@@ -955,8 +955,8 @@ void MultiParticleContainer::doResampling (const int timestep, const bool verbos
 
 void MultiParticleContainer::CheckIonizationProductSpecies()
 {
-    for (int i=0; i < static_cast<int>(species_names.size()); i++){
-        if (allcontainers[i]->do_field_ionization){
+    for (int i=0; i < static_cast<int>(species_names.size()); i++) {
+        if (allcontainers[i]->do_field_ionization) {
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                 i != allcontainers[i]->ionization_product,
                 "ERROR: ionization product cannot be the same species");
@@ -985,22 +985,22 @@ void MultiParticleContainer::InitQED ()
     m_nspecies_breit_wheeler = 0;
 
     for (auto& pc : allcontainers) {
-        if(pc->has_quantum_sync()){
+        if (pc->has_quantum_sync()) {
             pc->set_quantum_sync_engine_ptr
                 (m_shr_p_qs_engine);
             m_nspecies_quantum_sync++;
         }
-        if(pc->has_breit_wheeler()){
+        if (pc->has_breit_wheeler()) {
             pc->set_breit_wheeler_engine_ptr
                 (m_shr_p_bw_engine);
             m_nspecies_breit_wheeler++;
         }
     }
 
-    if(m_nspecies_quantum_sync != 0)
+    if (m_nspecies_quantum_sync != 0)
         InitQuantumSync();
 
-    if(m_nspecies_breit_wheeler !=0)
+    if (m_nspecies_breit_wheeler !=0)
         InitBreitWheeler();
 
 }
@@ -1013,12 +1013,12 @@ void MultiParticleContainer::InitQuantumSync ()
     //If specified, use a user-defined energy threshold for photon creation
     ParticleReal temp;
     constexpr auto mec2 = PhysConst::c * PhysConst::c * PhysConst::m_e;
-    if(utils::parser::queryWithParser(
-        pp_qed_qs, "photon_creation_energy_threshold", temp)){
+    if (utils::parser::queryWithParser(
+        pp_qed_qs, "photon_creation_energy_threshold", temp)) {
         temp *= mec2;
         m_quantum_sync_photon_creation_energy_threshold = temp;
     }
-    else{
+    else {
         ablastr::warn_manager::WMRecordWarning("QED",
             "Using default value (2*me*c^2) for photon energy creation threshold",
             ablastr::warn_manager::WarnPriority::low);
@@ -1032,11 +1032,11 @@ void MultiParticleContainer::InitQuantumSync ()
 
 
     pp_qed_qs.query("lookup_table_mode", lookup_table_mode);
-    if(lookup_table_mode.empty()){
+    if (lookup_table_mode.empty()) {
         WARPX_ABORT_WITH_MESSAGE("Quantum Synchrotron table mode should be provided");
     }
 
-    if(lookup_table_mode == "generate"){
+    if (lookup_table_mode == "generate") {
         ablastr::warn_manager::WMRecordWarning("QED",
             "A new Quantum Synchrotron table will be generated.",
             ablastr::warn_manager::WarnPriority::low);
@@ -1046,13 +1046,13 @@ void MultiParticleContainer::InitQuantumSync ()
         QuantumSyncGenerateTable();
 #endif
     }
-    else if(lookup_table_mode == "load"){
+    else if (lookup_table_mode == "load") {
         std::string load_table_name;
         pp_qed_qs.query("load_table_from", load_table_name);
         ablastr::warn_manager::WMRecordWarning("QED",
             "The Quantum Synchrotron table will be read from the file: " + load_table_name,
             ablastr::warn_manager::WarnPriority::low);
-        if(load_table_name.empty()){
+        if (load_table_name.empty()) {
             WARPX_ABORT_WITH_MESSAGE("Quantum Synchrotron table name should be provided");
         }
         Vector<char> table_data;
@@ -1061,14 +1061,14 @@ void MultiParticleContainer::InitQuantumSync ()
         m_shr_p_qs_engine->init_lookup_tables_from_raw_data(table_data,
             qs_minimum_chi_part);
     }
-    else if(lookup_table_mode == "builtin"){
+    else if (lookup_table_mode == "builtin") {
         ablastr::warn_manager::WMRecordWarning("QED",
             "The built-in Quantum Synchrotron table will be used. "
             "This low resolution table is intended for testing purposes only.",
             ablastr::warn_manager::WarnPriority::medium);
         m_shr_p_qs_engine->init_builtin_tables(qs_minimum_chi_part);
     }
-    else{
+    else {
         WARPX_ABORT_WITH_MESSAGE("Unknown Quantum Synchrotron table mode");
     }
 
@@ -1086,15 +1086,15 @@ void MultiParticleContainer::InitBreitWheeler ()
     // considered for pair production. If a photon has chi < chi_min,
     // the optical depth is not evolved and photon generation is ignored
     amrex::Real bw_minimum_chi_part;
-    if(!utils::parser::queryWithParser(pp_qed_bw, "chi_min", bw_minimum_chi_part))
+    if (!utils::parser::queryWithParser(pp_qed_bw, "chi_min", bw_minimum_chi_part))
         WARPX_ABORT_WITH_MESSAGE("qed_bw.chi_min should be provided!");
 
     pp_qed_bw.query("lookup_table_mode", lookup_table_mode);
-    if(lookup_table_mode.empty()){
+    if (lookup_table_mode.empty()) {
         WARPX_ABORT_WITH_MESSAGE("Breit Wheeler table mode should be provided");
     }
 
-    if(lookup_table_mode == "generate"){
+    if (lookup_table_mode == "generate") {
         ablastr::warn_manager::WMRecordWarning("QED",
             "A new Breit Wheeler table will be generated.",
             ablastr::warn_manager::WarnPriority::low);
@@ -1104,13 +1104,13 @@ void MultiParticleContainer::InitBreitWheeler ()
         BreitWheelerGenerateTable();
 #endif
     }
-    else if(lookup_table_mode == "load"){
+    else if (lookup_table_mode == "load") {
         std::string load_table_name;
         pp_qed_bw.query("load_table_from", load_table_name);
         ablastr::warn_manager::WMRecordWarning("QED",
             "The Breit Wheeler table will be read from the file:" + load_table_name,
             ablastr::warn_manager::WarnPriority::low);
-        if(load_table_name.empty()){
+        if (load_table_name.empty()) {
             WARPX_ABORT_WITH_MESSAGE("Breit Wheeler table name should be provided");
         }
         Vector<char> table_data;
@@ -1119,14 +1119,14 @@ void MultiParticleContainer::InitBreitWheeler ()
         m_shr_p_bw_engine->init_lookup_tables_from_raw_data(
             table_data, bw_minimum_chi_part);
     }
-    else if(lookup_table_mode == "builtin"){
+    else if (lookup_table_mode == "builtin") {
         ablastr::warn_manager::WMRecordWarning("QED",
             "The built-in Breit Wheeler table will be used. "
             "This low resolution table is intended for testing purposes only.",
             ablastr::warn_manager::WarnPriority::medium);
         m_shr_p_bw_engine->init_builtin_tables(bw_minimum_chi_part);
     }
-    else{
+    else {
         WARPX_ABORT_WITH_MESSAGE("Unknown Breit Wheeler table mode");
     }
 
@@ -1151,7 +1151,7 @@ MultiParticleContainer::QuantumSyncGenerateTable ()
     amrex::Real qs_minimum_chi_part;
     utils::parser::getWithParser(pp_qed_qs, "chi_min", qs_minimum_chi_part);
 
-    if(ParallelDescriptor::IOProcessor()){
+    if (ParallelDescriptor::IOProcessor()) {
         PicsarQuantumSyncCtrl ctrl;
 
         //==Table parameters==
@@ -1219,7 +1219,7 @@ MultiParticleContainer::QuantumSyncGenerateTable ()
 
     //No need to initialize from raw data for the processor that
     //has just generated the table
-    if(!ParallelDescriptor::IOProcessor()){
+    if (!ParallelDescriptor::IOProcessor()) {
         m_shr_p_qs_engine->init_lookup_tables_from_raw_data(
             table_data, qs_minimum_chi_part);
     }
@@ -1241,7 +1241,7 @@ MultiParticleContainer::BreitWheelerGenerateTable ()
     amrex::Real bw_minimum_chi_part;
     utils::parser::getWithParser(pp_qed_bw, "chi_min", bw_minimum_chi_part);
 
-    if(ParallelDescriptor::IOProcessor()){
+    if (ParallelDescriptor::IOProcessor()) {
         PicsarBreitWheelerCtrl ctrl;
 
         //==Table parameters==
@@ -1304,7 +1304,7 @@ MultiParticleContainer::BreitWheelerGenerateTable ()
 
     //No need to initialize from raw data for the processor that
     //has just generated the table
-    if(!ParallelDescriptor::IOProcessor()){
+    if (!ParallelDescriptor::IOProcessor()) {
         m_shr_p_bw_engine->init_lookup_tables_from_raw_data(
             table_data, bw_minimum_chi_part);
     }
@@ -1508,8 +1508,8 @@ void MultiParticleContainer::doQedBreitWheeler (int lev,
     // Photons undergoing Breit Wheeler process create electrons
     // in pc_product_ele and positrons in pc_product_pos
 
-    for (auto& pc_source : allcontainers){
-        if(!pc_source->has_breit_wheeler()) continue;
+    for (auto& pc_source : allcontainers) {
+        if (!pc_source->has_breit_wheeler()) continue;
 
         // Get product species
         auto& pc_product_ele =
@@ -1589,8 +1589,8 @@ void MultiParticleContainer::doQedQuantumSync (int lev,
     // Electrons or positrons undergoing Quantum photon emission process
     // create photons in pc_product_phot
 
-    for (auto& pc_source : allcontainers){
-        if(!pc_source->has_quantum_sync()){ continue; }
+    for (auto& pc_source : allcontainers) {
+        if (!pc_source->has_quantum_sync()){ continue; }
 
         // Get product species
         auto& pc_product_phot =
@@ -1655,9 +1655,9 @@ void MultiParticleContainer::doQedQuantumSync (int lev,
 void MultiParticleContainer::CheckQEDProductSpecies()
 {
     auto const nspecies = static_cast<int>(species_names.size());
-    for (int i=0; i<nspecies; i++){
+    for (int i=0; i<nspecies; i++) {
         const auto& pc = allcontainers[i];
-        if (pc->has_breit_wheeler()){
+        if (pc->has_breit_wheeler()) {
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                 i != pc->m_qed_breit_wheeler_ele_product,
                 "ERROR: Breit Wheeler product cannot be the same species");
@@ -1675,7 +1675,7 @@ void MultiParticleContainer::CheckQEDProductSpecies()
                 "ERROR: Breit Wheeler product species are of wrong type");
         }
 
-        if(pc->has_quantum_sync()){
+        if (pc->has_quantum_sync()) {
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                 i != pc->m_qed_quantum_sync_phot_product,
                 "ERROR: Quantum Synchrotron product cannot be the same species");

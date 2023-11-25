@@ -108,7 +108,7 @@ WarpX::DampPML_Cartesian (const int lev, PatchType patch_type)
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (Gpu::notInLaunchRegion())
 #endif
-        for ( MFIter mfi(*pml_E[0], TilingIfNotGPU()); mfi.isValid(); ++mfi )
+        for (MFIter mfi(*pml_E[0], TilingIfNotGPU()); mfi.isValid(); ++mfi )
         {
             const Box& tex  = mfi.tilebox( pml_E[0]->ixType().toIntVect() );
             const Box& tey  = mfi.tilebox( pml_E[1]->ixType().toIntVect() );
@@ -250,7 +250,7 @@ WarpX::DampJPML (int lev, PatchType patch_type)
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (Gpu::notInLaunchRegion())
 #endif
-        for ( MFIter mfi(*pml_j[0], TilingIfNotGPU()); mfi.isValid(); ++mfi )
+        for (MFIter mfi(*pml_j[0], TilingIfNotGPU()); mfi.isValid(); ++mfi )
         {
             auto const& pml_jxfab = pml_j[0]->array(mfi);
             auto const& pml_jyfab = pml_j[1]->array(mfi);
@@ -302,7 +302,7 @@ WarpX::DampJPML (int lev, PatchType patch_type)
             amrex::ParallelFor( tjx, tjy, tjz,
                 [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
-                    if(pml_lxfab(i, j, k) <= 0) return;
+                    if (pml_lxfab(i, j, k) <= 0) return;
 #endif
 
                     damp_jx_pml(i, j, k, pml_jxfab, sigma_star_cumsum_fac_j_x,
@@ -311,7 +311,7 @@ WarpX::DampJPML (int lev, PatchType patch_type)
                 },
                 [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
-                    if(pml_lyfab(i, j, k) <= 0) return;
+                    if (pml_lyfab(i, j, k) <= 0) return;
 #endif
 
                     damp_jy_pml(i, j, k, pml_jyfab, sigma_cumsum_fac_j_x,
@@ -320,7 +320,7 @@ WarpX::DampJPML (int lev, PatchType patch_type)
                 },
                 [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
-                    if(pml_lzfab(i, j, k)<=0) return;
+                    if (pml_lzfab(i, j, k)<=0) return;
 #endif
 
                     damp_jz_pml(i, j, k, pml_jzfab, sigma_cumsum_fac_j_x,
@@ -341,7 +341,7 @@ WarpX::CopyJPML ()
 {
     for (int lev = 0; lev <= finest_level; ++lev)
     {
-        if (pml[lev] && pml[lev]->ok()){
+        if (pml[lev] && pml[lev]->ok()) {
             pml[lev]->CopyJtoPMLs({ current_fp[lev][0].get(),
                                   current_fp[lev][1].get(),
                                   current_fp[lev][2].get() },
