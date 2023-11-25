@@ -98,26 +98,27 @@ namespace
 
 std::string abl_msg_logger::PriorityToString(const Priority& priority)
 {
-    if(priority == Priority::high)
+    if(priority == Priority::high) {
         return "high";
-    else if (priority == Priority::medium)
+    } else if (priority == Priority::medium) {
         return "medium";
-    else
+    } else {
         return "low";
+    }
 }
 
 Priority abl_msg_logger::StringToPriority(const std::string& priority_string)
 {
-    if(priority_string == "high")
+    if(priority_string == "high") {
         return Priority::high;
-    else if (priority_string == "medium")
+    } else if (priority_string == "medium") {
         return Priority::medium;
-    else if (priority_string == "low")
+    } else if (priority_string == "low") {
         return Priority::low;
-    else
+    } else {
         ABLASTR_ABORT_WITH_MESSAGE(
             "Priority string '" + priority_string + "' not recognized");
-
+    }
     //this silences a "non-void function does not return a value in all control paths" warning
     return Priority::low;
 }
@@ -246,9 +247,9 @@ Logger::collective_gather_msgs_with_counter_and_ranks() const
 #ifdef AMREX_USE_MPI
 
     // Trivial case of only one rank
-    if (m_num_procs == 1)
+    if (m_num_procs == 1) {
         return one_rank_gather_msgs_with_counter_and_ranks();
-
+    }
     // Find out who is the "gather rank" and how many messages it has
     const auto my_msgs = get_msgs();
     const auto how_many_msgs = static_cast<int>(my_msgs.size());
@@ -256,9 +257,9 @@ Logger::collective_gather_msgs_with_counter_and_ranks() const
         find_gather_rank_and_its_msgs(how_many_msgs);
 
     // If the "gather rank" has zero messages there are no messages at all
-    if(gather_rank_how_many_msgs == 0)
+    if(gather_rank_how_many_msgs == 0) {
         return std::vector<MsgWithCounterAndRanks>{};
-
+    }
     // All the ranks receive the msgs of the "gather rank" as a byte array
     const auto serialized_gather_rank_msgs =
         ::get_serialized_gather_rank_msgs(my_msgs, gather_rank, m_rank);
@@ -510,9 +511,10 @@ get_serialized_gather_rank_msgs(
     amrex::ParallelDescriptor::Bcast(
         &size_serialized_gather_rank_msgs, 1, gather_rank);
 
-    if (!is_gather_rank)
+    if (!is_gather_rank) {
         serialized_gather_rank_msgs.resize(
             size_serialized_gather_rank_msgs);
+    }
 
     amrex::ParallelDescriptor::Bcast(
         serialized_gather_rank_msgs.data(),

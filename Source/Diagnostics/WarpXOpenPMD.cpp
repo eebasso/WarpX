@@ -716,7 +716,7 @@ WarpXOpenPMDPlot::DumpToFile (ParticleContainer* pc,
             // Do not call storeChunk() with zero-sized particle tiles:
             //   https://github.com/openPMD/openPMD-api/issues/1147
             //   https://github.com/ECP-WarpX/WarpX/pull/1898#discussion_r745008290
-            if (numParticleOnTile == 0) continue;
+            if (numParticleOnTile == 0) { continue; }
 
             contributed_particles = true;
 
@@ -813,7 +813,7 @@ WarpXOpenPMDPlot::DumpToFile (ParticleContainer* pc,
     if (is_resizing_flush && !contributed_particles && isBTD && m_Series->backend() == "ADIOS2") {
         for( auto & [record_name, record] : currSpecies ) {
             for( auto & [comp_name, comp] : record ) {
-                if (comp.constant()) continue;
+                if (comp.constant()) { continue; }
 
                 auto dtype = comp.getDatatype();
                 switch (dtype) {

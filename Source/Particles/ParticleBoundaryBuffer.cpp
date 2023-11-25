@@ -227,13 +227,13 @@ void ParticleBoundaryBuffer::gatherParticles (MultiParticleContainer& mypc,
 
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim)
     {
-        if (geom.isPeriodic(idim)) continue;
+        if (geom.isPeriodic(idim)) { continue; }
         for (int iside = 0; iside < 2; ++iside)
         {
             auto& buffer = m_particle_containers[2*idim+iside];
             for (int i = 0; i < numSpecies(); ++i)
             {
-                if (!m_do_boundary_buffer[2*idim+iside][i]) continue;
+                if (!m_do_boundary_buffer[2*idim+iside][i]) { continue; }
                 const WarpXParticleContainer& pc = mypc.GetParticleContainer(i);
                 if (!buffer[i].isDefined())
                 {
@@ -250,13 +250,13 @@ void ParticleBoundaryBuffer::gatherParticles (MultiParticleContainer& mypc,
                     for(PIter pti(pc, lev); pti.isValid(); ++pti)
                     {
                         auto index = std::make_pair(pti.index(), pti.LocalTileIndex());
-                        if(plevel.find(index) == plevel.end()) continue;
+                        if(plevel.find(index) == plevel.end()) { continue; }
 
                         auto& ptile_buffer = species_buffer.DefineAndReturnParticleTile(
                                                         lev, pti.index(), pti.LocalTileIndex());
                         const auto& ptile = plevel.at(index);
                         auto np = ptile.numParticles();
-                        if (np == 0) continue;
+                        if (np == 0) { continue; }
 
                         auto predicate = IsOutsideDomainBoundary{plo, phi, idim, iside};
 
@@ -298,7 +298,7 @@ void ParticleBoundaryBuffer::gatherParticles (MultiParticleContainer& mypc,
     auto& buffer = m_particle_containers[m_particle_containers.size()-1];
     for (int i = 0; i < numSpecies(); ++i)
     {
-        if (!m_do_boundary_buffer[AMREX_SPACEDIM*2][i]) continue;
+        if (!m_do_boundary_buffer[AMREX_SPACEDIM*2][i]) { continue; }
         const auto& pc = mypc.GetParticleContainer(i);
         if (!buffer[i].isDefined())
         {
@@ -317,14 +317,14 @@ void ParticleBoundaryBuffer::gatherParticles (MultiParticleContainer& mypc,
             {
                 auto phiarr = (*distance_to_eb[lev])[pti].array();  // signed distance function
                 auto index = std::make_pair(pti.index(), pti.LocalTileIndex());
-                if(plevel.find(index) == plevel.end()) continue;
+                if(plevel.find(index) == plevel.end()) { continue; }
 
                 const auto getPosition = GetParticlePosition<PIdx>(pti);
                 auto& ptile_buffer = species_buffer.DefineAndReturnParticleTile(lev, pti.index(),
                                                                                 pti.LocalTileIndex());
                 const auto& ptile = plevel.at(index);
                 auto np = ptile.numParticles();
-                if (np == 0) continue;
+                if (np == 0) { continue; }
 
                 using SrcData = WarpXParticleContainer::ParticleTileType::ConstParticleTileDataType;
                 auto predicate = [=] AMREX_GPU_HOST_DEVICE (const SrcData& /*src*/, const int ip)

@@ -417,7 +417,7 @@ WarpX::setPhiBC ( amrex::Vector<std::unique_ptr<amrex::MultiFab>>& phi ) const
             // loop over dimensions
             for (int idim=0; idim<AMREX_SPACEDIM; idim++){
                 // check if neither boundaries in this dimension should be set
-                if (!(dirichlet_flag[2*idim] || dirichlet_flag[2*idim+1])) continue;
+                if (!(dirichlet_flag[2*idim] || dirichlet_flag[2*idim+1])) { continue; }
 
                 // a check can be added below to test if the boundary values
                 // are already correct, in which case the ParallelFor over the

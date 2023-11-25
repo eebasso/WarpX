@@ -373,7 +373,7 @@ using namespace amrex;
         {
             for (int iside = 0; iside < 2; ++iside)
             {
-                if (!is_pec[idim][iside]) continue;
+                if (!is_pec[idim][iside]) { continue; }
 
                 // Get the mirror guard cell index
                 amrex::IntVect iv_mirror = ijk_vec;
@@ -394,7 +394,7 @@ using namespace amrex;
         {
             for (int iside = 0; iside < 2; ++iside)
             {
-                if (!is_pec[idim][iside]) continue;
+                if (!is_pec[idim][iside]) { continue; }
 
                 amrex::IntVect iv_mirror = ijk_vec;
                 iv_mirror[idim] = mirrorfac[idim][iside] - ijk_vec[idim];
@@ -436,7 +436,7 @@ using namespace amrex;
         {
             for (int iside = 0; iside < 2; ++iside)
             {
-                if (!is_pec[idim][iside]) continue;
+                if (!is_pec[idim][iside]) { continue; }
 
                 // Get the mirror guard cell index
                 amrex::IntVect iv_mirror = ijk_vec;

@@ -131,8 +131,8 @@ void ChargeOnEB::ComputeDiags (const int step)
         // Skip boxes that do not intersect with the embedded boundary
         // (i.e. either fully covered or fully regular)
         amrex::FabType fab_type = eb_flag[mfi].getType(box);
-        if (fab_type == amrex::FabType::regular) continue;
-        if (fab_type == amrex::FabType::covered) continue;
+        if (fab_type == amrex::FabType::regular) { continue; }
+        if (fab_type == amrex::FabType::covered) { continue; }
 
         // Extract data for electric field
         const amrex::Array4<const amrex::Real> & Ex_arr = Ex.array(mfi);

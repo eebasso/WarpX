@@ -125,7 +125,7 @@ WarpX::ComputeEdgeLengths (std::array< std::unique_ptr<amrex::MultiFab>, 3 >& ed
     for (amrex::MFIter mfi(flags); mfi.isValid(); ++mfi){
 #ifdef WARPX_DIM_XZ
         for (int idim = 0; idim < 3; ++idim){
-            if(idim == 1) continue;
+            if(idim == 1) { continue; }
 #elif defined(WARPX_DIM_3D)
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim){
 #else
@@ -252,7 +252,7 @@ WarpX::ScaleEdges (std::array< std::unique_ptr<amrex::MultiFab>, 3 >& edge_lengt
     for (amrex::MFIter mfi(*edge_lengths[0]); mfi.isValid(); ++mfi) {
 #ifdef WARPX_DIM_XZ
         for (int idim = 0; idim < 3; ++idim){
-            if(idim == 1) continue;
+            if(idim == 1) { continue; }
 #elif defined(WARPX_DIM_3D)
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim){
 #else

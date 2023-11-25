@@ -73,8 +73,9 @@ deposit_charge (typename T_PC::ParIterType& pti,
 {
     // deposition guards
     amrex::IntVect ng_rho = rho->nGrowVect();
-    if (num_rho_deposition_guards.has_value())
+    if (num_rho_deposition_guards.has_value()) {
         ng_rho = num_rho_deposition_guards.value();
+    }
     ABLASTR_ALWAYS_ASSERT_WITH_MESSAGE(ng_rho <= rho->nGrowVect(),
                                        "num_rho_deposition_guards are larger than allocated!");
     // particle shape
@@ -82,14 +83,16 @@ deposit_charge (typename T_PC::ParIterType& pti,
 
     // used for MR when we want to deposit for a subset of the particles on the level in the
     // current box; with offset, we start at a later particle index
-    if (!np_to_depose.has_value())
+    if (!np_to_depose.has_value()) {
         np_to_depose = pti.numParticles();
+    }
     ABLASTR_ALWAYS_ASSERT_WITH_MESSAGE(np_to_depose.value() + offset <= pti.numParticles(),
                                        "np_to_depose + offset are out-of-bounds for particle iterator");
 
     int const lev = pti.GetLevel();
-    if (!depos_lev.has_value())
+    if (!depos_lev.has_value()) {
         depos_lev = lev;
+    }
     ABLASTR_ALWAYS_ASSERT_WITH_MESSAGE((depos_lev.value() == (lev-1)) ||
                                        (depos_lev.value() == (lev  )),
                                        "Deposition buffers only work for lev or lev-1");

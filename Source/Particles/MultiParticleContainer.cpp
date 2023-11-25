@@ -157,17 +157,17 @@ MultiParticleContainer::ReadParameters ()
         // if the input string for B_external on particles is "constant"
         // then the values for the external B on particles must
         // be provided in the input file.
-        if (m_B_ext_particle_s == "constant")
+        if (m_B_ext_particle_s == "constant") {
             utils::parser::getArrWithParser(
                 pp_particles, "B_external_particle", m_B_external_particle);
-
+        }
         // if the input string for E_external on particles is "constant"
         // then the values for the external E on particles must
         // be provided in the input file.
-        if (m_E_ext_particle_s == "constant")
+        if (m_E_ext_particle_s == "constant") {
             utils::parser::getArrWithParser(
                 pp_particles, "E_external_particle", m_E_external_particle);
-
+        }
         // if the input string for B_ext_particle_s is
         // "parse_b_ext_particle_function" then the mathematical expression
         // for the Bx_, By_, Bz_external_particle_function(x,y,z)
@@ -482,11 +482,11 @@ MultiParticleContainer::Evolve (int lev,
         jx.setVal(0.0);
         jy.setVal(0.0);
         jz.setVal(0.0);
-        if (cjx) cjx->setVal(0.0);
-        if (cjy) cjy->setVal(0.0);
-        if (cjz) cjz->setVal(0.0);
-        if (rho) rho->setVal(0.0);
-        if (crho) crho->setVal(0.0);
+        if (cjx)   { cjx->setVal(0.0); }
+        if (cjy)   { cjy->setVal(0.0); }
+        if (cjz)   { cjz->setVal(0.0); }
+        if (rho)   { rho->setVal(0.0); }
+        if (crho) { crho->setVal(0.0); }
     }
     for (auto& pc : allcontainers) {
         pc->Evolve(lev, Ex, Ey, Ez, Bx, By, Bz, jx, jy, jz, cjx, cjy, cjz,
@@ -585,7 +585,7 @@ MultiParticleContainer::DepositCharge (
     // Call the deposition kernel for each species
     for (auto& pc : allcontainers)
     {
-        if (pc->do_not_deposit) continue;
+        if (pc->do_not_deposit) { continue; }
         pc->DepositCharge(rho, local, reset, apply_boundary_and_scale_volume,
                               interpolate_across_levels);
     }
@@ -607,7 +607,7 @@ MultiParticleContainer::GetChargeDensity (int lev, bool local)
     std::unique_ptr<MultiFab> rho = GetZeroChargeDensity(lev);
 
     for (auto& container : allcontainers) {
-        if (container->do_not_deposit) continue;
+        if (container->do_not_deposit) { continue; }
         const std::unique_ptr<MultiFab> rhoi = container->GetChargeDensity(lev, true);
         MultiFab::Add(*rho, *rhoi, 0, 0, rho->nComp(), rho->nGrowVect());
     }
@@ -1509,7 +1509,7 @@ void MultiParticleContainer::doQedBreitWheeler (int lev,
     // in pc_product_ele and positrons in pc_product_pos
 
     for (auto& pc_source : allcontainers){
-        if(!pc_source->has_breit_wheeler()) continue;
+        if(!pc_source->has_breit_wheeler()) { continue; }
 
         // Get product species
         auto& pc_product_ele =

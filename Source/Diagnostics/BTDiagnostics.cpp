@@ -1254,7 +1254,7 @@ void BTDiagnostics::MergeBuffersForPlotfile (int i_snapshot)
                 WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                     std::rename(recent_species_Header.c_str(), snapshot_species_Header.c_str()) == 0,
                     std::string("Renaming ").append(recent_species_Header).append(" to ").append(snapshot_species_Header).append(" has failed"));
-                if (BufferSpeciesHeader.m_total_particles == 0) continue;
+                if (BufferSpeciesHeader.m_total_particles == 0) { continue; }
                 // if finite number of particles in the output, copy ParticleHdr and Data file
                 WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                     std::rename(recent_ParticleHdrFilename.c_str(), snapshot_ParticleHdrFilename.c_str()) == 0,
@@ -1265,7 +1265,7 @@ void BTDiagnostics::MergeBuffersForPlotfile (int i_snapshot)
             } else {
                 InterleaveSpeciesHeader(recent_species_Header,snapshot_species_Header,
                                         m_output_species_names[i], m_buffer_flush_counter[i_snapshot]);
-                if (BufferSpeciesHeader.m_total_particles == 0) continue;
+                if (BufferSpeciesHeader.m_total_particles == 0) { continue; }
                 if (m_totalParticles_flushed_already[i_snapshot][i]==0) {
                 WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
                     std::rename(recent_ParticleHdrFilename.c_str(), snapshot_ParticleHdrFilename.c_str()) == 0,

@@ -29,16 +29,16 @@ namespace
         const abl_msg_logger::Priority& priority)
     {
         using namespace abl_msg_logger;
-        if (priority == Priority::low)
+        if (priority == Priority::low) {
             return WarnPriority::low;
-        else if (priority == Priority::medium)
+        } else if (priority == Priority::medium) {
             return WarnPriority::medium;
-        else if (priority == Priority::high)
+        } else if (priority == Priority::high) {
             return WarnPriority::high;
-        else
+        } else {
             ABLASTR_ABORT_WITH_MESSAGE(
                 "Parsing Priority to WarnPriority has failed");
-
+        }
         return WarnPriority::high;
     }
 }
@@ -59,10 +59,11 @@ void WarnManager::RecordWarning(
             WarnPriority priority)
 {
     auto msg_priority = abl_msg_logger::Priority::high;
-    if(priority == WarnPriority::low)
+    if(priority == WarnPriority::low) {
         msg_priority = abl_msg_logger::Priority::low;
-    else if(priority == WarnPriority::medium)
+    } else if(priority == WarnPriority::medium) {
         msg_priority = abl_msg_logger::Priority::medium;
+    }
 
     if(m_always_warn_immediately){
 

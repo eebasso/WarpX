@@ -276,7 +276,7 @@ PEC::ApplyPECtoRhofield (amrex::MultiFab* rho, const int lev, PatchType patch_ty
 
         // If grown_domain_box contains fabbox it means there are no PEC
         // boundaries to handle so continue to next box
-        if (grown_domain_box.contains(fabbox)) continue;
+        if (grown_domain_box.contains(fabbox)) { continue; }
 
         // Extract field data
         auto const& rho_array = rho->array(mfi);
@@ -398,7 +398,7 @@ PEC::ApplyPECtoJfield(amrex::MultiFab* Jx, amrex::MultiFab* Jy,
         // If grown_domain_box contains fabbox it means there are no PEC
         // boundaries to handle so continue to next box
         grown_domain_box.convert(Jx_nodal);
-        if (grown_domain_box.contains(fabbox)) continue;
+        if (grown_domain_box.contains(fabbox)) { continue; }
 
         // Extract field data
         auto const& Jx_array = Jx->array(mfi);
@@ -433,7 +433,7 @@ PEC::ApplyPECtoJfield(amrex::MultiFab* Jx, amrex::MultiFab* Jy,
         // If grown_domain_box contains fabbox it means there are no PEC
         // boundaries to handle so continue to next box
         grown_domain_box.convert(Jy_nodal);
-        if (grown_domain_box.contains(fabbox)) continue;
+        if (grown_domain_box.contains(fabbox)) { continue; }
 
         // Extract field data
         auto const& Jy_array = Jy->array(mfi);
@@ -468,7 +468,7 @@ PEC::ApplyPECtoJfield(amrex::MultiFab* Jx, amrex::MultiFab* Jy,
         // If grown_domain_box contains fabbox it means there are no PEC
         // boundaries to handle so continue to next box
         grown_domain_box.convert(Jz_nodal);
-        if (grown_domain_box.contains(fabbox)) continue;
+        if (grown_domain_box.contains(fabbox)) { continue; }
 
         // Extract field data
         auto const& Jz_array = Jz->array(mfi);
@@ -538,7 +538,7 @@ PEC::ApplyPECtoElectronPressure (amrex::MultiFab* Pefield, const int lev,
 
         // If grown_domain_box contains fabbox it means there are no PEC
         // boundaries to handle so continue to next box
-        if (grown_domain_box.contains(fabbox)) continue;
+        if (grown_domain_box.contains(fabbox)) { continue; }
 
         // Extract field data
         auto const& Pe_array = Pefield->array(mfi);

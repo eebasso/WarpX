@@ -312,10 +312,11 @@ computePhi (amrex::Vector<amrex::MultiFab*> const & rho,
         }
 
         // Run additional operations, such as calculation of the E field for embedded boundaries
-        if constexpr (!std::is_same<T_PostPhiCalculationFunctor, std::nullopt_t>::value)
-            if (post_phi_calculation.has_value())
+        if constexpr (!std::is_same<T_PostPhiCalculationFunctor, std::nullopt_t>::value) {
+            if (post_phi_calculation.has_value()) {
                 post_phi_calculation.value()(mlmg, lev);
-
+            }
+        }
     } // loop over lev(els)
 }
 

@@ -228,7 +228,7 @@ WarpX::setVectorPotentialBC ( amrex::Vector<amrex::Array<std::unique_ptr<amrex::
                 // loop over dimensions
                 for (int idim=0; idim<AMREX_SPACEDIM; idim++){
                     // check if neither boundaries in this dimension should be set
-                    if (!(dirichlet_flag[adim][2*idim] || dirichlet_flag[adim][2*idim+1])) continue;
+                    if (!(dirichlet_flag[adim][2*idim] || dirichlet_flag[adim][2*idim+1])) { continue; }
 
                     // a check can be added below to test if the boundary values
                     // are already correct, in which case the ParallelFor over the
