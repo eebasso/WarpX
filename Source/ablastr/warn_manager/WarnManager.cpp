@@ -113,8 +113,8 @@ std::string WarnManager::PrintLocalWarnings(const std::string& when) const
     if (all_warnings.empty()) {
         ss << "* No recorded warnings.\n";
     }
-    else{
-    else {or(const auto& warn_msg : all_warnings) {
+    else {
+        for(const auto& warn_msg : all_warnings) {
             ss << PrintWarnMsg(warn_msg);
             ss << "*\n";
         }
@@ -144,8 +144,8 @@ std::string WarnManager::PrintGlobalWarnings(const std::string& when) const
     if (all_warnings.empty()) {
         ss << "* No recorded warnings.\n";
     }
-    else{
-    else {or(const auto& warn_msg : all_warnings) {
+    else {
+        for(const auto& warn_msg : all_warnings) {
             ss << PrintWarnMsg(warn_msg);
             ss << "*\n";
         }
@@ -200,8 +200,8 @@ void WarnManager::debug_read_warnings_from_input(const amrex::ParmParse& params)
         if (all_involved != 0) {
             this->RecordWarning(topic, msg, wpriority);
         }
-        else{
-        else {td::vector<int> who_involved;
+        else {
+            std::vector<int> who_involved;
             pp_warn.queryarr("who_involved", who_involved);
             if (std::find (who_involved.begin(), who_involved.end(), m_rank)
                 != who_involved.end()) {
@@ -251,8 +251,8 @@ std::string WarnManager::PrintWarnMsg(
         for (const auto rr : msg_with_counter_and_ranks.ranks)
             raised_by += " " + std::to_string(rr);
     }
-    else{
-    else {aised_by += "ALL\n";
+    else {
+        raised_by += "ALL\n";
     }
     ss << WarnManager::MsgFormatter(raised_by, warn_line_size, warn_tab_size);
 
@@ -274,8 +274,8 @@ std::string WarnManager::GetHeader(
     if (is_global) {
         ss << "* GLOBAL warning list  after " << " [ " <<  when << " ]\n*\n";
     }
-    else{
-    else {uto const mpi_rank = amrex::ParallelDescriptor::MyProc();
+    else {
+        auto const mpi_rank = amrex::ParallelDescriptor::MyProc();
         ss << "* LOCAL" << " ( rank # " << mpi_rank << " ) "
             << " warning list  after " <<  when << "\n*\n";
     }

@@ -379,7 +379,7 @@ struct InjectorMomentumJuttner
         u[dir] = static_cast<amrex::Real>(0._rt);
         // This condition is equation 10 in Zenitani,
         // though x1 is defined differently.
-        while(u[dir]-gamma <= x1)
+        while (u[dir]-gamma <= x1)
         {
             u[dir] = -theta*
                 std::log(amrex::Random(engine)*amrex::Random(engine)*amrex::Random(engine));

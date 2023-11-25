@@ -182,7 +182,7 @@ BackgroundMCCCollision::get_nu_max(amrex::Vector<MCCProcess> const& mcc_processe
     }
 
     amrex::ParticleReal E = E_start;
-    while(E < E_end) {
+    while (E < E_end) {
         amrex::ParticleReal sigma_E = 0.0;
 
         // loop through all collision pathways

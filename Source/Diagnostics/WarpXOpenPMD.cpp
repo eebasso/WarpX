@@ -339,20 +339,20 @@ namespace detail
     inline void
     setOpenPMDUnit ( openPMD::Mesh mesh, const std::string field_name )
     {
-        if (field_name[0] == 'E'){  // Electric field
+        if (field_name[0] == 'E') {  // Electric field
             mesh.setUnitDimension({
                                           {openPMD::UnitDimension::L,  1},
                                           {openPMD::UnitDimension::M,  1},
                                           {openPMD::UnitDimension::T, -3},
                                           {openPMD::UnitDimension::I, -1},
                                   });
-        } else if (field_name[0] == 'B'){ // Magnetic field
+        } else if (field_name[0] == 'B') { // Magnetic field
             mesh.setUnitDimension({
                                           {openPMD::UnitDimension::M,  1},
                                           {openPMD::UnitDimension::I, -1},
                                           {openPMD::UnitDimension::T, -2}
                                   });
-        } else if (field_name[0] == 'j'){ // current
+        } else if (field_name[0] == 'j') { // current
             mesh.setUnitDimension({
                                           {openPMD::UnitDimension::L, -2},
                                           {openPMD::UnitDimension::I,  1},
@@ -482,7 +482,7 @@ WarpXOpenPMDPlot::Init (openPMD::Access access, bool isBTD)
 
     // close a previously open series before creating a new one
     // see ADIOS1 limitation: https://github.com/openPMD/openPMD-api/pull/686
-    if (m_Encoding == openPMD::IterationEncoding::fileBased )
+    if (m_Encoding == openPMD::IterationEncoding::fileBased)
         m_Series = nullptr;
     else if (m_Series != nullptr )
         return;
@@ -1270,7 +1270,7 @@ WarpXOpenPMDPlot::GetMeshCompNames (int meshLevel,
         for (std::string const& vector_field : vector_fields) {
             for (std::string const& component : field_components) {
                 if (vector_field == varname_1st &&
-                    component == varname_2nd )
+                    component == varname_2nd)
                 {
                     field_name = varname_1st + varname.substr(2); // Strip component
                     comp_name = varname_2nd;

@@ -61,7 +61,7 @@ FlushFormatOpenPMD::FlushFormatOpenPMD (const std::string& diag_name)
     // if no encoding is defined, then check to see if tspf is defined.
     // (backward compatibility)
     //
-    if (!encodingDefined )
+    if (!encodingDefined)
     {
         bool openpmd_tspf = false;
         const bool tspfDefined = pp_diag_name.query("openpmd_tspf", openpmd_tspf);

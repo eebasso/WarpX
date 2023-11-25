@@ -23,9 +23,11 @@ utils::parser::SliceParser::SliceParser (const std::string& instr, const bool is
     auto insplit = ablastr::utils::text::split_string<std::vector<std::string>>(
         instr, m_separator, true);
 
-    if (insplit.size() == 1){ // no colon in input string. The input is the period.
+    if (insplit.size() == 1) // no colon in input string. The input is the period.
+    {
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE(!m_isBTD, "must specify interval stop for BTD");
-        m_period = parseStringtoInt(insplit[0], "interval period");}
+        m_period = parseStringtoInt(insplit[0], "interval period");
+    }
     else if (insplit.size() == 2) // 1 colon in input string. The input is start:stop
     {
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE(!m_isBTD || !insplit[1].empty(), "must specify interval stop for BTD");
@@ -137,7 +139,7 @@ int utils::parser::IntervalsParser::previousContains (const int n) const
 int utils::parser::IntervalsParser::previousContainsInclusive (
     const int n) const
 {
-    if (contains(n)){return n;}
+    if (contains(n)) {return n;}
     else {return previousContains(n);}
 }
 

@@ -2593,13 +2593,13 @@ PhysicalParticleContainer::PushP (int lev, Real dt,
                                          Byp, Bzp, qp, m, dt);
                 } else if (pusher_algo == ParticlePusherAlgo::Vay) {
                     amrex::ParticleReal qp = q;
-                    if (ion_lev){ qp *= ion_lev[ip]; }
+                    if (ion_lev) { qp *= ion_lev[ip]; }
                     UpdateMomentumVay( ux[ip], uy[ip], uz[ip],
                                        Exp, Eyp, Ezp, Bxp,
                                        Byp, Bzp, qp, m, dt);
                 } else if (pusher_algo == ParticlePusherAlgo::HigueraCary) {
                     amrex::ParticleReal qp = q;
-                    if (ion_lev){ qp *= ion_lev[ip]; }
+                    if (ion_lev) { qp *= ion_lev[ip]; }
                     UpdateMomentumHigueraCary( ux[ip], uy[ip], uz[ip],
                                                Exp, Eyp, Ezp, Bxp,
                                                Byp, Bzp, qp, m, dt);

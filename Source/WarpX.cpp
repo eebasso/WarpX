@@ -550,7 +550,7 @@ WarpX::ReadParameters ()
             std::optional<ablastr::warn_manager::WarnPriority> abort_on_warning_threshold = std::nullopt;
             if (str_abort_on_warning_threshold == "high")
                 abort_on_warning_threshold = ablastr::warn_manager::WarnPriority::high;
-            else if (str_abort_on_warning_threshold == "medium" )
+            else if (str_abort_on_warning_threshold == "medium")
                 abort_on_warning_threshold = ablastr::warn_manager::WarnPriority::medium;
             else if (str_abort_on_warning_threshold == "low")
                 abort_on_warning_threshold = ablastr::warn_manager::WarnPriority::low;
@@ -1675,7 +1675,7 @@ WarpX::ReadParameters ()
         amrex::Vector<Real> slice_hi(AMREX_SPACEDIM);
         Vector<int> slice_crse_ratio(AMREX_SPACEDIM);
         // set default slice_crse_ratio //
-        for (int idim=0; idim < AMREX_SPACEDIM; ++idim )
+        for (int idim=0; idim < AMREX_SPACEDIM; ++idim)
         {
             slice_crse_ratio[idim] = 1;
         }
@@ -2351,7 +2351,7 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
     int rho_ncomps = 0;
     if ((electrostatic_solver_id == ElectrostaticSolverAlgo::LabFrame) ||
         (electrostatic_solver_id == ElectrostaticSolverAlgo::LabFrameElectroMagnetostatic) ||
-        (electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC) )
+        (electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC))
     {
         rho_ncomps = ncomps;
     }

@@ -384,7 +384,7 @@ ComputeNBorrowEightFacesExtension(const amrex::Dim3 cell, const amrex::Real S_ex
 
     bool neg_face = true;
 
-    while(denom >= S_ext && neg_face && denom > 0) {
+    while (denom >= S_ext && neg_face && denom > 0) {
         neg_face = false;
         for (int i_n = -1; i_n < 2; i_n++) {
             for (int j_n = -1; j_n < 2; j_n++) {
@@ -646,7 +646,7 @@ WarpX::ComputeEightWaysExtensions() {
 
                     bool neg_face = true;
 
-                    while(denom >= S_ext && neg_face && denom > 0) {
+                    while (denom >= S_ext && neg_face && denom > 0) {
                         neg_face = false;
                         for (int i_n = -1; i_n < 2; i_n++) {
                             for (int j_n = -1; j_n < 2; j_n++) {

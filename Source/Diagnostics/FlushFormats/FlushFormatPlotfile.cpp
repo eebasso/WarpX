@@ -315,7 +315,7 @@ FlushFormatPlotfile::WriteWarpXHeader(
 
         for (int idiag = 0; idiag < warpx.GetMultiDiags().GetTotalDiags(); ++idiag)
         {
-            if (warpx.GetMultiDiags().diagstypes(idiag) == DiagTypes::BackTransformed )
+            if (warpx.GetMultiDiags().diagstypes(idiag) == DiagTypes::BackTransformed)
             {
                 auto& diag = warpx.GetMultiDiags().GetDiag(idiag);
                 for (int i_buffer=0; i_buffer<diag.getnumbuffers(); ++i_buffer) {

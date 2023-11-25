@@ -18,7 +18,7 @@ ablastr::utils::text::automatic_text_wrap(
     auto wrapped_text_lines = std::vector<std::string>{};
 
     std::string line;
-    while(std::getline(ss_text, line,'\n')) {
+    while (std::getline(ss_text, line,'\n')) {
 
         auto ss_line = std::stringstream{line};
         int counter = 0;

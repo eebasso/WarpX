@@ -368,7 +368,7 @@ Logger::compute_msgs_with_counter_and_ranks(
 #ifdef AMREX_USE_OMP
     #pragma omp parallel for
 #endif
-    for (int rr = 0; rr < m_num_procs; ++rr){ //for each rank
+    for (int rr = 0; rr < m_num_procs; ++rr) { //for each rank
         if (rr == gather_rank) // (skip gather_rank)
             continue;
 

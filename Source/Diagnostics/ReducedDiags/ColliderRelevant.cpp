@@ -163,7 +163,7 @@ ColliderRelevant::ColliderRelevant (std::string rd_name)
 
     if (amrex::ParallelDescriptor::IOProcessor())
     {
-        if (m_write_header )
+        if (m_write_header)
         {
             // open file
             std::ofstream ofs;

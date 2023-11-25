@@ -886,7 +886,7 @@ MultiParticleContainer::doFieldIonization (int lev,
     // Ionized particles in pc_source create particles in pc_product
     for (auto& pc_source : allcontainers)
     {
-        if (!pc_source->do_field_ionization){ continue; }
+        if (!pc_source->do_field_ionization) { continue; }
 
         auto& pc_product = allcontainers[pc_source->ionization_product];
 
@@ -1590,7 +1590,7 @@ void MultiParticleContainer::doQedQuantumSync (int lev,
     // create photons in pc_product_phot
 
     for (auto& pc_source : allcontainers) {
-        if (!pc_source->has_quantum_sync()){ continue; }
+        if (!pc_source->has_quantum_sync()) { continue; }
 
         // Get product species
         auto& pc_product_phot =
