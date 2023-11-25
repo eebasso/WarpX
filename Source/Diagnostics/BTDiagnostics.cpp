@@ -112,8 +112,9 @@ void BTDiagnostics::DerivedInitData ()
     const amrex::ParmParse pp_diag_name(m_diag_name);
     int write_species = 1;
     pp_diag_name.query("write_species", write_species);
-    if ((m_output_species_names.empty()) && (write_species == 1))
+    if ((m_output_species_names.empty()) && (write_species == 1)) {
         m_output_species_names = mpc.GetSpeciesNames();
+    }
 
     m_do_back_transformed_particles =
         ((!m_output_species_names.empty()) && (write_species == 1));
@@ -872,7 +873,7 @@ BTDiagnostics::k_index_zlab (int i_buffer, int lev)
     auto & warpx = WarpX::GetInstance();
     const amrex::Real prob_domain_zmin_lab = m_snapshot_domain_lab[i_buffer].lo( m_moving_window_dir );
     amrex::IntVect ref_ratio = amrex::IntVect(1);
-    if (lev > 0 ) ref_ratio = WarpX::RefRatio(lev-1);
+    if (lev > 0 ) { ref_ratio = WarpX::RefRatio(lev-1); }
     const int k_lab = static_cast<int>(floor (
                           ( m_current_z_lab[i_buffer]
                             - (prob_domain_zmin_lab  ) )

@@ -191,7 +191,7 @@ using namespace amrex;
                                         : (dom_hi[idim] + 1 - ig));
                         GuardCell = true;
                         // tangential components are inverted across PEC boundary
-                        if (is_tangent_to_PEC) sign *= -1._rt;
+                        if (is_tangent_to_PEC) { sign *= -1._rt; }
                     }
                 } // is PEC boundary
             } // loop over iside
@@ -319,7 +319,7 @@ using namespace amrex;
                                         : (dom_hi[idim] + 1 - ig));
                         GuardCell = true;
                         // Sign of the normal component in guard cell is inverted
-                        if (is_normal_to_PEC) sign *= -1._rt;
+                        if (is_normal_to_PEC) { sign *= -1._rt; }
                     }
                 } // if PEC Boundary
             } // loop over sides
