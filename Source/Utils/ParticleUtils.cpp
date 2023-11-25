@@ -34,7 +34,7 @@ namespace ParticleUtils {
     /* Find the particles and count the particles that are in each cell.
        Note that this does *not* rearrange particle arrays */
     ParticleBins
-    findParticlesInEachCell( int const lev, MFIter const& mfi,
+    findParticlesInEachCell (int const lev, MFIter const& mfi,
                              ParticleTileType const& ptile) {
 
         // Extract particle structures for this tile

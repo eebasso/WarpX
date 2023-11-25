@@ -27,8 +27,8 @@ namespace utils::algorithms
      */
     template <typename TV, typename TE,
         class = typename std::enable_if<std::is_convertible<TE,TV>::value>::type>
-    bool is_in(const std::vector<TV>& vect,
-               const TE& elem)
+    bool is_in (const std::vector<TV>& vect,
+                const TE& elem)
     {
         return (std::find(vect.begin(), vect.end(), elem) != vect.end());
     }
@@ -47,8 +47,8 @@ namespace utils::algorithms
      */
     template <typename TV, typename TE,
         class = typename std::enable_if<std::is_convertible<TE,TV>::value>::type>
-    bool any_of_is_in(const std::vector<TV>& vect,
-               const std::vector<TE>& elems)
+    bool any_of_is_in (const std::vector<TV>& vect,
+                       const std::vector<TE>& elems)
     {
         return std::any_of(elems.begin(), elems.end(),
             [&](const auto elem){return is_in(vect, elem);});

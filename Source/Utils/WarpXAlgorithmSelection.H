@@ -163,17 +163,17 @@ struct ReductionType {
 };
 
 int
-GetAlgorithmInteger(const amrex::ParmParse& pp, const char* pp_search_key );
+GetAlgorithmInteger (const amrex::ParmParse& pp, const char* pp_search_key);
 
 /** Select BC Type for fields, if field=true
  *  else select BCType for particles.
  */
 int
-GetFieldBCTypeInteger( std::string BCType );
+GetFieldBCTypeInteger (std::string BCType);
 
 /** Select BC Type for particles.
  */
 ParticleBoundaryType
-GetParticleBCTypeInteger( std::string BCType );
+GetParticleBCTypeInteger (std::string BCType);
 
 #endif // UTILS_WARPXALGORITHMSELECTION_H_

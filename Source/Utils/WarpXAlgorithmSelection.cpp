@@ -137,8 +137,8 @@ const std::map<std::string, int> ReductionType_algo_to_int = {
 };
 
 int
-GetAlgorithmInteger(const amrex::ParmParse& pp, const char* pp_search_key ){
-
+GetAlgorithmInteger (const amrex::ParmParse& pp, const char* pp_search_key)
+{
     // Read user input ; use "default" if it is not found
     std::string algo = "default";
     pp.query( pp_search_key, algo );
@@ -203,7 +203,8 @@ GetAlgorithmInteger(const amrex::ParmParse& pp, const char* pp_search_key ){
 }
 
 int
-GetFieldBCTypeInteger( std::string BCType ){
+GetFieldBCTypeInteger (std::string BCType)
+{
     std::transform(BCType.begin(), BCType.end(), BCType.begin(), ::tolower);
 
     if (FieldBCType_algo_to_int.count(BCType) == 0) {
@@ -220,7 +221,8 @@ GetFieldBCTypeInteger( std::string BCType ){
 }
 
 ParticleBoundaryType
-GetParticleBCTypeInteger( std::string BCType ){
+GetParticleBCTypeInteger (std::string BCType)
+{
     std::transform(BCType.begin(), BCType.end(), BCType.begin(), ::tolower);
 
     if (ParticleBCType_algo_to_enum.count(BCType) == 0) {

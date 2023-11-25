@@ -105,9 +105,9 @@ public:
     WarpX& operator= ( WarpX const & ) = delete;
 
     /** Move constructor */
-    WarpX ( WarpX && ) = default;
+    WarpX (WarpX &&) = default;
     /** Move operator */
-    WarpX& operator= ( WarpX && ) = default;
+    WarpX& operator= (WarpX &&) = default;
 
     static std::string Version (); //!< Version of WarpX executable
     static std::string PicsarVersion (); //!< Version of PICSAR dependency
@@ -565,7 +565,7 @@ public:
      */
     void ComputeMaxStep ();
     // Compute max_step automatically for simulations in a boosted frame.
-    void computeMaxStepBoostAccelerator();
+    void computeMaxStepBoostAccelerator ();
 
     /** \brief Move the moving window
      * \param step Time step
@@ -770,18 +770,18 @@ public:
     void UpdateCurrentNodalToStag (amrex::MultiFab& dst, amrex::MultiFab const& src);
 
     // Fill boundary cells including coarse/fine boundaries
-    void FillBoundaryB   (amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
-    void FillBoundaryE   (amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
-    void FillBoundaryB_avg   (amrex::IntVect ng);
-    void FillBoundaryE_avg   (amrex::IntVect ng);
+    void FillBoundaryB (    amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
+    void FillBoundaryE (    amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
+    void FillBoundaryB_avg (amrex::IntVect ng);
+    void FillBoundaryE_avg (amrex::IntVect ng);
 
-    void FillBoundaryF   (amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
-    void FillBoundaryG   (amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
+    void FillBoundaryF (  amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
+    void FillBoundaryG (  amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
     void FillBoundaryAux (amrex::IntVect ng);
-    void FillBoundaryE   (int lev, amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
-    void FillBoundaryB   (int lev, amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
-    void FillBoundaryE_avg   (int lev, amrex::IntVect ng);
-    void FillBoundaryB_avg   (int lev, amrex::IntVect ng);
+    void FillBoundaryE (    int lev, amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
+    void FillBoundaryB (    int lev, amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
+    void FillBoundaryE_avg (int lev, amrex::IntVect ng);
+    void FillBoundaryB_avg (int lev, amrex::IntVect ng);
 
     void FillBoundaryF   (int lev, amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
     void FillBoundaryG   (int lev, amrex::IntVect ng, std::optional<bool> nodal_sync = std::nullopt);
@@ -843,10 +843,10 @@ public:
     void AverageAndPackFields (amrex::Vector<std::string>& varnames,
         amrex::Vector<amrex::MultiFab>& mf_avg, amrex::IntVect ngrow) const;
 
-    void prepareFields( int step, amrex::Vector<std::string>& varnames,
+    void prepareFields (int step, amrex::Vector<std::string>& varnames,
         amrex::Vector<amrex::MultiFab>& mf_avg,
         amrex::Vector<const amrex::MultiFab*>& output_mf,
-        amrex::Vector<amrex::Geometry>& output_geom ) const;
+        amrex::Vector<amrex::Geometry>& output_geom) const;
 
     static std::array<amrex::Real,3> CellSize (int lev);
     static amrex::RealBox getRealBox (const amrex::Box& bx, int lev);
@@ -944,10 +944,10 @@ public:
 
     void computeE (amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>, 3> >& E,
                    const amrex::Vector<std::unique_ptr<amrex::MultiFab> >& phi,
-                   std::array<amrex::Real, 3> beta = {{0,0,0}} ) const;
+                   std::array<amrex::Real, 3> beta = {{0,0,0}}) const;
     void computeB (amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>, 3> >& B,
                    const amrex::Vector<std::unique_ptr<amrex::MultiFab> >& phi,
-                   std::array<amrex::Real, 3> beta = {{0,0,0}} ) const;
+                   std::array<amrex::Real, 3> beta = {{0,0,0}}) const;
     void computePhiTriDiagonal (const amrex::Vector<std::unique_ptr<amrex::MultiFab> >& rho,
                                       amrex::Vector<std::unique_ptr<amrex::MultiFab> >& phi) const;
 
@@ -1007,7 +1007,7 @@ public:
      *
      * \param[in] lev level of the Multifabs that is initialized
      */
-    void InitializeEBGridData(int lev);
+    void InitializeEBGridData (int lev);
 
     /** \brief adds particle and cell contributions in cells to compute heuristic
      * cost in each box on each level, and records in `costs`
@@ -1026,7 +1026,7 @@ public:
      * \param[in] n_order order of the finite-difference approximation
      * \param[in] a_grid_type type of grid (collocated or not)
      */
-    static amrex::Vector<amrex::Real> getFornbergStencilCoefficients(int n_order, short a_grid_type);
+    static amrex::Vector<amrex::Real> getFornbergStencilCoefficients (int n_order, short a_grid_type);
 
     // Device vectors of stencil coefficients used for finite-order centering of fields
     amrex::Gpu::DeviceVector<amrex::Real> device_field_centering_stencil_coeffs_x;

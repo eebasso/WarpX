@@ -19,7 +19,7 @@
 using namespace ablastr::utils::communication;
 using namespace amrex;
 
-WarpXFluidContainer::WarpXFluidContainer(int nlevs_max, int ispecies, const std::string &name):
+WarpXFluidContainer::WarpXFluidContainer (int nlevs_max, int ispecies, const std::string &name):
     species_id{ispecies},
     species_name{name}
 {
@@ -55,7 +55,7 @@ WarpXFluidContainer::WarpXFluidContainer(int nlevs_max, int ispecies, const std:
     NU.resize(nlevs_max);
 }
 
-void WarpXFluidContainer::ReadParameters()
+void WarpXFluidContainer::ReadParameters ()
 {
 
     // Extract charge, mass, species type
@@ -139,7 +139,7 @@ void WarpXFluidContainer::ReadParameters()
     }
 }
 
-void WarpXFluidContainer::AllocateLevelMFs(int lev, const BoxArray &ba, const DistributionMapping &dm)
+void WarpXFluidContainer::AllocateLevelMFs (int lev, const BoxArray &ba, const DistributionMapping &dm)
 {
     int ncomps = 1;
     const amrex::IntVect nguards(AMREX_D_DECL(2, 2, 2));
@@ -162,7 +162,7 @@ void WarpXFluidContainer::AllocateLevelMFs(int lev, const BoxArray &ba, const Di
                             dm, ncomps, nguards, lev, tag("fluid momentum density [z]"), 0.0_rt);
 }
 
-void WarpXFluidContainer::InitData(int lev, amrex::Box init_box, amrex::Real cur_time)
+void WarpXFluidContainer::InitData (int lev, amrex::Box init_box, amrex::Real cur_time)
 {
     WARPX_PROFILE("WarpXFluidContainer::InitData");
 
@@ -252,7 +252,7 @@ void WarpXFluidContainer::InitData(int lev, amrex::Box init_box, amrex::Real cur
 }
 
 
-void WarpXFluidContainer::Evolve(
+void WarpXFluidContainer::Evolve (
     int lev,
     const amrex::MultiFab &Ex, const amrex::MultiFab &Ey, const amrex::MultiFab &Ez,
     const amrex::MultiFab &Bx, const amrex::MultiFab &By, const amrex::MultiFab &Bz,
@@ -1229,7 +1229,7 @@ void WarpXFluidContainer::DepositCharge (int lev, amrex::MultiFab &rho, int icom
 }
 
 
-void WarpXFluidContainer::DepositCurrent(
+void WarpXFluidContainer::DepositCurrent (
     int lev,
     amrex::MultiFab &jx, amrex::MultiFab &jy, amrex::MultiFab &jz)
 {

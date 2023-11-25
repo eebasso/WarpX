@@ -23,8 +23,8 @@
 using namespace amrex;
 
 void FiniteDifferenceSolver::CalculateCurrentAmpere (
-    std::array< std::unique_ptr<amrex::MultiFab>, 3>& Jfield,
-    std::array< std::unique_ptr<amrex::MultiFab>, 3> const& Bfield,
+    std::array< std::unique_ptr<amrex::MultiFab>, 3 >& Jfield,
+    std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& Bfield,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& edge_lengths,
     int lev)
 {
@@ -32,12 +32,12 @@ void FiniteDifferenceSolver::CalculateCurrentAmpere (
     // but we compile code for each algorithm, using templates)
     if (m_fdtd_algo == ElectromagneticSolverAlgo::HybridPIC) {
 #ifdef WARPX_DIM_RZ
-        CalculateCurrentAmpereCylindrical <CylindricalYeeAlgorithm> (
+        CalculateCurrentAmpereCylindrical <CylindricalYeeAlgorithm>(
             Jfield, Bfield, edge_lengths, lev
         );
 
 #else
-        CalculateCurrentAmpereCartesian <CartesianYeeAlgorithm> (
+        CalculateCurrentAmpereCartesian <CartesianYeeAlgorithm>(
             Jfield, Bfield, edge_lengths, lev
         );
 

@@ -26,12 +26,12 @@
 #include <string>
 #include <vector>
 
-void ParseGeometryInput();
+void ParseGeometryInput ();
 
-void ReadBoostedFrameParameters(amrex::Real& gamma_boost, amrex::Real& beta_boost,
-                                amrex::Vector<int>& boost_direction);
+void ReadBoostedFrameParameters (amrex::Real& gamma_boost, amrex::Real& beta_boost,
+                                 amrex::Vector<int>& boost_direction);
 
-void ConvertLabParamsToBoost();
+void ConvertLabParamsToBoost ();
 
 /**
  * Reads the user-defined field and particle boundary condition parameters
@@ -53,7 +53,7 @@ void CheckDims ();
  */
 void CheckGriddingForRZSpectral ();
 
-void NullifyMF(amrex::MultiFab& mf, int lev, amrex::Real zmin,
+void NullifyMF (amrex::MultiFab& mf, int lev, amrex::Real zmin,
                amrex::Real zmax);
 
 
@@ -64,7 +64,7 @@ namespace WarpXUtilIO{
  * @param[in] data Vector containing binary data to write on disk
  * return true if it succeeds, false otherwise
  */
-bool WriteBinaryDataOnFile(std::string filename, const amrex::Vector<char>& data);
+bool WriteBinaryDataOnFile (std::string filename, const amrex::Vector<char>& data);
 
 }
 

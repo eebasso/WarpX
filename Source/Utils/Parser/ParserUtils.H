@@ -29,7 +29,7 @@ namespace utils::parser
     * \param real_name String, the name of the variable being casted to use in the error message
     */
     int
-    safeCastToInt(amrex::Real x, const std::string& real_name);
+    safeCastToInt (amrex::Real x, const std::string& real_name);
 
 
     /**
@@ -41,7 +41,7 @@ namespace utils::parser
     * \param real_name String, the name of the variable being casted to use in the error message
     */
     long
-    safeCastToLong(amrex::Real x, const std::string& real_name);
+    safeCastToLong (amrex::Real x, const std::string& real_name);
 
 
     /**
@@ -63,7 +63,7 @@ namespace utils::parser
     * \param query_string ParmParse.query will look for this string
     * \param stored_string variable in which the string to parse is stored
     */
-    void Store_parserString(
+    void Store_parserString (
         const amrex::ParmParse &pp,
         std::string query_string,
         std::string& stored_string);
@@ -77,7 +77,7 @@ namespace utils::parser
     * \param str The string to be parsed
     * \return representation as a double
     */
-    double parseStringtoDouble(const std::string& str);
+    double parseStringtoDouble (const std::string& str);
 
 
     /** Parse a string and return an int
@@ -89,7 +89,7 @@ namespace utils::parser
      * \param name For integers, the name, to be used in error messages
      * \return rounded closest integer
      */
-    int parseStringtoInt(const std::string& str, const std::string& name);
+    int parseStringtoInt (const std::string& str, const std::string& name);
 
 
     template <int N>

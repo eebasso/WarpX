@@ -36,12 +36,12 @@ public:
 
     MultiFluidContainer (int nlevs_max);
 
-    ~MultiFluidContainer() {}
+    ~MultiFluidContainer () {}
 
     MultiFluidContainer (MultiFluidContainer const &)              = delete;
     MultiFluidContainer& operator= (MultiFluidContainer const & )  = delete;
-    MultiFluidContainer(MultiFluidContainer&& )                    = default;
-    MultiFluidContainer& operator=(MultiFluidContainer&& )         = default;
+    MultiFluidContainer (MultiFluidContainer&& )                   = default;
+    MultiFluidContainer& operator= (MultiFluidContainer&& )        = default;
 
     WarpXFluidContainer&
     GetFluidContainer (int ispecies) const {return *allcontainers[ispecies];}
@@ -66,7 +66,7 @@ public:
                  amrex::MultiFab* rho, amrex::MultiFab& jx,  amrex::MultiFab& jy, amrex::MultiFab& jz,
                  amrex::Real cur_time, bool skip_deposition=false);
 
-    int nSpecies() const {return static_cast<int>(species_names.size());}
+    int nSpecies () const {return static_cast<int>(species_names.size());}
 
     void DepositCharge (int lev, amrex::MultiFab &rho);
     void DepositCurrent (int lev,

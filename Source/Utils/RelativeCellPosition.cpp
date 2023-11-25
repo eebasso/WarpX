@@ -11,7 +11,7 @@
 #include <AMReX_MultiFab.H>
 
 std::vector< double >
-utils::getRelativeCellPosition(amrex::MultiFab const& mf)
+utils::getRelativeCellPosition (amrex::MultiFab const& mf)
 {
     amrex::IndexType const idx_type = mf.ixType();
 

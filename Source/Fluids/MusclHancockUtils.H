@@ -65,7 +65,7 @@ amrex::Real max3 (amrex::Real a, amrex::Real b, amrex::Real c)
 }
 // mindmod
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-amrex::Real minmod3 (amrex::Real a, amrex::Real b , amrex::Real c)
+amrex::Real minmod3 (amrex::Real a, amrex::Real b, amrex::Real c)
 {
     using namespace amrex::literals;
     if (a > 0.0_rt && b > 0.0_rt && c > 0.0_rt)
@@ -89,8 +89,8 @@ amrex::Real maxmod (amrex::Real a, amrex::Real b)
 }
 // Rusanov Flux (density)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-amrex::Real flux_N (const amrex::Array4<amrex::Real>& Um,  const amrex::Array4<amrex::Real>& Up,
-int i, int j, int k, amrex::Real Vm, amrex::Real Vp)
+amrex::Real flux_N (const amrex::Array4<amrex::Real>& Um, const amrex::Array4<amrex::Real>& Up,
+                    int i, int j, int k, amrex::Real Vm, amrex::Real Vp)
 {
     using namespace amrex::literals;
     amrex::Real c = std::max( std::abs(Vm) , std::abs(Vp) );
@@ -98,8 +98,8 @@ int i, int j, int k, amrex::Real Vm, amrex::Real Vp)
 }
 // Rusanov Flux (Momentum density x)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-amrex::Real flux_NUx (const amrex::Array4<amrex::Real>& Um,  const amrex::Array4<amrex::Real>& Up,
-int i, int j, int k, amrex::Real Vm, amrex::Real Vp)
+amrex::Real flux_NUx (const amrex::Array4<amrex::Real>& Um, const amrex::Array4<amrex::Real>& Up,
+                      int i, int j, int k, amrex::Real Vm, amrex::Real Vp)
 {
     using namespace amrex::literals;
     amrex::Real c = std::max( std::abs(Vm) , std::abs(Vp) );
@@ -108,8 +108,8 @@ int i, int j, int k, amrex::Real Vm, amrex::Real Vp)
 }
 // Rusanov Flux (Momentum density y)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-amrex::Real flux_NUy (const amrex::Array4<amrex::Real>& Um,  const amrex::Array4<amrex::Real>& Up,
-int i, int j, int k, amrex::Real Vm, amrex::Real Vp)
+amrex::Real flux_NUy (const amrex::Array4<amrex::Real>& Um, const amrex::Array4<amrex::Real>& Up,
+                      int i, int j, int k, amrex::Real Vm, amrex::Real Vp)
 {
     using namespace amrex::literals;
     amrex::Real c = std::max( std::abs(Vm) , std::abs(Vp) );
@@ -118,8 +118,8 @@ int i, int j, int k, amrex::Real Vm, amrex::Real Vp)
 }
 // Rusanov Flux (Momentum density z)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-amrex::Real flux_NUz (const amrex::Array4<amrex::Real>& Um,  const amrex::Array4<amrex::Real>& Up,
-int i, int j, int k, amrex::Real Vm, amrex::Real Vp)
+amrex::Real flux_NUz (const amrex::Array4<amrex::Real>& Um, const amrex::Array4<amrex::Real>& Up,
+                      int i, int j, int k, amrex::Real Vm, amrex::Real Vp)
 {
     using namespace amrex::literals;
     amrex::Real c = std::max( std::abs(Vm) , std::abs(Vp) );
@@ -195,9 +195,11 @@ void plus_index_offsets (int i, int j, int k, int& ip, int& jp, int& kp, int com
 }
 // Compute the zero edges
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void compute_U_edges (const amrex::Array4<amrex::Real>& Um, const amrex::Array4<amrex::Real>& Up, int i, int j, int k, amrex::Box box,
-amrex::Real U_tilde0, amrex::Real U_tilde1, amrex::Real U_tilde2, amrex::Real U_tilde3,
-amrex::Real dU0x, amrex::Real dU1x, amrex::Real dU2x, amrex::Real dU3x, int comp)
+void compute_U_edges (
+    const amrex::Array4<amrex::Real>& Um, const amrex::Array4<amrex::Real>& Up,
+    int i, int j, int k, amrex::Box box,
+    amrex::Real U_tilde0, amrex::Real U_tilde1, amrex::Real U_tilde2, amrex::Real U_tilde3,
+    amrex::Real dU0x, amrex::Real dU1x, amrex::Real dU2x, amrex::Real dU3x, int comp)
 {
     using namespace amrex::literals;
     // comp -> x, y, z -> 0, 1, 2
@@ -246,9 +248,11 @@ const amrex::Array4<amrex::Real>& Up, int i, int j, int k, amrex::Box box, int c
 // if Q_minus or Q_plus is zero for the density (i.e. component 0 of Q_minus/Q_plus), set dQ to 0 and recompute Q_minus / Q_plus
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 void positivity_limiter (const amrex::Array4<amrex::Real>& U_edge_plus,
-const amrex::Array4<amrex::Real>& U_edge_minus, const amrex::Array4<amrex::Real>& N_arr,
-int i, int j, int k, amrex::Box box, amrex::Real Ux, amrex::Real Uy, amrex::Real Uz,
-int comp)
+                         const amrex::Array4<amrex::Real>& U_edge_minus,
+                         const amrex::Array4<amrex::Real>& N_arr,
+                         int i, int j, int k, amrex::Box box,
+                         amrex::Real Ux, amrex::Real Uy, amrex::Real Uz,
+                         int comp)
 {
 
     using namespace amrex::literals;
@@ -372,7 +376,8 @@ amrex::Real UpDz_N (const amrex::Array4<amrex::Real>& N, int i, int j, int k)
 // Compute the difference in U (down-x)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real DownDx_U (const amrex::Array4<amrex::Real>& N,
-const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
+                      const amrex::Array4<amrex::Real>& NU,
+                      amrex::Real& U, int i, int j, int k)
 {
     using namespace amrex::literals;
     // Write the correct differences
@@ -389,7 +394,8 @@ const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
 // Compute the difference in U (up-x)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real UpDx_U (const amrex::Array4<amrex::Real>& N,
-const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
+                    const amrex::Array4<amrex::Real>& NU,
+                    amrex::Real& U, int i, int j, int k)
 {
     using namespace amrex::literals;
     // Write the correct differences
@@ -407,7 +413,8 @@ const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
 // Compute the difference in U (down-y)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real DownDy_U (const amrex::Array4<amrex::Real>& N,
-const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
+                      const amrex::Array4<amrex::Real>& NU,
+                      amrex::Real& U, int i, int j, int k)
 {
     using namespace amrex::literals;
     // Write the correct differences
@@ -424,7 +431,8 @@ const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
 // Compute the difference in U (up-y)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real UpDy_U (const amrex::Array4<amrex::Real>& N,
-const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
+                    const amrex::Array4<amrex::Real>& NU,
+                    amrex::Real& U, int i, int j, int k)
 {
     using namespace amrex::literals;
     // Write the correct differences
@@ -442,7 +450,8 @@ const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
 // Compute the difference in U (down-z)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real DownDz_U (const amrex::Array4<amrex::Real>& N,
-const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
+                      const amrex::Array4<amrex::Real>& NU,
+                      amrex::Real& U, int i, int j, int k)
 {
     using namespace amrex::literals;
     // Write the correct differences
@@ -463,7 +472,8 @@ const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
 // Compute the difference in U (up-z)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real UpDz_U (const amrex::Array4<amrex::Real>& N,
-const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
+                    const amrex::Array4<amrex::Real>& NU,
+                    amrex::Real& U, int i, int j, int k)
 {
     using namespace amrex::literals;
     // Write the correct differences
@@ -486,7 +496,8 @@ const amrex::Array4<amrex::Real>& NU, amrex::Real& U, int i, int j, int k)
 // Flux difference calculation
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real dF (const amrex::Array4<amrex::Real>& U_minus,
-const amrex::Array4<amrex::Real>& U_plus,int i,int j,int k,amrex::Real clight, int comp, int dir)
+                const amrex::Array4<amrex::Real>& U_plus,
+                int i, int j, int k, amrex::Real clight, int comp, int dir)
 {
     using namespace amrex::literals;
     // dir -> x, y, z -> 0, 1, 2

@@ -2657,11 +2657,12 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
  * \param[in] dm                   Indicates which MPI proc owns which box, in realspace_ba
  * \param[in] dx                   Cell size along each dimension
  */
-void WarpX::AllocLevelSpectralSolverRZ (amrex::Vector<std::unique_ptr<SpectralSolverRZ>>& spectral_solver,
-                                        const int lev,
-                                        const amrex::BoxArray& realspace_ba,
-                                        const amrex::DistributionMapping& dm,
-                                        const std::array<Real,3>& dx)
+void
+WarpX::AllocLevelSpectralSolverRZ (amrex::Vector<std::unique_ptr<SpectralSolverRZ>>& spectral_solver,
+                                   const int lev,
+                                   const amrex::BoxArray& realspace_ba,
+                                   const amrex::DistributionMapping& dm,
+                                   const std::array<Real,3>& dx)
 {
     const RealVect dx_vect(dx[0], dx[2]);
 
@@ -2703,12 +2704,13 @@ void WarpX::AllocLevelSpectralSolverRZ (amrex::Vector<std::unique_ptr<SpectralSo
  * \param[in] dx                    Cell size along each dimension
  * \param[in] pml_flag              Whether the boxes in which the solver is applied are PML boxes
  */
-void WarpX::AllocLevelSpectralSolver (amrex::Vector<std::unique_ptr<SpectralSolver>>& spectral_solver,
-                                      const int lev,
-                                      const amrex::BoxArray& realspace_ba,
-                                      const amrex::DistributionMapping& dm,
-                                      const std::array<Real,3>& dx,
-                                      const bool pml_flag)
+void
+WarpX::AllocLevelSpectralSolver (amrex::Vector<std::unique_ptr<SpectralSolver>>& spectral_solver,
+                                 const int lev,
+                                 const amrex::BoxArray& realspace_ba,
+                                 const amrex::DistributionMapping& dm,
+                                 const std::array<Real,3>& dx,
+                                 const bool pml_flag)
 {
 #if defined(WARPX_DIM_3D)
     const RealVect dx_vect(dx[0], dx[1], dx[2]);
@@ -3099,9 +3101,10 @@ WarpX::getFornbergStencilCoefficients (const int n_order, const short a_grid_typ
     return coeffs;
 }
 
-void WarpX::ReorderFornbergCoefficients (amrex::Vector<amrex::Real>& ordered_coeffs,
-                                         amrex::Vector<amrex::Real>& unordered_coeffs,
-                                         const int order)
+void
+WarpX::ReorderFornbergCoefficients (amrex::Vector<amrex::Real>& ordered_coeffs,
+                                    amrex::Vector<amrex::Real>& unordered_coeffs,
+                                    const int order)
 {
     const int n = order / 2;
     for (int i = 0; i < n; i++) {
@@ -3112,13 +3115,14 @@ void WarpX::ReorderFornbergCoefficients (amrex::Vector<amrex::Real>& ordered_coe
     }
 }
 
-void WarpX::AllocateCenteringCoefficients (amrex::Gpu::DeviceVector<amrex::Real>& device_centering_stencil_coeffs_x,
-                                           amrex::Gpu::DeviceVector<amrex::Real>& device_centering_stencil_coeffs_y,
-                                           amrex::Gpu::DeviceVector<amrex::Real>& device_centering_stencil_coeffs_z,
-                                           const int centering_nox,
-                                           const int centering_noy,
-                                           const int centering_noz,
-                                           const short a_grid_type)
+void
+WarpX::AllocateCenteringCoefficients (amrex::Gpu::DeviceVector<amrex::Real>& device_centering_stencil_coeffs_x,
+                                      amrex::Gpu::DeviceVector<amrex::Real>& device_centering_stencil_coeffs_y,
+                                      amrex::Gpu::DeviceVector<amrex::Real>& device_centering_stencil_coeffs_z,
+                                      const int centering_nox,
+                                      const int centering_noy,
+                                      const int centering_noz,
+                                      const short a_grid_type)
 {
     // Vectors of Fornberg stencil coefficients
     amrex::Vector<amrex::Real> Fornberg_stencil_coeffs_x;
@@ -3204,7 +3208,7 @@ WarpX::RestoreCurrent (int lev)
 }
 
 bool
-WarpX::isAnyBoundaryPML()
+WarpX::isAnyBoundaryPML ()
 {
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::PML) return true;

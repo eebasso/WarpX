@@ -98,7 +98,7 @@ public:
         amrex::Real* AMREX_RESTRICT amplitude) const = 0;
 
     ILaserProfile () = default;
-    virtual ~ILaserProfile(){}
+    virtual ~ILaserProfile (){}
 
     ILaserProfile ( ILaserProfile const &)             = default;
     ILaserProfile& operator= ( ILaserProfile const & ) = default;
@@ -234,7 +234,7 @@ public:
     * \param t: Current physical time
     * \param amplitude: pointer to array of field amplitude.
     */
-    void internal_fill_amplitude_uniform_cartesian(
+    void internal_fill_amplitude_uniform_cartesian (
         int idx_t_left,
         int np,
         amrex::Real const * AMREX_RESTRICT Xp,
@@ -253,7 +253,7 @@ public:
     * \param t: Current physical time
     * \param amplitude: pointer to array of field amplitude.
     */
-    void internal_fill_amplitude_uniform_cylindrical(
+    void internal_fill_amplitude_uniform_cylindrical (
         int idx_t_left,
         int np,
         amrex::Real const * AMREX_RESTRICT Xp,
@@ -274,7 +274,7 @@ public:
     * \param t: Current physical time
     * \param amplitude: pointer to array of field amplitude.
     */
-        void internal_fill_amplitude_uniform_binary(
+        void internal_fill_amplitude_uniform_binary (
         int idx_t_left,
         int np,
         amrex::Real const * AMREX_RESTRICT Xp,
@@ -286,7 +286,7 @@ private:
     /** \brief parse a field file in the HDF5 'lasy' format
     * \param lasy_file_name: name of the lasy file to parse
     */
-    void parse_lasy_file(std::string lasy_file_name);
+    void parse_lasy_file (std::string lasy_file_name);
 
     /** \brief parse a field file in the binary 'binary' format (whose details are given below).
     *
@@ -301,14 +301,14 @@ private:
     * The spatiotemporal grid must be rectangular and uniform.
     * \param binary_file_name: name of the binary file to parse
     */
-    void parse_binary_file(std::string binary_file_name);
+    void parse_binary_file (std::string binary_file_name);
 
     /** \brief Finds left and right time indices corresponding to time t
     *
     *
     * \param t: simulation time
     */
-    std::pair<int,int> find_left_right_time_indices(amrex::Real t) const;
+    std::pair<int,int> find_left_right_time_indices (amrex::Real t) const;
 
     /** \brief Load field data within the temporal range [t_begin, t_end]
     *
@@ -317,7 +317,7 @@ private:
     * \param t_begin: left limit of the timestep range to read
     * \param t_end: right limit of the timestep range to read (t_end is not read)
     */
-    void read_data_t_chunk(int t_begin, int t_end);
+    void read_data_t_chunk (int t_begin, int t_end);
 
         /** \brief Load field data within the temporal range [t_begin, t_end]
     *
@@ -326,7 +326,7 @@ private:
     * \param t_begin: left limit of the timestep range to read
     * \param t_end: right limit of the timestep range to read (t_end is not read)
     */
-    void read_binary_data_t_chunk(int t_begin, int t_end);
+    void read_binary_data_t_chunk (int t_begin, int t_end);
 
     /**
      * \brief m_params contains all the internal parameters

@@ -1081,7 +1081,7 @@ WarpXParticleContainer::GetChargeDensity (int lev, bool local)
     return rho;
 }
 
-amrex::ParticleReal WarpXParticleContainer::sumParticleCharge(bool local) {
+amrex::ParticleReal WarpXParticleContainer::sumParticleCharge (bool local) {
 
     amrex::ParticleReal total_charge = 0.0;
     ReduceOps<ReduceOpSum> reduce_op;
@@ -1110,7 +1110,7 @@ amrex::ParticleReal WarpXParticleContainer::sumParticleCharge(bool local) {
     return total_charge;
 }
 
-std::array<ParticleReal, 3> WarpXParticleContainer::meanParticleVelocity(bool local) {
+std::array<ParticleReal, 3> WarpXParticleContainer::meanParticleVelocity (bool local) {
 
     amrex::ParticleReal vx_total = 0.0_prt;
     amrex::ParticleReal vy_total = 0.0_prt;
@@ -1196,7 +1196,7 @@ std::array<ParticleReal, 3> WarpXParticleContainer::meanParticleVelocity(bool lo
     return mean_v;
 }
 
-amrex::ParticleReal WarpXParticleContainer::maxParticleVelocity(bool local) {
+amrex::ParticleReal WarpXParticleContainer::maxParticleVelocity (bool local) {
 
     amrex::ParticleReal max_v = 0.0;
 
@@ -1307,9 +1307,9 @@ void WarpXParticleContainer::defineAllParticleTiles () noexcept
 
 // This function is called in Redistribute, just after locate
 void
-WarpXParticleContainer::particlePostLocate(ParticleType& p,
-                                           const ParticleLocData& pld,
-                                           const int lev)
+WarpXParticleContainer::particlePostLocate (ParticleType& p,
+                                            const ParticleLocData& pld,
+                                            const int lev)
 {
     if (not do_splitting) return;
 

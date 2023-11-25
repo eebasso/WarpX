@@ -25,7 +25,7 @@ namespace Interpolate
     using namespace amrex;
 
     std::unique_ptr<MultiFab>
-    getInterpolatedScalar(
+    getInterpolatedScalar (
         const MultiFab& F_cp, const MultiFab& F_fp,
         const DistributionMapping& dm, const amrex::IntVect r_ratio,
         const Real* /*dx*/, const IntVect ngrow )
@@ -68,7 +68,7 @@ namespace Interpolate
     }
 
     std::array<std::unique_ptr<MultiFab>, 3>
-    getInterpolatedVector(
+    getInterpolatedVector (
         const MultiFab* Fx_cp,
         const MultiFab* Fy_cp,
         const MultiFab* Fz_cp,

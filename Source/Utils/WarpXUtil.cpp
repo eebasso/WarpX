@@ -42,7 +42,7 @@
 
 using namespace amrex;
 
-void PreparseAMReXInputIntArray(amrex::ParmParse& a_pp, char const * const input_str, const bool replace)
+void PreparseAMReXInputIntArray (amrex::ParmParse& a_pp, char const * const input_str, const bool replace)
 {
     const int cnt = a_pp.countval(input_str);
     if (cnt > 0) {
@@ -55,7 +55,7 @@ void PreparseAMReXInputIntArray(amrex::ParmParse& a_pp, char const * const input
     }
 }
 
-void ParseGeometryInput()
+void ParseGeometryInput ()
 {
     // Ensure that geometry.dims is set properly.
     CheckDims();
@@ -109,8 +109,8 @@ void ParseGeometryInput()
     PreparseAMReXInputIntArray(pp_amr, "blocking_factor_z", false);
 }
 
-void ReadBoostedFrameParameters(Real& gamma_boost, Real& beta_boost,
-                                Vector<int>& boost_direction)
+void ReadBoostedFrameParameters (Real& gamma_boost, Real& beta_boost,
+                                 Vector<int>& boost_direction)
 {
     const ParmParse pp_warpx("warpx");
     utils::parser::queryWithParser(pp_warpx, "gamma_boost", gamma_boost);
@@ -138,7 +138,7 @@ void ReadBoostedFrameParameters(Real& gamma_boost, Real& beta_boost,
     }
 }
 
-void ConvertLabParamsToBoost()
+void ConvertLabParamsToBoost ()
 {
     Real gamma_boost = 1., beta_boost = 0.;
     int max_level = 0;
@@ -223,7 +223,7 @@ void ConvertLabParamsToBoost()
 /* \brief Function that sets the value of MultiFab MF to zero for z between
  * zmin and zmax.
  */
-void NullifyMF(amrex::MultiFab& mf, int lev, amrex::Real zmin, amrex::Real zmax){
+void NullifyMF (amrex::MultiFab& mf, int lev, amrex::Real zmin, amrex::Real zmax){
     WARPX_PROFILE("WarpXUtil::NullifyMF()");
     int const ncomp = mf.nComp();
 #ifdef AMREX_USE_OMP
@@ -266,7 +266,7 @@ void NullifyMF(amrex::MultiFab& mf, int lev, amrex::Real zmin, amrex::Real zmax)
 }
 
 namespace WarpXUtilIO{
-    bool WriteBinaryDataOnFile(std::string filename, const amrex::Vector<char>& data)
+    bool WriteBinaryDataOnFile (std::string filename, const amrex::Vector<char>& data)
     {
         std::ofstream of{filename, std::ios::binary};
         of.write(data.data(), data.size());

@@ -115,13 +115,13 @@ public:
     using DiagnosticParticles = amrex::Vector<std::map<std::pair<int, int>, DiagnosticParticleData> >;
 
     WarpXParticleContainer (amrex::AmrCore* amr_core, int ispecies);
-    ~WarpXParticleContainer() override {}
+    ~WarpXParticleContainer () override {}
 
     // Move and copy operations
-    WarpXParticleContainer(const WarpXParticleContainer&)            = delete;
-    WarpXParticleContainer& operator=(const WarpXParticleContainer&) = delete;
-    WarpXParticleContainer(WarpXParticleContainer&&)                 = default;
-    WarpXParticleContainer& operator=(WarpXParticleContainer&&)      = default;
+    WarpXParticleContainer (const WarpXParticleContainer&)            = delete;
+    WarpXParticleContainer& operator= (const WarpXParticleContainer&) = delete;
+    WarpXParticleContainer (WarpXParticleContainer&&)                 = default;
+    WarpXParticleContainer& operator= (WarpXParticleContainer&&)      = default;
 
     virtual void InitData () = 0;
 
@@ -217,7 +217,7 @@ public:
                         bool apply_boundary_and_scale_volume = false,
                         int icomp = 0);
 
-    std::unique_ptr<amrex::MultiFab> GetChargeDensity(int lev, bool local = false);
+    std::unique_ptr<amrex::MultiFab> GetChargeDensity (int lev, bool local = false);
 
     virtual void DepositCharge (WarpXParIter& pti,
                                RealVector const & wp,
@@ -254,30 +254,30 @@ public:
     // PhysicalParticleContainer: implemented.
     // LaserParticleContainer: implemented.
     // RigidInjectedParticleContainer: not implemented.
-    virtual void ContinuousInjection(const amrex::RealBox& /*injection_box*/) {}
+    virtual void ContinuousInjection (const amrex::RealBox& /*injection_box*/) {}
 
     /**
      * \brief Update antenna position for continuous injection of lasers
      *        in a boosted frame. Empty function for containers other than lasers.
      */
-    virtual void UpdateAntennaPosition(const amrex::Real /*dt*/) {}
+    virtual void UpdateAntennaPosition (const amrex::Real /*dt*/) {}
 
-    bool doContinuousInjection() const {return do_continuous_injection;}
+    bool doContinuousInjection () const {return do_continuous_injection;}
 
     // Inject a continuous flux of particles from a defined plane
-    virtual void ContinuousFluxInjection(amrex::Real /*t*/, amrex::Real /*dt*/) {}
+    virtual void ContinuousFluxInjection (amrex::Real /*t*/, amrex::Real /*dt*/) {}
 
-    int getSpeciesId() const {return species_id;}
+    int getSpeciesId () const {return species_id;}
 
     ///
     /// This returns the total charge for all the particles in this ParticleContainer.
     /// This is needed when solving Poisson's equation with periodic boundary conditions.
     ///
-    amrex::ParticleReal sumParticleCharge(bool local = false);
+    amrex::ParticleReal sumParticleCharge (bool local = false);
 
-    std::array<amrex::ParticleReal, 3> meanParticleVelocity(bool local = false);
+    std::array<amrex::ParticleReal, 3> meanParticleVelocity (bool local = false);
 
-    amrex::ParticleReal maxParticleVelocity(bool local = false);
+    amrex::ParticleReal maxParticleVelocity (bool local = false);
 
     /**
      * \brief Adds n particles to the simulation
@@ -345,7 +345,7 @@ public:
      *
      * \param[in] do_back_transformed_particles The parameter to set if back-transformed particles are set to true/false
      */
-    void SetDoBackTransformedParticles(const bool do_back_transformed_particles) {
+    void SetDoBackTransformedParticles (const bool do_back_transformed_particles) {
         m_do_back_transformed_particles = do_back_transformed_particles;
     }
 
@@ -354,16 +354,16 @@ public:
     //amrex::Real getMass () {return mass;}
     amrex::ParticleReal getMass () const {return mass;}
 
-    int DoFieldIonization() const { return do_field_ionization; }
+    int DoFieldIonization () const { return do_field_ionization; }
 
 #ifdef WARPX_QED
     //Species for which QED effects are relevant should override these methods
-    virtual bool has_quantum_sync() const {return false;}
-    virtual bool has_breit_wheeler() const {return false;}
+    virtual bool has_quantum_sync () const {return false;}
+    virtual bool has_breit_wheeler () const {return false;}
 
-    int DoQED() const { return has_quantum_sync() || has_breit_wheeler(); }
+    int DoQED () const { return has_quantum_sync() || has_breit_wheeler(); }
 #else
-    int DoQED() const { return false; }
+    int DoQED () const { return false; }
 #endif
 
     /* \brief This function tests if the current species
@@ -440,9 +440,9 @@ protected:
     //Species can receive a shared pointer to a QED engine (species for
     //which this is relevant should override these functions)
     virtual void
-    set_breit_wheeler_engine_ptr(std::shared_ptr<BreitWheelerEngine>){}
+    set_breit_wheeler_engine_ptr (std::shared_ptr<BreitWheelerEngine>){}
     virtual void
-    set_quantum_sync_engine_ptr(std::shared_ptr<QuantumSynchrotronEngine>){}
+    set_quantum_sync_engine_ptr (std::shared_ptr<QuantumSynchrotronEngine>){}
 
     int m_qed_breit_wheeler_ele_product;
     std::string m_qed_breit_wheeler_ele_product_name;
@@ -468,7 +468,7 @@ protected:
     TmpParticles tmp_particle_data;
 
 private:
-    void particlePostLocate(ParticleType& p, const amrex::ParticleLocData& pld, int lev) override;
+    void particlePostLocate (ParticleType& p, const amrex::ParticleLocData& pld, int lev) override;
 
 };
 

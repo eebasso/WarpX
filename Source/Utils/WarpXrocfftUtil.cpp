@@ -18,7 +18,7 @@
 #endif
 
 void
-utils::rocfft::setup()
+utils::rocfft::setup ()
 {
 #if defined(AMREX_USE_HIP) && defined(WARPX_USE_PSATD)
     rocfft_setup();
@@ -26,7 +26,7 @@ utils::rocfft::setup()
 }
 
 void
-utils::rocfft::cleanup()
+utils::rocfft::cleanup ()
 {
 #if defined(AMREX_USE_HIP) && defined(WARPX_USE_PSATD)
     rocfft_cleanup();

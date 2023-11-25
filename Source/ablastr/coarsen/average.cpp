@@ -28,8 +28,7 @@ namespace ablastr::coarsen::average
         amrex::MultiFab const & mf_src,
         int const ncomp,
         amrex::IntVect const ngrow,
-        amrex::IntVect const crse_ratio
-    )
+        amrex::IntVect const crse_ratio)
     {
         // Staggering of source fine MultiFab and destination coarse MultiFab
         amrex::IntVect const stag_src = mf_src.boxArray().ixType().toIntVect();
@@ -67,8 +66,7 @@ namespace ablastr::coarsen::average
     Coarsen (
         amrex::MultiFab & mf_dst,
         amrex::MultiFab const & mf_src,
-        amrex::IntVect const crse_ratio
-    )
+        amrex::IntVect const crse_ratio)
     {
         BL_PROFILE("ablastr::coarsen::Coarsen()");
 

@@ -11,8 +11,8 @@
 
 namespace SpeciesUtils {
 
-    void StringParseAbortMessage(const std::string& var,
-                                 const std::string& name) {
+    void StringParseAbortMessage (const std::string& var,
+                                  const std::string& name) {
         std::stringstream stringstream;
         std::string string;
         stringstream << var << " string '" << name << "' not recognized.";
@@ -20,7 +20,8 @@ namespace SpeciesUtils {
         WARPX_ABORT_WITH_MESSAGE(string);
     }
 
-    void extractSpeciesProperties (std::string const& species_name,
+    void extractSpeciesProperties (
+        std::string const& species_name,
         std::string const& injection_style, amrex::Real& charge, amrex::Real& mass,
         PhysicalSpecies& physical_species )
     {
@@ -77,7 +78,8 @@ namespace SpeciesUtils {
     // Depending on injection type at runtime, initialize inj_rho
     // so that inj_rho->getDensity calls
     // InjectorPosition[Constant or Predefined or etc.].getDensity.
-    void parseDensity (std::string const& species_name,
+    void parseDensity (
+        std::string const& species_name,
         std::unique_ptr<InjectorDensity,InjectorDensityDeleter>& h_inj_rho,
         std::unique_ptr<amrex::Parser>& density_parser)
     {
@@ -113,7 +115,8 @@ namespace SpeciesUtils {
     // Depending on injection type at runtime, initialize inj_mom
     // so that inj_mom->getMomentum calls
     // InjectorMomentum[Constant or Gaussian or etc.].getMomentum.
-    void parseMomentum (std::string const& species_name, const std::string& style,
+    void parseMomentum (
+        std::string const& species_name, const std::string& style,
         std::unique_ptr<InjectorMomentum,InjectorMomentumDeleter>& h_inj_mom,
         std::unique_ptr<amrex::Parser>& ux_parser,
         std::unique_ptr<amrex::Parser>& uy_parser,

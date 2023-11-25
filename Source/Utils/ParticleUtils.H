@@ -29,7 +29,7 @@ namespace ParticleUtils {
      * @param[in] ptile the particle tile.
      */
     amrex::DenseBins<WarpXParticleContainer::ParticleType>
-    findParticlesInEachCell(int lev, amrex::MFIter const& mfi,
+    findParticlesInEachCell (int lev, amrex::MFIter const& mfi,
                              WarpXParticleContainer::ParticleTileType const& ptile);
 
     /**
@@ -64,8 +64,8 @@ namespace ParticleUtils {
      * @param[out] energy particle energy in eV
      */
     AMREX_GPU_HOST_DEVICE AMREX_INLINE
-    void getCollisionEnergy ( amrex::ParticleReal const u2, double const m,
-                              double const M, double& gamma, double& energy )
+    void getCollisionEnergy (amrex::ParticleReal const u2, double const m,
+                             double const M, double& gamma, double& energy)
     {
         using std::sqrt;
         using namespace amrex::literals;
@@ -89,10 +89,9 @@ namespace ParticleUtils {
                       NOT gamma*velocity!
      */
     AMREX_GPU_HOST_DEVICE AMREX_INLINE
-    void doLorentzTransform ( amrex::ParticleReal& ux, amrex::ParticleReal& uy,
-                              amrex::ParticleReal& uz,
-                              amrex::ParticleReal const Vx, amrex::ParticleReal const Vy,
-                              amrex::ParticleReal const Vz )
+    void doLorentzTransform (
+        amrex::ParticleReal& ux, amrex::ParticleReal& uy, amrex::ParticleReal& uz,
+        amrex::ParticleReal const Vx, amrex::ParticleReal const Vy, amrex::ParticleReal const Vz)
     {
         using namespace amrex::literals;
 
@@ -133,8 +132,8 @@ namespace ParticleUtils {
      * @param[in] engine the random-engine
      */
     AMREX_GPU_HOST_DEVICE AMREX_INLINE
-    void getRandomVector ( amrex::ParticleReal& x, amrex::ParticleReal& y,
-                           amrex::ParticleReal& z, amrex::RandomEngine const& engine )
+    void getRandomVector (amrex::ParticleReal& x, amrex::ParticleReal& y, amrex::ParticleReal& z,
+                          amrex::RandomEngine const& engine)
     {
         using std::sqrt;
         using std::cos;
@@ -158,10 +157,9 @@ namespace ParticleUtils {
      * @param[in] engine the random-engine
      */
     AMREX_GPU_HOST_DEVICE AMREX_INLINE
-    void RandomizeVelocity ( amrex::ParticleReal& ux, amrex::ParticleReal& uy,
-                             amrex::ParticleReal& uz,
-                             const amrex::ParticleReal vp,
-                             amrex::RandomEngine const& engine )
+    void RandomizeVelocity (amrex::ParticleReal& ux, amrex::ParticleReal& uy, amrex::ParticleReal& uz,
+                            const amrex::ParticleReal vp,
+                            amrex::RandomEngine const& engine )
     {
         amrex::ParticleReal x, y, z;
         // generate random unit vector for the new velocity direction

@@ -82,7 +82,7 @@ namespace utils::parser
         * @brief A method that returns the number of integers contained by the slice.
         *
         */
-        int numContained() const;
+        int numContained () const;
 
     private:
         bool m_isBTD = false;
@@ -200,13 +200,13 @@ namespace utils::parser
          *
          * @param i_buffer buffer or iteration index, between 0 and NumSnapshots
          */
-        int GetBTDIteration(int i_buffer) const;
+        int GetBTDIteration (int i_buffer) const;
 
         /**
          * @brief Return the final BTD iteration
          *
          */
-        int GetFinalIteration() const;
+        int GetFinalIteration () const;
 
         /**
         * \brief A method that returns true if any of the slices contained by the IntervalsParser

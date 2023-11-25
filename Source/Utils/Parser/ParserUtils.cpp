@@ -18,7 +18,7 @@
 #include <map>
 #include <set>
 
-void utils::parser::Store_parserString(
+void utils::parser::Store_parserString (
     const amrex::ParmParse& pp,
     std::string query_string,
     std::string& stored_string)
@@ -36,7 +36,7 @@ void utils::parser::Store_parserString(
 namespace {
     template< typename int_type >
     AMREX_FORCE_INLINE
-    int_type safeCastTo(const amrex::Real x, const std::string& real_name) {
+    int_type safeCastTo (const amrex::Real x, const std::string& real_name) {
         int_type result = int_type(0);
         bool error_detected = false;
         std::string assert_msg;
@@ -66,12 +66,12 @@ namespace {
 }
 
 
-int utils::parser::safeCastToInt(const amrex::Real x, const std::string& real_name) {
+int utils::parser::safeCastToInt (const amrex::Real x, const std::string& real_name) {
     return ::safeCastTo<int> (x, real_name);
 }
 
 
-long utils::parser::safeCastToLong(const amrex::Real x, const std::string& real_name) {
+long utils::parser::safeCastToLong (const amrex::Real x, const std::string& real_name) {
     return ::safeCastTo<long> (x, real_name);
 }
 
@@ -148,7 +148,7 @@ amrex::Parser utils::parser::makeParser (
 
 
 double
-utils::parser::parseStringtoDouble(const std::string& str)
+utils::parser::parseStringtoDouble (const std::string& str)
 {
     const auto parser = makeParser(str, {});
     const auto exe = parser.compileHost<0>();
@@ -158,7 +158,7 @@ utils::parser::parseStringtoDouble(const std::string& str)
 
 
 int
-utils::parser::parseStringtoInt(const std::string& str, const std::string& name)
+utils::parser::parseStringtoInt (const std::string& str, const std::string& name)
 {
     const auto rval = static_cast<amrex::Real>(parseStringtoDouble(str));
     const auto ival = safeCastToInt(std::round(rval), name);
