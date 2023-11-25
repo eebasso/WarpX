@@ -11,7 +11,7 @@
 
 using namespace amrex;
 
-HybridPICModel::HybridPICModel ( int nlevs_max )
+HybridPICModel::HybridPICModel (int nlevs_max)
 {
     ReadParameters();
     AllocateMFs(nlevs_max);
@@ -303,7 +303,7 @@ void HybridPICModel::CalculateElectronPressure(const int lev, DtType a_dt_type)
 
 void HybridPICModel::FillElectronPressureMF (
     std::unique_ptr<amrex::MultiFab> const& Pe_field,
-    amrex::MultiFab* const& rho_field )
+    amrex::MultiFab* const& rho_field)
 {
     const auto n0_ref = m_n0_ref;
     const auto elec_temp = m_elec_temp;

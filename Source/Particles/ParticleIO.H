@@ -34,7 +34,7 @@ enum struct ConvertDirection{WarpX_to_SI, SI_to_WarpX};
  */
 template< typename T_ParticleContainer >
 void
-particlesConvertUnits (ConvertDirection convert_direction, T_ParticleContainer* pc, amrex::ParticleReal const mass )
+particlesConvertUnits (ConvertDirection convert_direction, T_ParticleContainer* pc, amrex::ParticleReal const mass)
 {
     using namespace amrex;
 

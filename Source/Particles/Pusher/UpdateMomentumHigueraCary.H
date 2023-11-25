@@ -19,11 +19,11 @@
  */
 template <typename T>
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
-void UpdateMomentumHigueraCary(
+void UpdateMomentumHigueraCary (
     T& ux, T& uy, T& uz,
     const T Ex, const T Ey, const T Ez,
     const T Bx, const T By, const T Bz,
-    const T q, const T m, const amrex::Real dt )
+    const T q, const T m, const amrex::Real dt)
 {
     using namespace amrex::literals;
 

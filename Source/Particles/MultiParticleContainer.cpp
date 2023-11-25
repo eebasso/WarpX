@@ -936,7 +936,7 @@ MultiParticleContainer::doFieldIonization (int lev,
 }
 
 void
-MultiParticleContainer::doCollisions ( Real cur_time, amrex::Real dt )
+MultiParticleContainer::doCollisions (Real cur_time, amrex::Real dt)
 {
     WARPX_PROFILE("MultiParticleContainer::doCollisions()");
     collisionhandler->doCollisions(cur_time, dt, this);

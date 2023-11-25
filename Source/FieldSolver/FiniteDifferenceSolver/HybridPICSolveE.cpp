@@ -26,7 +26,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpere (
     std::array< std::unique_ptr<amrex::MultiFab>, 3>& Jfield,
     std::array< std::unique_ptr<amrex::MultiFab>, 3> const& Bfield,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& edge_lengths,
-    int lev )
+    int lev)
 {
     // Select algorithm (The choice of algorithm is a runtime option,
     // but we compile code for each algorithm, using templates)
@@ -374,7 +374,7 @@ void FiniteDifferenceSolver::HybridPICSolveE (
     std::unique_ptr<amrex::MultiFab> const& Pefield,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& edge_lengths,
     int lev, HybridPICModel const* hybrid_model,
-    const bool include_resistivity_term )
+    const bool include_resistivity_term)
 {
     // Select algorithm (The choice of algorithm is a runtime option,
     // but we compile code for each algorithm, using templates)
@@ -411,7 +411,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
     std::unique_ptr<amrex::MultiFab> const& Pefield,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& edge_lengths,
     int lev, HybridPICModel const* hybrid_model,
-    const bool include_resistivity_term )
+    const bool include_resistivity_term)
 {
 #ifndef AMREX_USE_EB
     amrex::ignore_unused(edge_lengths);
@@ -679,7 +679,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
     std::unique_ptr<amrex::MultiFab> const& Pefield,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& edge_lengths,
     int lev, HybridPICModel const* hybrid_model,
-    const bool include_resistivity_term )
+    const bool include_resistivity_term)
 {
 #ifndef AMREX_USE_EB
     amrex::ignore_unused(edge_lengths);

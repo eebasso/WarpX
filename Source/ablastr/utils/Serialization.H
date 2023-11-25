@@ -28,7 +28,7 @@ namespace ablastr::utils::serialization
     * @param[in, out] vec a reference to the vector to which the byte representation of val is appended
     */
     template <typename T>
-    void put_in(const T &val, std::vector<char> &vec)
+    void put_in (const T &val, std::vector<char> &vec)
     {
         if constexpr (std::is_same<T, std::string>())
         {
@@ -59,7 +59,7 @@ namespace ablastr::utils::serialization
     * @param[in, out] vec a reference to the vector to which the byte representation of val is appended
     */
     template <typename T>
-    void put_in_vec(const std::vector<T> &val, std::vector<char> &vec)
+    void put_in_vec (const std::vector<T> &val, std::vector<char> &vec)
     {
         if constexpr (std::is_same<T, char>())
         {
@@ -89,7 +89,7 @@ namespace ablastr::utils::serialization
     * @return the variable extracted from the byte array
     */
     template <typename T>
-    T get_out(std::vector<char>::const_iterator &it)
+    T get_out (std::vector<char>::const_iterator &it)
     {
         if constexpr (std::is_same<T, std::string>())
         {
@@ -126,7 +126,7 @@ namespace ablastr::utils::serialization
     * @return the variable extracted from the byte array
     */
     template <typename T>
-    std::vector<T> get_out_vec(std::vector<char>::const_iterator &it)
+    std::vector<T> get_out_vec (std::vector<char>::const_iterator &it)
     {
         if constexpr (std::is_same<T, std::string>())
         {

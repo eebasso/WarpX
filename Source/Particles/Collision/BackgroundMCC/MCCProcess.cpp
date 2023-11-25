@@ -9,10 +9,9 @@
 #include "Utils/TextMsg.H"
 #include "WarpX.H"
 
-MCCProcess::MCCProcess (
-                        const std::string& scattering_process,
+MCCProcess::MCCProcess (const std::string& scattering_process,
                         const std::string& cross_section_file,
-                        const amrex::ParticleReal energy )
+                        const amrex::ParticleReal energy)
 {
     // read the cross-section data file into memory
     readCrossSectionFile(cross_section_file, m_energies, m_sigmas_h);
@@ -21,11 +20,10 @@ MCCProcess::MCCProcess (
 }
 
 template <typename InputVector>
-MCCProcess::MCCProcess (
-                        const std::string& scattering_process,
+MCCProcess::MCCProcess (const std::string& scattering_process,
                         const InputVector&& energies,
                         const InputVector&& sigmas,
-                        const amrex::ParticleReal energy )
+                        const amrex::ParticleReal energy)
 {
     m_energies.insert(m_energies.begin(), std::begin(energies), std::end(energies));
     m_sigmas_h.insert(m_sigmas_h.begin(), std::begin(sigmas),   std::end(sigmas));
@@ -73,7 +71,7 @@ MCCProcess::init (const std::string& scattering_process, const amrex::ParticleRe
 }
 
 MCCProcessType
-MCCProcess::parseProcessType(const std::string& scattering_process)
+MCCProcess::parseProcessType (const std::string& scattering_process)
 {
     if (scattering_process == "elastic") {
         return MCCProcessType::ELASTIC;
@@ -91,10 +89,9 @@ MCCProcess::parseProcessType(const std::string& scattering_process)
 }
 
 void
-MCCProcess::readCrossSectionFile (
-                                  const std::string cross_section_file,
+MCCProcess::readCrossSectionFile (const std::string cross_section_file,
                                   amrex::Vector<amrex::ParticleReal>& energies,
-                                  amrex::Gpu::HostVector<amrex::ParticleReal>& sigmas )
+                                  amrex::Gpu::HostVector<amrex::ParticleReal>& sigmas)
 {
     std::ifstream infile(cross_section_file);
     if(!infile.is_open()) WARPX_ABORT_WITH_MESSAGE("Failed to open cross-section data file");
@@ -109,10 +106,8 @@ MCCProcess::readCrossSectionFile (
 }
 
 void
-MCCProcess::sanityCheckEnergyGrid (
-                                   const amrex::Vector<amrex::ParticleReal>& energies,
-                                   amrex::ParticleReal dE
-                                   )
+MCCProcess::sanityCheckEnergyGrid (const amrex::Vector<amrex::ParticleReal>& energies,
+                                   amrex::ParticleReal dE)
 {
     // confirm that the input data for the cross-section was provided with
     // equal energy steps, otherwise the linear interpolation will fail

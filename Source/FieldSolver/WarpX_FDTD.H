@@ -11,14 +11,14 @@
 #include <AMReX_FArrayBox.H>
 
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-void warpx_computedivb(int i, int j, int k, int dcomp,
-                       amrex::Array4<amrex::Real> const& divB,
-                       amrex::Array4<amrex::Real const> const& Bx,
-                       amrex::Array4<amrex::Real const> const& By,
-                       amrex::Array4<amrex::Real const> const& Bz,
-                       amrex::Real dxinv,
-                       amrex::Real dyinv,
-                       amrex::Real dzinv
+void warpx_computedivb (int i, int j, int k, int dcomp,
+                        amrex::Array4<amrex::Real> const& divB,
+                        amrex::Array4<amrex::Real const> const& Bx,
+                        amrex::Array4<amrex::Real const> const& By,
+                        amrex::Array4<amrex::Real const> const& Bz,
+                        amrex::Real dxinv,
+                        amrex::Real dyinv,
+                        amrex::Real dzinv
 #ifdef WARPX_DIM_RZ
                        , amrex::Real const rmin
 #endif

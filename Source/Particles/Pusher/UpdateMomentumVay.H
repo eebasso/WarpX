@@ -17,11 +17,11 @@
 /** \brief Push the particle's positions over one timestep,
  *    given the value of its momenta `ux`, `uy`, `uz` */
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
-void UpdateMomentumVay(
+void UpdateMomentumVay (
     amrex::ParticleReal& ux, amrex::ParticleReal& uy, amrex::ParticleReal& uz,
     const amrex::ParticleReal Ex, const amrex::ParticleReal Ey, const amrex::ParticleReal Ez,
     const amrex::ParticleReal Bx, const amrex::ParticleReal By, const amrex::ParticleReal Bz,
-    const amrex::ParticleReal q, const amrex::ParticleReal m, const amrex::Real dt )
+    const amrex::ParticleReal q, const amrex::ParticleReal m, const amrex::Real dt)
 {
     using namespace amrex::literals;
 

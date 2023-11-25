@@ -95,12 +95,12 @@ public:
      * \brief
      * This method has to be called at the end of the simulation. It deletes the WarpX instance.
      */
-    static void Finalize();
+    static void Finalize ();
 
     ~WarpX () override;
 
     /** Copy constructor */
-    WarpX ( WarpX const &) = delete;
+    WarpX (WarpX const &) = delete;
     /** Copy operator */
     WarpX& operator= ( WarpX const & ) = delete;
 
@@ -122,7 +122,7 @@ public:
     MultiFluidContainer& GetFluidContainer () { return *myfl; }
     MacroscopicProperties& GetMacroscopicProperties () { return *m_macroscopic_properties; }
     HybridPICModel& GetHybridPICModel () { return *m_hybrid_pic_model; }
-    MultiDiagnostics& GetMultiDiags () {return *multi_diags;}
+    MultiDiagnostics& GetMultiDiags () { return *multi_diags; }
 
     ParticleBoundaryBuffer& GetParticleBoundaryBuffer () { return *m_particle_boundary_buffer; }
 
@@ -447,7 +447,7 @@ public:
     static std::map<std::string, amrex::iMultiFab *> imultifab_map;
 
     std::array<const amrex::MultiFab* const, 3>
-    get_array_Bfield_aux  (const int lev) const {
+    get_array_Bfield_aux (const int lev) const {
         return {
             Bfield_aux[lev][0].get(),
             Bfield_aux[lev][1].get(),
@@ -455,7 +455,7 @@ public:
         };
     }
     std::array<const amrex::MultiFab* const, 3>
-    get_array_Efield_aux  (const int lev) const {
+    get_array_Efield_aux (const int lev) const {
         return {
             Efield_aux[lev][0].get(),
             Efield_aux[lev][1].get(),
@@ -463,61 +463,61 @@ public:
         };
     }
 
-    amrex::MultiFab * get_pointer_Efield_aux  (int lev, int direction) const { return Efield_aux[lev][direction].get(); }
-    amrex::MultiFab * get_pointer_Bfield_aux  (int lev, int direction) const { return Bfield_aux[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_Efield_aux (int lev, int direction) const { return Efield_aux[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_Bfield_aux (int lev, int direction) const { return Bfield_aux[lev][direction].get(); }
 
-    amrex::MultiFab * get_pointer_Efield_fp  (int lev, int direction) const { return Efield_fp[lev][direction].get(); }
-    amrex::MultiFab * get_pointer_Bfield_fp  (int lev, int direction) const { return Bfield_fp[lev][direction].get(); }
-    amrex::MultiFab * get_pointer_current_fp  (int lev, int direction) const { return current_fp[lev][direction].get(); }
-    amrex::MultiFab * get_pointer_current_fp_nodal  (int lev, int direction) const { return current_fp_nodal[lev][direction].get(); }
-    amrex::MultiFab * get_pointer_rho_fp  (int lev) const { return rho_fp[lev].get(); }
-    amrex::MultiFab * get_pointer_F_fp  (int lev) const { return F_fp[lev].get(); }
-    amrex::MultiFab * get_pointer_G_fp  (int lev) const { return G_fp[lev].get(); }
-    amrex::MultiFab * get_pointer_phi_fp  (int lev) const { return phi_fp[lev].get(); }
-    amrex::MultiFab * get_pointer_vector_potential_fp  (int lev, int direction) const { return vector_potential_fp_nodal[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_Efield_fp (int lev, int direction) const { return Efield_fp[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_Bfield_fp (int lev, int direction) const { return Bfield_fp[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_current_fp (int lev, int direction) const { return current_fp[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_current_fp_nodal (int lev, int direction) const { return current_fp_nodal[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_rho_fp (int lev) const { return rho_fp[lev].get(); }
+    amrex::MultiFab * get_pointer_F_fp (int lev) const { return F_fp[lev].get(); }
+    amrex::MultiFab * get_pointer_G_fp (int lev) const { return G_fp[lev].get(); }
+    amrex::MultiFab * get_pointer_phi_fp (int lev) const { return phi_fp[lev].get(); }
+    amrex::MultiFab * get_pointer_vector_potential_fp (int lev, int direction) const { return vector_potential_fp_nodal[lev][direction].get(); }
 
-    amrex::MultiFab * get_pointer_Efield_cp  (int lev, int direction) const { return Efield_cp[lev][direction].get(); }
-    amrex::MultiFab * get_pointer_Bfield_cp  (int lev, int direction) const { return Bfield_cp[lev][direction].get(); }
-    amrex::MultiFab * get_pointer_current_cp  (int lev, int direction) const { return current_cp[lev][direction].get(); }
-    amrex::MultiFab * get_pointer_rho_cp  (int lev) const { return rho_cp[lev].get(); }
-    amrex::MultiFab * get_pointer_F_cp  (int lev) const { return F_cp[lev].get(); }
-    amrex::MultiFab * get_pointer_G_cp  (int lev) const { return G_cp[lev].get(); }
+    amrex::MultiFab * get_pointer_Efield_cp (int lev, int direction) const { return Efield_cp[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_Bfield_cp (int lev, int direction) const { return Bfield_cp[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_current_cp (int lev, int direction) const { return current_cp[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_rho_cp (int lev) const { return rho_cp[lev].get(); }
+    amrex::MultiFab * get_pointer_F_cp (int lev) const { return F_cp[lev].get(); }
+    amrex::MultiFab * get_pointer_G_cp (int lev) const { return G_cp[lev].get(); }
 
-    amrex::MultiFab * get_pointer_edge_lengths  (int lev, int direction) const { return m_edge_lengths[lev][direction].get(); }
-    amrex::MultiFab * get_pointer_face_areas  (int lev, int direction) const { return m_face_areas[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_edge_lengths (int lev, int direction) const { return m_edge_lengths[lev][direction].get(); }
+    amrex::MultiFab * get_pointer_face_areas (int lev, int direction) const { return m_face_areas[lev][direction].get(); }
 
-    const amrex::MultiFab& getEfield  (int lev, int direction) {return *Efield_aux[lev][direction];}
-    const amrex::MultiFab& getBfield  (int lev, int direction) {return *Bfield_aux[lev][direction];}
+    const amrex::MultiFab& getEfield (int lev, int direction) { return *Efield_aux[lev][direction]; }
+    const amrex::MultiFab& getBfield (int lev, int direction) { return *Bfield_aux[lev][direction]; }
 
-    const amrex::MultiFab& getcurrent_cp (int lev, int direction) {return *current_cp[lev][direction];}
-    const amrex::MultiFab& getEfield_cp  (int lev, int direction) {return  *Efield_cp[lev][direction];}
-    const amrex::MultiFab& getBfield_cp  (int lev, int direction) {return  *Bfield_cp[lev][direction];}
-    const amrex::MultiFab& getrho_cp (int lev) {return  *rho_cp[lev];}
-    const amrex::MultiFab& getF_cp (int lev) {return *F_cp[lev];}
-    const amrex::MultiFab& getG_cp (int lev) {return *G_cp[lev];}
+    const amrex::MultiFab& getcurrent_cp (int lev, int direction) { return *current_cp[lev][direction]; }
+    const amrex::MultiFab& getEfield_cp (int lev, int direction) { return  *Efield_cp[lev][direction]; }
+    const amrex::MultiFab& getBfield_cp (int lev, int direction) { return  *Bfield_cp[lev][direction]; }
+    const amrex::MultiFab& getrho_cp (int lev) { return  *rho_cp[lev]; }
+    const amrex::MultiFab& getF_cp (int lev) { return *F_cp[lev]; }
+    const amrex::MultiFab& getG_cp (int lev) { return *G_cp[lev]; }
 
-    const amrex::MultiFab& getcurrent_fp (int lev, int direction) {return *current_fp[lev][direction];}
-    const amrex::MultiFab& getEfield_fp  (int lev, int direction) {return *Efield_fp[lev][direction];}
-    const amrex::MultiFab& getBfield_fp  (int lev, int direction) {return *Bfield_fp[lev][direction];}
-    const amrex::MultiFab& getrho_fp (int lev) {return *rho_fp[lev];}
-    const amrex::MultiFab& getphi_fp (int lev) {return *phi_fp[lev];}
-    const amrex::MultiFab& getF_fp (int lev) {return *F_fp[lev];}
-    const amrex::MultiFab& getG_fp (int lev) {return *G_fp[lev];}
+    const amrex::MultiFab& getcurrent_fp (int lev, int direction) { return *current_fp[lev][direction]; }
+    const amrex::MultiFab& getEfield_fp (int lev, int direction) { return *Efield_fp[lev][direction]; }
+    const amrex::MultiFab& getBfield_fp (int lev, int direction) { return *Bfield_fp[lev][direction]; }
+    const amrex::MultiFab& getrho_fp (int lev) { return *rho_fp[lev]; }
+    const amrex::MultiFab& getphi_fp (int lev) { return *phi_fp[lev]; }
+    const amrex::MultiFab& getF_fp (int lev) { return *F_fp[lev]; }
+    const amrex::MultiFab& getG_fp (int lev) { return *G_fp[lev];}
 
-    const amrex::MultiFab& getEfield_avg_fp (int lev, int direction) {return *Efield_avg_fp[lev][direction];}
-    const amrex::MultiFab& getBfield_avg_fp (int lev, int direction) {return *Bfield_avg_fp[lev][direction];}
-    const amrex::MultiFab& getEfield_avg_cp (int lev, int direction) {return *Efield_avg_cp[lev][direction];}
-    const amrex::MultiFab& getBfield_avg_cp (int lev, int direction) {return *Bfield_avg_cp[lev][direction];}
+    const amrex::MultiFab& getEfield_avg_fp (int lev, int direction) { return *Efield_avg_fp[lev][direction]; }
+    const amrex::MultiFab& getBfield_avg_fp (int lev, int direction) { return *Bfield_avg_fp[lev][direction]; }
+    const amrex::MultiFab& getEfield_avg_cp (int lev, int direction) { return *Efield_avg_cp[lev][direction]; }
+    const amrex::MultiFab& getBfield_avg_cp (int lev, int direction) { return *Bfield_avg_cp[lev][direction]; }
 
     bool DoPML () const {return do_pml;}
     bool DoFluidSpecies () const {return do_fluid_species;}
 
 #if (defined WARPX_DIM_RZ) && (defined WARPX_USE_PSATD)
-    const PML_RZ* getPMLRZ() {return pml_rz[0].get();}
+    const PML_RZ* getPMLRZ () {return pml_rz[0].get();}
 #endif
 
     /** get low-high-low-high-... vector for each direction indicating if mother grid PMLs are enabled */
-    std::vector<bool> getPMLdirections() const;
+    std::vector<bool> getPMLdirections () const;
 
     static amrex::LayoutData<amrex::Real>* getCosts (int lev);
 
@@ -544,7 +544,7 @@ public:
     /// object with all reduced diagnotics, similar to MultiParticleContainer for species.
     std::unique_ptr<MultiReducedDiags> reduced_diags;
 
-    void applyMirrors(amrex::Real time);
+    void applyMirrors (amrex::Real time);
 
     /** Determine the timestep of the simulation. */
     void ComputeDt ();
@@ -571,7 +571,7 @@ public:
      * \param step Time step
      * \param move_j whether the current (and the charge, if allocated) is shifted or not
      */
-    int  MoveWindow (int step, bool move_j);
+    int MoveWindow (int step, bool move_j);
 
     /**
      * \brief
@@ -678,13 +678,13 @@ public:
     void DampFieldsInGuards (int lev, std::unique_ptr<amrex::MultiFab>& mf);
 
 #ifdef WARPX_DIM_RZ
-    void ApplyInverseVolumeScalingToCurrentDensity(amrex::MultiFab* Jx,
-                                                   amrex::MultiFab* Jy,
-                                                   amrex::MultiFab* Jz,
-                                                   int lev);
+    void ApplyInverseVolumeScalingToCurrentDensity (amrex::MultiFab* Jx,
+                                                    amrex::MultiFab* Jy,
+                                                    amrex::MultiFab* Jz,
+                                                    int lev);
 
-    void ApplyInverseVolumeScalingToChargeDensity(amrex::MultiFab* Rho,
-                                                  int lev);
+    void ApplyInverseVolumeScalingToChargeDensity (amrex::MultiFab* Rho,
+                                                   int lev);
 #endif
 
     /**
@@ -727,7 +727,7 @@ public:
     void DampJPML (int lev, PatchType patch_type);
 
     void CopyJPML ();
-    bool isAnyBoundaryPML();
+    bool isAnyBoundaryPML ();
 
     PML* GetPML (int lev);
 #if (defined WARPX_DIM_RZ) && (defined WARPX_USE_PSATD)
@@ -831,16 +831,16 @@ public:
     void sett_new (int lev, amrex::Real time) {t_new[lev] = time;}
     amrex::Vector<amrex::Real> getdt () const {return dt;}
     amrex::Real getdt (int lev) const {return dt.at(lev);}
-    int getdo_moving_window() const {return do_moving_window;}
-    amrex::Real getmoving_window_x() const {return moving_window_x;}
-    bool getis_synchronized() const {return is_synchronized;}
+    int getdo_moving_window () const {return do_moving_window;}
+    amrex::Real getmoving_window_x () const {return moving_window_x;}
+    bool getis_synchronized () const {return is_synchronized;}
 
     int maxStep () const {return max_step;}
     void updateMaxStep (const int new_max_step) {max_step = new_max_step;}
     amrex::Real stopTime () const {return stop_time;}
     void updateStopTime (const amrex::Real new_stop_time) {stop_time = new_stop_time;}
 
-    void AverageAndPackFields( amrex::Vector<std::string>& varnames,
+    void AverageAndPackFields (amrex::Vector<std::string>& varnames,
         amrex::Vector<amrex::MultiFab>& mf_avg, amrex::IntVect ngrow) const;
 
     void prepareFields( int step, amrex::Vector<std::string>& varnames,
@@ -849,7 +849,7 @@ public:
         amrex::Vector<amrex::Geometry>& output_geom ) const;
 
     static std::array<amrex::Real,3> CellSize (int lev);
-    static amrex::RealBox getRealBox(const amrex::Box& bx, int lev);
+    static amrex::RealBox getRealBox (const amrex::Box& bx, int lev);
 
     /**
      * \brief Return the lower corner of the box in real units.
@@ -909,13 +909,13 @@ public:
                              const std::array<const amrex::MultiFab* const, 3>& B,
                              const std::array<amrex::Real,3>& dx, amrex::IntVect ngrow);
 
-    void ComputeDivE(amrex::MultiFab& divE, int lev);
+    void ComputeDivE (amrex::MultiFab& divE, int lev);
 
-    amrex::IntVect getngEB() const { return guard_cells.ng_alloc_EB; }
-    amrex::IntVect getngF() const { return guard_cells.ng_alloc_F; }
-    amrex::IntVect getngUpdateAux() const { return guard_cells.ng_UpdateAux; }
-    amrex::IntVect get_ng_depos_J() const {return guard_cells.ng_depos_J;}
-    amrex::IntVect get_ng_depos_rho() const {return guard_cells.ng_depos_rho;}
+    amrex::IntVect getngEB () const { return guard_cells.ng_alloc_EB; }
+    amrex::IntVect getngF () const { return guard_cells.ng_alloc_F; }
+    amrex::IntVect getngUpdateAux () const { return guard_cells.ng_UpdateAux; }
+    amrex::IntVect get_ng_depos_J () const {return guard_cells.ng_depos_J;}
+    amrex::IntVect get_ng_depos_rho () const {return guard_cells.ng_depos_rho;}
     amrex::IntVect get_ng_fieldgather () const {return guard_cells.ng_FieldGather;}
 
     /** Coarsest-level Domain Decomposition
@@ -925,7 +925,7 @@ public:
      *
      * @return the number of MPI processes per dimension if specified, otherwise a 0-vector
      */
-    amrex::IntVect get_numprocs() const {return numprocs;}
+    amrex::IntVect get_numprocs () const {return numprocs;}
 
     ElectrostaticSolver::PoissonBoundaryHandler m_poisson_boundary_handler;
     void ComputeSpaceChargeField (bool reset_fields);
@@ -1098,28 +1098,28 @@ public:
     /**
     * \brief Auxiliary function to count the amount of faces which still need to be extended
     */
-    amrex::Array1D<int, 0, 2> CountExtFaces();
+    amrex::Array1D<int, 0, 2> CountExtFaces ();
     /**
     * \brief Main function computing the cell extension. Where possible it computes one-way
     *       extensions and, when this is not possible, it does eight-ways extensions.
     */
-    void ComputeFaceExtensions();
+    void ComputeFaceExtensions ();
     /**
     * \brief Initialize the memory for the FaceInfoBoxes
     */
-    void InitBorrowing();
+    void InitBorrowing ();
     /**
     * \brief Shrink the vectors in the FaceInfoBoxes
     */
-    void ShrinkBorrowing();
+    void ShrinkBorrowing ();
     /**
     * \brief Do the one-way extension
     */
-    void ComputeOneWayExtensions();
+    void ComputeOneWayExtensions ();
     /**
     * \brief Do the eight-ways extension
     */
-    void ComputeEightWaysExtensions();
+    void ComputeEightWaysExtensions ();
     /**
     * \brief Whenever an unstable cell cannot be extended we increase its area to be the minimal for stability.
     *        This is the method Benkler-Chavannes-Kuster method and it is less accurate than the regular ECT but it
@@ -1128,7 +1128,7 @@ public:
     * @param idim Integer indicating the dimension (x->0, y->1, z->2) for which the BCK correction is done
     *
     */
-    void ApplyBCKCorrection(int idim);
+    void ApplyBCKCorrection (int idim);
 
     /**
      * \brief Subtract the average of the cumulative sums of the preliminary current D
@@ -1331,12 +1331,12 @@ private:
      * \brief Check that the number of guard cells is smaller than the number of valid cells,
      * for all available MultiFabs, and abort otherwise.
      */
-    void CheckGuardCells();
+    void CheckGuardCells ();
 
     /**
      * \brief Checks for known numerical issues involving different WarpX modules
      */
-    void CheckKnownIssues();
+    void CheckKnownIssues ();
 
     /** Check the requested resources and write performance hints */
     void PerformanceHints ();

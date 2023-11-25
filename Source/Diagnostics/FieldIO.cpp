@@ -77,7 +77,7 @@ getVec( const Real* v , bool reverse)
  * (used for compatibility with the openPMD API)
  */
 std::vector<std::uint64_t>
-getReversedVec( const IntVect& v )
+getReversedVec (const IntVect& v)
 {
   // Convert the IntVect v to and std::vector u
   std::vector<std::uint64_t> u = {
@@ -101,7 +101,7 @@ getReversedVec( const IntVect& v )
  * (used for compatibility with the openPMD API)
  */
 std::vector<double>
-getReversedVec( const Real* v )
+getReversedVec (const Real* v)
 {
   // Convert Real* v to and std::vector u
   std::vector<double> u = {
@@ -154,10 +154,10 @@ ConstructTotalRZScalarField (MultiFab& scalar_total,
  * Should only be used for BTD now.
  */
 void
-AverageAndPackVectorField( MultiFab& mf_avg,
+AverageAndPackVectorField (MultiFab& mf_avg,
                            const std::array< std::unique_ptr<MultiFab>, 3 >& vector_field,
                            const DistributionMapping& dm,
-                           const int dcomp, const IntVect ngrow )
+                           const int dcomp, const IntVect ngrow)
 {
 #ifndef WARPX_DIM_RZ
     (void)dm;
@@ -197,7 +197,7 @@ void
 AverageAndPackScalarField (MultiFab& mf_avg,
                            const MultiFab & scalar_field,
                            const DistributionMapping& dm,
-                           const int dcomp, const IntVect ngrow )
+                           const int dcomp, const IntVect ngrow)
 {
     const MultiFab *scalar_total = &scalar_field;
 

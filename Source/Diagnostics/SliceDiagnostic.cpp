@@ -60,8 +60,8 @@ using namespace amrex;
  */
 
 std::unique_ptr<MultiFab>
-CreateSlice( const MultiFab& mf, const Vector<Geometry> &dom_geom,
-             RealBox &slice_realbox, IntVect &slice_cr_ratio )
+CreateSlice (const MultiFab& mf, const Vector<Geometry> &dom_geom,
+             RealBox &slice_realbox, IntVect &slice_cr_ratio)
 {
     std::unique_ptr<MultiFab> smf;
     std::unique_ptr<MultiFab> cs_mf;
@@ -439,10 +439,10 @@ InterpolateSliceValues(MultiFab& smf, IntVect interp_lo, RealBox slice_realbox,
 }
 
 void
-InterpolateLo(const Box& bx, FArrayBox &fabox, IntVect slice_lo,
-             Vector<Geometry> geom, int idir, IntVect IndType,
-             RealBox slice_realbox, int srccomp, int ncomp,
-             int /*nghost*/, const RealBox real_box )
+InterpolateLo (const Box& bx, FArrayBox &fabox, IntVect slice_lo,
+               Vector<Geometry> geom, int idir, IntVect IndType,
+               RealBox slice_realbox, int srccomp, int ncomp,
+               int /*nghost*/, const RealBox real_box)
 {
     auto fabarr = fabox.array();
     const auto lo = amrex::lbound(bx);

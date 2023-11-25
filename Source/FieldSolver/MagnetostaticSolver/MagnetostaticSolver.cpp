@@ -56,7 +56,7 @@
 using namespace amrex;
 
 void
-WarpX::ComputeMagnetostaticField()
+WarpX::ComputeMagnetostaticField ()
 {
     WARPX_PROFILE("WarpX::ComputeMagnetostaticField");
     // Fields have been reset in Electrostatic solver for this time step, these fields
@@ -68,7 +68,7 @@ WarpX::ComputeMagnetostaticField()
 }
 
 void
-WarpX::AddMagnetostaticFieldLabFrame()
+WarpX::AddMagnetostaticFieldLabFrame ()
 {
     WARPX_PROFILE("WarpX::AddMagnetostaticFieldLabFrame");
 
@@ -254,7 +254,7 @@ WarpX::setVectorPotentialBC ( amrex::Vector<amrex::Array<std::unique_ptr<amrex::
     } // lev
 }
 
-void MagnetostaticSolver::VectorPoissonBoundaryHandler::defineVectorPotentialBCs ( )
+void MagnetostaticSolver::VectorPoissonBoundaryHandler::defineVectorPotentialBCs ()
 {
     for (int adim = 0; adim < 3; adim++) {
 #ifdef WARPX_DIM_RZ

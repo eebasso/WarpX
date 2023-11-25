@@ -30,7 +30,7 @@ amrex::ParticleReal BoschHaleFusionCrossSection (
     const amrex::ParticleReal& E_kin_star,
     const NuclearFusionType& fusion_type,
     const amrex::ParticleReal& m1,
-    const amrex::ParticleReal& m2 )
+    const amrex::ParticleReal& m2)
 {
     using namespace amrex::literals;
 

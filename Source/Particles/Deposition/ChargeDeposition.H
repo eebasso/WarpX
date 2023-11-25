@@ -256,8 +256,7 @@ void doChargeDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPositio
                                      const amrex::Box& box,
                                      const amrex::Geometry& geom,
                                      const amrex::IntVect& a_tbox_max_size,
-                                     const amrex::IntVect bin_size
-                                     )
+                                     const amrex::IntVect bin_size)
 {
     using namespace amrex;
 

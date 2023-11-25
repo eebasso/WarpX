@@ -50,11 +50,11 @@ using namespace amrex;
  *       in the gather buffers or in the interior of the fine patch
  */
 void
-PhysicalParticleContainer::PartitionParticlesInBuffers(
+PhysicalParticleContainer::PartitionParticlesInBuffers (
     long& nfine_current, long& nfine_gather, long const np,
     WarpXParIter& pti, int const lev,
     iMultiFab const* current_masks,
-    iMultiFab const* gather_masks )
+    iMultiFab const* gather_masks)
 {
     WARPX_PROFILE("PhysicalParticleContainer::PartitionParticlesInBuffers");
 

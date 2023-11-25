@@ -2761,7 +2761,7 @@ WarpX::CellSize (int lev)
 }
 
 amrex::RealBox
-WarpX::getRealBox(const Box& bx, int lev)
+WarpX::getRealBox (const Box& bx, int lev)
 {
     const amrex::Geometry& gm = GetInstance().Geom(lev);
     const RealBox grid_box{bx, gm.CellSize(), gm.ProbLo()};
@@ -2769,7 +2769,7 @@ WarpX::getRealBox(const Box& bx, int lev)
 }
 
 std::array<Real,3>
-WarpX::LowerCorner(const Box& bx, const int lev, const amrex::Real time_shift_delta)
+WarpX::LowerCorner (const Box& bx, const int lev, const amrex::Real time_shift_delta)
 {
     auto & warpx = GetInstance();
     const RealBox grid_box = getRealBox( bx, lev );
@@ -2794,7 +2794,7 @@ WarpX::LowerCorner(const Box& bx, const int lev, const amrex::Real time_shift_de
 }
 
 std::array<Real,3>
-WarpX::UpperCorner(const Box& bx, const int lev, const amrex::Real time_shift_delta)
+WarpX::UpperCorner (const Box& bx, const int lev, const amrex::Real time_shift_delta)
 {
     auto & warpx = GetInstance();
     const RealBox grid_box = getRealBox( bx, lev );
@@ -2899,7 +2899,7 @@ WarpX::ComputeDivB (amrex::MultiFab& divB, int const dcomp,
 }
 
 void
-WarpX::ComputeDivE(amrex::MultiFab& divE, const int lev)
+WarpX::ComputeDivE (amrex::MultiFab& divE, const int lev)
 {
     if ( WarpX::electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD ) {
 #ifdef WARPX_USE_PSATD
@@ -2938,7 +2938,7 @@ WarpX::GetPML (int lev)
 }
 
 std::vector< bool >
-WarpX::getPMLdirections() const
+WarpX::getPMLdirections () const
 {
     std::vector< bool > dirsWithPML( 6, false );
 #if AMREX_SPACEDIM!=3
@@ -3033,8 +3033,8 @@ WarpX::BuildBufferMasks ()
  * \param ng          Number of guard cells
  */
 void
-WarpX::BuildBufferMasksInBox ( const amrex::Box tbx, amrex::IArrayBox &buffer_mask,
-                               const amrex::IArrayBox &guard_mask, const int ng )
+WarpX::BuildBufferMasksInBox (const amrex::Box tbx, amrex::IArrayBox &buffer_mask,
+                              const amrex::IArrayBox &guard_mask, const int ng)
 {
     auto const& msk = buffer_mask.array();
     auto const& gmsk = guard_mask.const_array();
@@ -3055,7 +3055,8 @@ WarpX::BuildBufferMasksInBox ( const amrex::Box tbx, amrex::IArrayBox &buffer_ma
     });
 }
 
-amrex::Vector<amrex::Real> WarpX::getFornbergStencilCoefficients(const int n_order, const short a_grid_type)
+amrex::Vector<amrex::Real>
+WarpX::getFornbergStencilCoefficients (const int n_order, const short a_grid_type)
 {
     AMREX_ALWAYS_ASSERT_WITH_MESSAGE(n_order % 2 == 0, "n_order must be even");
 

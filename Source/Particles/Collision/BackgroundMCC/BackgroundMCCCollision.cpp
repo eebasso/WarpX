@@ -308,8 +308,8 @@ BackgroundMCCCollision::doCollisions (amrex::Real cur_time, amrex::Real dt, Mult
 }
 
 
-void BackgroundMCCCollision::doBackgroundCollisionsWithinTile
-( WarpXParIter& pti, amrex::Real t )
+void BackgroundMCCCollision::doBackgroundCollisionsWithinTile (
+    WarpXParIter& pti, amrex::Real t)
 {
     using namespace amrex::literals;
 

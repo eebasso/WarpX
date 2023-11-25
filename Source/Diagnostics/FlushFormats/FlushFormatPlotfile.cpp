@@ -425,11 +425,11 @@ FlushFormatPlotfile::WriteParticles(const std::string& dir,
  *  Write guard cells if `plot_guards` is True.
  */
 void
-WriteRawMF ( const MultiFab& F, const DistributionMapping& dm,
-             const std::string& filename,
-             const std::string& level_prefix,
-             const std::string& field_name,
-             const int lev, const bool plot_guards )
+WriteRawMF (const MultiFab& F, const DistributionMapping& dm,
+            const std::string& filename,
+            const std::string& level_prefix,
+            const std::string& field_name,
+            const int lev, const bool plot_guards)
 {
     const std::string prefix = amrex::MultiFabFileFullPrefix(lev,
                             filename, level_prefix, field_name);
@@ -451,11 +451,11 @@ WriteRawMF ( const MultiFab& F, const DistributionMapping& dm,
  *  the coarse patch of level 0 (meaningless).
  */
 void
-WriteZeroRawMF( const MultiFab& F, const DistributionMapping& dm,
+WriteZeroRawMF (const MultiFab& F, const DistributionMapping& dm,
                 const std::string& filename,
                 const std::string& level_prefix,
                 const std::string& field_name,
-                const int lev, const IntVect ng )
+                const int lev, const IntVect ng)
 {
     const std::string prefix = amrex::MultiFabFileFullPrefix(lev,
                             filename, level_prefix, field_name);
@@ -471,7 +471,8 @@ WriteZeroRawMF( const MultiFab& F, const DistributionMapping& dm,
  *  coarse and fine patch to have the same shape.
  */
 void
-WriteCoarseVector( const std::string field_name,
+WriteCoarseVector (
+    const std::string field_name,
     const MultiFab* Fx_cp,
     const MultiFab* Fy_cp,
     const MultiFab* Fz_cp,
@@ -481,7 +482,7 @@ WriteCoarseVector( const std::string field_name,
     const DistributionMapping& dm,
     const std::string& filename,
     const std::string& level_prefix,
-    const int lev, const bool plot_guards )
+    const int lev, const bool plot_guards)
 {
     IntVect ng(0);
     if (plot_guards) ng = Fx_fp->nGrowVect();
@@ -511,14 +512,15 @@ WriteCoarseVector( const std::string field_name,
  *  coarse and fine patch to have the same shape.
  */
 void
-WriteCoarseScalar( const std::string field_name,
+WriteCoarseScalar (
+    const std::string field_name,
     const MultiFab* F_cp,
     const MultiFab* F_fp,
     const DistributionMapping& dm,
     const std::string& filename,
     const std::string& level_prefix,
     const int lev, const bool plot_guards,
-    const int icomp )
+    const int icomp)
 {
     IntVect ng(0);
     if (plot_guards) ng = F_fp->nGrowVect();
