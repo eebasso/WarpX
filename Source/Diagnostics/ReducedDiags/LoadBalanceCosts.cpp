@@ -282,7 +282,7 @@ void LoadBalanceCosts::WriteToFile (int step) const
     // get a reference to WarpX instance
     auto& warpx = WarpX::GetInstance();
 
-    if (!ParallelDescriptor::IOProcessor()) return;
+    if (!ParallelDescriptor::IOProcessor()) { return; }
 
     // final step is a special case, fill jagged array with NaN
     if (m_intervals.nextContains(step+1) > warpx.maxStep())

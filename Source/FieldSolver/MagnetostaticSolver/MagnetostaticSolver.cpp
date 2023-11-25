@@ -206,7 +206,7 @@ void
 WarpX::setVectorPotentialBC ( amrex::Vector<amrex::Array<std::unique_ptr<amrex::MultiFab>,3>>& A ) const
 {
     // check if any dimension has non-periodic boundary conditions
-    if (!m_vector_poisson_boundary_handler.has_non_periodic) return;
+    if (!m_vector_poisson_boundary_handler.has_non_periodic) { return; }
 
     auto dirichlet_flag = m_vector_poisson_boundary_handler.dirichlet_flag;
 

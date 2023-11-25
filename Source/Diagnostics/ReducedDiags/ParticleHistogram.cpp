@@ -158,7 +158,7 @@ ParticleHistogram::ParticleHistogram (std::string rd_name):
 void ParticleHistogram::ComputeDiags (int step)
 {
     // Judge if the diags should be done
-    if (!m_intervals.contains(step+1)) return;
+    if (!m_intervals.contains(step+1)) { return; }
 
     // get a reference to WarpX instance
     auto & warpx = WarpX::GetInstance();
@@ -230,7 +230,7 @@ void ParticleHistogram::ComputeDiags (int step)
                     auto const f = fun_partparser(t, x, y, z, ux, uy, uz);
                     // determine particle bin
                     int const bin = int(Math::floor((f-bin_min)/bin_size));
-                    if ( bin<0 || bin>=num_bins ) return; // discard if out-of-range
+                    if ( bin<0 || bin>=num_bins ) { return; } // discard if out-of-range
 
                     // add particle to histogram bin
                     //! @todo performance: on CPU, we are probably faster by

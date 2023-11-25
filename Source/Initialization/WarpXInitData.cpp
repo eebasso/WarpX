@@ -1058,7 +1058,7 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
                 if((field=='E' and lx(i, j, k)<=0) or (field=='B' and Sx(i, j, k)<=0))  return;
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
                 //In XZ and RZ Ex is associated with a x-edge, while Bx is associated with a z-edge
-                if((field=='E' and lx(i, j, k)<=0) or (field=='B' and lz(i, j, k)<=0)) return;
+                if((field=='E' and lx(i, j, k)<=0) or (field=='B' and lz(i, j, k)<=0)) { return; }
 #endif
 #endif
                 // Shift required in the x-, y-, or z- position
@@ -1095,7 +1095,7 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
                                  || lx(std::max(i-1, lx_lo.x), std::min(j  , lx_hi.y), k)<=0
                                  || lz(std::min(i  , lz_hi.x), std::min(j  , lz_hi.y), k)<=0
                                  || lz(std::min(i  , lz_hi.x), std::max(j-1, lz_lo.y), k)<=0)) or
-                   (field=='B' and Sy(i,j,k)<=0)) return;
+                   (field=='B' and Sy(i,j,k)<=0)) { return; }
 #endif
 #endif
 #if defined(WARPX_DIM_1D_Z)
@@ -1126,7 +1126,7 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
                 if((field=='E' and lz(i, j, k)<=0) or (field=='B' and Sz(i, j, k)<=0))  return;
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
                 //In XZ and RZ Ez is associated with a z-edge, while Bz is associated with a x-edge
-                if((field=='E' and lz(i, j, k)<=0) or (field=='B' and lx(i, j, k)<=0)) return;
+                if((field=='E' and lz(i, j, k)<=0) or (field=='B' and lx(i, j, k)<=0)) { return; }
 #endif
 #endif
 #if defined(WARPX_DIM_1D_Z)

@@ -150,7 +150,7 @@ template <typename MultiFabType> void
 RemakeMultiFab (std::unique_ptr<MultiFabType>& mf, const DistributionMapping& dm,
                 const bool redistribute, const int lev)
 {
-    if (mf == nullptr) return;
+    if (mf == nullptr) { return; }
     const IntVect& ng = mf->nGrowVect();
     std::unique_ptr<MultiFabType> pmf;
     WarpX::AllocInitMultiFab(pmf, mf->boxArray(), dm, mf->nComp(), ng, lev, mf->tags()[0]);
@@ -163,7 +163,7 @@ WarpX::RemakeLevel (int lev, Real /*time*/, const BoxArray& ba, const Distributi
 {
     if (ba == boxArray(lev))
     {
-        if (ParallelDescriptor::NProcs() == 1) return;
+        if (ParallelDescriptor::NProcs() == 1) { return; }
 
         // Fine patch
         for (int idim=0; idim < 3; ++idim)

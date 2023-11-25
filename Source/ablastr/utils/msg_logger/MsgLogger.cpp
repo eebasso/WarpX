@@ -347,7 +347,7 @@ Logger::compute_msgs_with_counter_and_ranks(
     const std::vector<int>& displacements,
     const int gather_rank) const
 {
-    if(m_rank != gather_rank) return std::vector<MsgWithCounterAndRanks>{};
+    if(m_rank != gather_rank) { return std::vector<MsgWithCounterAndRanks>{}; }
 
     std::vector<MsgWithCounterAndRanks> msgs_with_counter_and_ranks;
 

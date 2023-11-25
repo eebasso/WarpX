@@ -318,10 +318,10 @@ WarpXParticleContainer::DepositCurrent (WarpXParIter& pti,
                                      "Deposition buffers only work for lev-1");
 
     // If no particles, do not do anything
-    if (np_to_depose == 0) return;
+    if (np_to_depose == 0) { return; }
 
     // If user decides not to deposit
-    if (do_not_deposit) return;
+    if (do_not_deposit) { return; }
 
     // Number of guard cells for local deposition of J
     const WarpX& warpx = WarpX::GetInstance();
@@ -681,7 +681,7 @@ WarpXParticleContainer::DepositCharge (WarpXParIter& pti, RealVector const& wp,
                                          "Deposition buffers only work for lev-1");
 
         // If no particles, do not do anything
-        if (np_to_depose == 0) return;
+        if (np_to_depose == 0) { return; }
 
         // Number of guard cells for local deposition of rho
         const WarpX& warpx = WarpX::GetInstance();
@@ -1236,7 +1236,7 @@ WarpXParticleContainer::PushX (int lev, amrex::Real dt)
 {
     WARPX_PROFILE("WarpXParticleContainer::PushX()");
 
-    if (do_not_push) return;
+    if (do_not_push) { return; }
 
     amrex::LayoutData<amrex::Real>* costs = WarpX::getCosts(lev);
 
@@ -1311,7 +1311,7 @@ WarpXParticleContainer::particlePostLocate(ParticleType& p,
                                            const ParticleLocData& pld,
                                            const int lev)
 {
-    if (not do_splitting) return;
+    if (not do_splitting) { return; }
 
     // Tag particle if goes to higher level.
     // It will be split later in the loop
@@ -1333,7 +1333,7 @@ WarpXParticleContainer::ApplyBoundaryConditions (){
     WARPX_PROFILE("WarpXParticleContainer::ApplyBoundaryConditions()");
 
     // Periodic boundaries are handled in AMReX code
-    if (m_boundary_conditions.CheckAll(ParticleBoundaryType::Periodic)) return;
+    if (m_boundary_conditions.CheckAll(ParticleBoundaryType::Periodic)) { return; }
 
     auto boundary_conditions = m_boundary_conditions.data;
 
@@ -1372,7 +1372,7 @@ WarpXParticleContainer::ApplyBoundaryConditions (){
                     ParticleType& p = pp[i];
 
                     // skip particles that are already flagged for removal
-                    if (p.id() < 0) return;
+                    if (p.id() < 0) { return; }
 
                     ParticleReal x, y, z;
                     GetPosition.AsStored(i, x, y, z);

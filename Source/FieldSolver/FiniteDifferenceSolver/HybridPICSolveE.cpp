@@ -127,7 +127,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
             [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
-                if (lr(i, j, 0) <= 0) return;
+                if (lr(i, j, 0) <= 0) { return; }
 #endif
                 // Mode m=0
                 Jr(i, j, 0, 0) = one_over_mu0 * (
@@ -154,7 +154,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
 #ifdef AMREX_USE_EB
                 // In RZ Jt is associated with a mesh node, so we need to check if the mesh node is covered
                 amrex::ignore_unused(lt);
-                if (lr(i, j, 0)<=0 || lr(i-1, j, 0)<=0 || lz(i, j-1, 0)<=0 || lz(i, j, 0)<=0) return;
+                if (lr(i, j, 0)<=0 || lr(i-1, j, 0)<=0 || lz(i, j-1, 0)<=0 || lz(i, j, 0)<=0) { return; }
 #endif
                 // r on a nodal point (Jt is nodal in r)
                 Real const r = rmin + i*dr;
@@ -201,7 +201,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCylindrical (
             [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
-                if (lz(i, j, 0) <= 0) return;
+                if (lz(i, j, 0) <= 0) { return; }
 #endif
                 // r on a nodal point (Jz is nodal in r)
                 Real const r = rmin + i*dr;
@@ -315,7 +315,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCartesian (
             [=] AMREX_GPU_DEVICE (int i, int j, int k){
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
-                if (lx(i, j, k) <= 0) return;
+                if (lx(i, j, k) <= 0) { return; }
 #endif
                 Jx(i, j, k) = one_over_mu0 * (
                     - T_Algo::DownwardDz(By, coefs_z, n_coefs_z, i, j, k)
@@ -328,11 +328,11 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCartesian (
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
 #ifdef WARPX_DIM_3D
-                if (ly(i,j,k) <= 0) return;
+                if (ly(i,j,k) <= 0) { return; }
 #elif defined(WARPX_DIM_XZ)
                 // In XZ Jy is associated with a mesh node, so we need to check if the mesh node is covered
                 amrex::ignore_unused(ly);
-                if (lx(i, j, k)<=0 || lx(i-1, j, k)<=0 || lz(i, j-1, k)<=0 || lz(i, j, k)<=0) return;
+                if (lx(i, j, k)<=0 || lx(i-1, j, k)<=0 || lz(i, j-1, k)<=0 || lz(i, j, k)<=0) { return; }
 #endif
 #endif
                 Jy(i, j, k) = one_over_mu0 * (
@@ -345,7 +345,7 @@ void FiniteDifferenceSolver::CalculateCurrentAmpereCartesian (
             [=] AMREX_GPU_DEVICE (int i, int j, int k){
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
-                if (lz(i,j,k) <= 0) return;
+                if (lz(i,j,k) <= 0) { return; }
 #endif
                 Jz(i, j, k) = one_over_mu0 * (
                     - T_Algo::DownwardDy(Bx, coefs_y, n_coefs_y, i, j, k)
@@ -579,7 +579,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
             [=] AMREX_GPU_DEVICE (int i, int j, int /*k*/){
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
-                if (lr(i, j, 0) <= 0) return;
+                if (lr(i, j, 0) <= 0) { return; }
 #endif
                 // Interpolate to get the appropriate charge density in space
                 Real rho_val = Interp(rho, nodal, Er_stag, coarsen, i, j, 0, 0);
@@ -604,7 +604,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
 #ifdef AMREX_USE_EB
                 // In RZ Et is associated with a mesh node, so we need to check if the mesh node is covered
                 amrex::ignore_unused(lt);
-                if (lr(i, j, 0)<=0 || lr(i-1, j, 0)<=0 || lz(i, j-1, 0)<=0 || lz(i, j, 0)<=0) return;
+                if (lr(i, j, 0)<=0 || lr(i-1, j, 0)<=0 || lz(i, j-1, 0)<=0 || lz(i, j, 0)<=0) { return; }
 #endif
                 // r on a nodal grid (Et is nodal in r)
                 Real const r = rmin + i*dr;
@@ -637,7 +637,7 @@ void FiniteDifferenceSolver::HybridPICSolveECylindrical (
             [=] AMREX_GPU_DEVICE (int i, int j, int k){
 #ifdef AMREX_USE_EB
                 // Skip field solve if this cell is fully covered by embedded boundaries
-                if (lz(i,j,0) <= 0) return;
+                if (lz(i,j,0) <= 0) { return; }
 #endif
                 // Interpolate to get the appropriate charge density in space
                 Real rho_val = Interp(rho, nodal, Ez_stag, coarsen, i, j, k, 0);
@@ -839,7 +839,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
             [=] AMREX_GPU_DEVICE (int i, int j, int k){
 #ifdef AMREX_USE_EB
                 // Skip if this cell is fully covered by embedded boundaries
-                if (lx(i, j, k) <= 0) return;
+                if (lx(i, j, k) <= 0) { return; }
 #endif
                 // Interpolate to get the appropriate charge density in space
                 Real rho_val = Interp(rho, nodal, Ex_stag, coarsen, i, j, k, 0);
@@ -864,11 +864,11 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
 #ifdef AMREX_USE_EB
                 // Skip field solve if this cell is fully covered by embedded boundaries
 #ifdef WARPX_DIM_3D
-                if (ly(i,j,k) <= 0) return;
+                if (ly(i,j,k) <= 0) { return; }
 #elif defined(WARPX_DIM_XZ)
                 //In XZ Ey is associated with a mesh node, so we need to check if the mesh node is covered
                 amrex::ignore_unused(ly);
-                if (lx(i, j, k)<=0 || lx(i-1, j, k)<=0 || lz(i, j-1, k)<=0 || lz(i, j, k)<=0) return;
+                if (lx(i, j, k)<=0 || lx(i-1, j, k)<=0 || lz(i, j-1, k)<=0 || lz(i, j, k)<=0) { return; }
 #endif
 #endif
                 // Interpolate to get the appropriate charge density in space
@@ -893,7 +893,7 @@ void FiniteDifferenceSolver::HybridPICSolveECartesian (
             [=] AMREX_GPU_DEVICE (int i, int j, int k){
 #ifdef AMREX_USE_EB
                 // Skip field solve if this cell is fully covered by embedded boundaries
-                if (lz(i,j,k) <= 0) return;
+                if (lz(i,j,k) <= 0) { return; }
 #endif
                 // Interpolate to get the appropriate charge density in space
                 Real rho_val = Interp(rho, nodal, Ez_stag, coarsen, i, j, k, 0);

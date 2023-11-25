@@ -1048,7 +1048,7 @@ WarpX::SyncRho (
 {
     WARPX_PROFILE("WarpX::SyncRho()");
 
-    if (!charge_fp[0]) return;
+    if (!charge_fp[0]) { return; }
     const int ncomp = charge_fp[0]->nComp();
 
     // See comments in WarpX::SyncCurrent for an explanation of the algorithm.
@@ -1330,7 +1330,7 @@ void WarpX::ApplyFilterandSumBoundaryRho (
     const int glev = (patch_type == PatchType::fine) ? lev : lev-1;
     const std::unique_ptr<amrex::MultiFab>& rho = (patch_type == PatchType::fine) ?
                                                   charge_fp[lev] : charge_cp[lev];
-    if (rho == nullptr) return;
+    if (rho == nullptr) { return; }
     ApplyFilterandSumBoundaryRho(lev, glev, *rho, icomp, ncomp);
 }
 
@@ -1373,7 +1373,7 @@ void WarpX::AddRhoFromFineLevelandSumBoundary (
     const int icomp,
     const int ncomp)
 {
-    if (!charge_fp[lev]) return;
+    if (!charge_fp[lev]) { return; }
 
     ApplyFilterandSumBoundaryRho(charge_fp, charge_cp, lev, PatchType::fine, icomp, ncomp);
 
@@ -1452,7 +1452,7 @@ void WarpX::NodalSyncJ (
     const int lev,
     PatchType patch_type)
 {
-    if (!override_sync_intervals.contains(istep[0])) return;
+    if (!override_sync_intervals.contains(istep[0])) { return; }
 
     if (patch_type == PatchType::fine)
     {
@@ -1478,7 +1478,7 @@ void WarpX::NodalSyncRho (
     const int icomp,
     const int ncomp)
 {
-    if (!override_sync_intervals.contains(istep[0])) return;
+    if (!override_sync_intervals.contains(istep[0])) { return; }
 
     if (patch_type == PatchType::fine && charge_fp[lev])
     {

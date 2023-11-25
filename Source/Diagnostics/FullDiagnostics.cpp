@@ -147,7 +147,7 @@ FullDiagnostics::FlushRaw () {}
 bool
 FullDiagnostics::DoDump (int step, int /*i_buffer*/, bool force_flush)
 {
-    if (m_already_done) return false;
+    if (m_already_done) { return false; }
     if ( force_flush || (m_intervals.contains(step+1)) ){
         m_already_done = true;
         return true;
@@ -360,7 +360,7 @@ FullDiagnostics::AddRZModesToDiags (int lev)
 {
 #ifdef WARPX_DIM_RZ
 
-    if (!m_dump_rz_modes) return;
+    if (!m_dump_rz_modes) { return; }
 
     auto & warpx = WarpX::GetInstance();
     const int ncomp_multimodefab = warpx.get_pointer_Efield_aux(0, 0)->nComp();

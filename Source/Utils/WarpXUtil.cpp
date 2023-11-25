@@ -146,7 +146,7 @@ void ConvertLabParamsToBoost()
 
     ReadBoostedFrameParameters(gamma_boost, beta_boost, boost_direction);
 
-    if (gamma_boost <= 1.) return;
+    if (gamma_boost <= 1.) { return; }
 
     Vector<Real> prob_lo(AMREX_SPACEDIM);
     Vector<Real> prob_hi(AMREX_SPACEDIM);

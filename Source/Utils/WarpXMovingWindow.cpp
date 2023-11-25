@@ -142,7 +142,7 @@ WarpX::MoveWindow (const int step, bool move_j)
     if (step == end_moving_window_step) {
         amrex::Print() << Utils::TextMsg::Info("Stopping moving window");
     }
-    if (!moving_window_active(step)) return 0;
+    if (!moving_window_active(step)) { return 0; }
 
     // Update the continuous position of the moving window,
     // and of the plasma injection
@@ -163,7 +163,7 @@ WarpX::MoveWindow (const int step, bool move_j)
     const amrex::Real* cdx = geom[0].CellSize();
     const int num_shift_base = static_cast<int>((moving_window_x - current_lo[dir]) / cdx[dir]);
 
-    if (num_shift_base == 0) return 0;
+    if (num_shift_base == 0) { return 0; }
 
     // update the problem domain. Note the we only do this on the base level because
     // amrex::Geometry objects share the same, static RealBox.

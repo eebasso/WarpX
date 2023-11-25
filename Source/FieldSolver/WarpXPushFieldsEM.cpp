@@ -370,7 +370,7 @@ void WarpX::PSATDForwardTransformRho (
     const amrex::Vector<std::unique_ptr<amrex::MultiFab>>& charge_cp,
     const int icomp, const int dcomp, const bool apply_kspace_filter)
 {
-    if (charge_fp[0] == nullptr) return;
+    if (charge_fp[0] == nullptr) { return; }
 
     for (int lev = 0; lev <= finest_level; ++lev)
     {
@@ -916,7 +916,7 @@ WarpX::EvolveE (int lev, PatchType patch_type, amrex::Real a_dt)
 void
 WarpX::EvolveF (amrex::Real a_dt, DtType a_dt_type)
 {
-    if (!do_dive_cleaning) return;
+    if (!do_dive_cleaning) { return; }
 
     for (int lev = 0; lev <= finest_level; ++lev)
     {
@@ -927,7 +927,7 @@ WarpX::EvolveF (amrex::Real a_dt, DtType a_dt_type)
 void
 WarpX::EvolveF (int lev, amrex::Real a_dt, DtType a_dt_type)
 {
-    if (!do_dive_cleaning) return;
+    if (!do_dive_cleaning) { return; }
 
     EvolveF(lev, PatchType::fine, a_dt, a_dt_type);
     if (lev > 0) EvolveF(lev, PatchType::coarse, a_dt, a_dt_type);
@@ -936,7 +936,7 @@ WarpX::EvolveF (int lev, amrex::Real a_dt, DtType a_dt_type)
 void
 WarpX::EvolveF (int lev, PatchType patch_type, amrex::Real a_dt, DtType a_dt_type)
 {
-    if (!do_dive_cleaning) return;
+    if (!do_dive_cleaning) { return; }
 
     WARPX_PROFILE("WarpX::EvolveF()");
 
@@ -966,7 +966,7 @@ WarpX::EvolveF (int lev, PatchType patch_type, amrex::Real a_dt, DtType a_dt_typ
 void
 WarpX::EvolveG (amrex::Real a_dt, DtType a_dt_type)
 {
-    if (!do_divb_cleaning) return;
+    if (!do_divb_cleaning) { return; }
 
     for (int lev = 0; lev <= finest_level; ++lev)
     {
@@ -977,7 +977,7 @@ WarpX::EvolveG (amrex::Real a_dt, DtType a_dt_type)
 void
 WarpX::EvolveG (int lev, amrex::Real a_dt, DtType a_dt_type)
 {
-    if (!do_divb_cleaning) return;
+    if (!do_divb_cleaning) { return; }
 
     EvolveG(lev, PatchType::fine, a_dt, a_dt_type);
 
@@ -990,7 +990,7 @@ WarpX::EvolveG (int lev, amrex::Real a_dt, DtType a_dt_type)
 void
 WarpX::EvolveG (int lev, PatchType patch_type, amrex::Real a_dt, DtType /*a_dt_type*/)
 {
-    if (!do_divb_cleaning) return;
+    if (!do_divb_cleaning) { return; }
 
     WARPX_PROFILE("WarpX::EvolveG()");
 

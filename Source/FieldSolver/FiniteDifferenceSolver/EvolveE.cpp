@@ -155,7 +155,7 @@ void FiniteDifferenceSolver::EvolveECartesian (
             [=] AMREX_GPU_DEVICE (int i, int j, int k){
 #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
-                if (lx(i, j, k) <= 0) return;
+                if (lx(i, j, k) <= 0) { return; }
 #endif
                 Ex(i, j, k) += c2 * dt * (
                     - T_Algo::DownwardDz(By, coefs_z, n_coefs_z, i, j, k)
@@ -167,11 +167,11 @@ void FiniteDifferenceSolver::EvolveECartesian (
 #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
 #ifdef WARPX_DIM_3D
-                if (ly(i,j,k) <= 0) return;
+                if (ly(i,j,k) <= 0) { return; }
 #elif defined(WARPX_DIM_XZ)
                 //In XZ Ey is associated with a mesh node, so we need to check if the mesh node is covered
                 amrex::ignore_unused(ly);
-                if (lx(i, j, k)<=0 || lx(i-1, j, k)<=0 || lz(i, j-1, k)<=0 || lz(i, j, k)<=0) return;
+                if (lx(i, j, k)<=0 || lx(i-1, j, k)<=0 || lz(i, j-1, k)<=0 || lz(i, j, k)<=0) { return; }
 #endif
 #endif
                 Ey(i, j, k) += c2 * dt * (
@@ -184,7 +184,7 @@ void FiniteDifferenceSolver::EvolveECartesian (
 
 #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
-                if (lz(i,j,k) <= 0) return;
+                if (lz(i,j,k) <= 0) { return; }
 #endif
                 Ez(i, j, k) += c2 * dt * (
                     - T_Algo::DownwardDy(Bx, coefs_y, n_coefs_y, i, j, k)

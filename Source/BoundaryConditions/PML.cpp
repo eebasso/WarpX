@@ -513,7 +513,7 @@ MultiSigmaBox::MultiSigmaBox (const BoxArray& ba, const DistributionMapping& dm,
 void
 MultiSigmaBox::ComputePMLFactorsB (const Real* dx, Real dt)
 {
-    if (dt == dt_B) return;
+    if (dt == dt_B) { return; }
 
     dt_B = dt;
 
@@ -529,7 +529,7 @@ MultiSigmaBox::ComputePMLFactorsB (const Real* dx, Real dt)
 void
 MultiSigmaBox::ComputePMLFactorsE (const Real* dx, Real dt)
 {
-    if (dt == dt_E) return;
+    if (dt == dt_E) { return; }
 
     dt_E = dt;
 

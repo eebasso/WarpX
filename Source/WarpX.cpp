@@ -3206,8 +3206,8 @@ bool
 WarpX::isAnyBoundaryPML()
 {
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-        if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::PML) return true;
-        if ( WarpX::field_boundary_hi[idim] == FieldBoundaryType::PML) return true;
+        if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::PML) { return true; }
+        if ( WarpX::field_boundary_hi[idim] == FieldBoundaryType::PML) { return true; }
     }
     return false;
 }

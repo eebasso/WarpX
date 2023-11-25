@@ -341,7 +341,7 @@ public:
                                                            p_pair_offsets[i_cell] : 0;
 
                     // Do not collide if there is only one particle in the cell
-                    if ( cell_stop_1 - cell_start_1 <= 1 ) return;
+                    if ( cell_stop_1 - cell_start_1 <= 1 ) { return; }
 
                     // shuffle
                     ShuffleFisherYates(
@@ -502,7 +502,7 @@ public:
 
                     // Do not collide if one species is missing in the cell
                     if ( cell_stop_1 - cell_start_1 < 1 ||
-                        cell_stop_2 - cell_start_2 < 1 ) return;
+                        cell_stop_2 - cell_start_2 < 1 ) { return; }
 
                     // shuffle
                     ShuffleFisherYates(indices_1, cell_start_1, cell_stop_1, engine);

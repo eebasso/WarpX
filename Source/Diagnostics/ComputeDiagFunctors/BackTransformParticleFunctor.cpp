@@ -37,7 +37,7 @@ LorentzTransformParticles::LorentzTransformParticles ( const WarpXParIter& a_pti
 {
     using namespace amrex::literals;
 
-    if (tmp_particle_data.empty()) return;
+    if (tmp_particle_data.empty()) { return; }
     m_get_position = GetParticlePosition<PIdx>(a_pti, a_offset);
 
     auto& attribs = a_pti.GetAttribs();
@@ -80,7 +80,7 @@ BackTransformParticleFunctor::BackTransformParticleFunctor (
 void
 BackTransformParticleFunctor::operator () (PinnedMemoryParticleContainer& pc_dst, int &totalParticleCounter, int i_buffer) const
 {
-    if (m_perform_backtransform[i_buffer] == 0) return;
+    if (m_perform_backtransform[i_buffer] == 0) { return; }
     auto &warpx = WarpX::GetInstance();
     // get particle slice
     const int nlevs = std::max(0, m_pc_src->finestLevel()+1);

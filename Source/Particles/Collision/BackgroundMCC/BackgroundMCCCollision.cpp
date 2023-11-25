@@ -352,7 +352,7 @@ void BackgroundMCCCollision::doBackgroundCollisionsWithinTile
                           [=] AMREX_GPU_HOST_DEVICE (long ip, amrex::RandomEngine const& engine)
                           {
                               // determine if this particle should collide
-                              if (amrex::Random(engine) > total_collision_prob) return;
+                              if (amrex::Random(engine) > total_collision_prob) { return; }
 
                               amrex::ParticleReal x, y, z;
                               GetPosition.AsStored(ip, x, y, z);

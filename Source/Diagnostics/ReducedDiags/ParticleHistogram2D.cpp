@@ -130,7 +130,7 @@ ParticleHistogram2D::ParticleHistogram2D (std::string rd_name)
 void ParticleHistogram2D::ComputeDiags (int step)
 {
     // Judge if the diags should be done at this step
-    if (!m_intervals.contains(step+1)) return;
+    if (!m_intervals.contains(step+1)) { return; }
 
     // resize data array
     Array<int,2> tlo{0,0}; // lower bounds
@@ -226,10 +226,10 @@ void ParticleHistogram2D::ComputeDiags (int step)
 
                                        // determine particle bin
                                        int const bin_abs = int(Math::floor((f_abs-bin_min_abs)/bin_size_abs));
-                                       if ( bin_abs<0 || bin_abs>=num_bins_abs ) return; // discard if out-of-range
+                                       if ( bin_abs<0 || bin_abs>=num_bins_abs ) { return; } // discard if out-of-range
 
                                        int const bin_ord = int(Math::floor((f_ord-bin_min_ord)/bin_size_ord));
-                                       if ( bin_ord<0 || bin_ord>=num_bins_ord ) return; // discard if out-of-range
+                                       if ( bin_ord<0 || bin_ord>=num_bins_ord ) { return; } // discard if out-of-range
 
                                        amrex::Real &data = d_table(bin_abs, bin_ord);
                                        amrex::HostDevice::Atomic::Add(&data, weight);

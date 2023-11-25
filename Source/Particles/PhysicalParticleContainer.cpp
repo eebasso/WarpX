@@ -2479,7 +2479,7 @@ PhysicalParticleContainer::PushP (int lev, Real dt,
 {
     WARPX_PROFILE("PhysicalParticleContainer::PushP()");
 
-    if (do_not_push) return;
+    if (do_not_push) { return; }
 
     const std::array<amrex::Real,3>& dx = WarpX::CellSize(std::max(lev,0));
 
@@ -2660,7 +2660,7 @@ PhysicalParticleContainer::PushPX (WarpXParIter& pti,
                                      (gather_lev==(lev  )),
                                      "Gather buffers only work for lev-1");
     // If no particles, do not do anything
-    if (np_to_push == 0) return;
+    if (np_to_push == 0) { return; }
 
     // Get cell size on gather_lev
     const std::array<Real,3>& dx = WarpX::CellSize(std::max(gather_lev,0));
@@ -2864,7 +2864,7 @@ PhysicalParticleContainer::PushPX (WarpXParIter& pti,
 void
 PhysicalParticleContainer::InitIonizationModule ()
 {
-    if (!do_field_ionization) return;
+    if (!do_field_ionization) { return; }
     const ParmParse pp_species_name(species_name);
     if (charge != PhysConst::q_e){
         ablastr::warn_manager::WMRecordWarning("Species",

@@ -133,7 +133,7 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
 
             [=] AMREX_GPU_DEVICE (int i, int j, int k){
 #ifdef AMREX_USE_EB
-                if(lx(i, j, k) <= 0) return;
+                if(lx(i, j, k) <= 0) { return; }
 #endif
 
                 Ex(i, j, k, PMLComp::xz) -= c2 * dt * (
@@ -148,11 +148,11 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
 #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
 #ifdef WARPX_DIM_3D
-                if (ly(i,j,k) <= 0) return;
+                if (ly(i,j,k) <= 0) { return; }
 #elif defined(WARPX_DIM_XZ)
                 //In XZ Ey is associated with a mesh node, so we need to check if the mesh node is covered
                 amrex::ignore_unused(ly);
-                if (lx(i, j, k)<=0 || lx(i-1, j, k)<=0 || lz(i, j-1, k)<=0 || lz(i, j, k)<=0) return;
+                if (lx(i, j, k)<=0 || lx(i-1, j, k)<=0 || lz(i, j-1, k)<=0 || lz(i, j, k)<=0) { return; }
 #endif
 #endif
                 Ey(i, j, k, PMLComp::yx) -= c2 * dt * (
@@ -165,7 +165,7 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
 
             [=] AMREX_GPU_DEVICE (int i, int j, int k){
 #ifdef AMREX_USE_EB
-                if(lz(i, j, k) <= 0) return;
+                if(lz(i, j, k) <= 0) { return; }
 #endif
 
                 Ez(i, j, k, PMLComp::zy) -= c2 * dt * (

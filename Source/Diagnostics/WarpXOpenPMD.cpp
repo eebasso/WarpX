@@ -304,33 +304,35 @@ namespace detail
     getUnitDimension ( std::string const & record_name )
     {
 
-        if( (record_name == "position") || (record_name == "positionOffset") ) return {
-            {openPMD::UnitDimension::L,  1.}
-        };
-        else if( record_name == "momentum" ) return {
-            {openPMD::UnitDimension::L,  1.},
-            {openPMD::UnitDimension::M,  1.},
-            {openPMD::UnitDimension::T, -1.}
-        };
-        else if( record_name == "charge" ) return {
-            {openPMD::UnitDimension::T,  1.},
-            {openPMD::UnitDimension::I,  1.}
-        };
-        else if( record_name == "mass" ) return {
-            {openPMD::UnitDimension::M,  1.}
-        };
-        else if( record_name == "E" ) return {
-            {openPMD::UnitDimension::L,  1.},
-            {openPMD::UnitDimension::M,  1.},
-            {openPMD::UnitDimension::T, -3.},
-            {openPMD::UnitDimension::I, -1.},
-        };
-        else if( record_name == "B" ) return {
-            {openPMD::UnitDimension::M,  1.},
-            {openPMD::UnitDimension::I, -1.},
-            {openPMD::UnitDimension::T, -2.}
-        };
-        else return {};
+        if( (record_name == "position") || (record_name == "positionOffset") ) {
+            return {{openPMD::UnitDimension::L,  1.}};
+        }
+        else if( record_name == "momentum" ) {
+            return {{openPMD::UnitDimension::L,  1.},
+                    {openPMD::UnitDimension::M,  1.},
+                    {openPMD::UnitDimension::T, -1.}};
+        }
+        else if( record_name == "charge" )  {
+            return {{openPMD::UnitDimension::T,  1.},
+                    {openPMD::UnitDimension::I,  1.}};
+        }
+        else if( record_name == "mass" ) {
+            return {{openPMD::UnitDimension::M,  1.}};
+        }
+        else if( record_name == "E" ) {
+            return {{openPMD::UnitDimension::L,  1.},
+                    {openPMD::UnitDimension::M,  1.},
+                    {openPMD::UnitDimension::T, -3.},
+                    {openPMD::UnitDimension::I, -1.}};
+        }
+        else if( record_name == "B" ) {
+            return {{openPMD::UnitDimension::M,  1.},
+                    {openPMD::UnitDimension::I, -1.},
+                    {openPMD::UnitDimension::T, -2.}};
+        }
+        else {
+            return {};
+        }
     }
 
     /** \brief For a given field that is to be written to an openPMD file,
@@ -1175,8 +1177,8 @@ WarpXOpenPMDPlot::SetupFields ( openPMD::Container< openPMD::Mesh >& meshes,
       meshes.setAttribute("fieldBoundary", fieldBoundary);
       meshes.setAttribute("particleBoundary", particleBoundary);
       meshes.setAttribute("currentSmoothing", []() {
-          if (WarpX::use_filter) return "Binomial";
-          else return "none";
+          if (WarpX::use_filter) { return "Binomial"; }
+          else { return "none"; }
       }());
       if (WarpX::use_filter)
           meshes.setAttribute("currentSmoothingParameters", []() {
@@ -1197,8 +1199,8 @@ WarpXOpenPMDPlot::SetupFields ( openPMD::Container< openPMD::Mesh >& meshes,
               return currentSmoothingParameters;
           }());
       meshes.setAttribute("chargeCorrection", []() {
-          if (WarpX::do_dive_cleaning) return "hyperbolic"; // TODO or "spectral" or something? double-check
-          else return "none";
+          if (WarpX::do_dive_cleaning) { return "hyperbolic"; } // TODO or "spectral" or something? double-check
+          else { return "none"; }
       }());
       if (WarpX::do_dive_cleaning)
           meshes.setAttribute("chargeCorrectionParameters", "period=1");
@@ -1364,7 +1366,7 @@ WarpXOpenPMDPlot::WriteOpenPMDFieldsAll ( //const std::string& filename,
     }
 
     // If there are no fields to be written, interrupt the function here
-    if ( varnames.empty() ) return;
+    if ( varnames.empty() ) { return; }
 
     // loop over levels up to output_levels
     //   note: this is usually the finestLevel, not the maxLevel

@@ -69,7 +69,7 @@ BreitWheelerEngine::init_lookup_tables_from_raw_data (
 {
     auto raw_iter = raw_data.begin();
     const auto size_first = pxr_sr::get_out<uint64_t>(raw_iter);
-    if(size_first <= 0 || size_first >= raw_data.size() ) return false;
+    if(size_first <= 0 || size_first >= raw_data.size() ) { return false; }
 
     const auto raw_dndt_table = vector<char>{
         raw_iter, raw_iter+static_cast<long>(size_first)};

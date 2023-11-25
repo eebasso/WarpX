@@ -502,7 +502,7 @@ BTDiagnostics::InitializeBufferData ( int i_buffer , int lev, bool restart)
 void
 BTDiagnostics::DefineCellCenteredMultiFab(int lev)
 {
-    if (!m_do_back_transformed_fields) return;
+    if (!m_do_back_transformed_fields) { return; }
     // Creating MultiFab to store cell-centered data in boosted-frame for the entire-domain
     // This MultiFab will store all the user-requested fields in the boosted-frame
     auto & warpx = WarpX::GetInstance();
@@ -524,7 +524,7 @@ void
 BTDiagnostics::InitializeFieldFunctors (int lev)
 {
     // Initialize fields functors only if do_back_transformed_fields is selected
-    if (!m_do_back_transformed_fields) return;
+    if (!m_do_back_transformed_fields) { return; }
 
 #ifdef WARPX_DIM_RZ
     // For RZ, initialize field functors RZ for openpmd
@@ -783,7 +783,7 @@ void
 BTDiagnostics::PrepareFieldDataForOutput ()
 {
     // Initialize fields functors only if do_back_transformed_fields is selected
-    if (!m_do_back_transformed_fields) return;
+    if (!m_do_back_transformed_fields) { return; }
 
     auto & warpx = WarpX::GetInstance();
     // In this function, we will get cell-centered data for every level, lev,
@@ -884,7 +884,7 @@ BTDiagnostics::k_index_zlab (int i_buffer, int lev)
 void
 BTDiagnostics::SetSnapshotFullStatus (const int i_buffer)
 {
-   if (m_snapshot_full[i_buffer] == 1) return;
+   if (m_snapshot_full[i_buffer] == 1) { return; }
    // if the last valid z-index of the snapshot, which is 0, is filled, then
    // set the snapshot full integer to 1
    if (m_lastValidZSlice[i_buffer] == 1) m_snapshot_full[i_buffer] = 1;
@@ -894,7 +894,7 @@ BTDiagnostics::SetSnapshotFullStatus (const int i_buffer)
 void
 BTDiagnostics::DefineFieldBufferMultiFab (const int i_buffer, const int lev)
 {
-    if (m_field_buffer_multifab_defined[i_buffer] == 1) return;
+    if (m_field_buffer_multifab_defined[i_buffer] == 1) { return; }
     auto & warpx = WarpX::GetInstance();
 
     const int hi_k_lab = m_buffer_k_index_hi[i_buffer];
@@ -954,7 +954,7 @@ BTDiagnostics::DefineFieldBufferMultiFab (const int i_buffer, const int lev)
 void
 BTDiagnostics::DefineSnapshotGeometry (const int i_buffer, const int lev)
 {
-    if (m_snapshot_geometry_defined[i_buffer] == 1) return;
+    if (m_snapshot_geometry_defined[i_buffer] == 1) { return; }
 
     if (lev == 0) {
         // Default non-periodic geometry for diags

@@ -81,7 +81,7 @@ struct GetExternalEBField
                                            field_Bx, field_By, field_Bz);
         }
 
-        if (m_Etype == None && m_Btype == None) return;
+        if (m_Etype == None && m_Btype == None) { return; }
 
         amrex::ParticleReal Ex = 0._prt;
         amrex::ParticleReal Ey = 0._prt;

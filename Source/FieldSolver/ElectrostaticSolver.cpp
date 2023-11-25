@@ -381,7 +381,7 @@ void
 WarpX::setPhiBC ( amrex::Vector<std::unique_ptr<amrex::MultiFab>>& phi ) const
 {
     // check if any dimension has non-periodic boundary conditions
-    if (!m_poisson_boundary_handler.has_non_periodic) return;
+    if (!m_poisson_boundary_handler.has_non_periodic) { return; }
 
     // get the boundary potentials at the current time
     amrex::Array<amrex::Real,AMREX_SPACEDIM> phi_bc_values_lo;
@@ -641,7 +641,7 @@ WarpX::computeB (amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>, 3> >
                  std::array<amrex::Real, 3> const beta ) const
 {
     // return early if beta is 0 since there will be no B-field
-    if ((beta[0] == 0._rt) && (beta[1] == 0._rt) && (beta[2] == 0._rt)) return;
+    if ((beta[0] == 0._rt) && (beta[1] == 0._rt) && (beta[2] == 0._rt)) { return; }
 
     for (int lev = 0; lev <= max_level; lev++) {
 

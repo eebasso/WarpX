@@ -279,7 +279,7 @@ LaserParticleContainer::LaserParticleContainer (AmrCore* amr_core, int ispecies,
 void
 LaserParticleContainer::ContinuousInjection (const RealBox& injection_box)
 {
-    if (!m_enabled) return;
+    if (!m_enabled) { return; }
 
     // Input parameter injection_box contains small box where injection
     // should occur.
@@ -321,7 +321,7 @@ LaserParticleContainer::ContinuousInjection (const RealBox& injection_box)
 void
 LaserParticleContainer::UpdateAntennaPosition (const amrex::Real dt)
 {
-    if (!m_enabled) return;
+    if (!m_enabled) { return; }
 
     const int dir = WarpX::moving_window_dir;
     if (do_continuous_injection and (WarpX::gamma_boost > 1)){
@@ -350,7 +350,7 @@ LaserParticleContainer::UpdateAntennaPosition (const amrex::Real dt)
 void
 LaserParticleContainer::InitData ()
 {
-    if (!m_enabled) return;
+    if (!m_enabled) { return; }
 
     // Call InitData on max level to inject one laser particle per
     // finest cell.
@@ -367,7 +367,7 @@ LaserParticleContainer::InitData ()
 void
 LaserParticleContainer::InitData (int lev)
 {
-    if (!m_enabled) return;
+    if (!m_enabled) { return; }
 
     // spacing of laser particles in the laser plane.
     // has to be done after geometry is set up.
@@ -566,7 +566,7 @@ LaserParticleContainer::Evolve (int lev,
     WARPX_PROFILE("LaserParticleContainer::Evolve()");
     WARPX_PROFILE_VAR_NS("LaserParticleContainer::Evolve::ParticlePush", blp_pp);
 
-    if (!m_enabled) return;
+    if (!m_enabled) { return; }
 
     Real t_lab = t;
     if (WarpX::gamma_boost > 1) {
@@ -701,7 +701,7 @@ LaserParticleContainer::Evolve (int lev,
 void
 LaserParticleContainer::PostRestart ()
 {
-    if (!m_enabled) return;
+    if (!m_enabled) { return; }
 
     Real Sx, Sy;
     const int lev = finestLevel();

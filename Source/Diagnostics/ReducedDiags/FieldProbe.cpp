@@ -628,7 +628,7 @@ void FieldProbe::ComputeDiags (int step)
 
 void FieldProbe::WriteToFile (int step) const
 {
-    if (!(ProbeInDomain() && amrex::ParallelDescriptor::IOProcessor())) return;
+    if (!(ProbeInDomain() && amrex::ParallelDescriptor::IOProcessor())) { return; }
 
     // loop over num valid particles to find the lowest particle ID for later sorting
     long int first_id = static_cast<long int>(m_data_out[0]);

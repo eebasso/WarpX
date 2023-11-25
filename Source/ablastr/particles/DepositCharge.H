@@ -100,7 +100,7 @@ deposit_charge (typename T_PC::ParIterType& pti,
     }
 
     // If no particles, do not do anything
-    if (np_to_depose == 0) return;
+    if (np_to_depose == 0) { return; }
 
     // Extract deposition order and check that particles shape fits within the guard cells.
     // NOTE: In specific situations where the staggering of rho and the charge deposition algorithm

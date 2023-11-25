@@ -151,7 +151,7 @@ void ChargeOnEB::ComputeDiags (const int step)
             [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 
                 // Only cells that are partially covered do contribute to the integral
-                if (eb_flag_arr(i,j,k).isRegular() || eb_flag_arr(i,j,k).isCovered()) return;
+                if (eb_flag_arr(i,j,k).isRegular() || eb_flag_arr(i,j,k).isCovered()) { return; }
 
                 // Find nodal point which is outside of the EB
                 // (eb_normal points towards the *interior* of the EB)
