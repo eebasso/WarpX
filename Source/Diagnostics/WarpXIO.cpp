@@ -225,7 +225,7 @@ WarpX::InitFromCheckpoint ()
 
         for (int idiag = 0; idiag < multi_diags->GetTotalDiags(); ++idiag)
         {
-            if (multi_diags->diagstypes(idiag) == DiagTypes::BackTransformed )
+            if (multi_diags->diagstypes(idiag) == DiagTypes::BackTransformed)
             {
                 auto& diag = multi_diags->GetDiag(idiag);
                 if (diag.getnumbuffers() > 0) {
