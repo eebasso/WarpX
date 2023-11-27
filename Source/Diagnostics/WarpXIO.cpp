@@ -382,11 +382,13 @@ WarpX::InitFromCheckpoint ()
     if (do_pml)
     {
         for (int lev = 0; lev < nlevs; ++lev) {
-            if (pml[lev])
+            if (pml[lev]) {
                 pml[lev]->Restart(amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "pml"));
+            }
 #if (defined WARPX_DIM_RZ) && (defined WARPX_USE_PSATD)
-            if (pml_rz[lev])
+            if (pml_rz[lev]) {
                 pml_rz[lev]->Restart(amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "pml_rz"));
+            }
 #endif
         }
     }
