@@ -15,7 +15,7 @@
 
 std::map< std::string, std::function<void()> > warpx_callback_py_map;
 
-void InstallPythonCallback (td::string name, std::function<void()> callback)
+void InstallPythonCallback (std::string name, std::function<void()> callback)
 {
     warpx_callback_py_map[name] = callback;
 }
