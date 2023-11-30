@@ -28,7 +28,7 @@ public:
      * constructor
      * @param[in] rd_name reduced diags names
      */
-    RhoMaximum(std::string rd_name);
+    RhoMaximum (std::string rd_name);
 
     /**
      * This function computes the maximum and minimum values of rho (summed over all species) and
@@ -36,7 +36,7 @@ public:
      *
      * @param[in] step current time step
      */
-    void ComputeDiags(int step) final;
+    void ComputeDiags (int step) final;
 
 private:
     /** Vector of (pointers to) functors to compute rho, per level, per species. We reuse here the

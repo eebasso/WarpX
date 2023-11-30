@@ -141,7 +141,7 @@ private:
 // In order for InjectorFlux to be trivially copyable, its destructor
 // must be trivial.  So we have to rely on a custom deleter for unique_ptr.
 struct InjectorFluxDeleter {
-    void operator () (InjectorFlux* p) const {
+    void operator() (InjectorFlux* p) const {
         if (p) {
             p->clear();
             delete p;

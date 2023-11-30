@@ -29,15 +29,15 @@ struct ScaleFields
     {}
 
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-    void operator () (amrex::ParticleReal  /*xp*/,
-                      amrex::ParticleReal  /*yp*/,
-                      amrex::ParticleReal  zp,
-                      amrex::ParticleReal& Exp,
-                      amrex::ParticleReal& Eyp,
-                      amrex::ParticleReal& Ezp,
-                      amrex::ParticleReal& Bxp,
-                      amrex::ParticleReal& Byp,
-                      amrex::ParticleReal& Bzp) const noexcept
+    void operator() (amrex::ParticleReal  /*xp*/,
+                     amrex::ParticleReal  /*yp*/,
+                     amrex::ParticleReal  zp,
+                     amrex::ParticleReal& Exp,
+                     amrex::ParticleReal& Eyp,
+                     amrex::ParticleReal& Ezp,
+                     amrex::ParticleReal& Bxp,
+                     amrex::ParticleReal& Byp,
+                     amrex::ParticleReal& Bzp) const noexcept
     {
         using namespace amrex::literals;
 

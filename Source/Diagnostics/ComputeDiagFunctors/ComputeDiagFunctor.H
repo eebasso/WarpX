@@ -17,16 +17,16 @@ class
 ComputeDiagFunctor
 {
 public:
-    ComputeDiagFunctor( int ncomp, amrex::IntVect crse_ratio) :
+    ComputeDiagFunctor ( int ncomp, amrex::IntVect crse_ratio) :
                         m_ncomp(ncomp), m_crse_ratio(crse_ratio) {}
     //** Virtual Destructor to handle clean destruction of derived classes */
-    virtual ~ComputeDiagFunctor() = default;
+    virtual ~ComputeDiagFunctor () = default;
 
     // Default move and copy operations
-    ComputeDiagFunctor(const ComputeDiagFunctor&) = default;
-    ComputeDiagFunctor& operator=(const ComputeDiagFunctor&) = default;
-    ComputeDiagFunctor(ComputeDiagFunctor&&) = default;
-    ComputeDiagFunctor& operator=(ComputeDiagFunctor&&) = default;
+    ComputeDiagFunctor (const ComputeDiagFunctor&) = default;
+    ComputeDiagFunctor& operator= (const ComputeDiagFunctor&) = default;
+    ComputeDiagFunctor (ComputeDiagFunctor&&) = default;
+    ComputeDiagFunctor& operator= (ComputeDiagFunctor&&) = default;
 
     /** Compute a field and store the result in mf_dst
      *
@@ -65,7 +65,7 @@ public:
                                           current_z_boost, buffer_box,
                                           k_index_zlab, snapshot_full);
                                       }
-    virtual void InitData() {}
+    virtual void InitData () {}
 
     void InterpolateMFForDiag (
         amrex::MultiFab& mf_dst, const amrex::MultiFab& mf_src, int dcomp,

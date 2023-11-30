@@ -62,13 +62,13 @@ struct GetExternalEBField
     bool isNoOp () const { return (m_Etype == None && m_Btype == None && !d_lattice_element_finder.has_value()); }
 
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-    void operator () (long i,
-                      amrex::ParticleReal& field_Ex,
-                      amrex::ParticleReal& field_Ey,
-                      amrex::ParticleReal& field_Ez,
-                      amrex::ParticleReal& field_Bx,
-                      amrex::ParticleReal& field_By,
-                      amrex::ParticleReal& field_Bz) const noexcept
+    void operator() (long i,
+                     amrex::ParticleReal& field_Ex,
+                     amrex::ParticleReal& field_Ey,
+                     amrex::ParticleReal& field_Ez,
+                     amrex::ParticleReal& field_Bx,
+                     amrex::ParticleReal& field_By,
+                     amrex::ParticleReal& field_Bz) const noexcept
     {
         using namespace amrex::literals;
 

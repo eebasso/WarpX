@@ -113,7 +113,7 @@ private:
      */
     void PrepareFieldDataForOutput () override;
     /** The Particle Geometry, BoxArray, and RealBox are set for the lab-frame output */
-    void PrepareParticleDataForOutput() override;
+    void PrepareParticleDataForOutput () override;
 
     /** whether z-slice that corresponds to the buffer, i_buffer, is within the
      *  boosted-domain and lab-frame domains at level, lev.
@@ -255,7 +255,7 @@ private:
      *  or when the buffer is empty. Checked using `buffer_empty(i_buffer)`
      *  \param[in] lev level at which the cell-centered MultiFab is defined.
      */
-    void DefineCellCenteredMultiFab(int lev);
+    void DefineCellCenteredMultiFab (int lev);
     /** Define the cell-centered multi-component output buffer MultiFab for
      *  snapshot, i_buffer, at level, lev
      *
@@ -276,7 +276,7 @@ private:
       * \param[in] t_lab   lab-frame time of the snapshot
       * \param[in] t_boost boosted-frame time at level, lev
       */
-    amrex::Real UpdateCurrentZBoostCoordinate(amrex::Real t_lab, amrex::Real t_boost)
+    amrex::Real UpdateCurrentZBoostCoordinate (amrex::Real t_lab, amrex::Real t_boost)
     {
         const amrex::Real current_z_boost = (t_lab / m_gamma_boost - t_boost) * PhysConst::c / m_beta_boost;
         return current_z_boost;
@@ -285,7 +285,7 @@ private:
       * \param[in] t_lab   lab-frame time of the snapshot
       * \param[in] t_boost boosted-frame time at level, lev
       */
-    amrex::Real UpdateCurrentZLabCoordinate(amrex::Real t_lab, amrex::Real t_boost)
+    amrex::Real UpdateCurrentZLabCoordinate (amrex::Real t_lab, amrex::Real t_boost)
     {
         const amrex::Real current_z_lab = (t_lab - t_boost / m_gamma_boost ) * PhysConst::c / m_beta_boost;
         return current_z_lab;
@@ -325,7 +325,7 @@ private:
     /** Resets integer for first flush to 0 for the ith snapshot (i_buffer).
      *  This function is called after flush the first buffer after restarting the simulation
      */
-    void NullifyFirstFlush(int i_buffer) {m_first_flush_after_restart[i_buffer] = 0;}
+    void NullifyFirstFlush (int i_buffer) {m_first_flush_after_restart[i_buffer] = 0;}
 
     /** Vector of integers to indicate if the snapshot geometry is defined. */
     amrex::Vector<int> m_snapshot_geometry_defined;
@@ -335,13 +335,13 @@ private:
     /** Reset buffer counter to zero.
      * \param[in] i_buffer snapshot index for which the counter is set to zero.
      */
-    void ResetBufferCounter(int i_buffer) {
+    void ResetBufferCounter (int i_buffer) {
         m_buffer_counter[i_buffer] = 0;
     }
     /** Increment buffer counter by one when the buffer of a snapshot has been flushed.
      * \param[in] i_buffer snapshot index for which the counter is incremented.
      */
-    void IncrementBufferFlushCounter(int i_buffer) {
+    void IncrementBufferFlushCounter (int i_buffer) {
         m_buffer_flush_counter[i_buffer]++;
     }
     /** Set Snapshot full status to 1 if the last valid zslice, m_lastValidZSlice,
@@ -381,34 +381,34 @@ private:
     /** Interleave meta-data of the buffer multifabs to be consistent
      *  with the merged plotfile lab-frame data.
      */
-    void InterleaveFabArrayHeader( std::string Buffer_FabHeaderFilename,
+    void InterleaveFabArrayHeader (std::string Buffer_FabHeaderFilename,
                                    std::string snapshot_FabHeaderFilename,
                                    std::string newsnapshot_FabFilename);
     /** Interleave lab-frame metadata of the species header file in the buffers to
      *  be consistent with the merged plotfile lab-frame data
      */
-    void InterleaveSpeciesHeader(std::string buffer_species_Header_path,
-                                 std::string snapshot_species_Header_path,
-                                 std::string species_name, int new_data_index);
+    void InterleaveSpeciesHeader (std::string buffer_species_Header_path,
+                                  std::string snapshot_species_Header_path,
+                                  std::string species_name, int new_data_index);
 
     /** Interleave lab-frame metadata of the particle header file in the buffers to
      *  be consistent with the merged plotfile lab-frame data
      */
-    void InterleaveParticleDataHeader( std::string buffer_ParticleHdrFilename,
+    void InterleaveParticleDataHeader (std::string buffer_ParticleHdrFilename,
                                        std::string snapshot_ParticleHdrFilename);
     /** Initialize particle functors for each species to compute the back-transformed
         lab-frame data. */
     void InitializeParticleFunctors () override;
 
     /** Update total number of particles flushed for all species for ith snapshot */
-    void UpdateTotalParticlesFlushed(int i_buffer);
+    void UpdateTotalParticlesFlushed (int i_buffer);
     /** Reset total number of particles in the particle buffer to 0 for ith snapshot */
-    void ResetTotalParticlesInBuffer(int i_buffer);
+    void ResetTotalParticlesInBuffer (int i_buffer);
     /** Clear particle data stored in the particle buffer */
-    void ClearParticleBuffer(int i_buffer);
+    void ClearParticleBuffer (int i_buffer);
     /** Redistributes particles to the buffer box array in the lab-frame */
     void RedistributeParticleBuffer (int i_buffer);
-    void UpdateVarnamesForRZopenPMD();
+    void UpdateVarnamesForRZopenPMD ();
 
     amrex::Real gettlab (int i_buffer) override {return m_t_lab[i_buffer];}
     void settlab (int i_buffer, amrex::Real tlab) override {m_t_lab[i_buffer] = tlab; }
@@ -418,9 +418,9 @@ private:
     amrex::Real get_snapshot_domain_hi (int i_buffer, int idim) override {return m_snapshot_domain_lab[i_buffer].hi(idim); }
     int get_flush_counter (int i_buffer) override {return m_buffer_flush_counter[i_buffer]; }
     void set_flush_counter ([[maybe_unused]] int i_buffer, int flush_counter) override { m_buffer_flush_counter[i_buffer] = flush_counter; }
-    int get_last_valid_Zslice ( int i_buffer) override { return m_lastValidZSlice[i_buffer]; }
-    void set_last_valid_Zslice ( int i_buffer, int last_valid_Zslice) override { m_lastValidZSlice[i_buffer] = last_valid_Zslice; }
-    int get_snapshot_full_flag ( int i_buffer) override { return m_snapshot_full[i_buffer]; }
-    void set_snapshot_full ( int i_buffer, int snapshot_full) override { m_snapshot_full[i_buffer] = snapshot_full; }
+    int get_last_valid_Zslice (int i_buffer) override { return m_lastValidZSlice[i_buffer]; }
+    void set_last_valid_Zslice (int i_buffer, int last_valid_Zslice) override { m_lastValidZSlice[i_buffer] = last_valid_Zslice; }
+    int get_snapshot_full_flag (int i_buffer) override { return m_snapshot_full[i_buffer]; }
+    void set_snapshot_full (int i_buffer, int snapshot_full) override { m_snapshot_full[i_buffer] = snapshot_full; }
 };
 #endif // WARPX_BTDIAGNOSTICS_H_

@@ -74,7 +74,7 @@ FlushFormatAscent::WriteToFile (
 
 #ifdef AMREX_USE_ASCENT
 void
-FlushFormatAscent::WriteParticles(const amrex::Vector<ParticleDiag>& particle_diags, conduit::Node& a_bp_mesh) const
+FlushFormatAscent::WriteParticles (const amrex::Vector<ParticleDiag>& particle_diags, conduit::Node& a_bp_mesh) const
 {
     WARPX_PROFILE("FlushFormatAscent::WriteParticles()");
 

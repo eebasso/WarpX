@@ -28,7 +28,7 @@ public:
         const amrex::Vector<int>& totalParticlesFlushedAlready = amrex::Vector<int>() ) const = 0;
 
     FlushFormat () = default;
-    virtual ~FlushFormat() = default;
+    virtual ~FlushFormat () = default;
 
     FlushFormat ( FlushFormat const &)             = default;
     FlushFormat& operator= ( FlushFormat const & ) = default;

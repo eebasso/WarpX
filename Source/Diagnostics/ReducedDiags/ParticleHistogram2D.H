@@ -30,7 +30,7 @@ public:
      * constructor
      * @param[in] rd_name reduced diags names
      */
-    ParticleHistogram2D(std::string rd_name);
+    ParticleHistogram2D (std::string rd_name);
 
     /// File type
     std::string m_openpmd_backend {"default"};
@@ -84,7 +84,7 @@ public:
      *
      * @param[in] step current time step
      */
-    void ComputeDiags(int step) final;
+    void ComputeDiags (int step) final;
 
     /**
      * write to file function

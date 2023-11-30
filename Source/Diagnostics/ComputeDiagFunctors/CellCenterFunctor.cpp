@@ -6,7 +6,7 @@
 #include <AMReX_IntVect.H>
 #include <AMReX_MultiFab.H>
 
-CellCenterFunctor::CellCenterFunctor(amrex::MultiFab const * mf_src, int lev,
+CellCenterFunctor::CellCenterFunctor (amrex::MultiFab const * mf_src, int lev,
                                      amrex::IntVect crse_ratio,
                                      bool convertRZmodes2cartesian, int ncomp)
     : ComputeDiagFunctor(ncomp, crse_ratio), m_mf_src(mf_src), m_lev(lev),
@@ -14,7 +14,7 @@ CellCenterFunctor::CellCenterFunctor(amrex::MultiFab const * mf_src, int lev,
 {}
 
 void
-CellCenterFunctor::operator()(amrex::MultiFab& mf_dst, int dcomp, const int /*i_buffer*/) const
+CellCenterFunctor::operator() (amrex::MultiFab& mf_dst, int dcomp, const int /*i_buffer*/) const
 {
     auto& warpx = WarpX::GetInstance();
     InterpolateMFForDiag(mf_dst, *m_mf_src, dcomp, warpx.DistributionMap(m_lev),

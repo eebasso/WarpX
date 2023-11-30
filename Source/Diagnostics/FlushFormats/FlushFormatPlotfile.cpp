@@ -109,7 +109,7 @@ FlushFormatPlotfile::WriteToFile (
 }
 
 void
-FlushFormatPlotfile::WriteJobInfo(const std::string& dir) const
+FlushFormatPlotfile::WriteJobInfo (const std::string& dir) const
 {
 
     auto & warpx = WarpX::GetInstance();
@@ -231,7 +231,7 @@ FlushFormatPlotfile::WriteJobInfo(const std::string& dir) const
 }
 
 void
-FlushFormatPlotfile::WriteWarpXHeader(
+FlushFormatPlotfile::WriteWarpXHeader (
     const std::string& name,
     amrex::Vector<amrex::Geometry>& geom) const
 {
@@ -337,9 +337,9 @@ FlushFormatPlotfile::WriteWarpXHeader(
 }
 
 void
-FlushFormatPlotfile::WriteParticles(const std::string& dir,
-                                    const amrex::Vector<ParticleDiag>& particle_diags,
-                                    const amrex::Real time, bool isBTD) const
+FlushFormatPlotfile::WriteParticles (const std::string& dir,
+                                     const amrex::Vector<ParticleDiag>& particle_diags,
+                                     const amrex::Real time, bool isBTD) const
 {
 
     for (auto& part_diag : particle_diags) {
@@ -542,7 +542,7 @@ WriteCoarseScalar (
 }
 
 void
-FlushFormatPlotfile::WriteAllRawFields(
+FlushFormatPlotfile::WriteAllRawFields (
     const bool plot_raw_fields, const int nlevels, const std::string& plotfilename,
     const bool plot_raw_fields_guards) const
 {

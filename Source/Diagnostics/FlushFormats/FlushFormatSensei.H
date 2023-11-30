@@ -32,13 +32,13 @@ using AmrMeshParticleInSituBridge = void;
 class FlushFormatSensei : public FlushFormat
 {
 public:
-    FlushFormatSensei();
-    ~FlushFormatSensei() override;
+    FlushFormatSensei ();
+    ~FlushFormatSensei () override;
 
-    FlushFormatSensei(const FlushFormatSensei &)            = delete;
-    FlushFormatSensei& operator=(const FlushFormatSensei &) = delete;
-    FlushFormatSensei(FlushFormatSensei&&)                  = default;
-    FlushFormatSensei& operator=(FlushFormatSensei&& )      = default;
+    FlushFormatSensei (const FlushFormatSensei &)            = delete;
+    FlushFormatSensei& operator= (const FlushFormatSensei &) = delete;
+    FlushFormatSensei (FlushFormatSensei&&)                  = default;
+    FlushFormatSensei& operator= (FlushFormatSensei&& )      = default;
 
     /** Construct.
      *
@@ -67,7 +67,7 @@ public:
     /** \brief Do in-situ visualization for particle data.
      * \param[in] particle_diags Each element of this vector handles output of 1 species.
      */
-    void WriteParticles(const amrex::Vector<ParticleDiag>& particle_diags) const;
+    void WriteParticles (const amrex::Vector<ParticleDiag>& particle_diags) const;
 
 private:
     std::string m_insitu_config;

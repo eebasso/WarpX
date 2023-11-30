@@ -42,8 +42,8 @@ public:
 
     Diagnostics (Diagnostics const &)              = delete;
     Diagnostics& operator= (Diagnostics const & )  = delete;
-    Diagnostics(Diagnostics&& )                    = default;
-    Diagnostics& operator=(Diagnostics&& )         = default;
+    Diagnostics (Diagnostics&& )                    = default;
+    Diagnostics& operator= (Diagnostics&& )         = default;
 
     /** Pack (stack) all fields in the cell-centered output MultiFab m_mf_output.
      *
@@ -94,7 +94,7 @@ public:
      * \param[in] force_flush if true, return true for any step
      * \return bool, whether to compute and pack data
      */
-    virtual bool DoComputeAndPack(int step, bool force_flush=false) = 0;
+    virtual bool DoComputeAndPack (int step, bool force_flush=false) = 0;
     /** whether to flush at this time step
      * \param[in] step current time step
      * \param[in] i_buffer index of the buffer data to be flushed.
@@ -114,7 +114,7 @@ public:
     /** Whether the last timestep is always dumped */
     [[nodiscard]] bool DoDumpLastTimestep () const {return  m_dump_last_timestep;}
     /** Returns the number of snapshots used in BTD. For Full-Diagnostics, the value is 1*/
-    int getnumbuffers() {return m_num_buffers;}
+    int getnumbuffers () {return m_num_buffers;}
     /** Time in lab-frame associated with the ith snapshot
      * \param[in] i_buffer index of the buffer
      */
@@ -148,13 +148,13 @@ public:
      * \param[in] idim dimension along which the lo-end of the lab-frame physical domain is set
      * \param[in] domain_lab_lo value of the lo-end of the lab-frame physical domain for the ith snapshot
      */
-    void setSnapshotDomainLo(int i_buffer, int idim,  amrex::Real domain_lab_lo) {m_snapshot_domain_lab[i_buffer].setLo(idim, domain_lab_lo); }
+    void setSnapshotDomainLo (int i_buffer, int idim,  amrex::Real domain_lab_lo) {m_snapshot_domain_lab[i_buffer].setLo(idim, domain_lab_lo); }
     /** Sets hi-end of the lab-frame physical domain for the ith snapshot in BTD
      * \param[in] i_buffer index of the buffer
      * \param[in] idim dimension along which the hi-end of the lab-frame physical domain is set
      * \param[in] domain_lab_hi value of the hi-end of the lab-frame physical domain for the ith snapshot
      */
-    void setSnapshotDomainHi(int i_buffer, int idim,  amrex::Real domain_lab_hi) {m_snapshot_domain_lab[i_buffer].setHi(idim, domain_lab_hi); }
+    void setSnapshotDomainHi (int i_buffer, int idim,  amrex::Real domain_lab_hi) {m_snapshot_domain_lab[i_buffer].setHi(idim, domain_lab_hi); }
     /** Returns counter for the number of times buffer data for the ith snapshot has been flushed
      * \param[in] i_buffer index of the buffer
      */

@@ -25,7 +25,7 @@ public:
      *
      * \param[in] rd_name reduced diags names
      */
-    ParticleMomentum(std::string rd_name);
+    ParticleMomentum (std::string rd_name);
 
     /**
      * \brief This function computes the particle relativistic momentum,
@@ -34,7 +34,7 @@ public:
      *
      * \param [in] step current time step
      */
-    void ComputeDiags(int step) final;
+    void ComputeDiags (int step) final;
 };
 
 #endif

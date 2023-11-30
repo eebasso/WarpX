@@ -20,15 +20,15 @@ ComputeParticleDiagFunctor
 {
 public:
 
-    ComputeParticleDiagFunctor( ) = default;
+    ComputeParticleDiagFunctor () = default;
     /** Virtual Destructor to handle clean destruction of derived classes */
-    virtual ~ComputeParticleDiagFunctor() = default;
+    virtual ~ComputeParticleDiagFunctor () = default;
 
     /** Default assignment and copy operations*/
-    ComputeParticleDiagFunctor(const ComputeParticleDiagFunctor&) = default;
-    ComputeParticleDiagFunctor& operator=(const ComputeParticleDiagFunctor&) = default;
-    ComputeParticleDiagFunctor(ComputeParticleDiagFunctor&&) = default;
-    ComputeParticleDiagFunctor& operator=(ComputeParticleDiagFunctor&&) = default;
+    ComputeParticleDiagFunctor (const ComputeParticleDiagFunctor&) = default;
+    ComputeParticleDiagFunctor& operator= (const ComputeParticleDiagFunctor&) = default;
+    ComputeParticleDiagFunctor (ComputeParticleDiagFunctor&&) = default;
+    ComputeParticleDiagFunctor& operator= (ComputeParticleDiagFunctor&&) = default;
 
     /** \brief Prepare data required to back-transform particle attribtutes for
      *         lab-frame snapshot, with index i_buffer.
@@ -60,7 +60,7 @@ public:
      *  \param[out] totalParticlesInBuffer total number of particles in the container
      *  \param[in] i_buffer snapshot index for which the particle buffer is processed
      */
-    virtual void operator () (PinnedMemoryParticleContainer& pc_dst, int &totalParticlesInBuffer, int i_buffer = 0) const = 0;
+    virtual void operator() (PinnedMemoryParticleContainer& pc_dst, int &totalParticlesInBuffer, int i_buffer = 0) const = 0;
     virtual void InitData () {}
 };
 

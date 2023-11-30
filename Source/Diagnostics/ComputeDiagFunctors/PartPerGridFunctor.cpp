@@ -20,7 +20,7 @@
 
 #include <memory>
 
-PartPerGridFunctor::PartPerGridFunctor(const amrex::MultiFab * const mf_src, const int lev, const amrex::IntVect crse_ratio, const int ncomp)
+PartPerGridFunctor::PartPerGridFunctor (const amrex::MultiFab * const mf_src, const int lev, const amrex::IntVect crse_ratio, const int ncomp)
     : ComputeDiagFunctor(ncomp, crse_ratio), m_lev(lev)
 {
     // mf_src will not be used, let's make sure it's null.
@@ -30,7 +30,7 @@ PartPerGridFunctor::PartPerGridFunctor(const amrex::MultiFab * const mf_src, con
 }
 
 void
-PartPerGridFunctor::operator()(amrex::MultiFab& mf_dst, const int dcomp, const int /*i_buffer*/) const
+PartPerGridFunctor::operator() (amrex::MultiFab& mf_dst, const int dcomp, const int /*i_buffer*/) const
 {
     auto& warpx = WarpX::GetInstance();
     const amrex::Vector<amrex::Long>& npart_in_grid = warpx.GetPartContainer().NumberOfParticlesInGrid(m_lev);

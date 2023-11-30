@@ -54,7 +54,7 @@ public:
 #endif
 
     FlushFormatAscent ()          = default;
-    ~FlushFormatAscent() override = default;
+    ~FlushFormatAscent () override = default;
 
     FlushFormatAscent ( FlushFormatAscent const &)             = default;
     FlushFormatAscent& operator= ( FlushFormatAscent const & ) = default;

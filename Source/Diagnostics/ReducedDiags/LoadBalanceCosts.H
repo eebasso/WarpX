@@ -54,7 +54,7 @@ public:
      * constructor
      * @param[in] rd_name reduced diags names
      */
-    LoadBalanceCosts(std::string rd_name);
+    LoadBalanceCosts (std::string rd_name);
 
     /**
      * This function updates the costs, given the current distribution mapping,
@@ -62,7 +62,7 @@ public:
      *
      * @param[in] step current time step
      */
-    void ComputeDiags(int step) final;
+    void ComputeDiags (int step) final;
 
     /**
      * write to file function for costs;  this differs from the base class
@@ -71,7 +71,7 @@ public:
      *
      * @param[in] step current time step
      */
-    void WriteToFile(int step) const final;
+    void WriteToFile (int step) const final;
 
 };
 

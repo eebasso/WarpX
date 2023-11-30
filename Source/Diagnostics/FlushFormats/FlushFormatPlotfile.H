@@ -39,9 +39,9 @@ public:
         const amrex::Vector<int>& totalParticlesFlushedAlready = amrex::Vector<int>() ) const override;
 
     /** Write general info of the run into the plotfile */
-    void WriteJobInfo(const std::string& dir) const;
+    void WriteJobInfo (const std::string& dir) const;
     /** Write WarpX-specific plotfile header */
-    void WriteWarpXHeader(const std::string& name, amrex::Vector<amrex::Geometry>& geom) const;
+    void WriteWarpXHeader (const std::string& name, amrex::Vector<amrex::Geometry>& geom) const;
     void WriteAllRawFields (bool plot_raw_fields, int nlevels,
                             const std::string& plotfilename,
                             bool plot_raw_fields_guards) const;
@@ -51,13 +51,13 @@ public:
      * \param[in] time the simulation time on the coarsest level
      * \param[in] isBTD whether this is a back-transformed diagnostic
      */
-    void WriteParticles(const std::string& filename,
-                        const amrex::Vector<ParticleDiag>& particle_diags,
-                        amrex::Real time,
-                        bool isBTD = false) const;
+    void WriteParticles (const std::string& filename,
+                         const amrex::Vector<ParticleDiag>& particle_diags,
+                         amrex::Real time,
+                         bool isBTD = false) const;
 
     FlushFormatPlotfile () = default;
-    ~FlushFormatPlotfile() override = default;
+    ~FlushFormatPlotfile () override = default;
 
     FlushFormatPlotfile ( FlushFormatPlotfile const &)             = default;
     FlushFormatPlotfile& operator= ( FlushFormatPlotfile const & ) = default;

@@ -343,8 +343,8 @@ BTDMultiFabHeaderImpl::SetMaxVal (int ifab, amrex::Vector<amrex::Real> maxval)
 }
 
 void
-BTDMultiFabHeaderImpl::CopyVec(amrex::Vector<amrex::Real>& dst,
-                               amrex::Vector<amrex::Real> src)
+BTDMultiFabHeaderImpl::CopyVec (amrex::Vector<amrex::Real>& dst,
+                                amrex::Vector<amrex::Real> src)
 {
     dst.resize(src.size());
     for (int i = 0; i < src.size(); ++i) {
@@ -451,7 +451,7 @@ BTDSpeciesHeaderImpl::WriteHeader ()
 }
 
 void
-BTDSpeciesHeaderImpl::set_DataIndex(const int lev, const int box_id, const int data_index)
+BTDSpeciesHeaderImpl::set_DataIndex (const int lev, const int box_id, const int data_index)
 {
     m_which_data[lev][box_id] = data_index;
 }

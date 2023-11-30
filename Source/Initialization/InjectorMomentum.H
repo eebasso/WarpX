@@ -831,7 +831,7 @@ private:
 // In order for InjectorMomentum to be trivially copyable, its destructor
 // must be trivial.  So we have to rely on a custom deleter for unique_ptr.
 struct InjectorMomentumDeleter {
-    void operator () (InjectorMomentum* p) const {
+    void operator() (InjectorMomentum* p) const {
         if (p) {
             p->clear();
             delete p;

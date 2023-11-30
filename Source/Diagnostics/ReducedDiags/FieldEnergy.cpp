@@ -156,7 +156,7 @@ void FieldEnergy::ComputeDiags (int step)
 
 // Function that computes the sum of the field squared in RZ
 amrex::Real
-FieldEnergy::ComputeNorm2RZ(const amrex::MultiFab& field, const int lev)
+FieldEnergy::ComputeNorm2RZ (const amrex::MultiFab& field, const int lev)
 {
     // get a reference to WarpX instance
     auto & warpx = WarpX::GetInstance();

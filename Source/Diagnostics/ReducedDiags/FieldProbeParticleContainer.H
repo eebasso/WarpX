@@ -44,7 +44,7 @@ class FieldProbeParticleContainer
 {
 public:
     FieldProbeParticleContainer (amrex::AmrCore* amr_core);
-    ~FieldProbeParticleContainer() override = default;
+    ~FieldProbeParticleContainer () override = default;
 
     FieldProbeParticleContainer ( FieldProbeParticleContainer const &)             = delete;
     FieldProbeParticleContainer& operator= ( FieldProbeParticleContainer const & ) = delete;

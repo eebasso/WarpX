@@ -500,7 +500,7 @@ BTDiagnostics::InitializeBufferData ( int i_buffer , int lev, bool restart)
 }
 
 void
-BTDiagnostics::DefineCellCenteredMultiFab(int lev)
+BTDiagnostics::DefineCellCenteredMultiFab (int lev)
 {
     if (!m_do_back_transformed_fields) return;
     // Creating MultiFab to store cell-centered data in boosted-frame for the entire-domain
@@ -1332,9 +1332,9 @@ BTDiagnostics::InterleaveBufferAndSnapshotHeader ( std::string buffer_Header_pat
 
 
 void
-BTDiagnostics::InterleaveFabArrayHeader(std::string Buffer_FabHeader_path,
-                                        std::string snapshot_FabHeader_path,
-                                        std::string newsnapshot_FabFilename)
+BTDiagnostics::InterleaveFabArrayHeader (std::string Buffer_FabHeader_path,
+                                         std::string snapshot_FabHeader_path,
+                                         std::string newsnapshot_FabFilename)
 {
     BTDMultiFabHeaderImpl snapshot_FabHeader(snapshot_FabHeader_path);
     snapshot_FabHeader.ReadMultiFabHeader();
@@ -1362,9 +1362,9 @@ BTDiagnostics::InterleaveFabArrayHeader(std::string Buffer_FabHeader_path,
 }
 
 void
-BTDiagnostics::InterleaveSpeciesHeader(std::string buffer_species_Header_path,
-                                       std::string snapshot_species_Header_path,
-                                       std::string species_name, const int new_data_index)
+BTDiagnostics::InterleaveSpeciesHeader (std::string buffer_species_Header_path,
+                                        std::string snapshot_species_Header_path,
+                                        std::string species_name, const int new_data_index)
 {
     BTDSpeciesHeaderImpl BufferSpeciesHeader(buffer_species_Header_path,
                                              species_name);
@@ -1386,8 +1386,8 @@ BTDiagnostics::InterleaveSpeciesHeader(std::string buffer_species_Header_path,
 }
 
 void
-BTDiagnostics::InterleaveParticleDataHeader(std::string buffer_ParticleHdrFilename,
-                                           std::string snapshot_ParticleHdrFilename)
+BTDiagnostics::InterleaveParticleDataHeader (std::string buffer_ParticleHdrFilename,
+                                             std::string snapshot_ParticleHdrFilename)
 {
     BTDParticleDataHeaderImpl BufferParticleHeader(buffer_ParticleHdrFilename);
     BufferParticleHeader.ReadHeader();
@@ -1447,7 +1447,7 @@ BTDiagnostics::InitializeParticleBuffer ()
 }
 
 void
-BTDiagnostics::PrepareParticleDataForOutput()
+BTDiagnostics::PrepareParticleDataForOutput ()
 {
     for (int lev = 0; lev < nlev_output; ++lev) {
         for (int i = 0; i < m_all_particle_functors.size(); ++i)
@@ -1485,7 +1485,7 @@ BTDiagnostics::PrepareParticleDataForOutput()
 }
 
 void
-BTDiagnostics::UpdateTotalParticlesFlushed(int i_buffer)
+BTDiagnostics::UpdateTotalParticlesFlushed (int i_buffer)
 {
     for (int isp = 0; isp < m_totalParticles_flushed_already[i_buffer].size(); ++isp) {
         m_totalParticles_flushed_already[i_buffer][isp] += static_cast<int>(
@@ -1494,7 +1494,7 @@ BTDiagnostics::UpdateTotalParticlesFlushed(int i_buffer)
 }
 
 void
-BTDiagnostics::ResetTotalParticlesInBuffer(int i_buffer)
+BTDiagnostics::ResetTotalParticlesInBuffer (int i_buffer)
 {
     std::fill(
         m_totalParticles_in_buffer[i_buffer].begin(),
@@ -1503,7 +1503,7 @@ BTDiagnostics::ResetTotalParticlesInBuffer(int i_buffer)
 }
 
 void
-BTDiagnostics::ClearParticleBuffer(int i_buffer)
+BTDiagnostics::ClearParticleBuffer (int i_buffer)
 {
     std::for_each(
         m_particles_buffer[i_buffer].begin(),

@@ -50,7 +50,7 @@ public:
      * constructor
      * @param[in] rd_name reduced diags names
      */
-    FieldReduction(std::string rd_name);
+    FieldReduction (std::string rd_name);
 
     /**
      * This function is called at every time step, and if necessary calls the templated function
@@ -58,13 +58,13 @@ public:
      *
      * @param[in] step the timestep
      */
-    void ComputeDiags(int step) final;
+    void ComputeDiags (int step) final;
 
     /**
      * This function queries deprecated input parameters and aborts
      * the run if one of them is specified.
      */
-    void BackwardCompatibility();
+    void BackwardCompatibility ();
 
 private:
     /// Parser to read expression to be reduced from the input file.
@@ -85,7 +85,7 @@ public:
      *         amrex::ReduceOpMax, amrex::ReduceOpMin or amrex::ReduceOpSum.
      */
     template<typename ReduceOp>
-    void ComputeFieldReduction()
+    void ComputeFieldReduction ()
     {
         using namespace amrex::literals;
 

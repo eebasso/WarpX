@@ -210,7 +210,7 @@ private:
 // In order for InjectorDensity to be trivially copyable, its destructor
 // must be trivial.  So we have to rely on a custom deleter for unique_ptr.
 struct InjectorDensityDeleter {
-    void operator () (InjectorDensity* p) const {
+    void operator() (InjectorDensity* p) const {
         if (p) {
             p->clear();
             delete p;

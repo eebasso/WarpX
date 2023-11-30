@@ -13,9 +13,9 @@
 #include <AMReX_IntVect.H>
 #include <AMReX_MultiFab.H>
 
-DivEFunctor::DivEFunctor(const std::array<const amrex::MultiFab* const, 3> arr_mf_src, const int lev,
-                         const amrex::IntVect crse_ratio,
-                         bool convertRZmodes2cartesian, const int ncomp)
+DivEFunctor::DivEFunctor (const std::array<const amrex::MultiFab* const, 3> arr_mf_src, const int lev,
+                          const amrex::IntVect crse_ratio,
+                          bool convertRZmodes2cartesian, const int ncomp)
     : ComputeDiagFunctor(ncomp, crse_ratio), m_arr_mf_src(arr_mf_src), m_lev(lev),
       m_convertRZmodes2cartesian(convertRZmodes2cartesian)
 {
@@ -23,7 +23,7 @@ DivEFunctor::DivEFunctor(const std::array<const amrex::MultiFab* const, 3> arr_m
 }
 
 void
-DivEFunctor::operator()(amrex::MultiFab& mf_dst, const int dcomp, const int /*i_buffer*/) const
+DivEFunctor::operator() (amrex::MultiFab& mf_dst, const int dcomp, const int /*i_buffer*/) const
 {
     auto& warpx = WarpX::GetInstance();
     // Guard cell is set to 1 for generality. However, for a cell-centered

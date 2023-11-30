@@ -28,7 +28,7 @@ public:
      * constructor
      * @param[in] rd_name reduced diags names
      */
-    ParticleHistogram(std::string rd_name);
+    ParticleHistogram (std::string rd_name);
 
     /// normalization type
     int m_norm;
@@ -62,7 +62,7 @@ public:
      *
      * @param[in] step current time step
      */
-    void ComputeDiags(int step) final;
+    void ComputeDiags (int step) final;
 
 };
 
