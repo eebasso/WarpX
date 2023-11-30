@@ -90,21 +90,21 @@ template<
     typename T_FArrayBoxFactory = void
 >
 void
-computeVectorPotential   (  amrex::Vector<amrex::Array<amrex::MultiFab*, 3> > const & curr,
-                            amrex::Vector<amrex::Array<amrex::MultiFab*, 3> > & A,
-                            amrex::Real const relative_tolerance,
-                            amrex::Real absolute_tolerance,
-                            int const max_iters,
-                            int const verbosity,
-                            amrex::Vector<amrex::Geometry> const geom,
-                            amrex::Vector<amrex::DistributionMapping> const dmap,
-                            amrex::Vector<amrex::BoxArray> const grids,
-                            T_BoundaryHandler const boundary_handler,
-                            bool const do_single_precision_comms = false,
-                            std::optional<amrex::Vector<amrex::IntVect> > rel_ref_ratio = std::nullopt,
-                            [[maybe_unused]] T_PostACalculationFunctor post_A_calculation = std::nullopt,
-                            [[maybe_unused]] std::optional<amrex::Real const> current_time = std::nullopt, // only used for EB
-                            [[maybe_unused]] std::optional<amrex::Vector<T_FArrayBoxFactory const *> > eb_farray_box_factory = std::nullopt // only used for EB
+computeVectorPotential (amrex::Vector<amrex::Array<amrex::MultiFab*, 3> > const & curr,
+                        amrex::Vector<amrex::Array<amrex::MultiFab*, 3> > & A,
+                        amrex::Real const relative_tolerance,
+                        amrex::Real absolute_tolerance,
+                        int const max_iters,
+                        int const verbosity,
+                        amrex::Vector<amrex::Geometry> const geom,
+                        amrex::Vector<amrex::DistributionMapping> const dmap,
+                        amrex::Vector<amrex::BoxArray> const grids,
+                        T_BoundaryHandler const boundary_handler,
+                        bool const do_single_precision_comms = false,
+                        std::optional<amrex::Vector<amrex::IntVect> > rel_ref_ratio = std::nullopt,
+                        [[maybe_unused]] T_PostACalculationFunctor post_A_calculation = std::nullopt,
+                        [[maybe_unused]] std::optional<amrex::Real const> current_time = std::nullopt, // only used for EB
+                        [[maybe_unused]] std::optional<amrex::Vector<T_FArrayBoxFactory const *> > eb_farray_box_factory = std::nullopt // only used for EB
 )
 {
     using namespace amrex::literals;

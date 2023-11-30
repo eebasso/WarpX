@@ -12,13 +12,13 @@
 using namespace ablastr::utils::timer;
 
 void
-Timer::record_start_time() noexcept
+Timer::record_start_time () noexcept
 {
     m_start_time = amrex::ParallelDescriptor::second();
 }
 
 void
-Timer::record_stop_time() noexcept
+Timer::record_stop_time () noexcept
 {
     m_stop_time = amrex::ParallelDescriptor::second();
 }

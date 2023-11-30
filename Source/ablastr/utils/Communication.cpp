@@ -25,10 +25,10 @@
 namespace ablastr::utils::communication
 {
 
-void ParallelCopy(amrex::MultiFab &dst, const amrex::MultiFab &src, int src_comp, int dst_comp, int num_comp,
-                  const amrex::IntVect &src_nghost, const amrex::IntVect &dst_nghost,
-                  bool do_single_precision_comms, const amrex::Periodicity &period,
-                  amrex::FabArrayBase::CpOp op)
+void ParallelCopy (amrex::MultiFab &dst, const amrex::MultiFab &src, int src_comp, int dst_comp, int num_comp,
+                   const amrex::IntVect &src_nghost, const amrex::IntVect &dst_nghost,
+                   bool do_single_precision_comms, const amrex::Periodicity &period,
+                   amrex::FabArrayBase::CpOp op)
 {
     BL_PROFILE("ablastr::utils::communication::ParallelCopy");
 
@@ -60,9 +60,9 @@ void ParallelCopy(amrex::MultiFab &dst, const amrex::MultiFab &src, int src_comp
     }
 }
 
-void ParallelAdd(amrex::MultiFab &dst, const amrex::MultiFab &src, int src_comp, int dst_comp, int num_comp,
-                 const amrex::IntVect &src_nghost, const amrex::IntVect &dst_nghost,
-                 bool do_single_precision_comms, const amrex::Periodicity &period)
+void ParallelAdd (amrex::MultiFab &dst, const amrex::MultiFab &src, int src_comp, int dst_comp, int num_comp,
+                  const amrex::IntVect &src_nghost, const amrex::IntVect &dst_nghost,
+                  bool do_single_precision_comms, const amrex::Periodicity &period)
 {
     ablastr::utils::communication::ParallelCopy(dst, src, src_comp, dst_comp, num_comp, src_nghost, dst_nghost,
                                                 do_single_precision_comms, period, amrex::FabArrayBase::ADD);

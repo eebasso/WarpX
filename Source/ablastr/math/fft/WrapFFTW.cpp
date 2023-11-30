@@ -16,9 +16,9 @@
 namespace ablastr::math::anyfft
 {
 
-    void setup(){/*nothing to do*/}
+    void setup (){/*nothing to do*/}
 
-    void cleanup(){/*nothing to do*/}
+    void cleanup (){/*nothing to do*/}
 
 #ifdef AMREX_USE_FLOAT
     const auto VendorCreatePlanR2C3D = fftwf_plan_dft_r2c_3d;
@@ -32,8 +32,8 @@ namespace ablastr::math::anyfft
     const auto VendorCreatePlanC2R2D = fftw_plan_dft_c2r_2d;
 #endif
 
-    FFTplan CreatePlan(const amrex::IntVect& real_size, amrex::Real * const real_array,
-                       Complex * const complex_array, const direction dir, const int dim)
+    FFTplan CreatePlan (const amrex::IntVect& real_size, amrex::Real * const real_array,
+                        Complex * const complex_array, const direction dir, const int dim)
     {
         FFTplan fft_plan;
 
@@ -82,7 +82,7 @@ namespace ablastr::math::anyfft
         return fft_plan;
     }
 
-    void DestroyPlan(FFTplan& fft_plan)
+    void DestroyPlan (FFTplan& fft_plan)
     {
 #  ifdef AMREX_USE_FLOAT
         fftwf_destroy_plan( fft_plan.m_plan );
@@ -91,7 +91,7 @@ namespace ablastr::math::anyfft
 #  endif
     }
 
-    void Execute(FFTplan& fft_plan){
+    void Execute (FFTplan& fft_plan){
 #  ifdef AMREX_USE_FLOAT
         fftwf_execute( fft_plan.m_plan );
 #  else

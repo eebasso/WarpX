@@ -302,9 +302,9 @@ PEC::ApplyPECtoRhofield (amrex::MultiFab* rho, const int lev, PatchType patch_ty
 
 
 void
-PEC::ApplyPECtoJfield(amrex::MultiFab* Jx, amrex::MultiFab* Jy,
-                      amrex::MultiFab* Jz, const int lev,
-                      PatchType patch_type)
+PEC::ApplyPECtoJfield (amrex::MultiFab* Jx, amrex::MultiFab* Jy,
+                       amrex::MultiFab* Jz, const int lev,
+                       PatchType patch_type)
 {
     auto& warpx = WarpX::GetInstance();
 

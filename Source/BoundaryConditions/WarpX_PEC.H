@@ -29,7 +29,8 @@ using namespace amrex;
      * \returns 1 if the boundary type is PEC else 0
      */
     AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-    bool is_boundary_PEC (amrex::GpuArray<int, 3> const& fboundary, int dir) {
+    bool is_boundary_PEC (amrex::GpuArray<int, 3> const& fboundary, int dir)
+    {
         return ( fboundary[dir] == FieldBoundaryType::PEC );
     }
 
@@ -43,7 +44,8 @@ using namespace amrex;
      * \returns 1 if the boundary type is reflecting else 0
      */
     AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-    bool is_boundary_reflecting (amrex::GpuArray<ParticleBoundaryType, 3> const& pboundary, int dir) {
+    bool is_boundary_reflecting (amrex::GpuArray<ParticleBoundaryType, 3> const& pboundary, int dir)
+    {
         return ( pboundary[dir] == ParticleBoundaryType::Reflecting );
     }
 
@@ -64,9 +66,9 @@ using namespace amrex;
      * \returns number of grid points to the boundary
      */
     AMREX_GPU_DEVICE AMREX_FORCE_INLINE
-    int get_cell_count_to_boundary (const amrex::IntVect& dom_lo,
-        const amrex::IntVect& dom_hi, const amrex::IntVect& ijk_vec,
-        const amrex::IntVect& is_nodal, const int idim, const int iside)
+    int get_cell_count_to_boundary (const amrex::IntVect& dom_lo, const amrex::IntVect& dom_hi,
+                                    const amrex::IntVect& ijk_vec, const amrex::IntVect& is_nodal,
+                                    const int idim, const int iside)
     {
         return ((iside == 0) ? (dom_lo[idim] - ijk_vec[idim])
                              : (ijk_vec[idim] - (dom_hi[idim] + is_nodal[idim])));
@@ -140,12 +142,12 @@ using namespace amrex;
      */
     AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     void SetEfieldOnPEC (const int icomp, const amrex::IntVect & dom_lo,
-                                const amrex::IntVect &dom_hi,
-                                const amrex::IntVect &ijk_vec, const int n,
-                                amrex::Array4<amrex::Real> const& Efield,
-                                const amrex::IntVect& is_nodal,
-                                amrex::GpuArray<int, 3> const& fbndry_lo,
-                                amrex::GpuArray<int, 3> const& fbndry_hi )
+                         const amrex::IntVect &dom_hi,
+                         const amrex::IntVect &ijk_vec, const int n,
+                         amrex::Array4<amrex::Real> const& Efield,
+                         const amrex::IntVect& is_nodal,
+                         amrex::GpuArray<int, 3> const& fbndry_lo,
+                         amrex::GpuArray<int, 3> const& fbndry_hi)
     {
         // Tangential Efield componentes in guard cells set equal and opposite to cells
         // in the mirror locations across the PEC boundary, whereas normal E-field
@@ -269,12 +271,12 @@ using namespace amrex;
      */
     AMREX_GPU_DEVICE AMREX_FORCE_INLINE
     void SetBfieldOnPEC (const int icomp, const amrex::IntVect & dom_lo,
-                           const amrex::IntVect & dom_hi,
-                           const amrex::IntVect & ijk_vec, const int n,
-                           amrex::Array4<amrex::Real> const& Bfield,
-                           const amrex::IntVect & is_nodal,
-                           amrex::GpuArray<int, 3> const& fbndry_lo,
-                           amrex::GpuArray<int, 3> const& fbndry_hi )
+                         const amrex::IntVect & dom_hi,
+                         const amrex::IntVect & ijk_vec, const int n,
+                         amrex::Array4<amrex::Real> const& Bfield,
+                         const amrex::IntVect & is_nodal,
+                         amrex::GpuArray<int, 3> const& fbndry_lo,
+                         amrex::GpuArray<int, 3> const& fbndry_hi )
     {
         amrex::IntVect ijk_mirror = ijk_vec;
         bool OnPECBoundary = false;
@@ -459,7 +461,7 @@ using namespace amrex;
 
 
     /** Returns 1 if any domain boundary is set to PEC, else returns 0.*/
-    bool isAnyBoundaryPEC();
+    bool isAnyBoundaryPEC ();
     /**
      * \brief Sets the tangential electric field at the PEC boundary to zero.
      *        The guard cell values are set equal and opposite to the valid cell
@@ -471,9 +473,9 @@ using namespace amrex;
      * \param[in]     split_pml_field whether pml the multifab is the regular Efield or
      *                                split pml field
      */
-    void ApplyPECtoEfield ( std::array<amrex::MultiFab*, 3> Efield,
-                            int lev, PatchType patch_type,
-                            bool split_pml_field = false);
+    void ApplyPECtoEfield (std::array<amrex::MultiFab*, 3> Efield,
+                           int lev, PatchType patch_type,
+                           bool split_pml_field = false);
     /**
      * \brief Sets the normal component of the magnetic field at the PEC boundary to zero.
      *        The guard cell values are set equal and opposite to the valid cell
@@ -483,8 +485,8 @@ using namespace amrex;
      * \param[in]     lev        level of the Multifab
      * \param[in]     patch_type coarse or fine
      */
-    void ApplyPECtoBfield ( std::array<amrex::MultiFab*, 3> Bfield,
-                            int lev, PatchType patch_type);
+    void ApplyPECtoBfield (std::array<amrex::MultiFab*, 3> Bfield,
+                           int lev, PatchType patch_type);
 
     /**
      * \brief Reflects charge density deposited over the PEC boundary back into
@@ -494,8 +496,8 @@ using namespace amrex;
      * \param[in]     lev        level of the Multifab
      * \param[in]     patch_type coarse or fine
      */
-    void ApplyPECtoRhofield(amrex::MultiFab* rho, int lev,
-                            PatchType patch_type);
+    void ApplyPECtoRhofield (amrex::MultiFab* rho, int lev,
+                             PatchType patch_type);
 
     /**
      * \brief Reflects current density deposited over the PEC boundary back into
@@ -505,9 +507,9 @@ using namespace amrex;
      * \param[in]     lev        level of the Multifab
      * \param[in]     patch_type coarse or fine
      */
-    void ApplyPECtoJfield(amrex::MultiFab* Jx, amrex::MultiFab* Jy,
-                          amrex::MultiFab* Jz, int lev,
-                          PatchType patch_type);
+    void ApplyPECtoJfield (amrex::MultiFab* Jx, amrex::MultiFab* Jy,
+                           amrex::MultiFab* Jz, int lev,
+                           PatchType patch_type);
 
     /**
      * \brief Apply the PEC boundary to the electron pressure field.

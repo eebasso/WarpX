@@ -10,8 +10,8 @@
 namespace ablastr::math::anyfft
 {
 
-    void setup(){/*nothing to do*/}
+    void setup (){/*nothing to do*/}
 
-    void cleanup(){/*nothing to do*/}
+    void cleanup (){/*nothing to do*/}
 
 }

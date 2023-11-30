@@ -18,7 +18,7 @@
 using namespace amrex::literals;
 using namespace amrex;
 
-void WarpX::ApplyEfieldBoundary(const int lev, PatchType patch_type)
+void WarpX::ApplyEfieldBoundary (const int lev, PatchType patch_type)
 {
     if (PEC::isAnyBoundaryPEC()) {
         if (patch_type == PatchType::fine) {

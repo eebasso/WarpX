@@ -36,7 +36,7 @@ namespace
     * @return the messages of the "gather rank" as a byte array
     */
     std::vector<char>
-    get_serialized_gather_rank_msgs(
+    get_serialized_gather_rank_msgs (
         const std::vector<Msg>& my_msgs,
         int gather_rank,
         int my_rank);
@@ -51,7 +51,7 @@ namespace
     * @return a byte array to send back to the "gather rank" (or a dummy vector in case is_gather_rank is true)
     */
     std::vector<char>
-    compute_package_for_gather_rank(
+    compute_package_for_gather_rank (
         const std::vector<char>& serialized_gather_rank_msgs,
         std::int64_t gather_rank_how_many_msgs,
         const std::map<Msg, std::int64_t>& my_msg_map,
@@ -72,7 +72,7 @@ namespace
     * @return (see function description)
     */
     std::pair<std::vector<char>, std::vector<int>>
-    gather_all_data(
+    gather_all_data (
         const std::vector<char>& package_for_gather_rank,
         int gather_rank, int my_rank);
 
@@ -82,7 +82,7 @@ namespace
     * @param[in] msgs the vector of Msg struct
     * @return a byte array
     */
-    std::vector<char> serialize_msgs(
+    std::vector<char> serialize_msgs (
         const std::vector<Msg>& msgs);
 
     /**
@@ -91,12 +91,12 @@ namespace
     * @param[in] serialized the byte array
     * @return a vector of Msg struct
     */
-    std::vector<Msg> deserialize_msgs(
+    std::vector<Msg> deserialize_msgs (
         const std::vector<char>& serialized);
 }
 #endif
 
-std::string abl_msg_logger::PriorityToString(const Priority& priority)
+std::string abl_msg_logger::PriorityToString (const Priority& priority)
 {
     if(priority == Priority::high)
         return "high";
@@ -106,7 +106,7 @@ std::string abl_msg_logger::PriorityToString(const Priority& priority)
         return "low";
 }
 
-Priority abl_msg_logger::StringToPriority(const std::string& priority_string)
+Priority abl_msg_logger::StringToPriority (const std::string& priority_string)
 {
     if(priority_string == "high")
         return Priority::high;
@@ -122,7 +122,7 @@ Priority abl_msg_logger::StringToPriority(const std::string& priority_string)
     return Priority::low;
 }
 
-std::vector<char> Msg::serialize() const
+std::vector<char> Msg::serialize () const
 {
     std::vector<char> serialized_msg;
 
@@ -150,7 +150,7 @@ Msg Msg::deserialize (std::vector<char>::const_iterator&& it)
     return Msg::deserialize(it);
 }
 
-std::vector<char> MsgWithCounter::serialize() const
+std::vector<char> MsgWithCounter::serialize () const
 {
     std::vector<char> serialized_msg_with_counter;
 
@@ -177,7 +177,7 @@ MsgWithCounter MsgWithCounter::deserialize (std::vector<char>::const_iterator&& 
     return MsgWithCounter::deserialize(it);
 }
 
-std::vector<char> MsgWithCounterAndRanks::serialize() const
+std::vector<char> MsgWithCounterAndRanks::serialize () const
 {
     std::vector<char> serialized_msg_with_counter_and_ranks;
 
@@ -208,18 +208,18 @@ MsgWithCounterAndRanks::deserialize (std::vector<char>::const_iterator&& it)
     return MsgWithCounterAndRanks::deserialize(it);
 }
 
-Logger::Logger() :
+Logger::Logger () :
     m_rank{amrex::ParallelDescriptor::MyProc()},
     m_num_procs{amrex::ParallelDescriptor::NProcs()},
     m_io_rank{amrex::ParallelDescriptor::IOProcessorNumber()}
 {}
 
-void Logger::record_msg(Msg msg)
+void Logger::record_msg (Msg msg)
 {
     m_messages[msg]++;
 }
 
-std::vector<Msg> Logger::get_msgs() const
+std::vector<Msg> Logger::get_msgs () const
 {
     auto res = std::vector<Msg>{};
 
@@ -229,7 +229,7 @@ std::vector<Msg> Logger::get_msgs() const
     return res;
 }
 
-std::vector<MsgWithCounter> Logger::get_msgs_with_counter() const
+std::vector<MsgWithCounter> Logger::get_msgs_with_counter () const
 {
     auto res = std::vector<MsgWithCounter>{};
 
@@ -240,7 +240,7 @@ std::vector<MsgWithCounter> Logger::get_msgs_with_counter() const
 }
 
 std::vector<MsgWithCounterAndRanks>
-Logger::collective_gather_msgs_with_counter_and_ranks() const
+Logger::collective_gather_msgs_with_counter_and_ranks () const
 {
 
 #ifdef AMREX_USE_MPI
@@ -300,7 +300,7 @@ Logger::collective_gather_msgs_with_counter_and_ranks() const
 }
 
 std::vector<MsgWithCounterAndRanks>
-Logger::one_rank_gather_msgs_with_counter_and_ranks() const
+Logger::one_rank_gather_msgs_with_counter_and_ranks () const
 {
     std::vector<MsgWithCounterAndRanks> res;
     for (const auto& el : m_messages)
@@ -316,7 +316,7 @@ Logger::one_rank_gather_msgs_with_counter_and_ranks() const
 
 #ifdef AMREX_USE_MPI
 
-std::pair<int,int> Logger::find_gather_rank_and_its_msgs(int how_many_msgs) const
+std::pair<int,int> Logger::find_gather_rank_and_its_msgs (int how_many_msgs) const
 {
     int max_items = 0;
     int max_rank = 0;
@@ -341,7 +341,7 @@ std::pair<int,int> Logger::find_gather_rank_and_its_msgs(int how_many_msgs) cons
 }
 
 std::vector<MsgWithCounterAndRanks>
-Logger::compute_msgs_with_counter_and_ranks(
+Logger::compute_msgs_with_counter_and_ranks (
     const std::map<Msg,std::int64_t>& my_msg_map,
     const std::vector<char>& all_data,
     const std::vector<int>& displacements,
@@ -454,7 +454,7 @@ Logger::compute_msgs_with_counter_and_ranks(
     return msgs_with_counter_and_ranks;
 }
 
-void Logger::swap_with_io_rank(
+void Logger::swap_with_io_rank (
     std::vector<MsgWithCounterAndRanks>& msgs_with_counter_and_ranks,
     int gather_rank) const
 {
@@ -491,7 +491,7 @@ void Logger::swap_with_io_rank(
 namespace
 {
 std::vector<char>
-get_serialized_gather_rank_msgs(
+get_serialized_gather_rank_msgs (
     const std::vector<Msg>& my_msgs,
     const int gather_rank,
     const int my_rank)
@@ -522,7 +522,7 @@ get_serialized_gather_rank_msgs(
 }
 
 std::vector<char>
-compute_package_for_gather_rank(
+compute_package_for_gather_rank (
     const std::vector<char>& serialized_gather_rank_msgs,
     const std::int64_t gather_rank_how_many_msgs,
     const std::map<Msg, std::int64_t>& my_msg_map,
@@ -565,7 +565,7 @@ compute_package_for_gather_rank(
 }
 
 std::pair<std::vector<char>, std::vector<int>>
-gather_all_data(
+gather_all_data (
     const std::vector<char>& package_for_gather_rank,
     const int gather_rank, const int my_rank)
 {
@@ -616,7 +616,7 @@ gather_all_data(
     return std::make_pair(all_data, displacements);
 }
 
-std::vector<char> serialize_msgs(
+std::vector<char> serialize_msgs (
     const std::vector<Msg>& msgs)
 {
     auto serialized = std::vector<char>{};
@@ -630,7 +630,7 @@ std::vector<char> serialize_msgs(
     return serialized;
 }
 
-std::vector<Msg> deserialize_msgs(
+std::vector<Msg> deserialize_msgs (
     const std::vector<char>& serialized)
 {
     auto it = serialized.begin();
