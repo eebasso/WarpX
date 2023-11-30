@@ -1038,7 +1038,7 @@ PML::Getj_cp ()
 }
 
 std::array<MultiFab*,3>
-PML::Get_edge_lengths()
+PML::Get_edge_lengths ()
 {
     return {pml_edge_lengths[0].get(), pml_edge_lengths[1].get(), pml_edge_lengths[2].get()};
 }

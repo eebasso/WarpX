@@ -45,7 +45,7 @@ BackTransformFunctor::BackTransformFunctor (amrex::MultiFab const * mf_src, int 
 }
 
 void
-BackTransformFunctor::operator ()(amrex::MultiFab& mf_dst, int /*dcomp*/, const int i_buffer) const
+BackTransformFunctor::operator() (amrex::MultiFab& mf_dst, int /*dcomp*/, const int i_buffer) const
 {
     // Perform back-transformation only if z slice is within the domain stored as 0/1
     // in m_perform_backtransform[i_buffer]

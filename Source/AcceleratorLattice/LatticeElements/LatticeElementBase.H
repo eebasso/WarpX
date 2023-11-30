@@ -32,7 +32,7 @@ struct LatticeElementBase
      * @param[inout] z_location The current z location in the lattice
      */
     void
-    AddElementBase(amrex::ParmParse & pp_element, amrex::ParticleReal & z_location);
+    AddElementBase (amrex::ParmParse & pp_element, amrex::ParticleReal & z_location);
 
     /**
      * \brief Write the base element information to the device

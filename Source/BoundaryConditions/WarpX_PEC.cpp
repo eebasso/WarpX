@@ -16,7 +16,7 @@
 using namespace amrex::literals;
 
 bool
-PEC::isAnyBoundaryPEC() {
+PEC::isAnyBoundaryPEC () {
     for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
         if ( WarpX::field_boundary_lo[idim] == FieldBoundaryType::PEC) return true;
         if ( WarpX::field_boundary_hi[idim] == FieldBoundaryType::PEC) return true;

@@ -120,10 +120,10 @@ class MultiSigmaBox
     : public amrex::FabArray<SigmaBox>
 {
 public:
-    MultiSigmaBox(const amrex::BoxArray& ba, const amrex::DistributionMapping& dm,
-                  const amrex::BoxArray& grid_ba, const amrex::Real* dx,
-                  const amrex::IntVect& ncell, const amrex::IntVect& delta,
-                  const amrex::Box& regular_domain, amrex::Real v_sigma_sb);
+    MultiSigmaBox (const amrex::BoxArray& ba, const amrex::DistributionMapping& dm,
+                   const amrex::BoxArray& grid_ba, const amrex::Real* dx,
+                   const amrex::IntVect& ncell, const amrex::IntVect& delta,
+                   const amrex::Box& regular_domain, amrex::Real v_sigma_sb);
     void ComputePMLFactorsB (const amrex::Real* dx, amrex::Real dt);
     void ComputePMLFactorsE (const amrex::Real* dx, amrex::Real dt);
 private:

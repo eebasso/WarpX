@@ -154,7 +154,7 @@ BackTransformParticleFunctor::operator () (PinnedMemoryParticleContainer& pc_dst
 
 
 void
-BackTransformParticleFunctor::InitData()
+BackTransformParticleFunctor::InitData ()
 {
     m_current_z_boost.resize(m_num_buffers);
     m_old_z_boost.resize(m_num_buffers);

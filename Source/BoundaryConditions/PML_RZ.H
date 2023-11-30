@@ -33,9 +33,9 @@ public:
     PML_RZ (int lev, const amrex::BoxArray& grid_ba, const amrex::DistributionMapping& grid_dm,
             const amrex::Geometry* geom, int ncell, int do_pml_in_domain);
 
-    void ApplyDamping(amrex::MultiFab* Et_fp, amrex::MultiFab* Ez_fp,
-                      amrex::MultiFab* Bt_fp, amrex::MultiFab* Bz_fp,
-                      amrex::Real dt);
+    void ApplyDamping (amrex::MultiFab* Et_fp, amrex::MultiFab* Ez_fp,
+                       amrex::MultiFab* Bt_fp, amrex::MultiFab* Bz_fp,
+                       amrex::Real dt);
 
     std::array<amrex::MultiFab*,2> GetE_fp ();
     std::array<amrex::MultiFab*,2> GetB_fp ();

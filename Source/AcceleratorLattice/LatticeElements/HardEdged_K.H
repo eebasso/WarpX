@@ -22,10 +22,10 @@
  * @return the fraction is returned
  */
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-amrex::ParticleReal hard_edged_fraction(const amrex::ParticleReal z,
-                                        const amrex::ParticleReal zpvdt,
-                                        const amrex::ParticleReal zs,
-                                        const amrex::ParticleReal ze)
+amrex::ParticleReal hard_edged_fraction (const amrex::ParticleReal z,
+                                         const amrex::ParticleReal zpvdt,
+                                         const amrex::ParticleReal zs,
+                                         const amrex::ParticleReal ze)
 {
 
     using namespace amrex::literals;

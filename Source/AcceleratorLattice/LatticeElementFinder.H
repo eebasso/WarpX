@@ -187,13 +187,13 @@ struct LatticeElementFinderDevice
      * @param[out] field_Ex,field_Ey,field_Ez,field_Bx,field_By,field_Bz the gathered E and B fields
      */
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-    void operator () (const long i,
-                      amrex::ParticleReal& field_Ex,
-                      amrex::ParticleReal& field_Ey,
-                      amrex::ParticleReal& field_Ez,
-                      amrex::ParticleReal& field_Bx,
-                      amrex::ParticleReal& field_By,
-                      amrex::ParticleReal& field_Bz) const noexcept
+    void operator() (const long i,
+                     amrex::ParticleReal& field_Ex,
+                     amrex::ParticleReal& field_Ey,
+                     amrex::ParticleReal& field_Ez,
+                     amrex::ParticleReal& field_Bx,
+                     amrex::ParticleReal& field_By,
+                     amrex::ParticleReal& field_Bz) const noexcept
     {
 
         using namespace amrex::literals;

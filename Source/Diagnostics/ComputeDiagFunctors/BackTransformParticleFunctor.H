@@ -32,7 +32,7 @@ struct SelectParticles
      * @param[in] old_z_boost        previous z-position of the slice in boosted frame
      * @param[in] a_offset           index offset for particles to be selected
      */
-    SelectParticles( const WarpXParIter& a_pti, TmpParticles& tmp_particle_data,
+    SelectParticles (const WarpXParIter& a_pti, TmpParticles& tmp_particle_data,
                      amrex::Real current_z_boost, amrex::Real old_z_boost,
                      int a_offset = 0);
 
@@ -104,7 +104,7 @@ struct LorentzTransformParticles
      */
     template <typename DstData, typename SrcData>
     AMREX_GPU_HOST_DEVICE
-    void operator () (const DstData& dst, const SrcData& src, int i_src, int i_dst) const noexcept
+    void operator() (const DstData& dst, const SrcData& src, int i_src, int i_dst) const noexcept
     {
         amrex::ignore_unused(src);
         using namespace amrex::literals;
@@ -199,10 +199,10 @@ class
 BackTransformParticleFunctor final : public ComputeParticleDiagFunctor
 {
 public:
-    BackTransformParticleFunctor(WarpXParticleContainer *pc_src, std::string species_name, int num_buffers);
+    BackTransformParticleFunctor (WarpXParticleContainer *pc_src, std::string species_name, int num_buffers);
     /** Computes the Lorentz transform of source particles to obtain lab-frame data in pc_dst*/
-    void operator () (PinnedMemoryParticleContainer& pc_dst, int &TotalParticleCounter, int i_buffer) const override;
-    void InitData() override;
+    void operator() (PinnedMemoryParticleContainer& pc_dst, int &TotalParticleCounter, int i_buffer) const override;
+    void InitData () override;
     /** \brief Prepare data required to back-transform particle attribtutes for lab-frame snapshot, i_buffer
      *
      * \param[in] i_buffer           index of the snapshot

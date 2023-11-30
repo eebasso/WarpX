@@ -64,7 +64,7 @@ public:
      *            lab-frame data for the user-request fields is written.
      * \param[in] i_buffer buffer index for which the data is transformed.
      */
-    void operator ()(amrex::MultiFab& mf_dst, int dcomp, int i_buffer) const override;
+    void operator() (amrex::MultiFab& mf_dst, int dcomp, int i_buffer) const override;
 
     /** \brief Prepare data required to back-transform fields for lab-frame snapshot, i_buffer
      *
