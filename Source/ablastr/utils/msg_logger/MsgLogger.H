@@ -38,7 +38,7 @@ namespace ablastr::utils::msg_logger
     * @param[in] priority the priority
     * @return the corresponding string
     */
-    std::string PriorityToString(const Priority& priority);
+    std::string PriorityToString (const Priority& priority);
 
     /**
     * \brief This function converts a string into the corresponding
@@ -47,7 +47,7 @@ namespace ablastr::utils::msg_logger
     * @param[in] priority_string the priority string
     * @return the corresponding priority
     */
-    Priority StringToPriority(const std::string& priority_string);
+    Priority StringToPriority (const std::string& priority_string);
 
     /**
     * This struct represents a message, which is composed by
@@ -65,7 +65,7 @@ namespace ablastr::utils::msg_logger
         *
         * @return a byte vector
         */
-        [[nodiscard]] std::vector<char> serialize() const;
+        [[nodiscard]] std::vector<char> serialize () const;
 
         /**
         * \brief This function generates a Msg struct from a byte vector
@@ -73,7 +73,7 @@ namespace ablastr::utils::msg_logger
         * @param[in] it iterator of a byte array
         * @return a Msg struct
         */
-        static Msg deserialize(std::vector<char>::const_iterator& it);
+        static Msg deserialize (std::vector<char>::const_iterator& it);
 
         /**
         * \brief Same as static Msg deserialize(std::vector<char>::const_iterator& it)
@@ -82,7 +82,7 @@ namespace ablastr::utils::msg_logger
         * @param[in] it iterator of a byte array
         * @return a Msg struct
         */
-        static Msg deserialize(std::vector<char>::const_iterator&& it);
+        static Msg deserialize (std::vector<char>::const_iterator&& it);
     };
 
     /**
@@ -101,7 +101,7 @@ namespace ablastr::utils::msg_logger
         *
         * @return a byte vector
         */
-        [[nodiscard]] std::vector<char> serialize() const;
+        [[nodiscard]] std::vector<char> serialize () const;
 
         /**
         * \brief This function generates a MsgWithCounter struct from a byte vector
@@ -109,7 +109,7 @@ namespace ablastr::utils::msg_logger
         * @param[in] it iterator of a byte array
         * @return a MsgWithCounter struct
         */
-        static MsgWithCounter deserialize(std::vector<char>::const_iterator& it);
+        static MsgWithCounter deserialize (std::vector<char>::const_iterator& it);
 
         /**
         * \brief Same as static Msg MsgWithCounter(std::vector<char>::const_iterator& it)
@@ -118,7 +118,7 @@ namespace ablastr::utils::msg_logger
         * @param[in] it iterator of a byte array
         * @return a MsgWithCounter struct
         */
-        static MsgWithCounter deserialize(std::vector<char>::const_iterator&& it);
+        static MsgWithCounter deserialize (std::vector<char>::const_iterator&& it);
     };
 
     /**
@@ -140,7 +140,7 @@ namespace ablastr::utils::msg_logger
         *
         * @return a byte vector
         */
-        [[nodiscard]] std::vector<char> serialize() const;
+        [[nodiscard]] std::vector<char> serialize () const;
 
         /**
         * \brief This function generates a MsgWithCounterAndRanks struct from a byte vector
@@ -148,7 +148,7 @@ namespace ablastr::utils::msg_logger
         * @param[in] it iterator of a byte array
         * @return a MsgWithCounterAndRanks struct
         */
-        static MsgWithCounterAndRanks deserialize(std::vector<char>::const_iterator& it);
+        static MsgWithCounterAndRanks deserialize (std::vector<char>::const_iterator& it);
 
         /**
         * \brief Same as static Msg MsgWithCounterAndRanks(std::vector<char>::const_iterator& it)
@@ -157,7 +157,7 @@ namespace ablastr::utils::msg_logger
         * @param[in] it iterator of a byte array
         * @return a MsgWithCounterAndRanks struct
         */
-        static MsgWithCounterAndRanks deserialize(std::vector<char>::const_iterator&& it);
+        static MsgWithCounterAndRanks deserialize (std::vector<char>::const_iterator&& it);
     };
 
     /**
@@ -170,7 +170,7 @@ namespace ablastr::utils::msg_logger
     * @param[in] r a Msg
     * @return true if l<r, false otherwise
     */
-    constexpr bool operator<(const Msg& l, const Msg& r)
+    constexpr bool operator< (const Msg& l, const Msg& r)
     {
         return
             (l.priority > r.priority) ||
@@ -189,21 +189,21 @@ namespace ablastr::utils::msg_logger
         /**
         * \brief The constructor.
         */
-        Logger();
+        Logger ();
 
         /**
         * \brief This function records a message
         *
         * @param[in] msg a Msg struct
         */
-        void record_msg(Msg msg);
+        void record_msg (Msg msg);
 
         /**
         * \brief This function returns a vector containing the recorded messages
         *
         * @return a vector of the recorded messages
         */
-        [[nodiscard]] std::vector<Msg> get_msgs() const;
+        [[nodiscard]] std::vector<Msg> get_msgs () const;
 
         /**
         * \brief This function returns a vector containing the recorded messages
@@ -212,7 +212,7 @@ namespace ablastr::utils::msg_logger
         * @return a vector of the recorded messages with counters
         */
         [[nodiscard]] std::vector<MsgWithCounter>
-        get_msgs_with_counter() const;
+        get_msgs_with_counter () const;
 
         /**
         * \brief This collective function generates a vector containing the messages
@@ -222,7 +222,7 @@ namespace ablastr::utils::msg_logger
         * @return a vector of messages with counters and ranks if I/O rank, an empty vector otherwise
         */
         [[nodiscard]] std::vector<MsgWithCounterAndRanks>
-        collective_gather_msgs_with_counter_and_ranks() const;
+        collective_gather_msgs_with_counter_and_ranks () const;
 
         private:
 
@@ -233,7 +233,7 @@ namespace ablastr::utils::msg_logger
         * @return a vector of messages with counters and ranks
         */
         [[nodiscard]] std::vector<MsgWithCounterAndRanks>
-        one_rank_gather_msgs_with_counter_and_ranks() const;
+        one_rank_gather_msgs_with_counter_and_ranks () const;
 
 #ifdef AMREX_USE_MPI
         /**
@@ -245,7 +245,7 @@ namespace ablastr::utils::msg_logger
         * @return a pair containing the ID of the "gather rank" and its number of messages
         */
         [[nodiscard]] std::pair<int, int>
-        find_gather_rank_and_its_msgs(int how_many_msgs) const;
+        find_gather_rank_and_its_msgs (int how_many_msgs) const;
 
         /**
         * \brief This function uses data gathered on the "gather rank" to generate
@@ -258,7 +258,7 @@ namespace ablastr::utils::msg_logger
         * @return if gather_rank==m_rank a vector of messages with global counters and emitting rank lists, dummy data otherwise
         */
         [[nodiscard]] std::vector<MsgWithCounterAndRanks>
-        compute_msgs_with_counter_and_ranks(
+        compute_msgs_with_counter_and_ranks (
             const std::map<Msg,std::int64_t>& my_msg_map,
             const std::vector<char>& all_data,
             const std::vector<int>& displacements,
@@ -274,7 +274,7 @@ namespace ablastr::utils::msg_logger
         * @param[in] gather_rank the ID of the "gather rank"
         */
         void
-        swap_with_io_rank(
+        swap_with_io_rank (
         std::vector<MsgWithCounterAndRanks>& msgs_with_counter_and_ranks,
         int gather_rank) const;
 

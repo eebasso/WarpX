@@ -48,12 +48,12 @@ WarnManager& WarnManager::GetInstance() {
     return warn_manager;
 }
 
-WarnManager::WarnManager():
+WarnManager::WarnManager ():
     m_rank{amrex::ParallelDescriptor::MyProc()},
     m_p_logger{std::make_unique<abl_msg_logger::Logger>()}
 {}
 
-void WarnManager::RecordWarning(
+void WarnManager::RecordWarning (
             std::string topic,
             std::string text,
             WarnPriority priority)
@@ -100,7 +100,7 @@ void WarnManager::RecordWarning(
     }
 }
 
-std::string WarnManager::PrintLocalWarnings(const std::string& when) const
+std::string WarnManager::PrintLocalWarnings (const std::string& when) const
 {
     auto all_warnings = m_p_logger->get_msgs_with_counter();
     std::sort(all_warnings.begin(), all_warnings.end(),
@@ -125,7 +125,7 @@ std::string WarnManager::PrintLocalWarnings(const std::string& when) const
     return ss.str();
 }
 
-std::string WarnManager::PrintGlobalWarnings(const std::string& when) const
+std::string WarnManager::PrintGlobalWarnings (const std::string& when) const
 {
     auto all_warnings =
         m_p_logger->collective_gather_msgs_with_counter_and_ranks();
@@ -156,27 +156,27 @@ std::string WarnManager::PrintGlobalWarnings(const std::string& when) const
     return ss.str();
 }
 
-void WarnManager::SetAlwaysWarnImmediately(bool always_warn_immediately)
+void WarnManager::SetAlwaysWarnImmediately (bool always_warn_immediately)
 {
     m_always_warn_immediately = always_warn_immediately;
 }
 
-bool WarnManager::GetAlwaysWarnImmediatelyFlag() const
+bool WarnManager::GetAlwaysWarnImmediatelyFlag () const
 {
     return m_always_warn_immediately;
 }
 
-void WarnManager::SetAbortThreshold(std::optional<WarnPriority> abort_threshold)
+void WarnManager::SetAbortThreshold (std::optional<WarnPriority> abort_threshold)
 {
     m_abort_on_warning_threshold = abort_threshold;
 }
 
-std::optional<WarnPriority> WarnManager::GetAbortThreshold() const
+std::optional<WarnPriority> WarnManager::GetAbortThreshold () const
 {
     return m_abort_on_warning_threshold;
 }
 
-void WarnManager::debug_read_warnings_from_input(const amrex::ParmParse& params)
+void WarnManager::debug_read_warnings_from_input (const amrex::ParmParse& params)
 {
     std::vector<std::string> warnings;
     params.queryarr("test_warnings", warnings);
@@ -212,7 +212,7 @@ void WarnManager::debug_read_warnings_from_input(const amrex::ParmParse& params)
 
 }
 
-std::string WarnManager::PrintWarnMsg(
+std::string WarnManager::PrintWarnMsg (
     const abl_msg_logger::MsgWithCounter& msg_with_counter) const
 {
     std::stringstream ss;
@@ -240,7 +240,7 @@ std::string WarnManager::PrintWarnMsg(
     return ss.str();
 }
 
-std::string WarnManager::PrintWarnMsg(
+std::string WarnManager::PrintWarnMsg (
     const abl_msg_logger::MsgWithCounterAndRanks& msg_with_counter_and_ranks) const
 {
     std::stringstream ss;
@@ -259,7 +259,7 @@ std::string WarnManager::PrintWarnMsg(
     return ss.str();
 }
 
-std::string WarnManager::GetHeader(
+std::string WarnManager::GetHeader (
     const std::string& when,
     const int line_size,
     const bool is_global)
@@ -284,7 +284,7 @@ std::string WarnManager::GetHeader(
 }
 
 std::string
-WarnManager::MsgFormatter(
+WarnManager::MsgFormatter (
         const std::string& msg,
         const int line_size,
         const int tab_size)
@@ -302,12 +302,12 @@ WarnManager::MsgFormatter(
     return ss_out.str();
 }
 
-WarnManager& ablastr::warn_manager::GetWMInstance()
+WarnManager& ablastr::warn_manager::GetWMInstance ()
 {
     return WarnManager::GetInstance();
 }
 
-void ablastr::warn_manager::WMRecordWarning(
+void ablastr::warn_manager::WMRecordWarning (
     std::string topic,
     std::string text,
     WarnPriority priority)

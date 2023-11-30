@@ -61,7 +61,7 @@ namespace ablastr::utils::text
      * @param[in] max_line_length the maximum line length
      * @return an std::vector containing the lines of the wrapped text
      */
-    std::vector<std::string> automatic_text_wrap(
+    std::vector<std::string> automatic_text_wrap (
         const std::string& text, int max_line_length);
 
 }

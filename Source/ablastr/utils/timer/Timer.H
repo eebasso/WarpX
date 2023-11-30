@@ -23,19 +23,19 @@ namespace ablastr::utils::timer
         /**
         * \brief The constructor.
         */
-        Timer() = default;
+        Timer () = default;
 
 
         /**
         * \brief This function records the start time
         */
-        void record_start_time() noexcept;
+        void record_start_time () noexcept;
 
 
         /**
         * \brief This function records the stop time
         */
-        void record_stop_time() noexcept;
+        void record_stop_time () noexcept;
 
 
         /**

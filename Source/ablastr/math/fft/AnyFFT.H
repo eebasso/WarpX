@@ -38,12 +38,12 @@ namespace ablastr::math::anyfft
     /** This function is a wrapper around rocff_setup().
      *  It is a no-op in case rocfft is not used.
     */
-    void setup();
+    void setup ();
 
     /** This function is a wrapper around rocff_cleanup().
      *  It is a no-op in case rocfft is not used.
     */
-    void cleanup();
+    void cleanup ();
 
 #ifdef ABLASTR_USE_FFT
 
@@ -112,18 +112,18 @@ namespace ablastr::math::anyfft
      * \param[in] dir direction, either R2C or C2R
      * \param[in] dim direction, number of dimensions of the arrays. Must be <= AMREX_SPACEDIM.
      */
-    FFTplan CreatePlan(const amrex::IntVect& real_size, amrex::Real* real_array,
-                       Complex* complex_array, direction dir, int dim);
+    FFTplan CreatePlan (const amrex::IntVect& real_size, amrex::Real* real_array,
+                        Complex* complex_array, direction dir, int dim);
 
     /** \brief Destroy library FFT plan.
      * \param[out] fft_plan plan to destroy
      */
-    void DestroyPlan(FFTplan& fft_plan);
+    void DestroyPlan (FFTplan& fft_plan);
 
     /** \brief Perform FFT with backend library.
      * \param[out] fft_plan plan for which the FFT is performed
      */
-    void Execute(FFTplan& fft_plan);
+    void Execute (FFTplan& fft_plan);
 
 #endif
 

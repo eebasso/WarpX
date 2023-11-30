@@ -32,8 +32,7 @@ public:
      * (for performance, it is recommended to allocate pinned host memory).
      */
     AMREX_GPU_DEVICE
-    KernelTimer
-    (const bool do_timing, amrex::Real* cost)
+    KernelTimer (const bool do_timing, amrex::Real* cost)
 #if (defined AMREX_USE_GPU)
         : m_do_timing(do_timing)
 #endif

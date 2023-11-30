@@ -11,12 +11,12 @@
 
 namespace ablastr::math::anyfft
 {
-    void setup()
+    void setup ()
     {
         rocfft_setup();
     }
 
-    void cleanup()
+    void cleanup ()
     {
         rocfft_cleanup();
     }

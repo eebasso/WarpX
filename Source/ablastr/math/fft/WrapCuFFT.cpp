@@ -12,9 +12,9 @@
 namespace ablastr::math::anyfft
 {
 
-    void setup(){/*nothing to do*/}
+    void setup (){/*nothing to do*/}
 
-    void cleanup(){/*nothing to do*/}
+    void cleanup (){/*nothing to do*/}
 
 #ifdef AMREX_USE_FLOAT
     cufftType VendorR2C = CUFFT_R2C;
@@ -26,8 +26,8 @@ namespace ablastr::math::anyfft
 
     std::string cufftErrorToString (const cufftResult& err);
 
-    FFTplan CreatePlan(const amrex::IntVect& real_size, amrex::Real * const real_array,
-                       Complex * const complex_array, const direction dir, const int dim)
+    FFTplan CreatePlan (const amrex::IntVect& real_size, amrex::Real * const real_array,
+                        Complex * const complex_array, const direction dir, const int dim)
     {
         FFTplan fft_plan;
 
@@ -67,12 +67,12 @@ namespace ablastr::math::anyfft
         return fft_plan;
     }
 
-    void DestroyPlan(FFTplan& fft_plan)
+    void DestroyPlan (FFTplan& fft_plan)
     {
         cufftDestroy( fft_plan.m_plan );
     }
 
-    void Execute(FFTplan& fft_plan){
+    void Execute (FFTplan& fft_plan){
         // make sure that this is done on the same GPU stream as the above copy
         cudaStream_t stream = amrex::Gpu::Device::cudaStream();
         cufftSetStream ( fft_plan.m_plan, stream);

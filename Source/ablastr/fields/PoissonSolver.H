@@ -72,7 +72,7 @@ namespace details
      */
     struct PoissonInterpCPtoFP
     {
-        PoissonInterpCPtoFP(
+        PoissonInterpCPtoFP (
                 amrex::Array4<amrex::Real> const phi_fp_arr,
                 amrex::Array4<amrex::Real const> const phi_cp_arr,
                 amrex::IntVect const refratio)

@@ -37,16 +37,16 @@ mixedCopy (amrex::FabArray<FAB1>& dst, amrex::FabArray<FAB2> const& src, int src
     amrex::Gpu::synchronize();
 }
 
-void ParallelCopy(amrex::MultiFab &dst,
-                  const amrex::MultiFab &src,
-                  int src_comp,
-                  int dst_comp,
-                  int num_comp,
-                  const amrex::IntVect &src_nghost,
-                  const amrex::IntVect &dst_nghost,
-                  bool do_single_precision_comms,
-                  const amrex::Periodicity &period = amrex::Periodicity::NonPeriodic(),
-                  amrex::FabArrayBase::CpOp op = amrex::FabArrayBase::COPY);
+void ParallelCopy (amrex::MultiFab &dst,
+                   const amrex::MultiFab &src,
+                   int src_comp,
+                   int dst_comp,
+                   int num_comp,
+                   const amrex::IntVect &src_nghost,
+                   const amrex::IntVect &dst_nghost,
+                   bool do_single_precision_comms,
+                   const amrex::Periodicity &period = amrex::Periodicity::NonPeriodic(),
+                   amrex::FabArrayBase::CpOp op = amrex::FabArrayBase::COPY);
 
 void ParallelAdd (amrex::MultiFab &dst,
                   const amrex::MultiFab &src,
@@ -77,8 +77,8 @@ void FillBoundary (amrex::iMultiFab&         mf,
                    const amrex::Periodicity& period = amrex::Periodicity::NonPeriodic());
 
 void
-FillBoundary(amrex::Vector<amrex::MultiFab *> const &mf, bool do_single_precision_comms,
-             const amrex::Periodicity &period, std::optional<bool> nodal_sync=std::nullopt);
+FillBoundary (amrex::Vector<amrex::MultiFab *> const &mf, bool do_single_precision_comms,
+              const amrex::Periodicity &period, std::optional<bool> nodal_sync=std::nullopt);
 
 void
 SumBoundary (amrex::MultiFab &mf,

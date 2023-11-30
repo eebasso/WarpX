@@ -52,7 +52,7 @@ namespace ablastr::warn_manager
         /**
         * A singleton class should not be cloneable.
         */
-        WarnManager( const WarnManager& ) = delete;
+        WarnManager ( const WarnManager& ) = delete;
 
         /**
         * A singleton class should not be cloneable.
@@ -62,19 +62,19 @@ namespace ablastr::warn_manager
         /**
         * A singleton class should not be assignable.
         */
-        WarnManager& operator=( const WarnManager & ) = delete;
+        WarnManager& operator= ( const WarnManager & ) = delete;
 
         /**
         * A singleton class should not be assignable.
         */
-        WarnManager& operator=( const WarnManager&& ) = delete;
+        WarnManager& operator= ( const WarnManager&& ) = delete;
 
         /**
         * Default destructor
         */
-        ~WarnManager() = default;
+        ~WarnManager () = default;
 
-        static WarnManager& GetInstance();
+        static WarnManager& GetInstance ();
 
         /**
         * \brief This function records a warning message (recording a warning message is thread-safe)
@@ -83,7 +83,7 @@ namespace ablastr::warn_manager
         * @param[in] text the text of the warning message
         * @param[in] priority priority of the warning message ("medium" by default)
          */
-        void RecordWarning(
+        void RecordWarning (
             std::string topic,
             std::string text,
             WarnPriority priority = WarnPriority::medium);
@@ -95,7 +95,7 @@ namespace ablastr::warn_manager
         * @param[in] when a string to mark when the warnings are printed out (it appears in the warning list)
         * @return a string containing the "local" warning list
         */
-        [[nodiscard]] std::string PrintLocalWarnings(
+        [[nodiscard]] std::string PrintLocalWarnings (
             const std::string& when) const;
 
         /**
@@ -105,7 +105,7 @@ namespace ablastr::warn_manager
         * @param[in] when a string to mark when the warnings are printed out (it appears in the warning list)
         * @return a string containing the "global" warning list
         */
-        [[nodiscard]] std::string PrintGlobalWarnings(
+        [[nodiscard]] std::string PrintGlobalWarnings (
             const std::string& when) const;
 
         /**
@@ -113,14 +113,14 @@ namespace ablastr::warn_manager
         *
         * @param[in] always_warn_immediately new value of the m_always_warn_immediately flag
         */
-        void SetAlwaysWarnImmediately(bool always_warn_immediately);
+        void SetAlwaysWarnImmediately (bool always_warn_immediately);
 
         /**
         * \brief Getter for the m_always_warn_immediately
         *
         * @return the m_always_warn_immediately flag
         */
-        [[nodiscard]] bool GetAlwaysWarnImmediatelyFlag() const;
+        [[nodiscard]] bool GetAlwaysWarnImmediatelyFlag () const;
 
         /**
         * \brief Setter for the m_abort_on_warning_threshold flag
@@ -128,14 +128,14 @@ namespace ablastr::warn_manager
         *
         * @param[in] abort_threshold new value of the m_abort_on_warning_threshold flag
         */
-        void SetAbortThreshold(std::optional<WarnPriority> abort_threshold);
+        void SetAbortThreshold (std::optional<WarnPriority> abort_threshold);
 
         /**
         * \brief Getter for the m_abort_on_warning_threshold flag
         *
         * @return the m_abort_on_warning_threshold flag
         */
-        [[nodiscard]] std::optional<WarnPriority> GetAbortThreshold() const;
+        [[nodiscard]] std::optional<WarnPriority> GetAbortThreshold () const;
 
         /**
         * \brief This function reads warning messages from the inputfile. It is intended for
@@ -143,7 +143,7 @@ namespace ablastr::warn_manager
         *
         * @param[in, out] params the inputfile parser
         */
-        void debug_read_warnings_from_input(const amrex::ParmParse& params);
+        void debug_read_warnings_from_input (const amrex::ParmParse& params);
 
         static const int warn_line_size = 80 /*! Maximum line length to be used in formatting warning list*/;
         static const int warn_tab_size = 5 /*! Tabulation size to be used in formatting warning list*/;
@@ -153,7 +153,7 @@ namespace ablastr::warn_manager
         /**
         * The constructor.
         */
-        WarnManager();
+        WarnManager ();
 
         /**
         * \brief This function generates a string for a single entry of the warning list
@@ -163,7 +163,7 @@ namespace ablastr::warn_manager
         * @param[in] msg_with_counter a MessageWithCounter
         * @return a string containing the warning message
         */
-        [[nodiscard]] std::string PrintWarnMsg(
+        [[nodiscard]] std::string PrintWarnMsg (
             const ablastr::utils::msg_logger::MsgWithCounter& msg_with_counter) const;
 
         /**
@@ -174,7 +174,7 @@ namespace ablastr::warn_manager
         * @param[in] msg_with_counter_and_ranks a MsgWithCounterAndRanks
         * @return a string containing the warning message
         */
-        [[nodiscard]] std::string PrintWarnMsg(
+        [[nodiscard]] std::string PrintWarnMsg (
             const ablastr::utils::msg_logger::MsgWithCounterAndRanks& msg_with_counter_and_ranks) const;
 
         /**
@@ -185,7 +185,7 @@ namespace ablastr::warn_manager
         * @param[in] is_global flag: true if the header is for a global warning list, false otherwise
         * @return a string containing the header of the warning list
         */
-        static std::string GetHeader(
+        static std::string GetHeader (
             const std::string& when,
             int line_size,
             bool is_global);
@@ -198,7 +198,7 @@ namespace ablastr::warn_manager
         * @param[in] tab_size tabulation size to be used in formatting warning list
         * @return a string containing the formatted warning message text
         */
-        static std::string MsgFormatter(
+        static std::string MsgFormatter (
             const std::string& msg,
             int line_size,
             int tab_size);
@@ -214,7 +214,7 @@ namespace ablastr::warn_manager
     *
     * @return the instance of the WarnManager class
     */
-    WarnManager& GetWMInstance();
+    WarnManager& GetWMInstance ();
 
     /**
     * \brief Helper function to abbreviate the call to WarnManager::GetInstance().RecordWarning
@@ -224,7 +224,7 @@ namespace ablastr::warn_manager
     * @param[in] text the text of the warning message
     * @param[in] priority priority of the warning message ("medium" by default)
     */
-    void WMRecordWarning(
+    void WMRecordWarning (
         std::string topic,
         std::string text,
         WarnPriority priority = WarnPriority::medium);
