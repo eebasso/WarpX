@@ -58,7 +58,11 @@ public:
                                   const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM>& dx_lev,
                                   const amrex::RealBox& prob_domain_lev);
 
-    const amrex::Vector<MagneticMaterial>& getMagneticMaterialList () { return m_magnetic_materials; }
+    const amrex::Vector<MagneticMaterial>& getMagneticMaterialList ()
+    {
+        // return {m_magmattest, m_magmattest};
+        return m_magnetic_materials;
+    }
 
     /** Gpu Vector with index type of the conductivity multifab */
     amrex::GpuArray<int, 3> sigma_IndexType;
@@ -125,6 +129,8 @@ private:
 
     /** Bool flag on whether magnetic material is present. */
     bool m_magnetic_material_present_flag = false;
+
+    MagneticMaterial m_magmattest = MagneticMaterial();
 
 };
 

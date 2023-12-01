@@ -32,6 +32,7 @@
 
 #include <array>
 #include <memory>
+#include <functional>
 
 using namespace amrex;
 
@@ -105,7 +106,7 @@ void FiniteDifferenceSolver::MacroscopicEvolveE (
 
 #ifndef WARPX_DIM_RZ
 
-// template<typename T_Algo, typename T_MacroAlgo>
+template<typename T_Algo, typename T_MacroAlgo>
 void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
     std::array< std::unique_ptr<amrex::MultiFab>, 3 >& Efield,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& Bfield,
@@ -119,17 +120,17 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
     using Real = amrex::Real;
     using namespace amrex::literals;
 
-    using T_Algo = CartesianYeeAlgorithm; //! debug variable
-    using T_MacroAlgo = BackwardEulerAlgo; //! debug variable
+    // using T_Algo = CartesianYeeAlgorithm; //! debug variable
+    // using T_MacroAlgo = BackwardEulerAlgo; //! debug variable
 
 #ifndef AMREX_USE_EB
     amrex::ignore_unused(edge_lengths);
 #endif
 
-    amrex::MultiFab const& sigma_mf = macroscopic_properties->getsigma_mf();
-    amrex::MultiFab const& epsilon_mf = macroscopic_properties->getepsilon_mf();
-    amrex::MultiFab const& mu_mf = macroscopic_properties->getmu_mf();
-    amrex::iMultiFab const& mag_mat_id_mf = macroscopic_properties->get_MagneticMaterialID_mf();
+    amrex::MultiFab& sigma_mf = macroscopic_properties->getsigma_mf();
+    amrex::MultiFab& epsilon_mf = macroscopic_properties->getepsilon_mf();
+    amrex::MultiFab& mu_mf = macroscopic_properties->getmu_mf();
+    amrex::iMultiFab& mag_mat_id_mf = macroscopic_properties->get_MagneticMaterialID_mf();
 
     // Index type required for calling ablastr::coarsen::sample::Interp to interpolate macroscopic
     // properties from their respective staggering to the Ex, Ey, Ez locations
@@ -147,15 +148,9 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
     for ( amrex::MFIter mfi(*Efield[0], amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi ) {
 
         // Extract field data for this grid/tile
-        amrex::Array4<      Real> const& Ex = Efield[0]->array(mfi);
-        amrex::Array4<      Real> const& Ey = Efield[1]->array(mfi);
-        amrex::Array4<      Real> const& Ez = Efield[2]->array(mfi);
-        amrex::Array4<const Real> const& Bx = Bfield[0]->const_array(mfi);
-        amrex::Array4<const Real> const& By = Bfield[1]->const_array(mfi);
-        amrex::Array4<const Real> const& Bz = Bfield[2]->const_array(mfi);
-        amrex::Array4<const Real> const& jx = Jfield[0]->const_array(mfi);
-        amrex::Array4<const Real> const& jy = Jfield[1]->const_array(mfi);
-        amrex::Array4<const Real> const& jz = Jfield[2]->const_array(mfi);
+        amrex::Array4<Real> const& Bx = Bfield[0]->array(mfi);
+        amrex::Array4<Real> const& By = Bfield[1]->array(mfi);
+        amrex::Array4<Real> const& Bz = Bfield[2]->array(mfi);
 
 #ifdef AMREX_USE_EB
         amrex::Array4<const Real> const& lx = edge_lengths[0]->const_array(mfi);
@@ -164,9 +159,9 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
 #endif
 
         // material prop //
-        amrex::Array4<const Real> const& sigma_arr = sigma_mf.const_array(mfi);
-        amrex::Array4<const Real> const& eps_arr = epsilon_mf.const_array(mfi);
-        amrex::Array4<const Real> const& mu_arr = mu_mf.const_array(mfi);
+        amrex::Array4<Real> const& sigma_arr = sigma_mf.array(mfi);
+        amrex::Array4<Real> const& eps_arr = epsilon_mf.array(mfi);
+        amrex::Array4<Real> const& mu_arr = mu_mf.array(mfi);
 
         // Extract stencil coefficients
         Real const * const AMREX_RESTRICT coefs_x = m_stencil_coefs_x.dataPtr();
@@ -176,17 +171,18 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
         Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
-        auto Hx = [=] AMREX_GPU_DEVICE (int, int, int, int) { return 0.0_rt; };
-        auto Hy = [=] AMREX_GPU_DEVICE (int, int, int, int) { return 0.0_rt; };
-        auto Hz = [=] AMREX_GPU_DEVICE (int, int, int, int) { return 0.0_rt; };
+        // This functor computes Hx = Bx/mu
+        // Note that mu is cell-centered here and will be interpolated/averaged
+        // to the location where the B-field and H-field are defined
+        FieldAccessorMacroscopic const Hx(Bx, mu_arr);
+        FieldAccessorMacroscopic const Hy(By, mu_arr);
+        FieldAccessorMacroscopic const Hz(Bz, mu_arr);
 
+        auto Hy = [=] (int, int, int, int) { return 0.0_rt; };
+        auto Hz = [=] (int, int, int, int) { return 0.0_rt; };
 
-        amrex::Array4<amrex::Real const> const &arr_src;
+        std::function<Real(int, int, int, int)> Hx = [=] (int, int, int, int) { return 0.0_rt; };
 
-        auto const arr_src_safe = [arr_src]
-                AMREX_GPU_DEVICE(int const ix, int const iy, int const iz, int const n) noexcept {
-            return arr_src.contains(ix, iy, iz) ? arr_src(ix, iy, iz, n) : 0.0_rt;
-        };
 
         if (macroscopic_properties->is_magnetic_material_present()) {
             amrex::Array4<Real> const& H_x_arr = Hfield[0]->array(mfi);
@@ -212,29 +208,49 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
                     }
                 }
             );
-            Hx = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-                return Real(0.5*((mag_mat_id(i  ,j,k) >= 0 ?  H_x_arr(i  ,j,k,n) : Bx(i,j,k,n)/mu_arr(i  ,j,k))
-                                +(mag_mat_id(i-1,j,k) >= 0 ?  H_x_arr(i-1,j,k,n) : Bx(i,j,k,n)/mu_arr(i-1,j,k))));
+            Hx = [=] (int i, int j, int k, int n)
+            {
+                return 0.5_rt*( (mag_mat_id(i  ,j,k) >= 0 ? H_x_arr(i  ,j,k,n) : Bx(i,j,k,n)/mu_arr(i  ,j,k))
+                               +(mag_mat_id(i-1,j,k) >= 0 ? H_x_arr(i-1,j,k,n) : Bx(i,j,k,n)/mu_arr(i-1,j,k)) );
             };
-            Hy = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-                return Real(0.5*((mag_mat_id(i,j  ,k) >= 0 ?  H_y_arr(i,j  ,k,n) : By(i,j,k,n)/mu_arr(i,j  ,k))
-                                +(mag_mat_id(i,j-1,k) >= 0 ?  H_y_arr(i,j-1,k,n) : By(i,j,k,n)/mu_arr(i,j-1,k))));
+            Hy = [=] (int i, int j, int k, int n)
+            {
+                return 0.5_rt*( (mag_mat_id(i,j  ,k) >= 0 ? H_y_arr(i,j  ,k,n) : By(i,j,k,n)/mu_arr(i,j  ,k))
+                               +(mag_mat_id(i,j-1,k) >= 0 ? H_y_arr(i,j-1,k,n) : By(i,j,k,n)/mu_arr(i,j-1,k)) );
             };
-            Hz = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-                return Real(0.5*((mag_mat_id(i,j,k  ) >= 0 ?  H_z_arr(i,j,k  ,n) : Bz(i,j,k,n)/mu_arr(i,j,k  ))
-                                +(mag_mat_id(i,j,k-1) >= 0 ?  H_z_arr(i,j,k-1,n) : Bz(i,j,k,n)/mu_arr(i,j,k-1))));
+            Hz = [=] (int i, int j, int k, int n)
+            {
+                return 0.5_rt*( (mag_mat_id(i,j,k  ) >= 0 ? H_z_arr(i,j,k  ,n) : Bz(i,j,k,n)/mu_arr(i,j,k  ))
+                               +(mag_mat_id(i,j,k-1) >= 0 ? H_z_arr(i,j,k-1,n) : Bz(i,j,k,n)/mu_arr(i,j,k-1)) );
             };
         } else {
-            Hx = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-                return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i-1,j,k))*Bx(i,j,k,n);
-            };
-            Hy = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-                return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i,j-1,k))*By(i,j,k,n);
-            };
-            Hz = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-                return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i,j,k-1))*Bz(i,j,k,n);
-            };
+            // Hx = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
+            //     return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i-1,j,k))*Bx(i,j,k,n);
+            // };
+            // Hy = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
+            //     return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i,j-1,k))*By(i,j,k,n);
+            // };
+            // Hz = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
+            //     return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i,j,k-1))*Bz(i,j,k,n);
+            // };
         }
+
+        amrex::Array4<Real> const& sigma_arr = sigma_mf.array(mfi);
+        amrex::Array4<Real> const& eps_arr = epsilon_mf.array(mfi);
+
+        amrex::GpuArray<int, 3> const& sigma_stag = macroscopic_properties->sigma_IndexType;
+        amrex::GpuArray<int, 3> const& epsilon_stag = macroscopic_properties->epsilon_IndexType;
+        amrex::GpuArray<int, 3> const& macro_cr     = macroscopic_properties->macro_cr_ratio;
+        amrex::GpuArray<int, 3> const& Ex_stag = macroscopic_properties->Ex_IndexType;
+        amrex::GpuArray<int, 3> const& Ey_stag = macroscopic_properties->Ey_IndexType;
+        amrex::GpuArray<int, 3> const& Ez_stag = macroscopic_properties->Ez_IndexType;
+
+        amrex::Array4<Real> const& Ex = Efield[0]->array(mfi);
+        amrex::Array4<Real> const& Ey = Efield[1]->array(mfi);
+        amrex::Array4<Real> const& Ez = Efield[2]->array(mfi);
+        amrex::Array4<const Real> const& jx = Jfield[0]->const_array(mfi);
+        amrex::Array4<const Real> const& jy = Jfield[1]->const_array(mfi);
+        amrex::Array4<const Real> const& jz = Jfield[2]->const_array(mfi);
 
         // Extract tileboxes for which to loop
         amrex::Box const& tex  = mfi.tilebox(Efield[0]->ixType().toIntVect());
@@ -242,16 +258,17 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
         amrex::Box const& tez  = mfi.tilebox(Efield[2]->ixType().toIntVect());
         // starting component to interpolate macro properties to Ex, Ey, Ez locations
         const int scomp = 0;
+
         // Loop over the cells and update the fields
         amrex::ParallelFor(tex, tey, tez,
             [=] AMREX_GPU_DEVICE (int i, int j, int k) {
-#ifdef AMREX_USE_EB
+    #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
                 if (lx(i, j, k) <= 0) return;
-#endif
+    #endif
                 // Interpolate conductivity, sigma, to Ex position on the grid
                 amrex::Real const sigma_interp = ablastr::coarsen::sample::Interp(sigma_arr, sigma_stag,
-                                                                                  Ex_stag, macro_cr, i, j, k, scomp);
+                                                                                    Ex_stag, macro_cr, i, j, k, scomp);
                 // Interpolated permittivity, epsilon, to Ex position on the grid
                 amrex::Real const epsilon_interp = ablastr::coarsen::sample::Interp(eps_arr, epsilon_stag,
                                                                                     Ex_stag, macro_cr, i, j, k, scomp);
@@ -289,13 +306,13 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
             },
 
             [=] AMREX_GPU_DEVICE (int i, int j, int k) {
-#ifdef AMREX_USE_EB
+    #ifdef AMREX_USE_EB
                 // Skip field push if this cell is fully covered by embedded boundaries
                 if (lz(i,j,k) <= 0) return;
-#endif
+    #endif
                 // Interpolate conductivity, sigma, to Ez position on the grid
                 amrex::Real const sigma_interp = ablastr::coarsen::sample::Interp(sigma_arr, sigma_stag,
-                                                                                  Ez_stag, macro_cr, i, j, k, scomp);
+                                                                                    Ez_stag, macro_cr, i, j, k, scomp);
                 // Interpolated permittivity, epsilon, to Ez position on the grid
                 amrex::Real const epsilon_interp = ablastr::coarsen::sample::Interp(eps_arr, epsilon_stag,
                                                                                     Ez_stag, macro_cr, i, j, k, scomp);
@@ -308,7 +325,12 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
                                        - jz(i, j, k) );
             }
         );
+
     }
+
+    // use decltype()
 }
+
+
 
 #endif // corresponds to ifndef WARPX_DIM_RZ

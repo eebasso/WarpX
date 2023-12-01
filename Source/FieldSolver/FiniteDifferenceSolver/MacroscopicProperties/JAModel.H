@@ -1,9 +1,7 @@
 #ifndef WARPX_JAMODEL_H_
 #define WARPX_JAMODEL_H_
 
-#include "MacroscopicProperties_fwd.H"
-
-#include "Utils/WarpXConst.H"
+#include "MagneticMaterial.H"
 
 #include <AMReX_Array.H>
 #include <AMReX_REAL.H>

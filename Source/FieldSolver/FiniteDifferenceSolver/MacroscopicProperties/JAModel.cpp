@@ -1,5 +1,6 @@
 #include "JAModel.H"
 #include "LangevinFunctions.H"
+#include "Utils/WarpXConst.H"
 
 JAModel::JAModel (amrex::Real alpha,
                   amrex::Real a,
