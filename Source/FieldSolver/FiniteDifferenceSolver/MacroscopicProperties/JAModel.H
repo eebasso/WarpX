@@ -14,8 +14,9 @@
 /**
  * \brief Jiles-Atherton model of magnetic hysteresis.
  */
-// : public MagneticMaterial
-class JAModel {
+class JAModel
+    : public MagneticMaterial
+{
 public:
 
     /**
@@ -54,8 +55,8 @@ public:
      * Both fields are needed as a way of keeping track of the previous state of the material.
      */
     void UpdateHandM (
-              amrex::Real& H_x     ,       amrex::Real& H_y     ,        amrex::Real& H_z    ,
-              amrex::Real& M_x     ,       amrex::Real& M_y     ,        amrex::Real& M_z    ,
+              amrex::Real& H_x     ,       amrex::Real& H_y     ,       amrex::Real& H_z    ,
+              amrex::Real& M_x     ,       amrex::Real& M_y     ,       amrex::Real& M_z    ,
         const amrex::Real& B_next_x, const amrex::Real& B_next_y, const amrex::Real& B_next_z) const override;
 
 

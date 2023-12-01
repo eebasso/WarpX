@@ -13,11 +13,11 @@ JAModel::JAModel (amrex::Real alpha,
     m_param_Ms = Ms;
     m_param_k = k;
     m_param_c = c;
-    m_param_one_minus_alpha = amrex::Real(1.0) - alpha;
-    m_param_one_minus_alpha_inv = amrex::Real(1.0) / m_param_one_minus_alpha;
+    m_param_one_minus_alpha = 1.0_rt - alpha;
+    m_param_one_minus_alpha_inv = 1.0_rt / m_param_one_minus_alpha;
     m_param_Ms_over_a = Ms / a;
     m_param_c_Ms_over_a = c * Ms / a;
-    m_param_a_inv = amrex::Real(1.0) / a;
+    m_param_a_inv = 1.0_rt / a;
     m_param_a2_inv = m_param_a_inv*m_param_a_inv;
 }
 

@@ -105,7 +105,7 @@ void FiniteDifferenceSolver::MacroscopicEvolveE (
 
 #ifndef WARPX_DIM_RZ
 
-template<typename T_Algo, typename T_MacroAlgo>
+// template<typename T_Algo, typename T_MacroAlgo>
 void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
     std::array< std::unique_ptr<amrex::MultiFab>, 3 >& Efield,
     std::array< std::unique_ptr<amrex::MultiFab>, 3 > const& Bfield,
@@ -117,9 +117,10 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
     std::unique_ptr<MacroscopicProperties> const& macroscopic_properties)
 {
     using Real = amrex::Real;
+    using namespace amrex::literals;
 
-    // using T_Algo = CartesianYeeAlgorithm; //! debug variable
-    // using T_MacroAlgo = BackwardEulerAlgo; //! debug variable
+    using T_Algo = CartesianYeeAlgorithm; //! debug variable
+    using T_MacroAlgo = BackwardEulerAlgo; //! debug variable
 
 #ifndef AMREX_USE_EB
     amrex::ignore_unused(edge_lengths);
@@ -175,9 +176,17 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
         Real const * const AMREX_RESTRICT coefs_z = m_stencil_coefs_z.dataPtr();
         auto const n_coefs_z = static_cast<int>(m_stencil_coefs_z.size());
 
-        auto Hx = [=] AMREX_GPU_DEVICE (int, int, int, int) { return Real(0.0); };
-        auto Hy = [=] AMREX_GPU_DEVICE (int, int, int, int) { return Real(0.0); };
-        auto Hz = [=] AMREX_GPU_DEVICE (int, int, int, int) { return Real(0.0); };
+        auto Hx = [=] AMREX_GPU_DEVICE (int, int, int, int) { return 0.0_rt; };
+        auto Hy = [=] AMREX_GPU_DEVICE (int, int, int, int) { return 0.0_rt; };
+        auto Hz = [=] AMREX_GPU_DEVICE (int, int, int, int) { return 0.0_rt; };
+
+
+        amrex::Array4<amrex::Real const> const &arr_src;
+
+        auto const arr_src_safe = [arr_src]
+                AMREX_GPU_DEVICE(int const ix, int const iy, int const iz, int const n) noexcept {
+            return arr_src.contains(ix, iy, iz) ? arr_src(ix, iy, iz, n) : 0.0_rt;
+        };
 
         if (macroscopic_properties->is_magnetic_material_present()) {
             amrex::Array4<Real> const& H_x_arr = Hfield[0]->array(mfi);
@@ -194,37 +203,37 @@ void FiniteDifferenceSolver::MacroscopicEvolveECartesian (
             amrex::ParallelFor(box_cc, 1,
                 [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
                     if (mag_mat_id(i,j,k) >= 0) {
-                        const Real B_next_x = Real(0.5)*(Bx(i,j,k,n) + Bx(i+1,j,k,n));
-                        const Real B_next_y = Real(0.5)*(By(i,j,k,n) + By(i,j+1,k,n));
-                        const Real B_next_z = Real(0.5)*(Bz(i,j,k,n) + Bz(i,j,k+1,n));
+                        const Real B_next_x = 0.5_rt*(Bx(i,j,k,n) + Bx(i+1,j,k,n));
+                        const Real B_next_y = 0.5_rt*(By(i,j,k,n) + By(i,j+1,k,n));
+                        const Real B_next_z = 0.5_rt*(Bz(i,j,k,n) + Bz(i,j,k+1,n));
                         mag_mat_vector[mag_mat_id(i,j,k)].UpdateHandM(H_x_arr(i,j,k,n), H_y_arr(i,j,k,n), H_z_arr(i,j,k,n),
                                                                       M_x_arr(i,j,k,n), M_y_arr(i,j,k,n), M_z_arr(i,j,k,n),
                                                                       B_next_x        , B_next_y        , B_next_z        );
                     }
                 }
             );
-            // Hx = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-            //     return Real(0.5*((mag_mat_id(i  ,j,k) >= 0 ?  H_x_arr(i  ,j,k,n) : Bx(i,j,k,n)/mu_arr(i  ,j,k))
-            //                     +(mag_mat_id(i-1,j,k) >= 0 ?  H_x_arr(i-1,j,k,n) : Bx(i,j,k,n)/mu_arr(i-1,j,k))));
-            // };
-            // Hy = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-            //     return Real(0.5*((mag_mat_id(i,j  ,k) >= 0 ?  H_y_arr(i,j  ,k,n) : By(i,j,k,n)/mu_arr(i,j  ,k))
-            //                     +(mag_mat_id(i,j-1,k) >= 0 ?  H_y_arr(i,j-1,k,n) : By(i,j,k,n)/mu_arr(i,j-1,k))));
-            // };
-            // Hz = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-            //     return Real(0.5*((mag_mat_id(i,j,k  ) >= 0 ?  H_z_arr(i,j,k  ,n) : Bz(i,j,k,n)/mu_arr(i,j,k  ))
-            //                     +(mag_mat_id(i,j,k-1) >= 0 ?  H_z_arr(i,j,k-1,n) : Bz(i,j,k,n)/mu_arr(i,j,k-1))));
-            // };
+            Hx = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
+                return Real(0.5*((mag_mat_id(i  ,j,k) >= 0 ?  H_x_arr(i  ,j,k,n) : Bx(i,j,k,n)/mu_arr(i  ,j,k))
+                                +(mag_mat_id(i-1,j,k) >= 0 ?  H_x_arr(i-1,j,k,n) : Bx(i,j,k,n)/mu_arr(i-1,j,k))));
+            };
+            Hy = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
+                return Real(0.5*((mag_mat_id(i,j  ,k) >= 0 ?  H_y_arr(i,j  ,k,n) : By(i,j,k,n)/mu_arr(i,j  ,k))
+                                +(mag_mat_id(i,j-1,k) >= 0 ?  H_y_arr(i,j-1,k,n) : By(i,j,k,n)/mu_arr(i,j-1,k))));
+            };
+            Hz = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
+                return Real(0.5*((mag_mat_id(i,j,k  ) >= 0 ?  H_z_arr(i,j,k  ,n) : Bz(i,j,k,n)/mu_arr(i,j,k  ))
+                                +(mag_mat_id(i,j,k-1) >= 0 ?  H_z_arr(i,j,k-1,n) : Bz(i,j,k,n)/mu_arr(i,j,k-1))));
+            };
         } else {
-            // Hx = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-            //     return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i-1,j,k))*Bx(i,j,k,n);
-            // };
-            // Hy = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-            //     return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i,j-1,k))*By(i,j,k,n);
-            // };
-            // Hz = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
-            //     return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i,j,k-1))*Bz(i,j,k,n);
-            // };
+            Hx = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
+                return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i-1,j,k))*Bx(i,j,k,n);
+            };
+            Hy = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
+                return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i,j-1,k))*By(i,j,k,n);
+            };
+            Hz = [=] AMREX_GPU_DEVICE (int i, int j, int k, int n) {
+                return (Real(0.5)/mu_arr(i,j,k) + Real(0.5)/mu_arr(i,j,k-1))*Bz(i,j,k,n);
+            };
         }
 
         // Extract tileboxes for which to loop
