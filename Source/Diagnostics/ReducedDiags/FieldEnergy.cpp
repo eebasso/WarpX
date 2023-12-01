@@ -163,6 +163,8 @@ FieldEnergy::ComputeNorm2RZ(const amrex::MultiFab& field, const int lev)
 
     Geometry const & geom = warpx.Geom(lev);
     const amrex::Real dr = geom.CellSize(0);
+    const amrex::Real half_dr = dr / 2._rt;
+    const amrex::Real drinv = 1._rt / dr;
 
     amrex::ReduceOps<amrex::ReduceOpSum> reduce_ops;
     amrex::ReduceData<amrex::Real> reduce_data(reduce_ops);
@@ -183,9 +185,13 @@ FieldEnergy::ComputeNorm2RZ(const amrex::MultiFab& field, const int lev)
         const std::array<amrex::Real, 3>& xyzmin = WarpX::LowerCorner(tilebox, lev, 0._rt);
         const Dim3 lo = lbound(tilebox);
         const Dim3 hi = ubound(tilebox);
-        const Real rmin = xyzmin[0] + (tb.ixType().nodeCentered(0) ? 0._rt : 0.5_rt*dr);
+        bool is_nodal_in_rdir = tb.ixType().nodeCentered(0);
+        const Real rmin = xyzmin[0] + (is_nodal_in_rdir ? 0._rt : half_dr);
         const int irmin = lo.x;
         const int irmax = hi.x;
+
+        const Real rmax = xyzmin[0] + (irmax - irmin)*dr;
+        const Real rmax_minus_half_dr = rmax - half_dr;
 
         int const ncomp = field.nComp();
 
@@ -202,9 +208,20 @@ FieldEnergy::ComputeNorm2RZ(const amrex::MultiFab& field, const int lev)
             {
                 const amrex::Real r = rmin + (i - irmin)*dr;
                 amrex::Real volume_factor = r;
-                if (r == 0._rt) {
-                    volume_factor = dr/8._rt;
-                } else if (rmin == 0._rt && i == irmax) {
+                if (r < half_dr) {
+                    // const amrex::Real rplus = r + half_dr;
+                    const amrex::Real rplus = std::max(r + half_dr, 0._rt);
+                    // const amrex::Real rminus = std::max(r - half_dr, 0._rt);
+                    // volume_factor = 0.5_rt*drinv*(rplus*rplus - rminus*rminus);
+                    volume_factor = 0.5_rt*drinv*(rplus*rplus - 0._rt);
+                } else if (r > rmax_minus_half_dr) {
+                    const amrex::Real rminus = std::min(r - half_dr, rmax);
+                    // const amrex::Real rplus = std::min(r + half_dr, rmax);
+                    // const amrex::Real rminus = std::min(r - half_dr, rmax);
+                    // volume_factor = 0.5_rt*drinv*(rplus*rplus - rminus*rminus);
+                    volume_factor = 0.5_rt*drinv*(rmax*rmax - rminus*rminus);
+                }
+                else if (i >= irmax) {
                     volume_factor = r/2._rt - dr/8._rt;
                 }
                 const amrex::Real theta_integral = (n == 0 ? 2._rt : 1._rt);
@@ -214,7 +231,7 @@ FieldEnergy::ComputeNorm2RZ(const amrex::MultiFab& field, const int lev)
     }
 
     const amrex::Real field_sum = amrex::get<0>(reduce_data.value());
-    const amrex::Real result = MathConst::pi*field_sum;
+    const amrex::Real result = MathConst::pi*field_sum/dr;
     return result;
 }
 // end Real FieldEnergy::ComputeNorm2RZ
