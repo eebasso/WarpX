@@ -17,10 +17,10 @@
 * \param[in] idim normal direction to the face in consideration (0 for x, 1 for y, 2 for z)
 */
 AMREX_GPU_DEVICE
-int ComputeNBorrowOneFaceExtension(const amrex::Dim3 cell, const amrex::Real S_ext,
-                                          const amrex::Array4<amrex::Real> &S_red,
-                                          const amrex::Array4<int> &flag_info_face,
-                                          const amrex::Array4<int> &flag_ext_face, int idim);
+int ComputeNBorrowOneFaceExtension (const amrex::Dim3 cell, const amrex::Real S_ext,
+                                    const amrex::Array4<amrex::Real> &S_red,
+                                    const amrex::Array4<int> &flag_info_face,
+                                    const amrex::Array4<int> &flag_ext_face, int idim);
 /**
 * \brief For the face of cell pointing in direction idim, return the number of faces
 * we need to intrude with the eight-ways extension.
@@ -33,9 +33,9 @@ int ComputeNBorrowOneFaceExtension(const amrex::Dim3 cell, const amrex::Real S_e
 * \param[in] idim normal direction to the face in consideration (0 for x, 1 for y, 2 for z)
 */
 AMREX_GPU_DEVICE
-int ComputeNBorrowEightFacesExtension(const amrex::Dim3 cell, const amrex::Real S_ext,
-                                             const amrex::Array4<amrex::Real> &S_red,
-                                             const amrex::Array4<amrex::Real> &S,
-                                             const amrex::Array4<int> &flag_info_face,
-                                             int idim);
+int ComputeNBorrowEightFacesExtension (const amrex::Dim3 cell, const amrex::Real S_ext,
+                                       const amrex::Array4<amrex::Real> &S_red,
+                                       const amrex::Array4<amrex::Real> &S,
+                                       const amrex::Array4<int> &flag_info_face,
+                                       int idim);
 #endif //WARPX_SOURCE_EMBEDDEDBOUNDARY_WARPXFACEEXTENSIONS_H

@@ -32,9 +32,10 @@ template <class T>
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 constexpr
 T
-GetNeigh(const amrex::Array4<T>& arr,
-         const int i, const int j, const int k,
-         const int i_n, const int j_n, const int dim){
+GetNeigh (const amrex::Array4<T>& arr,
+          const int i, const int j, const int k,
+          const int i_n, const int j_n, const int dim)
+{
 
     if(dim == 0){
         return arr(i, j + i_n, k + j_n);
@@ -83,9 +84,9 @@ template <class T>
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 constexpr
 void
-SetNeigh(const amrex::Array4<T>& arr, const T val,
-         const int i, const int j, const int k,
-         const int i_n, const int j_n, const int dim){
+SetNeigh (const amrex::Array4<T>& arr, const T val,
+          const int i, const int j, const int k,
+          const int i_n, const int j_n, const int dim) {
 
     if(dim == 0){
         arr(i, j + i_n, k + j_n) = val;
@@ -129,13 +130,12 @@ SetNeigh(const amrex::Array4<T>& arr, const T val,
 */
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 amrex::Real
-ComputeSStab(const int i, const int j, const int k,
-             const amrex::Array4<const amrex::Real> lx,
-             const amrex::Array4<const amrex::Real> ly,
-             const amrex::Array4<const amrex::Real> lz,
-             const amrex::Real dx, const amrex::Real dy, const amrex::Real dz,
-             const int dim){
-
+ComputeSStab (const int i, const int j, const int k,
+              const amrex::Array4<const amrex::Real> lx,
+              const amrex::Array4<const amrex::Real> ly,
+              const amrex::Array4<const amrex::Real> lz,
+              const amrex::Real dx, const amrex::Real dy, const amrex::Real dz,
+              const int dim) {
     using namespace amrex::literals;
 
     if(dim == 0) {
@@ -163,7 +163,7 @@ ComputeSStab(const int i, const int j, const int k,
 
 
 amrex::Array1D<int, 0, 2>
-WarpX::CountExtFaces() {
+WarpX::CountExtFaces () {
     amrex::Array1D<int, 0, 2> sums{0, 0, 0};
 #ifdef AMREX_USE_EB
 #ifndef WARPX_DIM_RZ
@@ -199,7 +199,7 @@ WarpX::CountExtFaces() {
 }
 
 void
-WarpX::ComputeFaceExtensions(){
+WarpX::ComputeFaceExtensions () {
 #ifdef AMREX_USE_EB
     amrex::Array1D<int, 0, 2> N_ext_faces = CountExtFaces();
     ablastr::warn_manager::WMRecordWarning("Embedded Boundary",
@@ -274,7 +274,7 @@ WarpX::ComputeFaceExtensions(){
 
 
 void
-WarpX::InitBorrowing() {
+WarpX::InitBorrowing () {
     int idim = 0;
     for (amrex::MFIter mfi(*Bfield_fp[maxLevel()][idim]); mfi.isValid(); ++mfi) {
         amrex::Box const &box = mfi.validbox();
@@ -321,10 +321,10 @@ WarpX::InitBorrowing() {
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 int
-ComputeNBorrowOneFaceExtension(const amrex::Dim3 cell, const amrex::Real S_ext,
-                               const amrex::Array4<amrex::Real>& S_red,
-                               const amrex::Array4<int>& flag_info_face,
-                               const amrex::Array4<int>& flag_ext_face, const int idim) {
+ComputeNBorrowOneFaceExtension (const amrex::Dim3 cell, const amrex::Real S_ext,
+                                const amrex::Array4<amrex::Real>& S_red,
+                                const amrex::Array4<int>& flag_info_face,
+                                const amrex::Array4<int>& flag_ext_face, const int idim) {
     const int i = cell.x;
     const int j = cell.y;
     const int k = cell.z;
@@ -356,10 +356,10 @@ ComputeNBorrowOneFaceExtension(const amrex::Dim3 cell, const amrex::Real S_ext,
 
 AMREX_GPU_DEVICE AMREX_FORCE_INLINE
 int
-ComputeNBorrowEightFacesExtension(const amrex::Dim3 cell, const amrex::Real S_ext,
-                                  const amrex::Array4<amrex::Real>& S_red,
-                                  const amrex::Array4<amrex::Real>& S,
-                                  const amrex::Array4<int>& flag_info_face, const int idim) {
+ComputeNBorrowEightFacesExtension (const amrex::Dim3 cell, const amrex::Real S_ext,
+                                   const amrex::Array4<amrex::Real>& S_red,
+                                   const amrex::Array4<amrex::Real>& S,
+                                   const amrex::Array4<int>& flag_info_face, const int idim) {
     const int i = cell.x;
     const int j = cell.y;
     const int k = cell.z;
@@ -421,7 +421,7 @@ ComputeNBorrowEightFacesExtension(const amrex::Dim3 cell, const amrex::Real S_ex
 
 
 void
-WarpX::ComputeOneWayExtensions() {
+WarpX::ComputeOneWayExtensions () {
 #ifdef AMREX_USE_EB
 #ifndef WARPX_DIM_RZ
     auto const eb_fact = fieldEBFactory(maxLevel());
@@ -545,7 +545,7 @@ WarpX::ComputeOneWayExtensions() {
 
 
 void
-WarpX::ComputeEightWaysExtensions() {
+WarpX::ComputeEightWaysExtensions () {
 #ifdef AMREX_USE_EB
 #ifndef WARPX_DIM_RZ
     auto const &cell_size = CellSize(maxLevel());
@@ -703,7 +703,7 @@ WarpX::ComputeEightWaysExtensions() {
 }
 
 void
-WarpX::ApplyBCKCorrection(const int idim) {
+WarpX::ApplyBCKCorrection (const int idim) {
 #if defined(AMREX_USE_EB) and !defined(WARPX_DIM_RZ)
     const std::array<amrex::Real,3> &cell_size = CellSize(maxLevel());
 
@@ -736,7 +736,7 @@ WarpX::ApplyBCKCorrection(const int idim) {
 }
 
 void
-WarpX::ShrinkBorrowing() {
+WarpX::ShrinkBorrowing () {
     for(int idim = 0; idim < AMREX_SPACEDIM; idim++) {
         for (amrex::MFIter mfi(*Bfield_fp[maxLevel()][idim]); mfi.isValid(); ++mfi) {
             auto &borrowing = (*m_borrowing[maxLevel()][idim])[mfi];

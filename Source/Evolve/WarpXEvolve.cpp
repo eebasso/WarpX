@@ -1035,7 +1035,7 @@ WarpX::PushParticlesandDepose (int lev, amrex::Real cur_time, DtType a_dt_type, 
  * The mirror normal direction has to be parallel to the z axis.
  */
 void
-WarpX::applyMirrors(Real time)
+WarpX::applyMirrors (Real time)
 {
     // Loop over the mirrors
     for(int i_mirror=0; i_mirror<num_mirrors; ++i_mirror)
@@ -1105,7 +1105,7 @@ WarpX::applyMirrors(Real time)
 }
 
 void
-WarpX::HandleSignals()
+WarpX::HandleSignals ()
 {
     SignalHandling::WaitSignals();
 

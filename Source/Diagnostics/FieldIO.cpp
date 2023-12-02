@@ -27,7 +27,7 @@ using namespace amrex;
  * (used for compatibility with openPMD-api)
  */
 std::vector<std::uint64_t>
-getVec( const IntVect& v, bool reverse)
+getVec (const IntVect& v, bool reverse)
 {
   // Convert the IntVect v to and std::vector u
   std::vector<std::uint64_t> u = {
@@ -51,7 +51,7 @@ getVec( const IntVect& v, bool reverse)
  * (used for compatibility with the openPMD API)
  */
 std::vector<double>
-getVec( const Real* v , bool reverse)
+getVec (const Real* v , bool reverse)
 {
   // Convert Real* v to and std::vector u
   std::vector<double> u = {

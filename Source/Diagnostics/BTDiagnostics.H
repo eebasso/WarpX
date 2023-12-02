@@ -375,8 +375,8 @@ private:
     /** Interleave lab-frame meta-data of the buffers to be consistent
      *  with the merged plotfile lab-frame data.
      */
-    void InterleaveBufferAndSnapshotHeader ( std::string buffer_Header,
-                                             std::string snapshot_Header);
+    void InterleaveBufferAndSnapshotHeader (std::string buffer_Header,
+                                            std::string snapshot_Header);
     /** Interleave meta-data of the buffer multifabs to be consistent
      *  with the merged plotfile lab-frame data.
      */

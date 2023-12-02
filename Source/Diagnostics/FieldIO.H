@@ -18,16 +18,16 @@
 #include <vector>
 
 void
-AverageAndPackVectorField( amrex::MultiFab& mf_avg,
-                         const std::array< std::unique_ptr<amrex::MultiFab>, 3 >& vector_field,
-                         const amrex::DistributionMapping& dm,
-                         int dcomp, amrex::IntVect ngrow );
+AverageAndPackVectorField (amrex::MultiFab& mf_avg,
+                           const std::array< std::unique_ptr<amrex::MultiFab>, 3 >& vector_field,
+                           const amrex::DistributionMapping& dm,
+                           int dcomp, amrex::IntVect ngrow );
 
 void
-AverageAndPackScalarField( amrex::MultiFab& mf_avg,
-                         const amrex::MultiFab & scalar_field,
-                         const amrex::DistributionMapping& dm,
-                         int dcomp, amrex::IntVect ngrow );
+AverageAndPackScalarField (amrex::MultiFab& mf_avg,
+                           const amrex::MultiFab & scalar_field,
+                           const amrex::DistributionMapping& dm,
+                           int dcomp, amrex::IntVect ngrow );
 
 /** Convert amrex IntVect to vector of `uint64`, reverse if requested
  *
@@ -36,7 +36,7 @@ AverageAndPackScalarField( amrex::MultiFab& mf_avg,
  * @return converted vector of type `uint64`, reversed if requested
  */
 std::vector<std::uint64_t>
-getVec( const amrex::IntVect& v, bool reverse = false);
+getVec (const amrex::IntVect& v, bool reverse = false);
 
 /** Convert vector of `amrex Reals` to vector of `double`, reverse if requested
  *
@@ -45,12 +45,12 @@ getVec( const amrex::IntVect& v, bool reverse = false);
  * @return converted vector of type `amrex::Real`, reversed if requested
  */
 std::vector<double>
-getVec( const amrex::Real* v, bool reverse = false );
+getVec (const amrex::Real* v, bool reverse = false );
 
 std::vector<std::uint64_t>
-getReversedVec( const amrex::IntVect& v );
+getReversedVec (const amrex::IntVect& v );
 
 std::vector<double>
-getReversedVec( const amrex::Real* v );
+getReversedVec (const amrex::Real* v );
 
 #endif // WARPX_FielIO_H_

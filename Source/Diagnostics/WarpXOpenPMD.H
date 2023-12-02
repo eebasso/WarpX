@@ -253,7 +253,8 @@ private:
    * @param[in] np  Number of particles
    * @param[in] isBTD whether this is a back-transformed diagnostic
    */
-  void SetupRealProperties (ParticleContainer const * pc,
+  void SetupRealProperties (
+               ParticleContainer const * pc,
                openPMD::ParticleSpecies& currSpecies,
                const amrex::Vector<int>& write_real_comp,
                const amrex::Vector<std::string>& real_comp_names,
@@ -271,7 +272,8 @@ private:
    * @param[in] write_int_comp The int attribute ids, from WarpX
    * @param[in] int_comp_names The int attribute names, from WarpX
    */
-  void SaveRealProperty (ParticleIter& pti, //int, int,
+  void SaveRealProperty (
+            ParticleIter& pti, //int, int,
             openPMD::ParticleSpecies& currSpecies,
             unsigned long long offset,
             const amrex::Vector<int>& write_real_comp,
@@ -294,7 +296,8 @@ private:
    * @param[in] isLastBTDFlush is this the last time we will flush this BTD station?
    * @param[in] ParticleFlushOffset previously flushed number of particles in BTD
    */
-  void DumpToFile (ParticleContainer* pc,
+  void DumpToFile (
+            ParticleContainer* pc,
             const std::string& name,
             int iteration,
             const amrex::Vector<int>& write_real_comp,

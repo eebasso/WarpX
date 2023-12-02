@@ -259,10 +259,10 @@ CreateSlice (const MultiFab& mf, const Vector<Geometry> &dom_geom,
 
 
 void
-CheckSliceInput( const RealBox real_box, RealBox &slice_cc_nd_box,
-               RealBox &slice_realbox, IntVect &slice_cr_ratio,
-               Vector<Geometry> dom_geom, IntVect const SliceType,
-               IntVect &slice_lo, IntVect &slice_hi, IntVect &interp_lo)
+CheckSliceInput (const RealBox real_box, RealBox &slice_cc_nd_box,
+                RealBox &slice_realbox, IntVect &slice_cr_ratio,
+                Vector<Geometry> dom_geom, IntVect const SliceType,
+                IntVect &slice_lo, IntVect &slice_hi, IntVect &interp_lo)
 {
 
     IntVect slice_lo2(AMREX_D_DECL(0,0,0));
@@ -418,10 +418,10 @@ CheckSliceInput( const RealBox real_box, RealBox &slice_cc_nd_box,
      is required in the dimension.
  */
 void
-InterpolateSliceValues(MultiFab& smf, IntVect interp_lo, RealBox slice_realbox,
-                       Vector<Geometry> geom, int ncomp, int nghost,
-                       IntVect slice_lo, IntVect /*slice_hi*/, IntVect SliceType,
-                       const RealBox real_box)
+InterpolateSliceValues (MultiFab& smf, IntVect interp_lo, RealBox slice_realbox,
+                        Vector<Geometry> geom, int ncomp, int nghost,
+                        IntVect slice_lo, IntVect /*slice_hi*/, IntVect SliceType,
+                        const RealBox real_box)
 {
     for (MFIter mfi(smf); mfi.isValid(); ++mfi)
     {

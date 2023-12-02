@@ -516,7 +516,8 @@ WarpXOpenPMDPlot::Init (openPMD::Access access, bool isBTD)
 }
 
 void
-WarpXOpenPMDPlot::WriteOpenPMDParticles (const amrex::Vector<ParticleDiag>& particle_diags,
+WarpXOpenPMDPlot::WriteOpenPMDParticles (
+                  const amrex::Vector<ParticleDiag>& particle_diags,
                   const amrex::Real time, const bool use_pinned_pc,
                   const bool isBTD, const bool isLastBTDFlush,
                   const amrex::Vector<int>& totalParticlesFlushedAlready)
@@ -633,7 +634,8 @@ for (unsigned i = 0, n = particle_diags.size(); i < n; ++i) {
 }
 
 void
-WarpXOpenPMDPlot::DumpToFile (ParticleContainer* pc,
+WarpXOpenPMDPlot::DumpToFile (
+                    ParticleContainer* pc,
                     const std::string& name,
                     int iteration,
                     const amrex::Vector<int>& write_real_comp,
@@ -851,7 +853,8 @@ WarpXOpenPMDPlot::DumpToFile (ParticleContainer* pc,
 }
 
 void
-WarpXOpenPMDPlot::SetupRealProperties (ParticleContainer const * pc,
+WarpXOpenPMDPlot::SetupRealProperties (
+                      ParticleContainer const * pc,
                       openPMD::ParticleSpecies& currSpecies,
                       const amrex::Vector<int>& write_real_comp,
                       const amrex::Vector<std::string>& real_comp_names,
@@ -930,7 +933,8 @@ WarpXOpenPMDPlot::SetupRealProperties (ParticleContainer const * pc,
 }
 
 void
-WarpXOpenPMDPlot::SaveRealProperty (ParticleIter& pti,
+WarpXOpenPMDPlot::SaveRealProperty (
+                       ParticleIter& pti,
                        openPMD::ParticleSpecies& currSpecies,
                        unsigned long long const offset,
                        amrex::Vector<int> const& write_real_comp,
@@ -1331,7 +1335,8 @@ GetFieldNameModeInt (const std::string& varname)
  *
  */
 void
-WarpXOpenPMDPlot::WriteOpenPMDFieldsAll ( //const std::string& filename,
+WarpXOpenPMDPlot::WriteOpenPMDFieldsAll (
+                      //const std::string& filename,
                       const std::vector<std::string>& varnames,
                       const amrex::Vector<amrex::MultiFab>& mf,
                       amrex::Vector<amrex::Geometry>& geom,

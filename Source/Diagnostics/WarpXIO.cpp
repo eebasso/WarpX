@@ -52,7 +52,8 @@ namespace
 }
 
 amrex::DistributionMapping
-WarpX::GetRestartDMap (const std::string& chkfile, const amrex::BoxArray& ba, int lev) const {
+WarpX::GetRestartDMap (const std::string& chkfile, const amrex::BoxArray& ba, int lev) const
+{
     std::string DMFileName = chkfile;
     if (!DMFileName.empty() && DMFileName[DMFileName.size()-1] != '/') {DMFileName += '/';}
     DMFileName = amrex::Concatenate(DMFileName + "Level_", lev, 1);

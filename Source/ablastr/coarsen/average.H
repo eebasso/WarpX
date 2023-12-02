@@ -55,7 +55,8 @@ namespace ablastr::coarsen::average
         int const i,
         int const j,
         int const k,
-        int const comp)
+        int const comp
+    )
     {
         using namespace amrex::literals;
 
@@ -157,7 +158,7 @@ namespace ablastr::coarsen::average
     void
     Loop (
         amrex::MultiFab & mf_dst,
-        amrex::MultiFab const& mf_src,
+        amrex::MultiFab const & mf_src,
         int ncomp,
         amrex::IntVect ngrow,
         amrex::IntVect crse_ratio
@@ -177,7 +178,8 @@ namespace ablastr::coarsen::average
     Coarsen (
         amrex::MultiFab & mf_dst,
         amrex::MultiFab const & mf_src,
-        amrex::IntVect crse_ratio);
+        amrex::IntVect crse_ratio
+    );
 
 } // namespace ablastr::coarsen::average
 
