@@ -69,7 +69,8 @@ public:
     [[nodiscard]] int nSpecies () const {return static_cast<int>(species_names.size());}
 
     void DepositCharge (int lev, amrex::MultiFab &rho);
-    void DepositCurrent (int lev,
+    void DepositCurrent (
+        int lev,
         amrex::MultiFab& jx, amrex::MultiFab& jy, amrex::MultiFab& jz);
 
 private:

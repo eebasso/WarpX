@@ -47,7 +47,8 @@ public:
     /**
      * Evolve updates a single timestep (dt) of the cold relativistic fluid eqautions
      */
-    void Evolve (int lev,
+    void Evolve (
+        int lev,
         const amrex::MultiFab& Ex, const amrex::MultiFab& Ey, const amrex::MultiFab& Ez,
         const amrex::MultiFab& Bx, const amrex::MultiFab& By, const amrex::MultiFab& Bz,
         amrex::MultiFab* rho, amrex::MultiFab& jx, amrex::MultiFab& jy, amrex::MultiFab& jz,
@@ -101,7 +102,8 @@ public:
      * \param[in] Bz Yee magnetic field (z)
      * \param[in] cur_time Current time
      */
-    void GatherAndPush (int lev,
+    void GatherAndPush (
+        int lev,
         const amrex::MultiFab& Ex, const amrex::MultiFab& Ey, const amrex::MultiFab& Ez,
         const amrex::MultiFab& Bx, const amrex::MultiFab& By, const amrex::MultiFab& Bz,
         amrex::Real cur_time);
@@ -117,7 +119,8 @@ public:
      * \param[in,out] jy current density MultiFab y comp.
      * \param[in,out] jz current density MultiFab z comp.
      */
-    void DepositCurrent (int lev,
+    void DepositCurrent (
+        int lev,
         amrex::MultiFab& jx, amrex::MultiFab& jy, amrex::MultiFab& jz);
 
     /**
