@@ -140,7 +140,7 @@ public:
      */
     AMREX_GPU_DEVICE
     AMREX_FORCE_INLINE
-    int operator()(
+    int operator() (
         const amrex::ParticleReal ux, const amrex::ParticleReal uy,
         const amrex::ParticleReal uz, const amrex::ParticleReal ex,
         const amrex::ParticleReal ey, const amrex::ParticleReal ez,
@@ -227,7 +227,7 @@ public:
      */
     AMREX_GPU_DEVICE
     AMREX_FORCE_INLINE
-    int operator()(
+    int operator() (
     const amrex::ParticleReal ux, const amrex::ParticleReal uy,
     const amrex::ParticleReal uz, const amrex::ParticleReal ex,
     const amrex::ParticleReal ey, const amrex::ParticleReal ez,
@@ -341,7 +341,7 @@ public:
      *
      * @param[in] bw_minimum_chi_phot minimum chi parameter to evolve the optical depth of a photon
      */
-    void init_builtin_tables(amrex::ParticleReal bw_minimum_chi_phot);
+    void init_builtin_tables (amrex::ParticleReal bw_minimum_chi_phot);
 
     /**
      * Computes the lookup tables. It does nothing unless WarpX is compiled with QED_TABLE_GEN=TRUE
@@ -357,9 +357,9 @@ public:
      *
      * @return default control params to generate the tables
      */
-    [[nodiscard]] PicsarBreitWheelerCtrl get_default_ctrl() const;
+    [[nodiscard]] PicsarBreitWheelerCtrl get_default_ctrl () const;
 
-    [[nodiscard]] amrex::ParticleReal get_minimum_chi_phot() const;
+    [[nodiscard]] amrex::ParticleReal get_minimum_chi_phot () const;
 
 private:
     bool m_lookup_tables_initialized = false;
@@ -371,8 +371,8 @@ private:
     BW_dndt_table m_dndt_table;
     BW_pair_prod_table m_pair_prod_table;
 
-    void init_builtin_dndt_table();
-    void init_builtin_pair_prod_table();
+    void init_builtin_dndt_table ();
+    void init_builtin_pair_prod_table ();
 
 
 };

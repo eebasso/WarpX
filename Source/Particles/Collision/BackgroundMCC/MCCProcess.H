@@ -126,7 +126,7 @@ public:
 private:
 
     static
-    MCCProcessType parseProcessType(const std::string& process);
+    MCCProcessType parseProcessType (const std::string& process);
 
     void init (const std::string& scattering_process, amrex::ParticleReal energy);
 

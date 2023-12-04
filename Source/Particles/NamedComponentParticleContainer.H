@@ -73,7 +73,7 @@ public:
     }
 
     /** Destructor for NamedComponentParticleContainer */
-    ~NamedComponentParticleContainer() override = default;
+    ~NamedComponentParticleContainer () override = default;
 
     /** Construct a NamedComponentParticleContainer from a regular
      * amrex::ParticleContainer, and additional name-to-index maps
@@ -84,7 +84,7 @@ public:
      * @param p_rcomps name-to-index map for run-time real components
      * @param p_ricomps name-to-index map for run-time integer components
      */
-    NamedComponentParticleContainer(
+    NamedComponentParticleContainer (
         amrex::ParticleContainer<0,0,PIdx::nattribs,0,T_Allocator> && pc,
         std::map<std::string, int> p_comps,
         std::map<std::string, int> p_icomps,

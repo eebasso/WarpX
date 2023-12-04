@@ -22,14 +22,14 @@ public:
 
     virtual void doCollisions (amrex::Real /*cur_time*/, amrex::Real /*dt*/, MultiParticleContainer* /*mypc*/ ){}
 
-    CollisionBase(CollisionBase const &) = delete;
-    CollisionBase(CollisionBase &&) = delete;
-    CollisionBase & operator=(CollisionBase const &) = delete;
-    CollisionBase & operator=(CollisionBase const &&) = delete;
+    CollisionBase (CollisionBase const &) = delete;
+    CollisionBase (CollisionBase &&) = delete;
+    CollisionBase & operator= (CollisionBase const &) = delete;
+    CollisionBase & operator= (CollisionBase const &&) = delete;
 
-    virtual ~CollisionBase() = default;
+    virtual ~CollisionBase () = default;
 
-    int get_ndt() {return m_ndt;}
+    int get_ndt () {return m_ndt;}
 
 protected:
 

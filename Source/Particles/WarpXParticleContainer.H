@@ -162,12 +162,12 @@ public:
      * class.
      */
     virtual void DefaultInitializeRuntimeAttributes (
-                        amrex::ParticleTile<amrex::Particle<NStructReal, NStructInt>,
-                                            NArrayReal, NArrayInt,
-                                            amrex::PinnedArenaAllocator>& pinned_tile,
-                        int n_external_attr_real,
-                        int n_external_attr_int,
-                        const amrex::RandomEngine& engine) = 0;
+        amrex::ParticleTile<amrex::Particle<NStructReal, NStructInt>,
+                            NArrayReal, NArrayInt,
+                            amrex::PinnedArenaAllocator>& pinned_tile,
+        int n_external_attr_real,
+        int n_external_attr_int,
+        const amrex::RandomEngine& engine) = 0;
 
     ///
     /// This pushes the particle positions by one half time step.
@@ -236,21 +236,21 @@ public:
                                int depos_lev);
 
     virtual void DepositCurrent (WarpXParIter& pti,
-                                RealVector const & wp,
-                                RealVector const & uxp,
-                                RealVector const & uyp,
-                                RealVector const & uzp,
-                                int const* ion_lev,
-                                amrex::MultiFab* jx,
-                                amrex::MultiFab* jy,
-                                amrex::MultiFab* jz,
-                                long offset,
-                                long np_to_depose,
-                                int thread_num,
-                                int lev,
-                                int depos_lev,
-                                amrex::Real dt,
-                                amrex::Real relative_time);
+                                 RealVector const & wp,
+                                 RealVector const & uxp,
+                                 RealVector const & uyp,
+                                 RealVector const & uzp,
+                                 int const* ion_lev,
+                                 amrex::MultiFab* jx,
+                                 amrex::MultiFab* jy,
+                                 amrex::MultiFab* jz,
+                                 long offset,
+                                 long np_to_depose,
+                                 int thread_num,
+                                 int lev,
+                                 int depos_lev,
+                                 amrex::Real dt,
+                                 amrex::Real relative_time);
 
     // If particles start outside of the domain, ContinuousInjection
     // makes sure that they are initialized when they enter the domain, and

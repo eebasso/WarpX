@@ -127,8 +127,8 @@ namespace
     // Note that we use the bulk momentum to perform the ballistic correction
     // Assume no z0_lab dependency
     AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-    Real applyBallisticCorrection(const XDim3& pos, const InjectorMomentum* inj_mom,
-                                  Real gamma_boost, Real beta_boost, Real t) noexcept
+    Real applyBallisticCorrection (const XDim3& pos, const InjectorMomentum* inj_mom,
+                                   Real gamma_boost, Real beta_boost, Real t) noexcept
     {
         const XDim3 u_bulk = inj_mom->getBulkMomentum(pos.x, pos.y, pos.z);
         const Real gamma_bulk = std::sqrt(1._rt +
@@ -645,9 +645,9 @@ PhysicalParticleContainer::AddGaussianBeam (
 }
 
 void
-PhysicalParticleContainer::AddPlasmaFromFile(PlasmaInjector & plasma_injector,
-                                             ParticleReal q_tot,
-                                             ParticleReal z_shift)
+PhysicalParticleContainer::AddPlasmaFromFile (PlasmaInjector & plasma_injector,
+                                              ParticleReal q_tot,
+                                              ParticleReal z_shift)
 {
     // Declare temporary vectors on the CPU
     Gpu::HostVector<ParticleReal> particle_x;

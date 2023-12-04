@@ -68,12 +68,12 @@ public:
 
     MultiParticleContainer (amrex::AmrCore* amr_core);
 
-    ~MultiParticleContainer() = default;
+    ~MultiParticleContainer () = default;
 
     MultiParticleContainer (MultiParticleContainer const &)             = delete;
     MultiParticleContainer& operator= (MultiParticleContainer const & ) = delete;
-    MultiParticleContainer(MultiParticleContainer&& )                   = default;
-    MultiParticleContainer& operator=(MultiParticleContainer&& )        = default;
+    MultiParticleContainer (MultiParticleContainer&& )                  = default;
+    MultiParticleContainer& operator= (MultiParticleContainer&& )       = default;
 
     [[nodiscard]] WarpXParticleContainer&
     GetParticleContainer (int index) const {return *allcontainers[index];}
@@ -166,7 +166,7 @@ public:
     /// This deposits the particle charge onto a node-centered MultiFab and returns a unique ptr
     /// to it. The charge density is accumulated over all the particles in the MultiParticleContainer
 
-    std::unique_ptr<amrex::MultiFab> GetChargeDensity(int lev, bool local = false);
+    std::unique_ptr<amrex::MultiFab> GetChargeDensity (int lev, bool local = false);
 
     void doFieldIonization (int lev,
                             const amrex::MultiFab& Ex, const amrex::MultiFab& Ey, const amrex::MultiFab& Ez,
@@ -225,9 +225,9 @@ public:
     *
     * @param[in] lev the index of the refinement level.
     */
-    [[nodiscard]] amrex::Vector<amrex::Long> GetZeroParticlesInGrid(int lev) const;
+    [[nodiscard]] amrex::Vector<amrex::Long> GetZeroParticlesInGrid (int lev) const;
 
-    [[nodiscard]] amrex::Vector<amrex::Long> NumberOfParticlesInGrid(int lev) const;
+    [[nodiscard]] amrex::Vector<amrex::Long> NumberOfParticlesInGrid (int lev) const;
 
     void Increment (amrex::MultiFab& mf, int lev);
 
@@ -273,18 +273,18 @@ public:
      * \brief  Update antenna position for continuous injection of lasers
      *         in a boosted frame. Empty function for containers other than lasers.
      */
-    void UpdateAntennaPosition(amrex::Real dt) const;
+    void UpdateAntennaPosition (amrex::Real dt) const;
 
     [[nodiscard]] int doContinuousInjection() const;
 
     // Inject particles from a surface during the simulation
     void ContinuousFluxInjection(amrex::Real t, amrex::Real dt) const;
 
-    [[nodiscard]] std::vector<std::string> GetSpeciesNames() const { return species_names; }
+    [[nodiscard]] std::vector<std::string> GetSpeciesNames () const { return species_names; }
 
-    [[nodiscard]] std::vector<std::string> GetLasersNames() const { return lasers_names; }
+    [[nodiscard]] std::vector<std::string> GetLasersNames () const { return lasers_names; }
 
-    [[nodiscard]] std::vector<std::string> GetSpeciesAndLasersNames() const
+    [[nodiscard]] std::vector<std::string> GetSpeciesAndLasersNames () const
     {
         std::vector<std::string> tmp = species_names;
         tmp.insert(tmp.end(), lasers_names.begin(), lasers_names.end());
@@ -495,12 +495,12 @@ private:
 
     bool m_do_back_transformed_particles = false;
 
-    void MFItInfoCheckTiling(const WarpXParticleContainer& /*pc_src*/) const noexcept
+    void MFItInfoCheckTiling (const WarpXParticleContainer& /*pc_src*/) const noexcept
     {}
 
     template<typename First, typename ...Args>
-    void MFItInfoCheckTiling(const WarpXParticleContainer& pc_src,
-                             First const& pc_dst, Args const&... others) const noexcept
+    void MFItInfoCheckTiling (const WarpXParticleContainer& pc_src,
+                              First const& pc_dst, Args const&... others) const noexcept
     {
         if (WarpXParticleContainer::do_tiling && amrex::Gpu::notInLaunchRegion()) {
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(pc_dst.do_tiling,
@@ -516,7 +516,7 @@ private:
     * It checks the physical correctness of product particle species
     * selected by the user for ionization process.
     */
-    void CheckIonizationProductSpecies();
+    void CheckIonizationProductSpecies ();
 
 #ifdef WARPX_QED
     /**

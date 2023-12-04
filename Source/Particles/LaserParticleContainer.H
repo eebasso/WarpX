@@ -66,23 +66,23 @@ public:
     void WriteHeader (std::ostream& os) const final;
 
     void Evolve (int lev,
-                         const amrex::MultiFab&, const amrex::MultiFab&, const amrex::MultiFab&,
-                         const amrex::MultiFab&, const amrex::MultiFab&, const amrex::MultiFab&,
-                         amrex::MultiFab& jx, amrex::MultiFab& jy, amrex::MultiFab& jz,
-                         amrex::MultiFab*, amrex::MultiFab*, amrex::MultiFab*,
-                         amrex::MultiFab* rho, amrex::MultiFab* crho,
-                         const amrex::MultiFab*, const amrex::MultiFab*, const amrex::MultiFab*,
-                         const amrex::MultiFab*, const amrex::MultiFab*, const amrex::MultiFab*,
-                         amrex::Real t, amrex::Real dt, DtType a_dt_type=DtType::Full,
-                         bool skip_deposition=false) final;
+                 const amrex::MultiFab&, const amrex::MultiFab&, const amrex::MultiFab&,
+                 const amrex::MultiFab&, const amrex::MultiFab&, const amrex::MultiFab&,
+                 amrex::MultiFab& jx, amrex::MultiFab& jy, amrex::MultiFab& jz,
+                 amrex::MultiFab*, amrex::MultiFab*, amrex::MultiFab*,
+                 amrex::MultiFab* rho, amrex::MultiFab* crho,
+                 const amrex::MultiFab*, const amrex::MultiFab*, const amrex::MultiFab*,
+                 const amrex::MultiFab*, const amrex::MultiFab*, const amrex::MultiFab*,
+                 amrex::Real t, amrex::Real dt, DtType a_dt_type=DtType::Full,
+                 bool skip_deposition=false) final;
 
     void PushP (int lev, amrex::Real dt,
-                        const amrex::MultiFab& ,
-                        const amrex::MultiFab& ,
-                        const amrex::MultiFab& ,
-                        const amrex::MultiFab& ,
-                        const amrex::MultiFab& ,
-                        const amrex::MultiFab& ) final;
+                const amrex::MultiFab& ,
+                const amrex::MultiFab& ,
+                const amrex::MultiFab& ,
+                const amrex::MultiFab& ,
+                const amrex::MultiFab& ,
+                const amrex::MultiFab& ) final;
 
     void PostRestart () final;
 
@@ -133,7 +133,7 @@ private:
     void InitData (int lev);
     // Inject the laser antenna during the simulation, if it started
     // outside of the simulation domain and enters it.
-    void ContinuousInjection(const amrex::RealBox& injection_box) override;
+    void ContinuousInjection (const amrex::RealBox& injection_box) override;
 
     /**
      * \brief  Update antenna position for continuous injection of lasers

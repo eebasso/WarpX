@@ -135,7 +135,7 @@ public:
      */
     AMREX_GPU_DEVICE
     AMREX_FORCE_INLINE
-    int operator()(
+    int operator() (
         const amrex::ParticleReal ux, const amrex::ParticleReal uy, const amrex::ParticleReal uz,
         const amrex::ParticleReal ex, const amrex::ParticleReal ey, const amrex::ParticleReal ez,
         const amrex::ParticleReal bx, const amrex::ParticleReal by, const amrex::ParticleReal bz,
@@ -208,14 +208,12 @@ public:
      */
     AMREX_GPU_DEVICE
     AMREX_FORCE_INLINE
-    bool operator()(
-    amrex::ParticleReal& ux, amrex::ParticleReal& uy,
-    amrex::ParticleReal& uz,
-    const amrex::ParticleReal ex, const amrex::ParticleReal ey,
-    const amrex::ParticleReal ez, const amrex::ParticleReal bx,
-    const amrex::ParticleReal by, const amrex::ParticleReal bz,
-    amrex::ParticleReal& g_ux, amrex::ParticleReal& g_uy,
-    amrex::ParticleReal& g_uz, amrex::RandomEngine const& engine) const noexcept
+    bool operator() (
+        amrex::ParticleReal& ux, amrex::ParticleReal& uy, amrex::ParticleReal& uz,
+        const amrex::ParticleReal ex, const amrex::ParticleReal ey, const amrex::ParticleReal ez,
+        const amrex::ParticleReal bx, const amrex::ParticleReal by, const amrex::ParticleReal bz,
+        amrex::ParticleReal& g_ux, amrex::ParticleReal& g_uy, amrex::ParticleReal& g_uz,
+        amrex::RandomEngine const& engine) const noexcept
     {
         using namespace amrex;
         namespace pxr_m = picsar::multi_physics::math;

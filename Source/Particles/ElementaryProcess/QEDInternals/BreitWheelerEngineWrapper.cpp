@@ -123,7 +123,7 @@ vector<char> BreitWheelerEngine::export_lookup_tables_data () const
 }
 
 PicsarBreitWheelerCtrl
-BreitWheelerEngine::get_default_ctrl() const
+BreitWheelerEngine::get_default_ctrl () const
 {
     namespace pxr_bw = picsar::multi_physics::phys::breit_wheeler;
     return PicsarBreitWheelerCtrl{
@@ -133,7 +133,7 @@ BreitWheelerEngine::get_default_ctrl() const
 }
 
 amrex::ParticleReal
-BreitWheelerEngine::get_minimum_chi_phot() const
+BreitWheelerEngine::get_minimum_chi_phot () const
 {
     return m_bw_minimum_chi_phot;
 }
@@ -158,7 +158,7 @@ void BreitWheelerEngine::compute_lookup_tables (
 #endif
 }
 
-void BreitWheelerEngine::init_builtin_dndt_table()
+void BreitWheelerEngine::init_builtin_dndt_table ()
 {
     constexpr auto default_chi_phot_min = 0.02_prt;
     constexpr auto default_chi_phot_max = 200.0_prt;
@@ -190,7 +190,7 @@ void BreitWheelerEngine::init_builtin_dndt_table()
     m_dndt_table = BW_dndt_table{dndt_params, vals};
 }
 
-void BreitWheelerEngine::init_builtin_pair_prod_table()
+void BreitWheelerEngine::init_builtin_pair_prod_table ()
 {
     constexpr auto default_chi_phot_min = 0.02_prt;
     constexpr auto default_chi_phot_max = 200.0_prt;

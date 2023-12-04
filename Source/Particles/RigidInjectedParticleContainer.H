@@ -56,57 +56,57 @@ public:
     RigidInjectedParticleContainer& operator= ( RigidInjectedParticleContainer&& )       = default;
 
 
-    void InitData() override;
+    void InitData () override;
 
-    virtual void RemapParticles();
+    virtual void RemapParticles ();
 
     void Evolve (int lev,
-                         const amrex::MultiFab& Ex,
-                         const amrex::MultiFab& Ey,
-                         const amrex::MultiFab& Ez,
-                         const amrex::MultiFab& Bx,
-                         const amrex::MultiFab& By,
-                         const amrex::MultiFab& Bz,
-                         amrex::MultiFab& jx,
-                         amrex::MultiFab& jy,
-                         amrex::MultiFab& jz,
-                         amrex::MultiFab* cjx,
-                         amrex::MultiFab* cjy,
-                         amrex::MultiFab* cjz,
-                         amrex::MultiFab* rho,
-                         amrex::MultiFab* crho,
-                         const amrex::MultiFab* cEx,
-                         const amrex::MultiFab* cEy,
-                         const amrex::MultiFab* cEz,
-                         const amrex::MultiFab* cBx,
-                         const amrex::MultiFab* cBy,
-                         const amrex::MultiFab* cBz,
-                         amrex::Real t,
-                         amrex::Real dt,
-                         DtType a_dt_type=DtType::Full,
-                         bool skip_deposition=false ) override;
+                 const amrex::MultiFab& Ex,
+                 const amrex::MultiFab& Ey,
+                 const amrex::MultiFab& Ez,
+                 const amrex::MultiFab& Bx,
+                 const amrex::MultiFab& By,
+                 const amrex::MultiFab& Bz,
+                 amrex::MultiFab& jx,
+                 amrex::MultiFab& jy,
+                 amrex::MultiFab& jz,
+                 amrex::MultiFab* cjx,
+                 amrex::MultiFab* cjy,
+                 amrex::MultiFab* cjz,
+                 amrex::MultiFab* rho,
+                 amrex::MultiFab* crho,
+                 const amrex::MultiFab* cEx,
+                 const amrex::MultiFab* cEy,
+                 const amrex::MultiFab* cEz,
+                 const amrex::MultiFab* cBx,
+                 const amrex::MultiFab* cBy,
+                 const amrex::MultiFab* cBz,
+                 amrex::Real t,
+                 amrex::Real dt,
+                 DtType a_dt_type=DtType::Full,
+                 bool skip_deposition=false ) override;
 
     void PushPX (WarpXParIter& pti,
-                         amrex::FArrayBox const * exfab,
-                         amrex::FArrayBox const * eyfab,
-                         amrex::FArrayBox const * ezfab,
-                         amrex::FArrayBox const * bxfab,
-                         amrex::FArrayBox const * byfab,
-                         amrex::FArrayBox const * bzfab,
-                         amrex::IntVect ngEB, int /*e_is_nodal*/,
-                         long offset,
-                         long np_to_push,
-                         int lev, int gather_lev,
-                         amrex::Real dt, ScaleFields scaleFields,
-                         DtType a_dt_type=DtType::Full) override;
+                 amrex::FArrayBox const * exfab,
+                 amrex::FArrayBox const * eyfab,
+                 amrex::FArrayBox const * ezfab,
+                 amrex::FArrayBox const * bxfab,
+                 amrex::FArrayBox const * byfab,
+                 amrex::FArrayBox const * bzfab,
+                 amrex::IntVect ngEB, int /*e_is_nodal*/,
+                 long offset,
+                 long np_to_push,
+                 int lev, int gather_lev,
+                 amrex::Real dt, ScaleFields scaleFields,
+                 DtType a_dt_type=DtType::Full) override;
 
     void PushP (int lev, amrex::Real dt,
-                        const amrex::MultiFab& Ex,
-                        const amrex::MultiFab& Ey,
-                        const amrex::MultiFab& Ez,
-                        const amrex::MultiFab& Bx,
-                        const amrex::MultiFab& By,
-                        const amrex::MultiFab& Bz) override;
+                const amrex::MultiFab& Ex,
+                const amrex::MultiFab& Ey,
+                const amrex::MultiFab& Ez,
+                const amrex::MultiFab& Bx,
+                const amrex::MultiFab& By,
+                const amrex::MultiFab& Bz) override;
 
     void ReadHeader (std::istream& is) override;
 

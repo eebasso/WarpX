@@ -23,7 +23,7 @@ class WARPX_EXPORT ParticleBoundaryBuffer
 public:
     ParticleBoundaryBuffer ();
 
-    ~ParticleBoundaryBuffer() = default;
+    ~ParticleBoundaryBuffer () = default;
 
     /** Copy constructor for ParticleBoundaryBuffer */
     ParticleBoundaryBuffer ( const ParticleBoundaryBuffer &) = delete;
@@ -35,9 +35,9 @@ public:
     /** Move operator for NamedComponentParticleContainer */
     ParticleBoundaryBuffer& operator= ( ParticleBoundaryBuffer && ) = default;
 
-    int numSpecies() const { return static_cast<int>(getSpeciesNames().size()); }
+    int numSpecies () const { return static_cast<int>(getSpeciesNames().size()); }
 
-    const std::vector<std::string>& getSpeciesNames() const;
+    const std::vector<std::string>& getSpeciesNames () const;
 
     void gatherParticles (MultiParticleContainer& mypc,
                           const amrex::Vector<const amrex::MultiFab*>& distance_to_eb);
@@ -48,11 +48,11 @@ public:
 
     void printNumParticles () const;
 
-    int getNumParticlesInContainer(std::string species_name, int boundary, bool local);
+    int getNumParticlesInContainer (std::string species_name, int boundary, bool local);
 
-    PinnedMemoryParticleContainer& getParticleBuffer(std::string species_name, int boundary);
+    PinnedMemoryParticleContainer& getParticleBuffer (std::string species_name, int boundary);
 
-    PinnedMemoryParticleContainer* getParticleBufferPointer(std::string species_name, int boundary);
+    PinnedMemoryParticleContainer* getParticleBufferPointer (std::string species_name, int boundary);
 
     static constexpr int numBoundaries () {
         return AMREX_SPACEDIM*2

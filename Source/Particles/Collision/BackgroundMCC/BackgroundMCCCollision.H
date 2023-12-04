@@ -60,8 +60,7 @@ public:
      * @param t current time
      *
      */
-    void doBackgroundIonization (
-                                 int lev,
+    void doBackgroundIonization (int lev,
                                  amrex::LayoutData<amrex::Real>* cost,
                                  WarpXParticleContainer& species1,
                                  WarpXParticleContainer& species2,

@@ -69,7 +69,7 @@ RigidInjectedParticleContainer::RigidInjectedParticleContainer (AmrCore* amr_cor
 
 }
 
-void RigidInjectedParticleContainer::InitData()
+void RigidInjectedParticleContainer::InitData ()
 {
     // Perform Lorentz transform of `z_inject_plane`
     const amrex::Real t_boost = WarpX::GetInstance().gett_new(0);
@@ -86,7 +86,7 @@ void RigidInjectedParticleContainer::InitData()
 }
 
 void
-RigidInjectedParticleContainer::RemapParticles()
+RigidInjectedParticleContainer::RemapParticles ()
 {
     // For rigid_advance == false, nothing needs to be done
 

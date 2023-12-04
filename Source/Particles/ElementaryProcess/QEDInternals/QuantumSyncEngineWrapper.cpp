@@ -91,7 +91,7 @@ QuantumSynchrotronEngine::init_lookup_tables_from_raw_data (
     return true;
 }
 
-void QuantumSynchrotronEngine::init_builtin_tables(
+void QuantumSynchrotronEngine::init_builtin_tables (
     const amrex::ParticleReal qs_minimum_chi_part)
 {
     init_builtin_dndt_table();
@@ -122,7 +122,7 @@ vector<char> QuantumSynchrotronEngine::export_lookup_tables_data () const
 }
 
 PicsarQuantumSyncCtrl
-QuantumSynchrotronEngine::get_default_ctrl() const
+QuantumSynchrotronEngine::get_default_ctrl () const
 {
     namespace pxr_qs = picsar::multi_physics::phys::quantum_sync;
     return PicsarQuantumSyncCtrl{
@@ -132,7 +132,7 @@ QuantumSynchrotronEngine::get_default_ctrl() const
 }
 
 amrex::ParticleReal
-QuantumSynchrotronEngine::get_minimum_chi_part() const
+QuantumSynchrotronEngine::get_minimum_chi_part () const
 {
     return m_qs_minimum_chi_part;
 }
@@ -157,7 +157,7 @@ void QuantumSynchrotronEngine::compute_lookup_tables (
 #endif
 }
 
-void QuantumSynchrotronEngine::init_builtin_dndt_table()
+void QuantumSynchrotronEngine::init_builtin_dndt_table ()
 {
     constexpr auto default_chi_part_min = 1.0e-3_prt;
     constexpr auto default_chi_part_max = 200.0_prt;
@@ -191,7 +191,7 @@ void QuantumSynchrotronEngine::init_builtin_dndt_table()
 }
 
 
-void QuantumSynchrotronEngine::init_builtin_phot_em_table()
+void QuantumSynchrotronEngine::init_builtin_phot_em_table ()
 {
     constexpr auto default_chi_part_min = 1.0e-3_prt;
     constexpr auto default_chi_part_max = 200.0_prt;

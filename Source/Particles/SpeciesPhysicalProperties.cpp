@@ -274,7 +274,7 @@ namespace {
 
 namespace species
 {
-    std::optional<PhysicalSpecies> from_string(const std::string& species)
+    std::optional<PhysicalSpecies> from_string (const std::string& species)
     {
         const auto phys_spec = string_to_species.find(species);
         return (phys_spec != string_to_species.end())?

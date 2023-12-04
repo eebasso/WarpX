@@ -38,11 +38,12 @@
  */
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real
-getSchwingerProductionNumber (const amrex::Real dV, const amrex::Real dt,
-              const amrex::ParticleReal Ex, const amrex::ParticleReal Ey, const amrex::ParticleReal Ez,
-              const amrex::ParticleReal Bx, const amrex::ParticleReal By, const amrex::ParticleReal Bz,
-              const amrex::ParticleReal PoissonToGaussianThreshold,
-              amrex::RandomEngine const& engine)
+getSchwingerProductionNumber (
+    const amrex::Real dV, const amrex::Real dt,
+    const amrex::ParticleReal Ex, const amrex::ParticleReal Ey, const amrex::ParticleReal Ez,
+    const amrex::ParticleReal Bx, const amrex::ParticleReal By, const amrex::ParticleReal Bz,
+    const amrex::ParticleReal PoissonToGaussianThreshold,
+    amrex::RandomEngine const& engine)
 {
     using namespace amrex;
     namespace pxr_p = picsar::multi_physics::phys;

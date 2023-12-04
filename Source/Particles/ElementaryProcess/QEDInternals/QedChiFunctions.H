@@ -28,7 +28,7 @@ namespace QedUtils{
     */
     AMREX_GPU_DEVICE
     AMREX_FORCE_INLINE
-    amrex::Real chi_photon(
+    amrex::Real chi_photon (
         const amrex::ParticleReal px, const amrex::ParticleReal py,
         const amrex::ParticleReal pz, const amrex::ParticleReal ex,
         const amrex::ParticleReal ey, const amrex::ParticleReal ez,
@@ -50,7 +50,7 @@ namespace QedUtils{
     */
     AMREX_GPU_DEVICE
     AMREX_FORCE_INLINE
-    amrex::Real chi_ele_pos(
+    amrex::Real chi_ele_pos (
         const amrex::ParticleReal px, const amrex::ParticleReal py,
         const amrex::ParticleReal pz, const amrex::ParticleReal ex,
         const amrex::ParticleReal ey, const amrex::ParticleReal ez,

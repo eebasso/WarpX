@@ -18,7 +18,7 @@
 
 #include <vector>
 
-CollisionHandler::CollisionHandler(MultiParticleContainer const * const mypc)
+CollisionHandler::CollisionHandler (MultiParticleContainer const * const mypc)
 {
 
     // Read in collision input

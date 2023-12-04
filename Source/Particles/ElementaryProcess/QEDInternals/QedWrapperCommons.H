@@ -68,7 +68,7 @@ class PicsarQedVector : public std::vector<Real>
     * @tparam Args the constructor arguments
     */
     template<typename... Args>
-    PicsarQedVector(Args&&... args) : HV(std::forward<Args>(args)...)
+    PicsarQedVector (Args&&... args) : HV(std::forward<Args>(args)...)
     {}
 
     /**
@@ -76,7 +76,7 @@ class PicsarQedVector : public std::vector<Real>
     * It forces a copy of the CPU data to the GPU
     *
     */
-    void pxr_sync()
+    void pxr_sync ()
     {
         m_device_data.resize(this->size());
         amrex::Gpu::copyAsync(amrex::Gpu::hostToDevice,
@@ -91,7 +91,7 @@ class PicsarQedVector : public std::vector<Real>
     *
     * @return a pointer to the raw device vector data
     */
-    const Real* data() const
+    const Real* data () const
     {
         return m_device_data.data();
     }

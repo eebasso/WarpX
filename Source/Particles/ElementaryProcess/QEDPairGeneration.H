@@ -43,7 +43,7 @@ public:
     *
     * @param[in] opt_depth_runtime_comp index of the optical depth component
     */
-    PairGenerationFilterFunc(int const opt_depth_runtime_comp)
+    PairGenerationFilterFunc (int const opt_depth_runtime_comp)
         : m_opt_depth_runtime_comp(opt_depth_runtime_comp)
         {}
 
@@ -96,17 +96,17 @@ public:
     * @param[in] bzfab constant reference to the FArrayBox of the z component of the magnetic field
     * @param[in] a_offset offset to apply to the particle indices
     */
-    PairGenerationTransformFunc(BreitWheelerGeneratePairs generate_functor,
-                                const WarpXParIter& a_pti, int lev, amrex::IntVect ngEB,
-                                amrex::FArrayBox const& exfab,
-                                amrex::FArrayBox const& eyfab,
-                                amrex::FArrayBox const& ezfab,
-                                amrex::FArrayBox const& bxfab,
-                                amrex::FArrayBox const& byfab,
-                                amrex::FArrayBox const& bzfab,
-                                amrex::Vector<amrex::ParticleReal>& E_external_particle,
-                                amrex::Vector<amrex::ParticleReal>& B_external_particle,
-                                int a_offset = 0);
+    PairGenerationTransformFunc (BreitWheelerGeneratePairs generate_functor,
+                                 const WarpXParIter& a_pti, int lev, amrex::IntVect ngEB,
+                                 amrex::FArrayBox const& exfab,
+                                 amrex::FArrayBox const& eyfab,
+                                 amrex::FArrayBox const& ezfab,
+                                 amrex::FArrayBox const& bxfab,
+                                 amrex::FArrayBox const& byfab,
+                                 amrex::FArrayBox const& bzfab,
+                                 amrex::Vector<amrex::ParticleReal>& E_external_particle,
+                                 amrex::Vector<amrex::ParticleReal>& B_external_particle,
+                                 int a_offset = 0);
 
     /**
     * \brief Functor call. It determines the properties of the generated pair

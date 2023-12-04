@@ -46,10 +46,10 @@ template <int N, typename DstTile, typename FAB, typename Index,
           typename CreateFunc1, typename CreateFunc2, typename TransFunc,
           amrex::EnableIf_t<std::is_integral<Index>::value, int> foo = 0>
 Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::Box box,
-                                const FAB *src_FAB, const Index* mask,
-                                const Index dst1_index, const Index dst2_index,
-                                CreateFunc1&& create1, CreateFunc2&& create2,
-                                TransFunc&& transform) noexcept
+                                    const FAB *src_FAB, const Index* mask,
+                                    const Index dst1_index, const Index dst2_index,
+                                    CreateFunc1&& create1, CreateFunc2&& create2,
+                                    TransFunc&& transform) noexcept
 {
     using namespace amrex;
 
@@ -170,10 +170,10 @@ template <int N, typename DstTile, typename FABs, typename Index,
           typename FilterFunc, typename CreateFunc1, typename CreateFunc2,
            typename TransFunc>
 Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::Box box,
-                                const FABs& src_FABs, const Index dst1_index,
-                                const Index dst2_index, FilterFunc&& filter,
-                                CreateFunc1&& create1, CreateFunc2&& create2,
-                                TransFunc && transform) noexcept
+                                    const FABs& src_FABs, const Index dst1_index,
+                                    const Index dst2_index, FilterFunc&& filter,
+                                    CreateFunc1&& create1, CreateFunc2&& create2,
+                                    TransFunc && transform) noexcept
 {
     using namespace amrex;
 

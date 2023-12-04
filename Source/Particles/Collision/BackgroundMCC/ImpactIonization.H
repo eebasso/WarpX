@@ -47,7 +47,7 @@ public:
                  density in m^-3 as a function of space and time
     * @param[in] t the current simulation time
     */
-    ImpactIonizationFilterFunc(
+    ImpactIonizationFilterFunc (
         MCCProcess const& mcc_process,
         double const mass,
         amrex::ParticleReal const total_collision_prob,
@@ -145,7 +145,7 @@ public:
                  temperature in Kelvin as a function of space and time
     * @param[in] t the current simulation time
     */
-    ImpactIonizationTransformFunc(
+    ImpactIonizationTransformFunc (
         amrex::ParticleReal energy_cost, double mass1, amrex::ParticleReal sqrt_kb_m,
         amrex::ParserExecutor<4> const& T_a_func, amrex::Real t
     ) :  m_energy_cost(energy_cost), m_mass1(mass1),

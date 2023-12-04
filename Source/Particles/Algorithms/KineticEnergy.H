@@ -30,7 +30,7 @@ namespace Algorithms{
      * @return the kinetic energy of the particle (in S.I. units)
      */
     AMREX_GPU_HOST_DEVICE AMREX_INLINE
-    amrex::ParticleReal KineticEnergy(
+    amrex::ParticleReal KineticEnergy (
         const amrex::ParticleReal ux, const amrex::ParticleReal uy, const amrex::ParticleReal uz,
         const amrex::ParticleReal mass)
     {
@@ -56,7 +56,7 @@ namespace Algorithms{
      * @return the kinetic energy of the photon (in S.I. units)
      */
     AMREX_GPU_HOST_DEVICE AMREX_INLINE
-    amrex::ParticleReal KineticEnergyPhotons(
+    amrex::ParticleReal KineticEnergyPhotons (
         const amrex::ParticleReal ux, const amrex::ParticleReal uy, const amrex::ParticleReal uz)
     {
         // Photons have zero mass, but ux, uy and uz are calculated assuming a mass equal to the

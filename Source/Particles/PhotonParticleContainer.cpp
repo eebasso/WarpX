@@ -71,7 +71,7 @@ PhotonParticleContainer::PhotonParticleContainer (AmrCore* amr_core, int ispecie
 
 }
 
-void PhotonParticleContainer::InitData()
+void PhotonParticleContainer::InitData ()
 {
     AddParticles(0); // Note - add on level 0
 

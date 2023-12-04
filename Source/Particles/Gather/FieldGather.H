@@ -469,22 +469,22 @@ void doGatherShapeN (const amrex::ParticleReal xp,
  * \param n_rz_azimuthal_modes Number of azimuthal modes when using RZ geometry
  */
 template <int depos_order, int lower_in_v>
-void doGatherShapeN(const GetParticlePosition<PIdx>& getPosition,
-                    const GetExternalEBField& getExternalEB,
-                    amrex::ParticleReal * const Exp, amrex::ParticleReal * const Eyp,
-                    amrex::ParticleReal * const Ezp, amrex::ParticleReal * const Bxp,
-                    amrex::ParticleReal * const Byp, amrex::ParticleReal * const Bzp,
-                    amrex::FArrayBox const * const exfab,
-                    amrex::FArrayBox const * const eyfab,
-                    amrex::FArrayBox const * const ezfab,
-                    amrex::FArrayBox const * const bxfab,
-                    amrex::FArrayBox const * const byfab,
-                    amrex::FArrayBox const * const bzfab,
-                    const long np_to_gather,
-                    const std::array<amrex::Real, 3>& dx,
-                    const std::array<amrex::Real, 3> xyzmin,
-                    const amrex::Dim3 lo,
-                    const int n_rz_azimuthal_modes)
+void doGatherShapeN (const GetParticlePosition<PIdx>& getPosition,
+                     const GetExternalEBField& getExternalEB,
+                     amrex::ParticleReal * const Exp, amrex::ParticleReal * const Eyp,
+                     amrex::ParticleReal * const Ezp, amrex::ParticleReal * const Bxp,
+                     amrex::ParticleReal * const Byp, amrex::ParticleReal * const Bzp,
+                     amrex::FArrayBox const * const exfab,
+                     amrex::FArrayBox const * const eyfab,
+                     amrex::FArrayBox const * const ezfab,
+                     amrex::FArrayBox const * const bxfab,
+                     amrex::FArrayBox const * const byfab,
+                     amrex::FArrayBox const * const bzfab,
+                     const long np_to_gather,
+                     const std::array<amrex::Real, 3>& dx,
+                     const std::array<amrex::Real, 3> xyzmin,
+                     const amrex::Dim3 lo,
+                     const int n_rz_azimuthal_modes)
 {
 
     amrex::GpuArray<amrex::Real, 3> dx_arr = {dx[0], dx[1], dx[2]};

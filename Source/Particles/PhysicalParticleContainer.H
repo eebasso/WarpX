@@ -111,30 +111,30 @@ public:
      * in the box.
      */
     void Evolve (int lev,
-                         const amrex::MultiFab& Ex,
-                         const amrex::MultiFab& Ey,
-                         const amrex::MultiFab& Ez,
-                         const amrex::MultiFab& Bx,
-                         const amrex::MultiFab& By,
-                         const amrex::MultiFab& Bz,
-                         amrex::MultiFab& jx,
-                         amrex::MultiFab& jy,
-                         amrex::MultiFab& jz,
-                         amrex::MultiFab* cjx,
-                         amrex::MultiFab* cjy,
-                         amrex::MultiFab* cjz,
-                         amrex::MultiFab* rho,
-                         amrex::MultiFab* crho,
-                         const amrex::MultiFab* cEx,
-                         const amrex::MultiFab* cEy,
-                         const amrex::MultiFab* cEz,
-                         const amrex::MultiFab* cBx,
-                         const amrex::MultiFab* cBy,
-                         const amrex::MultiFab* cBz,
-                         amrex::Real t,
-                         amrex::Real dt,
-                         DtType a_dt_type=DtType::Full,
-                         bool skip_deposition=false ) override;
+                 const amrex::MultiFab& Ex,
+                 const amrex::MultiFab& Ey,
+                 const amrex::MultiFab& Ez,
+                 const amrex::MultiFab& Bx,
+                 const amrex::MultiFab& By,
+                 const amrex::MultiFab& Bz,
+                 amrex::MultiFab& jx,
+                 amrex::MultiFab& jy,
+                 amrex::MultiFab& jz,
+                 amrex::MultiFab* cjx,
+                 amrex::MultiFab* cjy,
+                 amrex::MultiFab* cjz,
+                 amrex::MultiFab* rho,
+                 amrex::MultiFab* crho,
+                 const amrex::MultiFab* cEx,
+                 const amrex::MultiFab* cEy,
+                 const amrex::MultiFab* cEz,
+                 const amrex::MultiFab* cBx,
+                 const amrex::MultiFab* cBy,
+                 const amrex::MultiFab* cBz,
+                 amrex::Real t,
+                 amrex::Real dt,
+                 DtType a_dt_type=DtType::Full,
+                 bool skip_deposition=false ) override;
 
     virtual void PushPX (WarpXParIter& pti,
                          amrex::FArrayBox const * exfab,
@@ -151,21 +151,20 @@ public:
                          DtType a_dt_type=DtType::Full);
 
     void PushP (int lev, amrex::Real dt,
-                        const amrex::MultiFab& Ex,
-                        const amrex::MultiFab& Ey,
-                        const amrex::MultiFab& Ez,
-                        const amrex::MultiFab& Bx,
-                        const amrex::MultiFab& By,
-                        const amrex::MultiFab& Bz) override;
+                const amrex::MultiFab& Ex,
+                const amrex::MultiFab& Ey,
+                const amrex::MultiFab& Ez,
+                const amrex::MultiFab& Bx,
+                const amrex::MultiFab& By,
+                const amrex::MultiFab& Bz) override;
 
-    void PartitionParticlesInBuffers (
-                        long& nfine_current,
-                        long& nfine_gather,
-                        long np,
-                        WarpXParIter& pti,
-                        int lev,
-                        amrex::iMultiFab const* current_masks,
-                        amrex::iMultiFab const* gather_masks );
+    void PartitionParticlesInBuffers (long& nfine_current,
+                                      long& nfine_gather,
+                                      long np,
+                                      WarpXParIter& pti,
+                                      int lev,
+                                      amrex::iMultiFab const* current_masks,
+                                      amrex::iMultiFab const* gather_masks );
 
     void PostRestart () final {}
 

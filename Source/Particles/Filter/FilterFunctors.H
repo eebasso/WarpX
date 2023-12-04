@@ -33,7 +33,7 @@ struct RandomFilter
      * \param a_is_active whether the test is active
      * \param a_fraction fraction of particles to select
      */
-    RandomFilter(bool a_is_active, amrex::Real a_fraction)
+    RandomFilter (bool a_is_active, amrex::Real a_fraction)
         : m_is_active(a_is_active), m_fraction(a_fraction) {}
 
     /**
@@ -63,7 +63,7 @@ struct UniformFilter
      * \param a_is_active whether the test is active
      * \param a_stride one particle every a_stride is written to file
      */
-    UniformFilter(bool a_is_active, int a_stride)
+    UniformFilter (bool a_is_active, int a_stride)
         : m_is_active(a_is_active), m_stride(a_stride) {}
 
     /**
@@ -92,8 +92,8 @@ struct ParserFilter
      * \param a_mass mass of the particle species
      * \param time simulation time on the coarsest level
      */
-    ParserFilter(bool a_is_active, amrex::ParserExecutor<7> const& a_filter_parser,
-        const amrex::ParticleReal a_mass, const amrex::Real time):
+    ParserFilter (bool a_is_active, amrex::ParserExecutor<7> const& a_filter_parser,
+                  const amrex::ParticleReal a_mass, const amrex::Real time):
             m_is_active{a_is_active},
             m_function_partparser{a_filter_parser},
             m_mass{a_mass},
@@ -154,7 +154,7 @@ public:
  */
 struct GeometryFilter
 {
-    GeometryFilter(bool a_is_active, amrex::RealBox a_domain)
+    GeometryFilter (bool a_is_active, amrex::RealBox a_domain)
         : m_is_active(a_is_active), m_domain(a_domain) {}
     /**
      * \brief return 1 if the partcile is within the region described by the RealBox

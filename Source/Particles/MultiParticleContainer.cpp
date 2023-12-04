@@ -932,7 +932,7 @@ void MultiParticleContainer::doResampling (const int timestep, const bool verbos
     }
 }
 
-void MultiParticleContainer::CheckIonizationProductSpecies()
+void MultiParticleContainer::CheckIonizationProductSpecies ()
 {
     for (int i=0; i < static_cast<int>(species_names.size()); i++){
         if (allcontainers[i]->do_field_ionization){
