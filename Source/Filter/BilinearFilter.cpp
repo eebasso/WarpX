@@ -23,7 +23,7 @@
 using namespace amrex;
 
 namespace {
-    void compute_stencil(Gpu::DeviceVector<Real> &stencil, unsigned int npass)
+    void compute_stencil (Gpu::DeviceVector<Real> &stencil, unsigned int npass)
     {
         Vector<Real> old_s(1u+npass,0.);
         Vector<Real> new_s(1u+npass,0.);
@@ -60,7 +60,8 @@ namespace {
     }
 }
 
-void BilinearFilter::ComputeStencils(){
+void BilinearFilter::ComputeStencils ()
+{
     WARPX_PROFILE("BilinearFilter::ComputeStencils()");
     int i = 0;
     for (const auto& el : npass_each_dir )

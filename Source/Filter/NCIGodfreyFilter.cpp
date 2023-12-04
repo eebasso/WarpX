@@ -26,7 +26,7 @@ using namespace amrex;
 //NCIGodfreyFilter not implemented in 1D
 #if (AMREX_SPACEDIM >= 2)
 
-NCIGodfreyFilter::NCIGodfreyFilter(godfrey_coeff_set coeff_set, amrex::Real cdtodz, bool nodal_gather):
+NCIGodfreyFilter::NCIGodfreyFilter (godfrey_coeff_set coeff_set, amrex::Real cdtodz, bool nodal_gather):
     m_coeff_set{coeff_set}, // Store parameters into class data members
     m_cdtodz{cdtodz},
     m_nodal_gather{nodal_gather}
@@ -41,7 +41,7 @@ NCIGodfreyFilter::NCIGodfreyFilter(godfrey_coeff_set coeff_set, amrex::Real cdto
 # endif
 }
 
-void NCIGodfreyFilter::ComputeStencils()
+void NCIGodfreyFilter::ComputeStencils ()
 {
     using namespace warpx::nci_godfrey;
 
@@ -138,13 +138,13 @@ void NCIGodfreyFilter::ComputeStencils()
 
 #else
 
-NCIGodfreyFilter::NCIGodfreyFilter(godfrey_coeff_set, amrex::Real, bool)
+NCIGodfreyFilter::NCIGodfreyFilter (godfrey_coeff_set, amrex::Real, bool)
 {
     WARPX_ABORT_WITH_MESSAGE(
         "NCIGodfreyFilter not implemented in 1D!");
 }
 
-void NCIGodfreyFilter::ComputeStencils()
+void NCIGodfreyFilter::ComputeStencils ()
 {
     WARPX_ABORT_WITH_MESSAGE(
         "NCIGodfreyFilter not implemented in 1D!");

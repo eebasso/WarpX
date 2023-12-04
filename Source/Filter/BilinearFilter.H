@@ -17,9 +17,9 @@ class BilinearFilter : public Filter
 {
 public:
 
-    BilinearFilter() = default;
+    BilinearFilter () = default;
 
-    void ComputeStencils();
+    void ComputeStencils ();
 
     amrex::Array<unsigned int, AMREX_SPACEDIM> npass_each_dir;
 

@@ -30,10 +30,10 @@ public:
 
     NCIGodfreyFilter () = default;
 
-    NCIGodfreyFilter(godfrey_coeff_set coeff_set, amrex::Real cdtodz,
-                     bool nodal_gather);
+    NCIGodfreyFilter (godfrey_coeff_set coeff_set, amrex::Real cdtodz,
+                      bool nodal_gather);
 
-    void ComputeStencils();
+    void ComputeStencils ();
 
     static constexpr int m_stencil_width = 4;
 
