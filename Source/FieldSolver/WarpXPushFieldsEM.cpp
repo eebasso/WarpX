@@ -1063,9 +1063,9 @@ WarpX::MacroscopicEvolveE (int lev, PatchType patch_type, amrex::Real a_dt) {
 }
 
 void
-WarpX::DampFieldsInGuards(const int lev,
-                          const std::array<std::unique_ptr<amrex::MultiFab>,3>& Efield,
-                          const std::array<std::unique_ptr<amrex::MultiFab>,3>& Bfield) {
+WarpX::DampFieldsInGuards (const int lev,
+                           const std::array<std::unique_ptr<amrex::MultiFab>,3>& Efield,
+                           const std::array<std::unique_ptr<amrex::MultiFab>,3>& Bfield) {
 
     // Loop over dimensions
     for (int dampdir = 0 ; dampdir < AMREX_SPACEDIM ; dampdir++)
@@ -1161,7 +1161,7 @@ WarpX::DampFieldsInGuards(const int lev,
     }
 }
 
-void WarpX::DampFieldsInGuards(const int lev, std::unique_ptr<amrex::MultiFab>& mf)
+void WarpX::DampFieldsInGuards (const int lev, std::unique_ptr<amrex::MultiFab>& mf)
 {
     // Loop over dimensions
     for (int dampdir = 0; dampdir < AMREX_SPACEDIM; dampdir++)

@@ -28,9 +28,9 @@
  * \param[in] c2 the speed of light squared
  */
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
-void calc_M(amrex::Real arr [], amrex::Real ex, amrex::Real ey, amrex::Real ez,
-            amrex::Real bx, amrex::Real by, amrex::Real bz,
-            amrex::Real xi_c2, amrex::Real c2)
+void calc_M (amrex::Real arr [], amrex::Real ex, amrex::Real ey, amrex::Real ez,
+             amrex::Real bx, amrex::Real by, amrex::Real bz,
+             amrex::Real xi_c2, amrex::Real c2)
 {
     using namespace amrex;
     const Real ee = ex*ex+ey*ey+ez*ez;

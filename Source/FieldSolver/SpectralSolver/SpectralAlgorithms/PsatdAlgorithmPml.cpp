@@ -30,7 +30,7 @@
 
 using namespace amrex;
 
-PsatdAlgorithmPml::PsatdAlgorithmPml(
+PsatdAlgorithmPml::PsatdAlgorithmPml (
         const SpectralKSpace& spectral_kspace,
         const DistributionMapping& dm,
         const SpectralFieldIndex& spectral_index,
@@ -75,7 +75,7 @@ PsatdAlgorithmPml::PsatdAlgorithmPml(
     InitializeSpectralCoefficients(spectral_kspace, dm);
 }
 
-void PsatdAlgorithmPml::pushSpectralFields(SpectralFieldData& f) const
+void PsatdAlgorithmPml::pushSpectralFields (SpectralFieldData& f) const
 {
     const bool dive_cleaning = m_dive_cleaning;
     const bool divb_cleaning = m_divb_cleaning;

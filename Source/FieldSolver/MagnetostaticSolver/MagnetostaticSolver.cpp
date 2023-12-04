@@ -203,7 +203,7 @@ WarpX::computeVectorPotential (const amrex::Vector<amrex::Array<std::unique_ptr<
    \param[inout] A The vector potential
 */
 void
-WarpX::setVectorPotentialBC ( amrex::Vector<amrex::Array<std::unique_ptr<amrex::MultiFab>,3>>& A ) const
+WarpX::setVectorPotentialBC (amrex::Vector<amrex::Array<std::unique_ptr<amrex::MultiFab>,3>>& A) const
 {
     // check if any dimension has non-periodic boundary conditions
     if (!m_vector_poisson_boundary_handler.has_non_periodic) return;
@@ -347,8 +347,8 @@ void MagnetostaticSolver::VectorPoissonBoundaryHandler::defineVectorPotentialBCs
     bcs_set = true;
 }
 
-void MagnetostaticSolver::EBCalcBfromVectorPotentialPerLevel::doInterp(const std::unique_ptr<amrex::MultiFab> &src,
-                                                                       const std::unique_ptr<amrex::MultiFab> &dst)
+void MagnetostaticSolver::EBCalcBfromVectorPotentialPerLevel::doInterp (const std::unique_ptr<amrex::MultiFab> &src,
+                                                                        const std::unique_ptr<amrex::MultiFab> &dst)
 {
     WarpX &warpx = WarpX::GetInstance();
 
@@ -389,7 +389,7 @@ void MagnetostaticSolver::EBCalcBfromVectorPotentialPerLevel::doInterp(const std
     }
 }
 
-void MagnetostaticSolver::EBCalcBfromVectorPotentialPerLevel::operator()(amrex::Array<std::unique_ptr<amrex::MLMG>,3> & mlmg, int const lev)
+void MagnetostaticSolver::EBCalcBfromVectorPotentialPerLevel::operator() (amrex::Array<std::unique_ptr<amrex::MLMG>,3> & mlmg, int const lev)
 {
     using namespace amrex::literals;
 

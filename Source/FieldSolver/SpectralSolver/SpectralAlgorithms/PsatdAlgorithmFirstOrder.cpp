@@ -28,7 +28,7 @@
 
 using namespace amrex::literals;
 
-PsatdAlgorithmFirstOrder::PsatdAlgorithmFirstOrder(
+PsatdAlgorithmFirstOrder::PsatdAlgorithmFirstOrder (
     const SpectralKSpace& spectral_kspace,
     const amrex::DistributionMapping& dm,
     const SpectralFieldIndex& spectral_index,

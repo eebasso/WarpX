@@ -27,13 +27,13 @@ namespace ElectrostaticSolver {
         amrex::ParserExecutor<4> potential_eb;
 
         AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-        amrex::Real operator()(const amrex::Real x, const amrex::Real z) const noexcept {
+        amrex::Real operator() (const amrex::Real x, const amrex::Real z) const noexcept {
             using namespace amrex::literals;
             return potential_eb(x, 0.0_rt, z, t);
         }
 
         AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
-        amrex::Real operator()(const amrex::Real x, const amrex::Real y, const amrex::Real z) const noexcept {
+        amrex::Real operator() (const amrex::Real x, const amrex::Real y, const amrex::Real z) const noexcept {
             return potential_eb(x, y, z, t);
         }
     };
@@ -62,7 +62,7 @@ namespace ElectrostaticSolver {
         }
 
         [[nodiscard]] PhiCalculatorEB
-        getPhiEB(amrex::Real t) const noexcept
+        getPhiEB (amrex::Real t) const noexcept
         {
             return PhiCalculatorEB{t, potential_eb};
         }
@@ -102,16 +102,16 @@ namespace ElectrostaticSolver {
      * simple finite difference scheme in WarpX::computeE sometimes fails
      */
     class EBCalcEfromPhiPerLevel {
-      private:
+    private:
         amrex::Vector<
             amrex::Array<amrex::MultiFab *, AMREX_SPACEDIM>
         > m_e_field;
 
-      public:
-        EBCalcEfromPhiPerLevel(amrex::Vector<amrex::Array<amrex::MultiFab *, AMREX_SPACEDIM> > e_field)
+    public:
+        EBCalcEfromPhiPerLevel (amrex::Vector<amrex::Array<amrex::MultiFab *, AMREX_SPACEDIM> > e_field)
                 : m_e_field(std::move(e_field)) {}
 
-        void operator()(amrex::MLMG & mlmg, int const lev) {
+        void operator() (amrex::MLMG & mlmg, int const lev) {
             using namespace amrex::literals;
 
             mlmg.getGradSolution({m_e_field[lev]});

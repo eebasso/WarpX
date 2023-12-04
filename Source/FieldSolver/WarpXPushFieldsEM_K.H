@@ -24,7 +24,7 @@
  * \param[in] tb_bigEnd the highest index of the tilebox, including guard cells
  */
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
-amrex::Box constrain_tilebox_to_guards(
+amrex::Box constrain_tilebox_to_guards (
     const amrex::Box& input_tb,
     const int dir,
     const int iside,
@@ -71,7 +71,7 @@ amrex::Box constrain_tilebox_to_guards(
  * \param[in] tb_bigEnd the highest index of the tilebox, including guard cells
  */
 AMREX_GPU_HOST_DEVICE AMREX_INLINE
-void damp_field_in_guards(
+void damp_field_in_guards (
     amrex::Array4<amrex::Real> const& mf_arr,
     const int i,
     const int j,

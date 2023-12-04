@@ -28,7 +28,7 @@
 
 using namespace amrex::literals;
 
-PsatdAlgorithmJLinearInTime::PsatdAlgorithmJLinearInTime(
+PsatdAlgorithmJLinearInTime::PsatdAlgorithmJLinearInTime (
     const SpectralKSpace& spectral_kspace,
     const amrex::DistributionMapping& dm,
     const SpectralFieldIndex& spectral_index,

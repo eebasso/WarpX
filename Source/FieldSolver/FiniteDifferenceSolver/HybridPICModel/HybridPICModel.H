@@ -141,13 +141,13 @@ public:
 
     // Helper functions to retrieve hybrid-PIC multifabs
     [[nodiscard]] amrex::MultiFab*
-    get_pointer_current_fp_ampere  (int lev, int direction) const
+    get_pointer_current_fp_ampere (int lev, int direction) const
     {
         return current_fp_ampere[lev][direction].get();
     }
 
     [[nodiscard]] amrex::MultiFab*
-    get_pointer_electron_pressure_fp  (int lev) const
+    get_pointer_electron_pressure_fp (int lev) const
     {
         return electron_pressure_fp[lev].get();
     }

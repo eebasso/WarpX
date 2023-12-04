@@ -97,7 +97,7 @@ class SpectralFieldDataRZ
          *
          * \param[in] icomp component of the FabArray where the data are set to zero
          */
-        void ZeroOutDataComp(int icomp)
+        void ZeroOutDataComp (int icomp)
         {
             // In spectral space fields of each mode are grouped together, so that the index
             // of a field for a specific mode is given by field_index + mode*n_fields.
@@ -117,7 +117,7 @@ class SpectralFieldDataRZ
          * \param[in] icomp component of the FabArray where the data are scaled
          * \param[in] scale_factor scale factor to use for scaling
          */
-        void ScaleDataComp(int icomp, amrex::Real scale_factor)
+        void ScaleDataComp (int icomp, amrex::Real scale_factor)
         {
             // In spectral space fields of each mode are grouped together, so that the index
             // of a field for a specific mode is given by field_index + mode*n_fields.

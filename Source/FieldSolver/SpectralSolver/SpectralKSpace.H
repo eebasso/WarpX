@@ -48,22 +48,22 @@ class SpectralKSpace
 {
     public:
         amrex::BoxArray spectralspace_ba;
-        SpectralKSpace() : dx(amrex::RealVect::Zero) {}
+        SpectralKSpace () : dx(amrex::RealVect::Zero) {}
 
-        SpectralKSpace( const amrex::BoxArray& realspace_ba,
+        SpectralKSpace (const amrex::BoxArray& realspace_ba,
                         const amrex::DistributionMapping& dm,
-                        amrex::RealVect realspace_dx );
+                        amrex::RealVect realspace_dx);
 
-        KVectorComponent getKComponent(
+        KVectorComponent getKComponent (
             const amrex::DistributionMapping& dm,
             const amrex::BoxArray& realspace_ba,
             int i_dim, bool only_positive_k ) const;
 
-        KVectorComponent getModifiedKComponent(
+        KVectorComponent getModifiedKComponent (
             const amrex::DistributionMapping& dm, int i_dim,
             int n_order, short grid_type ) const;
 
-        SpectralShiftFactor getSpectralShiftFactor(
+        SpectralShiftFactor getSpectralShiftFactor (
             const amrex::DistributionMapping& dm, int i_dim,
             int shift_type ) const;
 

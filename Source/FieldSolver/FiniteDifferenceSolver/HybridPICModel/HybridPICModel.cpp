@@ -272,7 +272,7 @@ void HybridPICModel::HybridPICSolveE (
     warpx.ApplyEfieldBoundary(lev, patch_type);
 }
 
-void HybridPICModel::CalculateElectronPressure(DtType a_dt_type)
+void HybridPICModel::CalculateElectronPressure (DtType a_dt_type)
 {
     auto& warpx = WarpX::GetInstance();
     for (int lev = 0; lev <= warpx.finestLevel(); ++lev)
@@ -281,7 +281,7 @@ void HybridPICModel::CalculateElectronPressure(DtType a_dt_type)
     }
 }
 
-void HybridPICModel::CalculateElectronPressure(const int lev, DtType a_dt_type)
+void HybridPICModel::CalculateElectronPressure (const int lev, DtType a_dt_type)
 {
     WARPX_PROFILE("WarpX::CalculateElectronPressure()");
 

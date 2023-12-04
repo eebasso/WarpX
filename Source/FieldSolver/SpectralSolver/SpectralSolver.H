@@ -106,24 +106,25 @@ class SpectralSolver
          * \brief Transform spectral field specified by `field_index` back to
          * real space, and store it in the component `i_comp` of `mf`
          */
-        void BackwardTransform( int lev,
+        void BackwardTransform (int lev,
                                 amrex::MultiFab& mf,
                                 int field_index,
                                 const amrex::IntVect& fill_guards,
-                                int i_comp=0 );
+                                int i_comp=0);
 
         /**
          * \brief Update the fields in spectral space, over one timestep
          */
-        void pushSpectralFields();
+        void pushSpectralFields ();
 
         /**
           * \brief Public interface to call the member function ComputeSpectralDivE
           * of the base class SpectralBaseAlgorithm from objects of class SpectralSolver
           */
-        void ComputeSpectralDivE ( int lev,
-                                   const std::array<std::unique_ptr<amrex::MultiFab>,3>& Efield,
-                                   amrex::MultiFab& divE ) {
+        void ComputeSpectralDivE (int lev,
+                                  const std::array<std::unique_ptr<amrex::MultiFab>,3>& Efield,
+                                  amrex::MultiFab& divE)
+        {
             algorithm->ComputeSpectralDivE( lev, field_data, Efield, divE );
         }
 

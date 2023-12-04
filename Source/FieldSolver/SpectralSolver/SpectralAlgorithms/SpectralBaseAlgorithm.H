@@ -36,18 +36,18 @@ class SpectralBaseAlgorithm
 {
     public:
         // Virtual member function ; meant to be overridden in subclasses
-        virtual void pushSpectralFields(SpectralFieldData& f) const = 0;
+        virtual void pushSpectralFields (SpectralFieldData& f) const = 0;
 
         // The destructor should also be a virtual function, so that
         // a pointer to subclass of `SpectraBaseAlgorithm` actually
         // calls the subclass's destructor.
-        virtual ~SpectralBaseAlgorithm() = default;
+        virtual ~SpectralBaseAlgorithm () = default;
 
         // Default move and copy operations
-        SpectralBaseAlgorithm(const SpectralBaseAlgorithm&) = default;
-        SpectralBaseAlgorithm& operator=(const SpectralBaseAlgorithm&) = default;
-        SpectralBaseAlgorithm(SpectralBaseAlgorithm&&) = default;
-        SpectralBaseAlgorithm& operator=(SpectralBaseAlgorithm&&) = default;
+        SpectralBaseAlgorithm (const SpectralBaseAlgorithm&) = default;
+        SpectralBaseAlgorithm& operator= (const SpectralBaseAlgorithm&) = default;
+        SpectralBaseAlgorithm (SpectralBaseAlgorithm&&) = default;
+        SpectralBaseAlgorithm& operator= (SpectralBaseAlgorithm&&) = default;
 
         /**
          * \brief Virtual function for current correction in Fourier space
@@ -85,11 +85,11 @@ class SpectralBaseAlgorithm
         /**
         * \brief Constructor
         */
-        SpectralBaseAlgorithm(const SpectralKSpace& spectral_kspace,
-                              const amrex::DistributionMapping& dm,
-                              const SpectralFieldIndex& spectral_index,
-                              int norder_x, int norder_y,
-                              int norder_z, short grid_type);
+        SpectralBaseAlgorithm (const SpectralKSpace& spectral_kspace,
+                               const amrex::DistributionMapping& dm,
+                               const SpectralFieldIndex& spectral_index,
+                               int norder_x, int norder_y,
+                               int norder_z, short grid_type);
 
         SpectralFieldIndex m_spectral_index;
 

@@ -37,16 +37,17 @@ public:
     void InitData ();
 
     /** return MultiFab, sigma (conductivity) of the medium. */
-    amrex::MultiFab& getsigma_mf  () {return (*m_sigma_mf);}
+    amrex::MultiFab& getsigma_mf () {return (*m_sigma_mf);}
     /** return MultiFab, epsilon (permittivity) of the medium. */
-    amrex::MultiFab& getepsilon_mf  () {return (*m_eps_mf);}
+    amrex::MultiFab& getepsilon_mf () {return (*m_eps_mf);}
     /** return MultiFab, mu (permeability) of the medium. */
-    amrex::MultiFab& getmu_mf  () {return (*m_mu_mf);}
+    amrex::MultiFab& getmu_mf () {return (*m_mu_mf);}
 
     /** Initializes the Multifabs storing macroscopic properties
      *  with user-defined functions(x,y,z).
      */
-    void InitializeMacroMultiFabUsingParser (amrex::MultiFab *macro_mf,
+    void InitializeMacroMultiFabUsingParser (
+                                  amrex::MultiFab *macro_mf,
                                   amrex::ParserExecutor<3> const& macro_parser,
                                   const amrex::GpuArray<amrex::Real, AMREX_SPACEDIM>& dx_lev,
                                   const amrex::RealBox& prob_domain_lev);

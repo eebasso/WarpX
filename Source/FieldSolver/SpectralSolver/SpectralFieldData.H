@@ -143,20 +143,20 @@ class SpectralFieldData
 {
 
     public:
-        SpectralFieldData( int lev,
+        SpectralFieldData (int lev,
                            const amrex::BoxArray& realspace_ba,
                            const SpectralKSpace& k_space,
                            const amrex::DistributionMapping& dm,
                            int n_field_required,
                            bool periodic_single_box);
-        SpectralFieldData() = default; // Default constructor
-        ~SpectralFieldData();
+        SpectralFieldData () = default; // Default constructor
+        ~SpectralFieldData ();
 
         // default move and copy operations
-        SpectralFieldData(const SpectralFieldData&) = delete;
-        SpectralFieldData& operator=(const SpectralFieldData&) = delete;
-        SpectralFieldData(SpectralFieldData&&) = default;
-        SpectralFieldData& operator=(SpectralFieldData&& field_data) = default;
+        SpectralFieldData (const SpectralFieldData&) = delete;
+        SpectralFieldData& operator= (const SpectralFieldData&) = delete;
+        SpectralFieldData (SpectralFieldData&&) = default;
+        SpectralFieldData& operator= (SpectralFieldData&& field_data) = default;
 
         void ForwardTransform (int lev,
                                const amrex::MultiFab& mf, int field_index,

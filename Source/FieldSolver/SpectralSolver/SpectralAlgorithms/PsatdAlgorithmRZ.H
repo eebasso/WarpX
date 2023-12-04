@@ -16,21 +16,21 @@ class PsatdAlgorithmRZ : public SpectralBaseAlgorithmRZ
 {
 
     public:
-        PsatdAlgorithmRZ(SpectralKSpaceRZ const & spectral_kspace,
-                         amrex::DistributionMapping const & dm,
-                         const SpectralFieldIndex& spectral_index,
-                         int n_rz_azimuthal_modes, int norder_z,
-                         short grid_type, amrex::Real dt_step,
-                         bool update_with_rho,
-                         bool time_averaging,
-                         int J_in_time,
-                         int rho_in_time,
-                         bool dive_cleaning,
-                         bool divb_cleaning);
+        PsatdAlgorithmRZ (SpectralKSpaceRZ const & spectral_kspace,
+                          amrex::DistributionMapping const & dm,
+                          const SpectralFieldIndex& spectral_index,
+                          int n_rz_azimuthal_modes, int norder_z,
+                          short grid_type, amrex::Real dt_step,
+                          bool update_with_rho,
+                          bool time_averaging,
+                          int J_in_time,
+                          int rho_in_time,
+                          bool dive_cleaning,
+                          bool divb_cleaning);
         // Redefine functions from base class
-        void pushSpectralFields(SpectralFieldDataRZ & f) final;
+        void pushSpectralFields (SpectralFieldDataRZ & f) final;
 
-        void InitializeSpectralCoefficients(SpectralFieldDataRZ const & f);
+        void InitializeSpectralCoefficients (SpectralFieldDataRZ const & f);
 
         /**
          * \brief Virtual function for current correction in Fourier space

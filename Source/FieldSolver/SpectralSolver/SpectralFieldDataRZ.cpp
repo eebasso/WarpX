@@ -205,7 +205,7 @@ SpectralFieldDataRZ::SpectralFieldDataRZ (const int lev,
 }
 
 
-SpectralFieldDataRZ::~SpectralFieldDataRZ()
+SpectralFieldDataRZ::~SpectralFieldDataRZ ()
 {
     if (!fields.empty()){
         for (amrex::MFIter mfi(fields); mfi.isValid(); ++mfi){

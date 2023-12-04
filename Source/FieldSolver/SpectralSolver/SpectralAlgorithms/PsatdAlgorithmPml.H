@@ -44,7 +44,7 @@ class PsatdAlgorithmPml : public SpectralBaseAlgorithm
          * \param[in] dive_cleaning Whether to use divergence correction for E (F term)
          * \param[in] divb_cleaning Whether to use divergence correction for B (G term)
          */
-        PsatdAlgorithmPml(
+        PsatdAlgorithmPml (
             const SpectralKSpace& spectral_kspace,
             const amrex::DistributionMapping& dm,
             const SpectralFieldIndex& spectral_index,
@@ -64,7 +64,7 @@ class PsatdAlgorithmPml : public SpectralBaseAlgorithm
          * \param[in] spectral_kspace Spectral space
          * \param[in] dm Distribution mapping
          */
-        void InitializeSpectralCoefficients(
+        void InitializeSpectralCoefficients (
             const SpectralKSpace& spectral_kspace,
             const amrex::DistributionMapping& dm);
 
@@ -74,7 +74,7 @@ class PsatdAlgorithmPml : public SpectralBaseAlgorithm
          *
          * \param[in,out] f All fields in spectral space
          */
-        void pushSpectralFields(SpectralFieldData& f) const final;
+        void pushSpectralFields (SpectralFieldData& f) const final;
 
         /**
          * \brief Virtual function for current correction in Fourier space

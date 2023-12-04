@@ -53,6 +53,6 @@
  *    abramowitz m. & stegun irene a.
  *    handbook of mathematical functions
  */
-void GetBesselRoots(int n, int nk, amrex::Vector<amrex::Real>& roots, amrex::Vector<int> &ier);
+void GetBesselRoots (int n, int nk, amrex::Vector<amrex::Real>& roots, amrex::Vector<int> &ier);
 
 #endif // WARPX_BESSEL_ROOTS_H_

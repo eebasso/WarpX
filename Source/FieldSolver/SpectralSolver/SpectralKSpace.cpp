@@ -35,9 +35,9 @@ using namespace amrex;
  * \param dm Indicates which MPI proc owns which box, in realspace_ba.
  * \param realspace_dx Cell size of the grid in real space
  */
-SpectralKSpace::SpectralKSpace( const BoxArray& realspace_ba,
+SpectralKSpace::SpectralKSpace (const BoxArray& realspace_ba,
                                 const DistributionMapping& dm,
-                                const RealVect realspace_dx )
+                                const RealVect realspace_dx)
     : dx(realspace_dx)  // Store the cell size as member `dx`
 {
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
@@ -80,10 +80,10 @@ SpectralKSpace::SpectralKSpace( const BoxArray& realspace_ba,
  * corresponding k coordinate along the dimension specified by `i_dim`
  */
 KVectorComponent
-SpectralKSpace::getKComponent( const DistributionMapping& dm,
+SpectralKSpace::getKComponent (const DistributionMapping& dm,
                                const BoxArray& realspace_ba,
                                const int i_dim,
-                               const bool only_positive_k ) const
+                               const bool only_positive_k) const
 {
     // Initialize an empty DeviceVector in each box
     KVectorComponent k_comp(spectralspace_ba, dm);
@@ -141,9 +141,9 @@ SpectralKSpace::getKComponent( const DistributionMapping& dm,
  * a correcting "shift" factor must be applied in spectral space.)
  */
 SpectralShiftFactor
-SpectralKSpace::getSpectralShiftFactor( const DistributionMapping& dm,
+SpectralKSpace::getSpectralShiftFactor (const DistributionMapping& dm,
                                         const int i_dim,
-                                        const int shift_type ) const
+                                        const int shift_type) const
 {
     // Initialize an empty DeviceVector in each box
     SpectralShiftFactor shift_factor( spectralspace_ba, dm );
@@ -188,10 +188,10 @@ SpectralKSpace::getSpectralShiftFactor( const DistributionMapping& dm,
  * \param grid_type type of grid (collocated or not)
  */
 KVectorComponent
-SpectralKSpace::getModifiedKComponent( const DistributionMapping& dm,
+SpectralKSpace::getModifiedKComponent (const DistributionMapping& dm,
                                        const int i_dim,
                                        const int n_order,
-                                       const short grid_type ) const
+                                       const short grid_type) const
 {
     // Initialize an empty DeviceVector in each box
     KVectorComponent modified_k_comp(spectralspace_ba, dm);

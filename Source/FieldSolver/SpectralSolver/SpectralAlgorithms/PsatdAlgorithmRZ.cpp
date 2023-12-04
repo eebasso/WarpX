@@ -74,7 +74,7 @@ PsatdAlgorithmRZ::PsatdAlgorithmRZ (SpectralKSpaceRZ const & spectral_kspace,
 /* Advance the E and B field in spectral space (stored in `f`)
  * over one time step */
 void
-PsatdAlgorithmRZ::pushSpectralFields(SpectralFieldDataRZ & f)
+PsatdAlgorithmRZ::pushSpectralFields (SpectralFieldDataRZ & f)
 {
 
     const bool update_with_rho = m_update_with_rho;

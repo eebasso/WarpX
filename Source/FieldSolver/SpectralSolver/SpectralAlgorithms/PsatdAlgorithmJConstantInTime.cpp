@@ -29,7 +29,7 @@
 
 using namespace amrex;
 
-PsatdAlgorithmJConstantInTime::PsatdAlgorithmJConstantInTime(
+PsatdAlgorithmJConstantInTime::PsatdAlgorithmJConstantInTime (
     const SpectralKSpace& spectral_kspace,
     const DistributionMapping& dm,
     const SpectralFieldIndex& spectral_index,

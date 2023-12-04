@@ -21,17 +21,17 @@ class SpectralBaseAlgorithmRZ
 {
     public:
         // Virtual member function ; meant to be overridden in subclasses
-        virtual void pushSpectralFields(SpectralFieldDataRZ & f) = 0;
+        virtual void pushSpectralFields (SpectralFieldDataRZ & f) = 0;
 
         // The destructor should also be a virtual function, so that
         // a pointer to subclass of `SpectraBaseAlgorithm` actually
         // calls the subclass's destructor.
-        virtual ~SpectralBaseAlgorithmRZ() = default;
+        virtual ~SpectralBaseAlgorithmRZ () = default;
 
         /**
          * \brief Default Copy constructor
          */
-        SpectralBaseAlgorithmRZ ( SpectralBaseAlgorithmRZ const &) = default;
+        SpectralBaseAlgorithmRZ ( SpectralBaseAlgorithmRZ const & ) = default;
 
         /**
          * \brief Default Copy operator
@@ -81,10 +81,10 @@ class SpectralBaseAlgorithmRZ
         using SpectralComplexCoefficients = amrex::FabArray< amrex::BaseFab <Complex> >;
 
         // Constructor
-        SpectralBaseAlgorithmRZ(SpectralKSpaceRZ const & spectral_kspace,
-                                amrex::DistributionMapping const & dm,
-                                const SpectralFieldIndex& spectral_index,
-                                int const norder_z, short const grid_type)
+        SpectralBaseAlgorithmRZ (SpectralKSpaceRZ const & spectral_kspace,
+                                 amrex::DistributionMapping const & dm,
+                                 const SpectralFieldIndex& spectral_index,
+                                 int const norder_z, short const grid_type)
           // Compute and assign the modified k vectors
           : m_spectral_index(spectral_index),
             modified_kz_vec(spectral_kspace.getModifiedKComponent(dm, 1, norder_z, grid_type))

@@ -27,7 +27,8 @@ using namespace amrex;
 /**
  * \brief Constructor
  */
-SpectralBaseAlgorithm::SpectralBaseAlgorithm(const SpectralKSpace& spectral_kspace,
+SpectralBaseAlgorithm::SpectralBaseAlgorithm (
+    const SpectralKSpace& spectral_kspace,
     const amrex::DistributionMapping& dm,
     const SpectralFieldIndex& spectral_index,
     const int norder_x, const int norder_y,

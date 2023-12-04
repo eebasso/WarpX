@@ -20,7 +20,7 @@
 
 #if WARPX_USE_PSATD
 
-SpectralSolver::SpectralSolver(
+SpectralSolver::SpectralSolver (
                 const int lev,
                 const amrex::BoxArray& realspace_ba,
                 const amrex::DistributionMapping& dm,
@@ -136,7 +136,8 @@ SpectralSolver::BackwardTransform (const int lev,
 }
 
 void
-SpectralSolver::pushSpectralFields(){
+SpectralSolver::pushSpectralFields ()
+{
     WARPX_PROFILE("SpectralSolver::pushSpectralFields");
     // Virtual function: the actual function used here depends
     // on the sub-class of `SpectralBaseAlgorithm` that was
