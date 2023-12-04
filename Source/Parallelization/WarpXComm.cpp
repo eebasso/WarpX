@@ -1036,7 +1036,8 @@ WarpX::SyncCurrent (
 }
 
 void
-WarpX::SyncRho () {
+WarpX::SyncRho ()
+{
     SyncRho(rho_fp, rho_cp, charge_buf);
 }
 

@@ -50,7 +50,7 @@ public:
      * \param use_filter whether filtering will be done
      * \param bilinear_filter_stencil_length the size of the stencil for filtering
      */
-    void Init(
+    void Init (
         amrex::Real dt,
         amrex::RealVect dx,
         bool do_subcycling,

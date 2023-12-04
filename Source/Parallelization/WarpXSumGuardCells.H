@@ -27,9 +27,9 @@
  *    spectral solver requires the value of the sources over a large stencil.)
  */
 inline void
-WarpXSumGuardCells(amrex::MultiFab& mf, const amrex::Periodicity& period,
-                   const amrex::IntVect& src_ngrow,
-                   const int icomp=0, const int ncomp=1)
+WarpXSumGuardCells (amrex::MultiFab& mf, const amrex::Periodicity& period,
+                    const amrex::IntVect& src_ngrow,
+                    const int icomp=0, const int ncomp=1)
 {
     amrex::IntVect n_updated_guards;
 
@@ -57,10 +57,10 @@ WarpXSumGuardCells(amrex::MultiFab& mf, const amrex::Periodicity& period,
  *       The component from which we copy in `src` is always 0.
  */
 inline void
-WarpXSumGuardCells(amrex::MultiFab& dst, amrex::MultiFab& src,
-                   const amrex::Periodicity& period,
-                   const amrex::IntVect& src_ngrow,
-                   const int icomp=0, const int ncomp=1)
+WarpXSumGuardCells (amrex::MultiFab& dst, amrex::MultiFab& src,
+                    const amrex::Periodicity& period,
+                    const amrex::IntVect& src_ngrow,
+                    const int icomp=0, const int ncomp=1)
 {
     amrex::IntVect n_updated_guards;
 
