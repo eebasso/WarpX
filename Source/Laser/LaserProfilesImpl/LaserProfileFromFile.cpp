@@ -161,7 +161,7 @@ WarpXLaserProfiles::FromFileLaserProfile::fill_amplitude (
 }
 
 void
-WarpXLaserProfiles::FromFileLaserProfile::parse_lasy_file(std::string lasy_file_name)
+WarpXLaserProfiles::FromFileLaserProfile::parse_lasy_file (std::string lasy_file_name)
 {
 #ifdef WARPX_USE_OPENPMD
     if(ParallelDescriptor::IOProcessor()){
@@ -299,7 +299,7 @@ WarpXLaserProfiles::FromFileLaserProfile::parse_binary_file (std::string binary_
 }
 
 std::pair<int,int>
-WarpXLaserProfiles::FromFileLaserProfile::find_left_right_time_indices(amrex::Real t) const
+WarpXLaserProfiles::FromFileLaserProfile::find_left_right_time_indices (amrex::Real t) const
 {
     const auto t_min = m_params.t_min;
     const auto t_max = m_params.t_max;
