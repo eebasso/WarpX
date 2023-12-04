@@ -102,7 +102,8 @@ namespace {
     AMREX_FORCE_INLINE
     AMREX_GPU_HOST_DEVICE
     amrex::Real
-    generateGaussianFluxDist( amrex::Real u_m, amrex::Real u_th, amrex::RandomEngine const& engine ) {
+    generateGaussianFluxDist (amrex::Real u_m, amrex::Real u_th, amrex::RandomEngine const& engine)
+    {
 
         using namespace amrex::literals;
 
@@ -274,7 +275,7 @@ struct InjectorMomentumBoltzmann
     // Constructor whose inputs are:
     // a reference to the initial temperature container t,
     // a reference to the initial velocity container b
-    InjectorMomentumBoltzmann(GetTemperature const& t, GetVelocity const& b) noexcept
+    InjectorMomentumBoltzmann (GetTemperature const& t, GetVelocity const& b) noexcept
         : velocity(b), temperature(t)
         {}
 
@@ -359,7 +360,7 @@ struct InjectorMomentumJuttner
     // Constructor whose inputs are:
     // a reference to the initial temperature container t,
     // a reference to the initial velocity container b
-    InjectorMomentumJuttner(GetTemperature const& t, GetVelocity const& b) noexcept
+    InjectorMomentumJuttner (GetTemperature const& t, GetVelocity const& b) noexcept
         : velocity(b), temperature(t)
         {}
 
@@ -653,7 +654,7 @@ struct InjectorMomentum
     void operator= (InjectorMomentum &&) = delete;
 
     // Default destructor
-    ~InjectorMomentum() = default;
+    ~InjectorMomentum () = default;
 
     void clear ();
 

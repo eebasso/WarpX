@@ -88,7 +88,7 @@ namespace
      * \brief Check that the number of guard cells is smaller than the number of valid cells,
      * for a given MultiFab, and abort otherwise.
      */
-    void CheckGuardCells(amrex::MultiFab const& mf)
+    void CheckGuardCells (amrex::MultiFab const& mf)
     {
         for (amrex::MFIter mfi(mf); mfi.isValid(); ++mfi)
         {
@@ -503,7 +503,8 @@ WarpX::InitData ()
 }
 
 void
-WarpX::AddExternalFields () {
+WarpX::AddExternalFields ()
+{
     for (int lev = 0; lev <= finest_level; ++lev) {
         // FIXME: RZ multimode has more than one component for all these
         if (add_external_E_field) {
@@ -520,7 +521,8 @@ WarpX::AddExternalFields () {
 }
 
 void
-WarpX::InitDiagnostics () {
+WarpX::InitDiagnostics ()
+{
     multi_diags->InitData();
     reduced_diags->InitData();
 }
@@ -639,7 +641,8 @@ WarpX::ComputeMaxStep ()
  * simulation box passes input parameter zmax_plasma_to_compute_max_step.
  */
 void
-WarpX::computeMaxStepBoostAccelerator() {
+WarpX::computeMaxStepBoostAccelerator()
+{
     // Sanity checks: can use zmax_plasma_to_compute_max_step only if
     // the moving window and the boost are all in z direction.
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
@@ -712,7 +715,8 @@ WarpX::InitNCICorrector ()
 }
 
 void
-WarpX::InitFilter (){
+WarpX::InitFilter ()
+{
     if (WarpX::use_filter){
         WarpX::bilinear_filter.npass_each_dir = WarpX::filter_npass_each_dir.toArray<unsigned int>();
         WarpX::bilinear_filter.ComputeStencils();
@@ -1232,7 +1236,7 @@ WarpX::PerformanceHints ()
     // TODO: CPU tiling hints with OpenMP
 }
 
-void WarpX::CheckGuardCells()
+void WarpX::CheckGuardCells ()
 {
     for (int lev = 0; lev <= finest_level; ++lev)
     {
@@ -1336,7 +1340,7 @@ void WarpX::InitializeEBGridData (int lev)
 #endif
 }
 
-void WarpX::CheckKnownIssues()
+void WarpX::CheckKnownIssues ()
 {
     if (WarpX::electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD &&
         (std::any_of(do_pml_Lo[0].begin(),do_pml_Lo[0].end(),[](const auto& ee){return ee;}) ||

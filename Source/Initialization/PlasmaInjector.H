@@ -50,10 +50,10 @@ public:
                     const std::string& src_name="");
 
     // Default move and copy operations
-    PlasmaInjector(const PlasmaInjector&) = delete;
-    PlasmaInjector& operator=(const PlasmaInjector&) = delete;
-    PlasmaInjector(PlasmaInjector&&) = default;
-    PlasmaInjector& operator=(PlasmaInjector&&) = default;
+    PlasmaInjector (const PlasmaInjector&) = delete;
+    PlasmaInjector& operator= (const PlasmaInjector&) = delete;
+    PlasmaInjector (PlasmaInjector&&) = default;
+    PlasmaInjector& operator= (PlasmaInjector&&) = default;
 
     ~PlasmaInjector ();
 

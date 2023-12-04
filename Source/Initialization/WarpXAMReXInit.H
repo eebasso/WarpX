@@ -27,7 +27,7 @@ namespace warpx::initialization
      * @returns pointer to an AMReX* object, forwarded from amrex::Initialize
      */
     amrex::AMReX*
-    amrex_init(
+    amrex_init (
         int& argc,
         char**& argv,
         bool build_parm_parse = true
