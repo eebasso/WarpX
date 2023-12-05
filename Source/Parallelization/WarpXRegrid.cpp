@@ -147,12 +147,12 @@ WarpX::LoadBalance ()
 
 
 template <typename MultiFabType> void
-RemakeMultiFab (std::unique_ptr<amrex::MultiFabType>& mf, const amrex::DistributionMapping& dm,
+RemakeMultiFab (std::unique_ptr<MultiFabType>& mf, const amrex::DistributionMapping& dm,
                 const bool redistribute, const int lev)
 {
     if (mf == nullptr) return;
     const amrex::IntVect& ng = mf->nGrowVect();
-    std::unique_ptr<amrex::MultiFabType> pmf;
+    std::unique_ptr<MultiFabType> pmf;
     WarpX::AllocInitMultiFab(pmf, mf->boxArray(), dm, mf->nComp(), ng, lev, mf->tags()[0]);
     if (redistribute) pmf->Redistribute(*mf, 0, 0, mf->nComp(), ng);
     mf = std::move(pmf);

@@ -42,9 +42,6 @@
 
 using namespace amrex;
 
-using Real = amrex::Real;
-using amrex::ParmParse = amrex::ParmParse;
-
 void PreparseAMReXInputIntArray(amrex::ParmParse& a_pp, char const * const input_str, const bool replace)
 {
     const int cnt = a_pp.countval(input_str);
@@ -112,7 +109,7 @@ void ParseGeometryInput()
     PreparseAMReXInputIntArray(pp_amr, "blocking_factor_z", false);
 }
 
-void ReadBoostedFrameParameters(Real& gamma_boost, amrex::Real& beta_boost,
+void ReadBoostedFrameParameters(amrex::Real& gamma_boost, amrex::Real& beta_boost,
                                 amrex::Vector<int>& boost_direction)
 {
      const amrex::ParmParse pp_warpx("warpx");
@@ -250,7 +247,7 @@ void NullifyMF(amrex::MultiFab& mf, int lev, amrex::Real zmin, amrex::Real zmax)
         if ( (zmax>zmin_box && zmin<=zmax_box) ){
             const Array4<amrex::Real> arr = mf[mfi].array();
             // Set field to 0 between zmin and zmax
-            ParallelFor(bx, ncomp,
+            amrex::ParallelFor(bx, ncomp,
                 [=] AMREX_GPU_DEVICE(int i, int j, int k, int n) noexcept{
 #if defined(WARPX_DIM_3D)
                     const Real z_gridpoint = zmin_box+(k-lo_ind)*dz;
