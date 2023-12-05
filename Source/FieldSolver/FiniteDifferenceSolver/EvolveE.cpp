@@ -399,12 +399,12 @@ void FiniteDifferenceSolver::EvolveECylindrical (
                             Et(i, j, 0, 2*m  ) += c2 * dt * -m * F(i, j, 0, 2*m-1)/r; // Imaginary part
                         }
                     } else { // r==0: on-axis corrections
-                        // For m==1, F is linear in r, for small r
-                        // Therefore, the formula below regularizes the singularity
+                        // For r==0 and m==1, Et(i,j,m=1) = -i*Er(i,j,m=1)
+                        // Thus the change in Et is determined by the change in Er
                         if (nmodes >= 2) { // needs to have at least m=0 and m=1
                             int const m=1;
-                            Et(i, j, 0, 2*m-1) += c2 * dt *  m * F(i+1, j, 0, 2*m  )/dr; // Real part
-                            Et(i, j, 0, 2*m  ) += c2 * dt * -m * F(i+1, j, 0, 2*m-1)/dr; // Imaginary part
+                            Er(i, j, 0, 2*m-1) += c2 * dt * T_Algo::UpwardDr(F, coefs_r, n_coefs_r, i, j, 0, 2*m-1); // Real part
+                            Et(i, j, 0, 2*m  ) += -c2 * dt * T_Algo::UpwardDr(F, coefs_r, n_coefs_r, i, j, 0, 2*m  ); // Imaginary part
                         }
                     }
                 },
