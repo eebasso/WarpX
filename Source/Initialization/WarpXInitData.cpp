@@ -1028,6 +1028,7 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
 
 #if defined(WARPX_DIM_RZ)
     const int nmodes = WarpX::n_rz_azimuthal_modes;
+    const int nw = 10 * (2 * nmodes - 1);
     const amrex::Real normFactor = 2.0_rt / amrex::Real(2 * nmodes-1);
 #endif
 
@@ -1065,6 +1066,7 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
 #else
         amrex::ignore_unused(edge_lengths, face_areas, field);
 #endif
+
         amrex::ParallelFor (tbx, tby, tbz,
             [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
@@ -1077,80 +1079,23 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
 #endif
                 // Shift required in the x-, y-, or z- position
                 // depending on the index type of the multifab
-#if defined(WARPX_DIM_RZ)
+#if defined(WARPX_DIM_1D_Z)
+                const amrex::Real fac_z = (1._rt - x_nodal_flag[0]) * dx_lev[0] * 0.5_rt;
+                const amrex::Real z = j*dx_lev[0] + real_box.lo(0) + fac_z;
+                mfxfab(i,j,k) = xfield_parser(0._rt,0._rt,z);
+#elif defined(WARPX_DIM_XZ)
+                const amrex::Real fac_x = (1._rt - x_nodal_flag[0]) * dx_lev[0] * 0.5_rt;
+                const amrex::Real x = i*dx_lev[0] + real_box.lo(0) + fac_x;
+                const amrex::Real fac_z = (1._rt - x_nodal_flag[1]) * dx_lev[1] * 0.5_rt;
+                const amrex::Real z = j*dx_lev[1] + real_box.lo(1) + fac_z;
+                mfxfab(i,j,k) = xfield_parser(x,0._rt,z);
+#elif defined(WARPX_DIM_RZ)
                 const amrex::Real fac_r = (1._rt - x_nodal_flag[0]) * dx_lev[0] * 0.5_rt;
                 const amrex::Real r = i*dx_lev[0] + real_box.lo(0) + fac_r;
                 const amrex::Real fac_z = (1._rt - x_nodal_flag[1]) * dx_lev[1] * 0.5_rt;
                 const amrex::Real z = j*dx_lev[1] + real_box.lo(1) + fac_z;
-
-                for (int q = 0; q < 2 * nmodes - 1; q++) {
-                    mfxfab(i,j,0,q) = 0._rt;
-                }
-                for (int w = 0; w < 2 * nmodes - 1) {
-                    amrex::Real theta = w * MathConst::pi * normFactor;
-                    amrex::Real parseval = xfield_parser(r,theta,z);
-                    mfxfab(i,j,0,0) += parseval;
-                    for (int m = 1; m < nmodes; m++) {
-                        mfxfab(i,j,0,2*m  ) += parseval * std::cos(m*theta);
-                        mfxfab(i,j,0,2*m-1) += parseval * std::sin(m*theta);
-                    }
-                }
-                mfxfab(i,j,0,0) *= 0.5_rt*normFactor;
-                for (int m = 1; m < nmodes; m++) {
-                    mfxfab(i,j,0,2*m-1) *= normFactor;
-                    mfxfab(i,j,0,2*m  ) *= normFactor;
-                }
-
-                amrex::Real field0 = 0.0_rt;
-                amrex::Vector<amrex::Real, nmodes> fieldCosmtVec = amrex::Vector<amrex::Real>(nmodes, 0._rt);
-                amrex::Vector<amrex::Real, nmodes> fieldSinmtVec = amrex::Vector<amrex::Real>(nmodes, 0._rt);
-
-                for (int w = 0; w < 2 * nmodes - 1) {
-                    amrex::Real theta = w * MathConst::pi * normFactor;
-                    amrex::Real parseval = xfield_parser(r,theta,z);
-                    field0 += parseval;
-                    for (int m = 1; m < nmodes; m++) {
-                        fieldSinmtVec[2*m-1] += parseval * std::sin(m*theta);
-                        fieldCosmtVec[2*m  ] += parseval * std::cos(m*theta);
-                    }
-                }
-
-                mfxfab(i,j,0,0) *= 0.5_rt*normFactor;
-                for (int m = 1; m < nmodes; m++) {
-                    mfxfab(i,j,0,2*m-1) *= normFactor;
-                    mfxfab(i,j,0,2*m  ) *= normFactor;
-                }
-
-
-                field0 *= 0.5_rt*normFactor;
-                mfxfab(i,j,0,0) = field0;
-
-                for (int m = 1; m < nmodes; m++) {
-                    amrex::Real fieldCosmt = 0.0_rt;
-                    amrex::Real fieldSinmt = 0.0_rt;
-                    for (int w = 0; w < 2*nmodes - 1; m++) {
-                        amrex::Real theta = w * MathConst::pi * normFactor;
-                        amrex::Real parseval = xfield_parser(r,theta,z);
-                        fieldCosmt += parseval * std::cos(m*theta);
-                        fieldSinmt += parseval * std::sin(m*theta);
-                    }
-                    mfxfab(i,j,0,2*m-1) = fieldSinmt;
-                    mfxfab(i,j,0,2*m  ) = fieldCosmt;
-                }
-#else
-
-#if defined(WARPX_DIM_1D_Z)
-                const amrex::Real x = 0._rt;
-                const amrex::Real y = 0._rt;
-                const amrex::Real fac_z = (1._rt - x_nodal_flag[0]) * dx_lev[0] * 0.5_rt;
-                const amrex::Real z = j*dx_lev[0] + real_box.lo(0) + fac_z;
-// #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-#elif defined(WARPX_DIM_XZ)
-                const amrex::Real fac_x = (1._rt - x_nodal_flag[0]) * dx_lev[0] * 0.5_rt;
-                const amrex::Real x = i*dx_lev[0] + real_box.lo(0) + fac_x;
-                const amrex::Real y = 0._rt;
-                const amrex::Real fac_z = (1._rt - x_nodal_flag[1]) * dx_lev[1] * 0.5_rt;
-                const amrex::Real z = j*dx_lev[1] + real_box.lo(1) + fac_z;
+                InitializeFieldArrayUsingParserRZ(mfxfab,xfield_parser,dx_lev,
+                                                  nmodes,nw,normFactor,i,j,k);
 #else
                 const amrex::Real fac_x = (1._rt - x_nodal_flag[0]) * dx_lev[0] * 0.5_rt;
                 const amrex::Real x = i*dx_lev[0] + real_box.lo(0) + fac_x;
@@ -1158,8 +1103,6 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
                 const amrex::Real y = j*dx_lev[1] + real_box.lo(1) + fac_y;
                 const amrex::Real fac_z = (1._rt - x_nodal_flag[2]) * dx_lev[2] * 0.5_rt;
                 const amrex::Real z = k*dx_lev[2] + real_box.lo(2) + fac_z;
-#endif
-                // Initialize the x-component of the field.
                 mfxfab(i,j,k) = xfield_parser(x,y,z);
 #endif
             },
@@ -1177,16 +1120,18 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
 #endif
 #endif
 #if defined(WARPX_DIM_1D_Z)
-                const amrex::Real x = 0._rt;
-                const amrex::Real y = 0._rt;
+                // const amrex::Real x = 0._rt;
+                // const amrex::Real y = 0._rt;
                 const amrex::Real fac_z = (1._rt - y_nodal_flag[0]) * dx_lev[0] * 0.5_rt;
                 const amrex::Real z = j*dx_lev[0] + real_box.lo(0) + fac_z;
+                mfyfab(i,j,k)  = yfield_parser(0._rt,0._rt,z);
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
                 const amrex::Real fac_x = (1._rt - y_nodal_flag[0]) * dx_lev[0] * 0.5_rt;
                 const amrex::Real x = i*dx_lev[0] + real_box.lo(0) + fac_x;
-                const amrex::Real y = 0._rt;
+                // const amrex::Real y = 0._rt;
                 const amrex::Real fac_z = (1._rt - y_nodal_flag[1]) * dx_lev[1] * 0.5_rt;
                 const amrex::Real z = j*dx_lev[1] + real_box.lo(1) + fac_z;
+                mfyfab(i,j,k)  = yfield_parser(x,0._rt,z);
 #elif defined(WARPX_DIM_3D)
                 const amrex::Real fac_x = (1._rt - y_nodal_flag[0]) * dx_lev[0] * 0.5_rt;
                 const amrex::Real x = i*dx_lev[0] + real_box.lo(0) + fac_x;
@@ -1194,9 +1139,10 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
                 const amrex::Real y = j*dx_lev[1] + real_box.lo(1) + fac_y;
                 const amrex::Real fac_z = (1._rt - y_nodal_flag[2]) * dx_lev[2] * 0.5_rt;
                 const amrex::Real z = k*dx_lev[2] + real_box.lo(2) + fac_z;
+                mfyfab(i,j,k)  = yfield_parser(x,y,z);
 #endif
                 // Initialize the y-component of the field.
-                mfyfab(i,j,k)  = yfield_parser(x,y,z);
+                // mfyfab(i,j,k)  = yfield_parser(x,y,z);
             },
             [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
@@ -1230,6 +1176,71 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
                 mfzfab(i,j,k) = zfield_parser(x,y,z);
             }
         );
+    }
+}
+
+void
+InitializeFieldArrayUsingParserRZ (
+    amrex::Array4<amrex::Real> const& mffab,
+    int i, int j, int k, int nmodes,
+    amrex::Real r, amrex::Real z,
+    ParserExecutor<3> const& field_parser,
+    amrex::GpuArray<amrex::Real,AMREX_SPACEDIM> const& dx_lev,
+    int nw, amrex::Real normFactor)
+{
+    // Version 1
+    for (int q = 0; q < 2 * nmodes - 1; q++) {
+        mffab(i,j,0,q) = 0._rt;
+    }
+    for (int w = 0; w < nw; w++) {
+        amrex::Real theta = w * normFactor * MathConst::pi;
+        amrex::Real parseval = field_parser(r,theta,z);
+        mffab(i,j,0,0) += parseval;
+        for (int m = 1; m < nmodes; m++) {
+            mffab(i,j,0,2*m  ) += parseval * std::cos(m*theta);
+            mffab(i,j,0,2*m-1) += parseval * std::sin(m*theta);
+        }
+    }
+    mffab(i,j,0,0) *= 0.5_rt*normFactor;
+    for (int m = 1; m < nmodes; m++) {
+        mffab(i,j,0,2*m-1) *= normFactor;
+        mffab(i,j,0,2*m  ) *= normFactor;
+    }
+
+    // Version 2
+    amrex::Real field0 = 0._rt;
+    amrex::Vector<amrex::Real, nmodes> fieldCosmtVec = amrex::Vector<amrex::Real>(nmodes, 0._rt);
+    amrex::Vector<amrex::Real, nmodes> fieldSinmtVec = amrex::Vector<amrex::Real>(nmodes, 0._rt);
+    for (int w = 0; w < nw; w++) {
+        amrex::Real theta = w * normFactor * MathConst::pi;
+        amrex::Real parseval = xfield_parser(r,theta,z);
+        field0 += parseval;
+        for (int m = 1; m < nmodes; m++) {
+            fieldCosmtVec[m] += parseval * std::cos(m*theta);
+            fieldSinmtVec[m] += parseval * std::sin(m*theta);
+        }
+    }
+    mfxfab(i,j,0,0) = 0.5_rt * normFactor * field0;
+    for (int m = 1; m < nmodes; m++) {
+        mfxfab(i,j,0,2*m-1) = normFactor * fieldCosmtVec[m];
+        mfxfab(i,j,0,2*m  ) = normFactor * fieldSinmtVec[m];
+    }
+
+    // Version 3
+    field0 *= 0.5_rt*normFactor;
+    mfxfab(i,j,0,0) = field0;
+
+    for (int m = 1; m < nmodes; m++) {
+        amrex::Real fieldCosmt = 0.0_rt;
+        amrex::Real fieldSinmt = 0.0_rt;
+        for (int w = 0; w < nw; w++) {
+            amrex::Real theta = w * MathConst::pi * normFactor;
+            amrex::Real parseval = xfield_parser(r,theta,z);
+            fieldCosmt += parseval * std::cos(m*theta);
+            fieldSinmt += parseval * std::sin(m*theta);
+        }
+        mfxfab(i,j,0,2*m-1) = fieldCosmt;
+        mfxfab(i,j,0,2*m  ) = fieldSinmt;
     }
 }
 
