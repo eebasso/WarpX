@@ -79,6 +79,12 @@ E_fusion = 8.59009*MeV_to_Joule # Energy released during p + B -> alpha + Be
 E_decay = 0.0918984*MeV_to_Joule # Energy released during Be -> 2*alpha
 E_fusion_total = E_fusion + E_decay # Energy released during p + B -> 3*alpha
 
+m_p_c2 = m_p * scc.c**2
+m_b_c2 = m_b * scc.c**2
+m_reduced_c2 = m_reduced * scc.c**2
+m_a_c2 = m_a * scc.c**2
+m_be_c2 = m_be * scc.c**2
+
 ## Checks whether this is the 2D or the 3D test
 is_2D = "2D" in sys.argv[1]
 
@@ -521,14 +527,18 @@ def check_initial_energy2(data):
 
     # Loop over all slices (i.e. cells in the z direction)
     for slice_number in range(1, size_z):
-        ## For simplicity, all the calculations in this functino are done nonrelativistically
+        ## For simplicity, all the calculations in this function are done nonrelativistically
         ## Proton kinetic energy in the lab frame before fusion
-        E_proton_nonrelativistic = Energy_step*slice_number**2
+        #E_proton_nonrelativistic = Energy_step*slice_number**2
         ## Corresponding square norm of proton momentum
-        p_proton_sq = 2.*scc.m_p*E_proton_nonrelativistic
+        #p_proton_sq = 2.*scc.m_p*E_proton_nonrelativistic
+
+        p_proton_sq = 2.*m_p*(Energy_step*slice_number**2)
+        E_proton_kinetic = np.sqrt(m_p_c2**2 + p_proton_sq * scc.c**2) - m_p_c2
+
         ## Kinetic energy in the lab frame after
         ## proton + boron 11 -> alpha + beryllium 8
-        E_after_fusion = E_proton_nonrelativistic + E_fusion
+        E_after_fusion = E_proton_kinetic + E_fusion
 
         ## Compute the theoretical maximum and minimum energy of alpha1 in the lab frame. This
         ## calculation is done by noting that the maximum (minimum) energy corresponds to an alpha
@@ -563,8 +573,8 @@ def check_initial_energy2(data):
                              np.sqrt(4*m_a*max_energy_alpha2_plus_3 - max_p_sq_beryllium))
         min_p_alpha23 = 0.5*(np.sqrt(min_p_sq_beryllium) - \
                              np.sqrt(4*m_a*min_energy_alpha2_plus_3 - min_p_sq_beryllium))
-        max_energy_alpha23 = max_p_alpha23**2/(2*m_a)
-        min_energy_alpha23 = min_p_alpha23**2/(2*m_a)
+        max_energy_alpha23 = max_p_alpha23**2/(2*m_a) # CHANGE THIS
+        min_energy_alpha23 = min_p_alpha23**2/(2*m_a) # CHANGE THIS
 
         ## Get the energy of all alphas in the slice
         energy_alpha_slice = energy_alpha_simulation[(z_alpha >= slice_number)* \
