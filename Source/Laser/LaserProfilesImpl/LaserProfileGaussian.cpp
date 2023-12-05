@@ -27,7 +27,7 @@
 #include <numeric>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 void
 WarpXLaserProfiles::GaussianLaserProfile::init (

@@ -67,7 +67,7 @@
 #include <vector>
 #include <type_traits>
 
-// using namespace amrex;
+using namespace amrex;
 using namespace WarpXLaserProfiles;
 
 namespace

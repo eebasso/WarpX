@@ -39,7 +39,7 @@
 #include <iostream>
 #include <memory>
 
-// using namespace amrex;
+using namespace amrex;
 
 
 void

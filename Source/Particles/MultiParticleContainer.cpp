@@ -79,7 +79,7 @@
 #include <utility>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 namespace
 {

@@ -21,7 +21,7 @@
 
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 //NCIGodfreyFilter not implemented in 1D
 #if (AMREX_SPACEDIM >= 2)

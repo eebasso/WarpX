@@ -68,7 +68,7 @@
 #include <algorithm>
 #include <cmath>
 
-// using namespace amrex;
+using namespace amrex;
 
 WarpXParIter::WarpXParIter (ContainerType& pc, int level)
     : amrex::ParIter<0,0,PIdx::nattribs>(pc, level,
@@ -305,8 +305,8 @@ WarpXParticleContainer::AddNParticles (int /*lev*/, long n,
  */
 void
 WarpXParticleContainer::DepositCurrent (WarpXParIter& pti,
-                                        amrex::RealVector const & wp, amrex::RealVector const & uxp,
-                                        amrex::RealVector const & uyp, amrex::RealVector const & uzp,
+                                        RealVector const & wp, RealVector const & uxp,
+                                        RealVector const & uyp, RealVector const & uzp,
                                         int const * const ion_lev,
                                         amrex::MultiFab * const jx, amrex::MultiFab * const jy, amrex::MultiFab * const jz,
                                         long const offset, long const np_to_depose,
@@ -668,7 +668,7 @@ WarpXParticleContainer::DepositCurrent (
  * \param depos_lev   : Level on which particles deposit (if buffers are used)
  */
 void
-WarpXParticleContainer::DepositCharge (WarpXParIter& pti, amrex::RealVector const& wp,
+WarpXParticleContainer::DepositCharge (WarpXParIter& pti, RealVector const& wp,
                                        const int * const ion_lev,
                                        amrex::MultiFab* rho, const int icomp,
                                        const long offset, const long np_to_depose,

@@ -22,7 +22,7 @@
 #include <array>
 #include <memory>
 
-// using namespace amrex;
+using namespace amrex;
 
 /**
  * \brief Constructor

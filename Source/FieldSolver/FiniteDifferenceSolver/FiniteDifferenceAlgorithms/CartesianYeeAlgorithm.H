@@ -32,7 +32,7 @@ struct CartesianYeeAlgorithm {
         amrex::Vector<amrex::Real>& stencil_coefs_y,
         amrex::Vector<amrex::Real>& stencil_coefs_z ) {
 
-        // using namespace amrex;
+        using namespace amrex;
         // Store the inverse cell size along each direction in the coefficients
         stencil_coefs_x.resize(1);
         stencil_coefs_x[0] = 1._rt/cell_size[0];
@@ -71,7 +71,7 @@ struct CartesianYeeAlgorithm {
         amrex::Real const * const coefs_x, int const /*n_coefs_x*/,
         int const i, int const j, int const k, int const ncomp=0 ) {
 
-        // using namespace amrex;
+        using namespace amrex;
 #if (defined WARPX_DIM_1D_Z)
         amrex::ignore_unused(F, coefs_x, i, j, k, ncomp);
         return 0._rt; // 1D Cartesian: derivative along x is 0
@@ -90,7 +90,7 @@ struct CartesianYeeAlgorithm {
         amrex::Real const * const coefs_x, int const /*n_coefs_x*/,
         int const i, int const j, int const k, int const ncomp=0 ) {
 
-        // using namespace amrex;
+        using namespace amrex;
 #if (defined WARPX_DIM_1D_Z)
         amrex::ignore_unused(F, coefs_x, i, j, k, ncomp);
         return 0._rt; // 1D Cartesian: derivative along x is 0
@@ -108,7 +108,7 @@ struct CartesianYeeAlgorithm {
         amrex::Real const * const coefs_y, int const n_coefs_y,
         int const i, int const j, int const k, int const ncomp=0 ) {
 
-        // using namespace amrex;
+        using namespace amrex;
 #if defined WARPX_DIM_3D
         amrex::Real const inv_dy = coefs_y[0];
         amrex::ignore_unused(n_coefs_y);
@@ -132,7 +132,7 @@ struct CartesianYeeAlgorithm {
         amrex::Real const * const coefs_y, int const n_coefs_y,
         int const i, int const j, int const k, int const ncomp=0 ) {
 
-        // using namespace amrex;
+        using namespace amrex;
 #if defined WARPX_DIM_3D
         amrex::Real const inv_dy = coefs_y[0];
         amrex::ignore_unused(n_coefs_y);
@@ -155,7 +155,7 @@ struct CartesianYeeAlgorithm {
         amrex::Real const * const coefs_z, int const /*n_coefs_z*/,
         int const i, int const j, int const k, int const ncomp=0 ) {
 
-        // using namespace amrex;
+        using namespace amrex;
         amrex::Real const inv_dz = coefs_z[0];
 #if defined WARPX_DIM_3D
         return inv_dz*( F(i,j,k+1,ncomp) - F(i,j,k,ncomp) );
@@ -175,7 +175,7 @@ struct CartesianYeeAlgorithm {
         amrex::Real const * const coefs_z, int const /*n_coefs_z*/,
         int const i, int const j, int const k, int const ncomp=0 ) {
 
-        // using namespace amrex;
+        using namespace amrex;
         amrex::Real const inv_dz = coefs_z[0];
 #if defined WARPX_DIM_3D
         return inv_dz*( F(i,j,k,ncomp) - F(i,j,k-1,ncomp) );

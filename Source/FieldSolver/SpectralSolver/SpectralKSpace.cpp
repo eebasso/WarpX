@@ -26,7 +26,7 @@
 #include <cmath>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 /* \brief Initialize k space object.
  *

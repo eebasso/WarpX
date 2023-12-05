@@ -40,7 +40,7 @@
 #include <string>
 #include <limits>
 
-// using namespace amrex;
+using namespace amrex;
 
 using Real = amrex::Real;
 using amrex::ParmParse = amrex::ParmParse;

@@ -38,7 +38,7 @@
 #include <ostream>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 struct NormalizationType {
     enum {

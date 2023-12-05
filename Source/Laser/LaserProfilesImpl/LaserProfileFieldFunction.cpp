@@ -22,7 +22,7 @@
 #include <set>
 #include <string>
 
-// using namespace amrex;
+using namespace amrex;
 
 void
 WarpXLaserProfiles::FieldFunctionLaserProfile::init (

@@ -34,7 +34,7 @@
 #include <string>
 #include <utility>
 
-// using namespace amrex;
+using namespace amrex;
 
 namespace
 {

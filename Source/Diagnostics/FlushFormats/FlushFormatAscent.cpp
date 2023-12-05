@@ -7,7 +7,7 @@
 #include <AMReX.H>
 #include <AMReX_REAL.H>
 
-// using namespace amrex;
+using namespace amrex;
 
 void
 FlushFormatAscent::WriteToFile (

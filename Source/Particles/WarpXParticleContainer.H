@@ -57,11 +57,11 @@ public:
 
     WarpXParIter (ContainerType& pc, int level, amrex::MFItInfo& info);
 
-    const std::array<amrex::RealVector, PIdx::nattribs>& GetAttribs () const {
+    const std::array<RealVector, PIdx::nattribs>& GetAttribs () const {
         return GetStructOfArrays().GetRealData();
     }
 
-    std::array<amrex::RealVector, PIdx::nattribs>& GetAttribs () {
+    std::array<RealVector, PIdx::nattribs>& GetAttribs () {
         return GetStructOfArrays().GetRealData();
     }
 
@@ -69,11 +69,11 @@ public:
         return GetStructOfArrays().GetRealData(comp);
     }
 
-    amrex::RealVector& GetAttribs (int comp) {
+    RealVector& GetAttribs (int comp) {
         return GetStructOfArrays().GetRealData(comp);
     }
 
-    amrex::IntVector& GetiAttribs (int comp) {
+    IntVector& GetiAttribs (int comp) {
         return GetStructOfArrays().GetIntData(comp);
     }
 };
@@ -220,7 +220,7 @@ public:
     std::unique_ptr<amrex::MultiFab> GetChargeDensity(int lev, bool local = false);
 
     virtual void DepositCharge (WarpXParIter& pti,
-                               amrex::RealVector const & wp,
+                               RealVector const & wp,
                                const int* ion_lev,
                                amrex::MultiFab* rho,
                                int icomp,
@@ -231,10 +231,10 @@ public:
                                int depos_lev);
 
     virtual void DepositCurrent (WarpXParIter& pti,
-                                amrex::RealVector const & wp,
-                                amrex::RealVector const & uxp,
-                                amrex::RealVector const & uyp,
-                                amrex::RealVector const & uzp,
+                                RealVector const & wp,
+                                RealVector const & uxp,
+                                RealVector const & uyp,
+                                RealVector const & uzp,
                                 int const* ion_lev,
                                 amrex::MultiFab* jx,
                                 amrex::MultiFab* jy,

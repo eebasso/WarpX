@@ -50,7 +50,7 @@ void doChargeDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
                                amrex::Real* cost,
                                long load_balance_costs_update_algo)
 {
-    // using namespace amrex;
+    using namespace amrex;
 
 #if !defined(AMREX_USE_GPU)
     amrex::ignore_unused(cost, load_balance_costs_update_algo);
@@ -259,7 +259,7 @@ void doChargeDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPositio
                                      const amrex::IntVect bin_size
                                      )
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     auto permutation = a_bins.permutationPtr();
 

@@ -32,7 +32,7 @@ amrex::Box constrain_tilebox_to_guards(
     const int tb_smallEnd,
     const int tb_bigEnd)
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     amrex::Box constrained_tb = input_tb;
 
@@ -82,7 +82,7 @@ void damp_field_in_guards(
     const int tb_smallEnd,
     const int tb_bigEnd)
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     // dir = 0: idx = i (x)
     // dir = 1: idx = j (y in 3D, z in 2D/RZ)

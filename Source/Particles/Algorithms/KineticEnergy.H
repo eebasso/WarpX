@@ -34,7 +34,7 @@ namespace Algorithms{
         const amrex::ParticleReal ux, const amrex::ParticleReal uy, const amrex::ParticleReal uz,
         const amrex::ParticleReal mass)
     {
-        // using namespace amrex;
+        using namespace amrex;
 
         constexpr auto inv_c2 = 1.0_prt/(PhysConst::c * PhysConst::c);
 

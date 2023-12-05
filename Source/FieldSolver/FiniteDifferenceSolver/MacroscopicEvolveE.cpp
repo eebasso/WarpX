@@ -32,7 +32,7 @@
 #include <array>
 #include <memory>
 
-// using namespace amrex;
+using namespace amrex;
 
 void FiniteDifferenceSolver::MacroscopicEvolveE (
     std::array< std::unique_ptr<amrex::MultiFab>, 3 >& Efield,

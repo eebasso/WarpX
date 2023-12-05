@@ -43,7 +43,7 @@
 #include <unordered_map>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 // constructor
 

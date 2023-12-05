@@ -80,7 +80,7 @@
 
 #include "FieldSolver/FiniteDifferenceSolver/FiniteDifferenceSolver.H"
 
-// using namespace amrex;
+using namespace amrex;
 
 namespace
 {

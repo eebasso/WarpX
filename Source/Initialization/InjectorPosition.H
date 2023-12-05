@@ -75,7 +75,7 @@ struct InjectorPositionRegular
     getPositionUnitBox (int const i_part, amrex::IntVect const ref_fac,
                         amrex::RandomEngine const&) const noexcept
     {
-        // using namespace amrex;
+        using namespace amrex;
 
 #if (defined WARPX_DIM_3D)
         int const nx = ref_fac[0]*ppc.x;

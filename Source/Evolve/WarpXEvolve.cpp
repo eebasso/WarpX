@@ -56,7 +56,7 @@
 #include <ostream>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 using ablastr::utils::SignalHandling;
 
 void

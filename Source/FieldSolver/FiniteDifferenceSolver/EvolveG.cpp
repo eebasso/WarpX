@@ -35,7 +35,7 @@
 #include <array>
 #include <memory>
 
-// using namespace amrex;
+using namespace amrex;
 
 void FiniteDifferenceSolver::EvolveG (
     std::unique_ptr<amrex::MultiFab>& Gfield,

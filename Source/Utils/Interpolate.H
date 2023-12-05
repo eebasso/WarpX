@@ -10,7 +10,7 @@
 
 namespace Interpolate
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     /** \brief Samples/Interpolates the coarse scalar multifab `F_cp` on the
      * fine grid associated with the fine multifab `F_fp`.

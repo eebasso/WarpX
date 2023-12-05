@@ -17,7 +17,7 @@
 #include <set>
 #include <string>
 
-// using namespace amrex;
+using namespace amrex;
 
 
 FlushFormatOpenPMD::FlushFormatOpenPMD (const std::string& diag_name)

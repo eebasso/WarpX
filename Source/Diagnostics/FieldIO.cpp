@@ -20,7 +20,7 @@
 #include <cstdint>
 #include <memory>
 
-// using namespace amrex;
+using namespace amrex;
 
 /** \brief
  * Convert an IntVect to a std::vector<std::uint64_t>

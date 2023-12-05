@@ -25,7 +25,7 @@
 #include <memory>
 #include <sstream>
 
-// using namespace amrex;
+using namespace amrex;
 
 MacroscopicProperties::MacroscopicProperties ()
 {

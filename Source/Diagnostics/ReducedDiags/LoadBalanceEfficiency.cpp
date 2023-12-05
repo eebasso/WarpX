@@ -17,7 +17,7 @@
 #include <ostream>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 // constructor
 LoadBalanceEfficiency::LoadBalanceEfficiency (std::string rd_name)

@@ -30,7 +30,7 @@
 #include <string>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 ParticleMomentum::ParticleMomentum (std::string rd_name)
     : ReducedDiags{rd_name}

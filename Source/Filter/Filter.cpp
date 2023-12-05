@@ -21,7 +21,7 @@
 
 #include <algorithm>
 
-// using namespace amrex;
+using namespace amrex;
 
 #ifdef AMREX_USE_GPU
 

@@ -11,7 +11,7 @@
 
 #include <algorithm>
 
-// using namespace amrex;
+using namespace amrex;
 
 MultiDiagnostics::MultiDiagnostics ()
 {

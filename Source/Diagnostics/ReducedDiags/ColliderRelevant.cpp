@@ -57,7 +57,7 @@
 #include <memory>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 ColliderRelevant::ColliderRelevant (std::string rd_name)
 : ReducedDiags{std::move(rd_name)}

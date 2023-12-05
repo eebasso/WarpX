@@ -22,7 +22,7 @@
 
 namespace Interpolate
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     std::unique_ptr<amrex::MultiFab>
     getInterpolatedScalar(

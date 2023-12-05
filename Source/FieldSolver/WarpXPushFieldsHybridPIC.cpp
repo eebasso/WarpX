@@ -15,7 +15,7 @@
 #include "Utils/WarpXProfilerWrapper.H"
 #include "WarpX.H"
 
-// using namespace amrex;
+using namespace amrex;
 
 void WarpX::HybridPICEvolveFields ()
 {

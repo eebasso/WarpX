@@ -20,7 +20,7 @@
 #include <fstream>
 #include <iomanip>
 
-// using namespace amrex;
+using namespace amrex;
 
 // constructor
 ReducedDiags::ReducedDiags (std::string rd_name)

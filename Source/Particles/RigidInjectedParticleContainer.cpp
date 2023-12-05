@@ -54,7 +54,7 @@
 #include <cmath>
 #include <map>
 
-// using namespace amrex;
+using namespace amrex;
 
 RigidInjectedParticleContainer::RigidInjectedParticleContainer (AmrCore* amr_core, int ispecies,
                                                                 const std::string& name)

@@ -36,7 +36,7 @@ template< typename T_ParticleContainer >
 void
 particlesConvertUnits (ConvertDirection convert_direction, T_ParticleContainer* pc, amrex::ParticleReal const mass )
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     // Compute conversion factor
     auto factor = 1_rt;

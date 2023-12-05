@@ -83,7 +83,7 @@
 #include <string>
 #include <utility>
 
-// using namespace amrex;
+using namespace amrex;
 using namespace amrex::literals;
 
 amrex::Vector<amrex::Real> WarpX::E_external_grid(3, 0.0);

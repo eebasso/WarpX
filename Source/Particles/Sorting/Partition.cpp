@@ -22,7 +22,7 @@
 
 #include <utility>
 
-// using namespace amrex;
+using namespace amrex;
 
 /* \brief Determine which particles deposit/gather in the buffer, and
  *        and reorder the particle arrays accordingly

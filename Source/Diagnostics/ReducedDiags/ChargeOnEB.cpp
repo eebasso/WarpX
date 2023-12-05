@@ -25,7 +25,7 @@
 #include <fstream>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 // constructor
 ChargeOnEB::ChargeOnEB (std::string rd_name)

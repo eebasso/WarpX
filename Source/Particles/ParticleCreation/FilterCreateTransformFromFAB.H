@@ -51,7 +51,7 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
                                 CreateFunc1&& create1, CreateFunc2&& create2,
                                 TransFunc&& transform) noexcept
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     const auto ncells = box.volume();
     if (ncells == 0) return 0;
@@ -175,7 +175,7 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
                                 CreateFunc1&& create1, CreateFunc2&& create2,
                                 TransFunc && transform) noexcept
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     FArrayBox NumPartCreation(box, 1);
     // This may be unnecessary because of the Gpu::streamSynchronize() in

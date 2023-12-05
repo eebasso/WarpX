@@ -50,7 +50,7 @@
 #include <map>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 // constructor
 ParticleExtrema::ParticleExtrema (std::string rd_name)

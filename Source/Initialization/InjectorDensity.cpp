@@ -17,7 +17,7 @@
 #include <cctype>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 void InjectorDensity::clear ()
 {

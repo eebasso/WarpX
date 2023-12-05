@@ -11,7 +11,7 @@
 
 #include <string>
 
-// using namespace amrex;
+using namespace amrex;
 
 MultiFluidContainer::MultiFluidContainer (int nlevs_max)
 {

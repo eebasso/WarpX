@@ -49,10 +49,10 @@ class HankelTransform
         // Even though nk == nr always, use a separate variable for clarity.
         int m_nr, m_nk;
 
-        amrex::RealVector m_kr;
+        RealVector m_kr;
 
-        amrex::RealVector m_invM;
-        amrex::RealVector m_M;
+        RealVector m_invM;
+        RealVector m_M;
 
 #ifdef AMREX_USE_GPU
         std::unique_ptr<blas::Queue> m_queue;

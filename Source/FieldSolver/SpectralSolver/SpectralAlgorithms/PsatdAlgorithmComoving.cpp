@@ -21,7 +21,7 @@
 
 #if WARPX_USE_PSATD
 
-// using namespace amrex;
+using namespace amrex;
 
 PsatdAlgorithmComoving::PsatdAlgorithmComoving (const SpectralKSpace& spectral_kspace,
                                                 const amrex::DistributionMapping& dm,

@@ -20,7 +20,7 @@
 
 #include <ablastr/coarsen/sample.H>
 
-// using namespace amrex;
+using namespace amrex;
 
 void FiniteDifferenceSolver::CalculateCurrentAmpere (
     std::array< std::unique_ptr<amrex::MultiFab>, 3>& Jfield,

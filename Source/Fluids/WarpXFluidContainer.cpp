@@ -17,7 +17,7 @@
 #include "Utils/SpeciesUtils.H"
 
 using namespace ablastr::utils::communication;
-// using namespace amrex;
+using namespace amrex;
 
 WarpXFluidContainer::WarpXFluidContainer(int nlevs_max, int ispecies, const std::string &name):
     species_id{ispecies},

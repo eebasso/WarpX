@@ -20,7 +20,7 @@
 #include <array>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 namespace {
     void compute_stencil(Gpu::DeviceVector<amrex::Real> &stencil, unsigned int npass)

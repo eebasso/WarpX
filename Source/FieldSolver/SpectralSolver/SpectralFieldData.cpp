@@ -31,7 +31,7 @@
 
 #if WARPX_USE_PSATD
 
-// using namespace amrex;
+using namespace amrex;
 
 SpectralFieldIndex::SpectralFieldIndex (const bool update_with_rho,
                                         const bool time_averaging,

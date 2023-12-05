@@ -36,7 +36,7 @@
 #include <iterator>
 #include <map>
 
-// using namespace amrex;
+using namespace amrex;
 
 // constructor
 MultiReducedDiags::MultiReducedDiags ()

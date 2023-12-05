@@ -28,7 +28,7 @@
 #include <map>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 // constructor
 BeamRelevant::BeamRelevant (std::string rd_name)

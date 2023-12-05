@@ -47,7 +47,7 @@
 #include <memory>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 void
 WarpX::UpdateAuxilaryData ()

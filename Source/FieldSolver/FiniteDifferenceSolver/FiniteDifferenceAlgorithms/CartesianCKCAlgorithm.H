@@ -31,7 +31,7 @@ struct CartesianCKCAlgorithm {
         amrex::Vector<amrex::Real>& stencil_coefs_y,
         amrex::Vector<amrex::Real>& stencil_coefs_z ) {
 
-        // using namespace amrex;
+        using namespace amrex;
 
         // Compute Cole-Karkkainen-Cowan coefficients according
         // to Cowan - PRST-AB 16, 041303 (2013)
@@ -133,7 +133,7 @@ struct CartesianCKCAlgorithm {
         amrex::Real const * const coefs_x, int const /*n_coefs_x*/,
         int const i, int const j, int const k, int const ncomp=0 ) {
 
-        // using namespace amrex;
+        using namespace amrex;
 #if (defined WARPX_DIM_3D || WARPX_DIM_XZ)
         amrex::Real const alphax = coefs_x[1];
         amrex::Real const betaxz = coefs_x[3];
@@ -172,7 +172,7 @@ struct CartesianCKCAlgorithm {
         amrex::Real const * const coefs_x, int const /*n_coefs_x*/,
         int const i, int const j, int const k, int const ncomp=0 ) {
 
-        // using namespace amrex;
+        using namespace amrex;
 #if (defined WARPX_DIM_1D_Z)
         amrex::ignore_unused(F, coefs_x, i, j, k, ncomp);
         return 0._rt; // 1D Cartesian: derivative along x is 0
@@ -190,7 +190,7 @@ struct CartesianCKCAlgorithm {
         amrex::Real const * const coefs_y, int const n_coefs_y,
         int const i, int const j, int const k, int const ncomp=0 ) {
 
-        // using namespace amrex;
+        using namespace amrex;
 #if defined WARPX_DIM_3D
         amrex::Real const alphay = coefs_y[1];
         amrex::Real const betayz = coefs_y[2];
@@ -225,7 +225,7 @@ struct CartesianCKCAlgorithm {
         amrex::Real const * const coefs_y, int const n_coefs_y,
         int const i, int const j, int const k, int const ncomp=0 ) {
 
-        // using namespace amrex;
+        using namespace amrex;
 #if defined WARPX_DIM_3D
         amrex::Real const inv_dy = coefs_y[0];
         amrex::ignore_unused(n_coefs_y);
@@ -248,7 +248,7 @@ struct CartesianCKCAlgorithm {
         amrex::Real const * const coefs_z, int const n_coefs_z,
         int const i, int const j, int const k, int const ncomp=0 ) {
 
-        // using namespace amrex;
+        using namespace amrex;
 
         amrex::ignore_unused(n_coefs_z);
 

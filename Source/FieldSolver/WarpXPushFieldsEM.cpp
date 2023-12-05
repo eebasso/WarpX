@@ -51,7 +51,7 @@
 #include <cmath>
 #include <memory>
 
-// using namespace amrex;
+using namespace amrex;
 
 #ifdef WARPX_USE_PSATD
 namespace {

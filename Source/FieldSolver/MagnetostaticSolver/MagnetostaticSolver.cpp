@@ -53,7 +53,7 @@
 #include <memory>
 #include <string>
 
-// using namespace amrex;
+using namespace amrex;
 
 void
 WarpX::ComputeMagnetostaticField()

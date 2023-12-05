@@ -29,7 +29,7 @@
 #include <array>
 #include <memory>
 
-// using namespace amrex;
+using namespace amrex;
 
 /**
  * \brief Update the B field at the boundary, using the Silver-Mueller condition

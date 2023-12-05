@@ -27,7 +27,7 @@
 #include <fstream>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 // constructor
 FieldEnergy::FieldEnergy (std::string rd_name)

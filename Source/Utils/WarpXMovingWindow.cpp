@@ -52,7 +52,7 @@
 #include <memory>
 #include <string>
 
-// using namespace amrex;
+using namespace amrex;
 
 void
 WarpX::UpdateInjectionPosition (const amrex::Real a_dt)

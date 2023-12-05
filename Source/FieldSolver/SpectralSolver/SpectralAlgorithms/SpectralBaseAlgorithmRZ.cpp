@@ -8,7 +8,7 @@
 
 #include <cmath>
 
-// using namespace amrex;
+using namespace amrex;
 using namespace amrex::literals;
 
 /**

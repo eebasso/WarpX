@@ -28,7 +28,7 @@
 
 #if WARPX_USE_PSATD
 
-// using namespace amrex;
+using namespace amrex;
 
 PsatdAlgorithmPml::PsatdAlgorithmPml(
         const SpectralKSpace& spectral_kspace,

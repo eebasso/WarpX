@@ -28,7 +28,7 @@
 
 #include <algorithm>
 
-// using namespace amrex;
+using namespace amrex;
 
 void
 guardCellManager::Init (

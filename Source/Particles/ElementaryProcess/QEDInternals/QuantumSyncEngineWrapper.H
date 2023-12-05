@@ -217,7 +217,7 @@ public:
     amrex::ParticleReal& g_ux, amrex::ParticleReal& g_uy,
     amrex::ParticleReal& g_uz, amrex::RandomEngine const& engine) const noexcept
     {
-        // using namespace amrex;
+        using namespace amrex;
         namespace pxr_m = picsar::multi_physics::math;
         namespace pxr_p = picsar::multi_physics::phys;
         namespace pxr_qs = picsar::multi_physics::phys::quantum_sync;

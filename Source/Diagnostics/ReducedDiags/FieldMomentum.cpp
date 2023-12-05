@@ -36,7 +36,7 @@
 #include <algorithm>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 FieldMomentum::FieldMomentum (std::string rd_name)
     : ReducedDiags{rd_name}

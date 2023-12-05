@@ -41,7 +41,7 @@
 #include <map>
 #include <memory>
 
-// using namespace amrex;
+using namespace amrex;
 
 PhotonParticleContainer::PhotonParticleContainer (AmrCore* amr_core, int ispecies,
                                                   const std::string& name)

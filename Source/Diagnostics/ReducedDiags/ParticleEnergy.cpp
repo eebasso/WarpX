@@ -31,7 +31,7 @@
 #include <map>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 // constructor
 ParticleEnergy::ParticleEnergy (std::string rd_name)

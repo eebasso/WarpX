@@ -32,7 +32,7 @@
 #include <cmath>
 #include <memory>
 
-// using namespace amrex;
+using namespace amrex;
 
 PML_RZ::PML_RZ (const int lev, const amrex::BoxArray& grid_ba, const amrex::DistributionMapping& grid_dm,
                 const amrex::Geometry* geom, const int ncell, const int do_pml_in_domain)

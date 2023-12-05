@@ -238,7 +238,7 @@ public:
     amrex::ParticleReal& p_uz,
     amrex::RandomEngine const& engine) const noexcept
     {
-        // using namespace amrex;
+        using namespace amrex;
         namespace pxr_m = picsar::multi_physics::math;
         namespace pxr_p = picsar::multi_physics::phys;
         namespace pxr_bw = picsar::multi_physics::phys::breit_wheeler;

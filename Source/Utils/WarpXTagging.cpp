@@ -23,7 +23,7 @@
 
 #include <AMReX_BaseFwd.H>
 
-// using namespace amrex;
+using namespace amrex;
 
 void
 WarpX::ErrorEst (int lev, TagBoxArray& tags, amrex::Real /*time*/, int /*ngrow*/)

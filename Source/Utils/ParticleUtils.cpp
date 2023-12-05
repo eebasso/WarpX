@@ -24,7 +24,7 @@
 
 namespace ParticleUtils {
 
-    // using namespace amrex;
+    using namespace amrex;
     // Define shortcuts for frequently-used type names
     using ParticleType = WarpXParticleContainer::ParticleType;
     using ParticleTileType = WarpXParticleContainer::ParticleTileType;

@@ -50,7 +50,7 @@
 namespace io = openPMD;
 #endif
 
-// using namespace amrex;
+using namespace amrex;
 
 
 // constructor

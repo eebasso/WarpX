@@ -9,7 +9,7 @@
 
 #include "HybridPICModel.H"
 
-// using namespace amrex;
+using namespace amrex;
 
 HybridPICModel::HybridPICModel ( int nlevs_max )
 {

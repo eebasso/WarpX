@@ -107,7 +107,7 @@
 #include <vector>
 #include <sstream>
 
-// using namespace amrex;
+using namespace amrex;
 
 namespace
 {
@@ -2286,8 +2286,8 @@ PhysicalParticleContainer::SplitParticles (int lev)
 {
     auto& mypc = WarpX::GetInstance().GetPartContainer();
     auto& pctmp_split = mypc.GetPCtmp();
-    amrex::RealVector psplit_x, psplit_y, psplit_z, psplit_w;
-    amrex::RealVector psplit_ux, psplit_uy, psplit_uz;
+    RealVector psplit_x, psplit_y, psplit_z, psplit_w;
+    RealVector psplit_ux, psplit_uy, psplit_uz;
     long np_split_to_add = 0;
     long np_split;
     if(split_type==0)

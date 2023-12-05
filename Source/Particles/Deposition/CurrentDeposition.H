@@ -391,7 +391,7 @@ void doDepositionSharedShapeN (const GetParticlePosition<PIdx>& GetPosition,
     using namespace amrex::literals;
 
 #if defined(AMREX_USE_HIP) || defined(AMREX_USE_CUDA)
-    // using namespace amrex;
+    using namespace amrex;
 
     auto permutation = a_bins.permutationPtr();
 
@@ -597,7 +597,7 @@ void doEsirkepovDepositionShapeN (const GetParticlePosition<PIdx>& GetPosition,
                                   amrex::Real * const cost,
                                   long load_balance_costs_update_algo)
 {
-    // using namespace amrex;
+    using namespace amrex;
     using namespace amrex::literals;
 
 #if !defined(WARPX_DIM_RZ)

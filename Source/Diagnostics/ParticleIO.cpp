@@ -40,7 +40,7 @@
 #include <sstream>
 #include <vector>
 
-// using namespace amrex;
+using namespace amrex;
 
 void
 LaserParticleContainer::ReadHeader (std::istream& is)

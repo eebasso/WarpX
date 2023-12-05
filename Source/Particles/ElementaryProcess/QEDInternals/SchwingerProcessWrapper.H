@@ -44,7 +44,7 @@ getSchwingerProductionNumber (const amrex::Real dV, const amrex::Real dt,
               const amrex::ParticleReal PoissonToGaussianThreshold,
               amrex::RandomEngine const& engine)
 {
-    // using namespace amrex;
+    using namespace amrex;
     namespace pxr_p = picsar::multi_physics::phys;
     namespace pxr_sh = picsar::multi_physics::phys::schwinger;
 

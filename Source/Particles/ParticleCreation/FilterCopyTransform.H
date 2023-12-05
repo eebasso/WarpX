@@ -53,7 +53,7 @@ template <int N, typename DstTile, typename SrcTile, typename Index,
 Index filterCopyTransformParticles (DstTile& dst, SrcTile& src, Index* mask, Index dst_index,
                                     CopyFunc&& copy, TransFunc&& transform) noexcept
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     const auto np = src.numParticles();
     if (np == 0) return 0;
@@ -126,7 +126,7 @@ template <int N, typename DstTile, typename SrcTile, typename Index,
 Index filterCopyTransformParticles (DstTile& dst, SrcTile& src, Index dst_index,
                                     PredFunc&& filter, CopyFunc&& copy, TransFunc&& transform) noexcept
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     const auto np = src.numParticles();
     if (np == 0) return 0;
@@ -196,7 +196,7 @@ Index filterCopyTransformParticles (DstTile& dst1, DstTile& dst2, SrcTile& src, 
                                     CopyFunc1&& copy1, CopyFunc2&& copy2,
                                     TransFunc&& transform) noexcept
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     auto np = src.numParticles();
     if (np == 0) return 0;
@@ -283,7 +283,7 @@ Index filterCopyTransformParticles (DstTile& dst1, DstTile& dst2, SrcTile& src,
                                     PredFunc&& filter, CopyFunc1&& copy1, CopyFunc2&& copy2,
                                     TransFunc&& transform) noexcept
 {
-    // using namespace amrex;
+    using namespace amrex;
 
     auto np = src.numParticles();
     if (np == 0) return 0;

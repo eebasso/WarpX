@@ -35,7 +35,7 @@
 
 #include <array>
 
-// using namespace amrex;
+using namespace amrex;
 
 /**
  * \brief Update the B field, over one timestep

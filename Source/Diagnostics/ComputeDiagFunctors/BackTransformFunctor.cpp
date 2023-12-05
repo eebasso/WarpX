@@ -29,7 +29,7 @@
 #include <map>
 #include <memory>
 
-// using namespace amrex;
+using namespace amrex;
 
 BackTransformFunctor::BackTransformFunctor (amrex::MultiFab const * mf_src, int lev,
                                             const int ncomp, const int num_buffers,

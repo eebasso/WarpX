@@ -16,7 +16,7 @@
 #include <array>
 #include <memory>
 using namespace amrex::literals;
-// using namespace amrex;
+using namespace amrex;
 
 void WarpX::ApplyEfieldBoundary(const int lev, PatchType patch_type)
 {

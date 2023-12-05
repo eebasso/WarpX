@@ -18,7 +18,7 @@
 #include <AMReX_Utility.H>
 #include <AMReX_VisMF.H>
 
-// using namespace amrex;
+using namespace amrex;
 
 namespace
 {
