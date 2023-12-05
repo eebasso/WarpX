@@ -33,9 +33,9 @@ void calc_M(amrex::Real arr [], amrex::Real ex, amrex::Real ey, amrex::Real ez,
             amrex::Real xi_c2, amrex::Real c2)
 {
     using namespace amrex;
-    const Real ee = ex*ex+ey*ey+ez*ez;
-    const Real bb_c2 = c2*(bx*bx+by*by+bz*bz);
-    const Real eb = ex*bx+ey*by+ez*bz;
+    const amrex::Real ee = ex*ex+ey*ey+ez*ez;
+    const amrex::Real bb_c2 = c2*(bx*bx+by*by+bz*bz);
+    const amrex::Real eb = ex*bx+ey*by+ez*bz;
     arr[0] = -2._rt*xi_c2*( 2._rt*bx*(ee-bb_c2) - 7._rt*ex*eb );
     arr[1] = -2._rt*xi_c2*( 2._rt*by*(ee-bb_c2) - 7._rt*ey*eb );
     arr[2] = -2._rt*xi_c2*( 2._rt*bz*(ee-bb_c2) - 7._rt*ez*eb );

@@ -263,7 +263,7 @@ void HybridPICModel::GetCurrentExternal (
     auto t = warpx.gett_new(lev);
 
     auto dx_lev = warpx.Geom(lev).CellSizeArray();
-    const RealBox& real_box = warpx.Geom(lev).ProbDomain();
+    const amrex::RealBox& real_box = warpx.Geom(lev).ProbDomain();
 
     auto& mfx = current_fp_external[lev][0];
     auto& mfy = current_fp_external[lev][1];

@@ -216,9 +216,9 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
             Array4<amrex::Real> const& Jx = Jfield[0]->array(mfi);
             Array4<amrex::Real> const& Jy = Jfield[1]->array(mfi);
             Array4<amrex::Real> const& Jz = Jfield[2]->array(mfi);
-            const Real* sigmaj_x = sigba[mfi].sigma[0].data();
-            const Real* sigmaj_y = sigba[mfi].sigma[1].data();
-            const Real* sigmaj_z = sigba[mfi].sigma[2].data();
+            const amrex::Real* sigmaj_x = sigba[mfi].sigma[0].data();
+            const amrex::Real* sigmaj_y = sigba[mfi].sigma[1].data();
+            const amrex::Real* sigmaj_z = sigba[mfi].sigma[2].data();
             int const x_lo = sigba[mfi].sigma[0].lo();
 #if defined(WARPX_DIM_3D)
             int const y_lo = sigba[mfi].sigma[1].lo();
@@ -227,7 +227,7 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
             int const y_lo = 0;
             int const z_lo = sigba[mfi].sigma[1].lo();
 #endif
-            const Real mu_c2_dt = (PhysConst::mu0*PhysConst::c*PhysConst::c) * dt;
+            const amrex::Real mu_c2_dt = (PhysConst::mu0*PhysConst::c*PhysConst::c) * dt;
 
             amrex::ParallelFor( tex, tey, tez,
                 [=] AMREX_GPU_DEVICE (int i, int j, int k) {

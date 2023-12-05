@@ -113,7 +113,7 @@ LaserParticleContainer::LaserParticleContainer (AmrCore* amr_core, int ispecies,
     const bool a0_is_specified =
         utils::parser::queryWithParser(pp_laser_name, "a0", a0);
     if (a0_is_specified){
-        const Real omega = 2._rt*MathConst::pi*PhysConst::c/m_wavelength;
+        const amrex::Real omega = 2._rt*MathConst::pi*PhysConst::c/m_wavelength;
         m_e_max = PhysConst::m_e * omega * PhysConst::c * a0 / PhysConst::q_e;
     }
     AMREX_ALWAYS_ASSERT_WITH_MESSAGE(
@@ -186,7 +186,7 @@ LaserParticleContainer::LaserParticleContainer (AmrCore* amr_core, int ispecies,
         // Get the position of the plane, along the boost direction, in the lab frame
         // and convert the position of the antenna to the boosted frame
         m_Z0_lab = m_nvec[0]*m_position[0] + m_nvec[1]*m_position[1] + m_nvec[2]*m_position[2];
-        const Real Z0_boost = m_Z0_lab/WarpX::gamma_boost;
+        const amrex::Real Z0_boost = m_Z0_lab/WarpX::gamma_boost;
         m_position[0] += (Z0_boost-m_Z0_lab)*m_nvec[0];
         m_position[1] += (Z0_boost-m_Z0_lab)*m_nvec[1];
         m_position[2] += (Z0_boost-m_Z0_lab)*m_nvec[2];
@@ -277,7 +277,7 @@ LaserParticleContainer::LaserParticleContainer (AmrCore* amr_core, int ispecies,
  * \param injection_box: a RealBox where particles should be injected.
  */
 void
-LaserParticleContainer::ContinuousInjection (const RealBox& injection_box)
+LaserParticleContainer::ContinuousInjection (const amrex::RealBox& injection_box)
 {
     if (!m_enabled) return;
 
@@ -288,11 +288,11 @@ LaserParticleContainer::ContinuousInjection (const RealBox& injection_box)
 
     // Convert updated_position to Real* to use RealBox::contains().
 #if defined(WARPX_DIM_3D)
-    const Real* p_pos = m_updated_position.dataPtr();
+    const amrex::Real* p_pos = m_updated_position.dataPtr();
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-    const Real p_pos[2] = {m_updated_position[0], m_updated_position[2]};
+    const amrex::Real p_pos[2] = {m_updated_position[0], m_updated_position[2]};
 #else
-    const Real p_pos[1] = {m_updated_position[2]};
+    const amrex::Real p_pos[1] = {m_updated_position[2]};
 #endif
 #if defined(WARPX_DIM_RZ)
     // In RZ, check if laser enters the box only along Z. This is needed
@@ -432,8 +432,8 @@ LaserParticleContainer::InitData (int lev)
             plane_hi[1] = std::max(plane_hi[1], j);
         };
 
-        const Real* prob_lo = m_laser_injection_box.lo();
-        const Real* prob_hi = m_laser_injection_box.hi();
+        const amrex::Real* prob_lo = m_laser_injection_box.lo();
+        const amrex::Real* prob_hi = m_laser_injection_box.hi();
 #if defined(WARPX_DIM_3D)
         compute_min_max(prob_lo[0], prob_lo[1], prob_lo[2]);
         compute_min_max(prob_hi[0], prob_lo[1], prob_lo[2]);
@@ -500,11 +500,11 @@ LaserParticleContainer::InitData (int lev)
                 const amrex::Vector<amrex::Real>& pos = { 0.0_rt, 0.0_rt, m_position[2] };
 #endif
 #if defined(WARPX_DIM_3D)
-                const Real* x = pos.dataPtr();
+                const amrex::Real* x = pos.dataPtr();
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-                const Real x[2] = {pos[0], pos[2]};
+                const amrex::Real x[2] = {pos[0], pos[2]};
 #else
-                const Real x[1] = {pos[2]};
+                const amrex::Real x[1] = {pos[2]};
 #endif
                 if (m_laser_injection_box.contains(x))
                 {
@@ -521,13 +521,13 @@ LaserParticleContainer::InitData (int lev)
                     const auto n_spokes =
                         static_cast<int>((WarpX::n_rz_azimuthal_modes - 1)*m_min_particles_per_mode);
                     for (int spoke = 0 ; spoke < n_spokes ; spoke++) {
-                        const Real phase = 2._rt*MathConst::pi*spoke/n_spokes;
+                        const amrex::Real phase = 2._rt*MathConst::pi*spoke/n_spokes;
                         for (int k = 0; k<2; ++k) {
                             particle_x.push_back(pos[0]*std::cos(phase));
                             particle_y.push_back(pos[0]*std::sin(phase));
                             particle_z.push_back(pos[2]);
                         }
-                        const Real r_weight = m_weight*2._rt*MathConst::pi*pos[0]/n_spokes;
+                        const amrex::Real r_weight = m_weight*2._rt*MathConst::pi*pos[0]/n_spokes;
                         particle_w.push_back( r_weight);
                         particle_w.push_back(-r_weight);
                     }
@@ -717,7 +717,7 @@ LaserParticleContainer::ComputeSpacing (int lev, amrex::Real& Sx, amrex::Real& S
 #if !defined(WARPX_DIM_RZ)
     constexpr float small_float_coeff = 1.e-25f;
     constexpr double small_double_coeff = 1.e-50;
-    constexpr Real small_coeff = std::is_same<amrex::Real,float>::value ?
+    constexpr amrex::Real small_coeff = std::is_same<amrex::Real,float>::value ?
         static_cast<amrex::Real>(small_float_coeff) :
         static_cast<amrex::Real>(small_double_coeff);
     const auto eps = static_cast<amrex::Real>(dx[0]*small_coeff);
@@ -751,7 +751,7 @@ LaserParticleContainer::ComputeWeightMobility (amrex::Real Sx, amrex::Real Sy)
     // be emitted, and the corresponding velocity that the particles need to have.
     // We set the mobility so that the particles do not exceed a fraction
     // `eps` of the speed of light, at the peak of the laser field.
-    constexpr Real eps = 0.05_rt;
+    constexpr amrex::Real eps = 0.05_rt;
     m_mobility = eps/m_e_max;
     m_weight = PhysConst::ep0 / m_mobility;
     // Multiply by particle spacing
@@ -792,16 +792,16 @@ LaserParticleContainer::calculate_laser_plane_coordinates (const WarpXParIter& p
     const auto GetPosition = GetParticlePosition<PIdx>(pti);
 
 #if (AMREX_SPACEDIM >= 2)
-    const Real tmp_u_X_0 = m_u_X[0];
-    const Real tmp_u_X_2 = m_u_X[2];
-    const Real tmp_position_0 = m_position[0];
-    const Real tmp_position_2 = m_position[2];
+    const amrex::Real tmp_u_X_0 = m_u_X[0];
+    const amrex::Real tmp_u_X_2 = m_u_X[2];
+    const amrex::Real tmp_position_0 = m_position[0];
+    const amrex::Real tmp_position_2 = m_position[2];
 #if defined(WARPX_DIM_3D) || defined(WARPX_DIM_RZ)
-    const Real tmp_u_X_1 = m_u_X[1];
-    const Real tmp_u_Y_0 = m_u_Y[0];
-    const Real tmp_u_Y_1 = m_u_Y[1];
-    const Real tmp_u_Y_2 = m_u_Y[2];
-    const Real tmp_position_1 = m_position[1];
+    const amrex::Real tmp_u_X_1 = m_u_X[1];
+    const amrex::Real tmp_u_Y_0 = m_u_Y[0];
+    const amrex::Real tmp_u_Y_1 = m_u_Y[1];
+    const amrex::Real tmp_u_Y_2 = m_u_Y[2];
+    const amrex::Real tmp_position_1 = m_position[1];
 #endif
 #endif
 
@@ -849,28 +849,28 @@ LaserParticleContainer::update_laser_particle (WarpXParIter& pti,
                                                ParticleReal * AMREX_RESTRICT const puzp,
                                                ParticleReal const * AMREX_RESTRICT const pwp,
                                                amrex::Real const * AMREX_RESTRICT const amplitude,
-                                               const Real dt)
+                                               const amrex::Real dt)
 {
     const auto GetPosition = GetParticlePosition<PIdx>(pti);
     auto       SetPosition = SetParticlePosition<PIdx>(pti);
 
-    const Real tmp_p_X_0 = m_p_X[0];
-    const Real tmp_p_X_1 = m_p_X[1];
-    const Real tmp_p_X_2 = m_p_X[2];
-    const Real tmp_nvec_0 = m_nvec[0];
-    const Real tmp_nvec_1 = m_nvec[1];
-    const Real tmp_nvec_2 = m_nvec[2];
+    const amrex::Real tmp_p_X_0 = m_p_X[0];
+    const amrex::Real tmp_p_X_1 = m_p_X[1];
+    const amrex::Real tmp_p_X_2 = m_p_X[2];
+    const amrex::Real tmp_nvec_0 = m_nvec[0];
+    const amrex::Real tmp_nvec_1 = m_nvec[1];
+    const amrex::Real tmp_nvec_2 = m_nvec[2];
 
     // Copy member variables to tmp copies for GPU runs.
-    const Real tmp_mobility = m_mobility;
-    const Real gamma_boost = WarpX::gamma_boost;
-    const Real beta_boost = WarpX::beta_boost;
+    const amrex::Real tmp_mobility = m_mobility;
+    const amrex::Real gamma_boost = WarpX::gamma_boost;
+    const amrex::Real beta_boost = WarpX::beta_boost;
     amrex::ParallelFor(
         np,
         [=] AMREX_GPU_DEVICE (int i) {
             // Calculate the velocity according to the amplitude of E
-            const Real sign_charge = (pwp[i]>0) ? 1 : -1;
-            const Real v_over_c = sign_charge * tmp_mobility * amplitude[i];
+            const amrex::Real sign_charge = (pwp[i]>0) ? 1 : -1;
+            const amrex::Real v_over_c = sign_charge * tmp_mobility * amplitude[i];
             AMREX_ALWAYS_ASSERT_WITH_MESSAGE(amrex::Math::abs(v_over_c) < amrex::Real(1.),
                             "Error: calculated laser particle velocity greater than c."
                             "Make sure the laser wavelength and amplitude are accurately set.");
@@ -885,7 +885,7 @@ LaserParticleContainer::update_laser_particle (WarpXParIter& pti,
                 vz -= PhysConst::c * beta_boost * tmp_nvec_2;
             }
             // Get the corresponding momenta
-            const Real gamma =
+            const amrex::Real gamma =
                 static_cast<amrex::Real>(gamma_boost/std::sqrt(1. - v_over_c*v_over_c));
             puxp[i] = gamma * vx;
             puyp[i] = gamma * vy;

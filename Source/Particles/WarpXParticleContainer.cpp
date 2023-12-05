@@ -729,7 +729,7 @@ WarpXParticleContainer::DepositCharge (WarpXParIter& pti, RealVector const& wp,
         amrex::ignore_unused(range); // In case the assertion isn't compiled
 
         const std::array<amrex::Real,3>& dx = WarpX::CellSize(std::max(depos_lev,0));
-        const Real q = this->charge;
+        const amrex::Real q = this->charge;
 
         WARPX_PROFILE_VAR_NS("WarpXParticleContainer::DepositCharge::Sorting", blp_sort);
         WARPX_PROFILE_VAR_NS("WarpXParticleContainer::DepositCharge::ChargeDeposition", blp_ppc_chd);
@@ -776,7 +776,7 @@ WarpXParticleContainer::DepositCharge (WarpXParIter& pti, RealVector const& wp,
         // Lower corner of tile box physical domain
         // Note that this includes guard cells since it is after tilebox.ngrow
         // Take into account Galilean shift
-        const Real dt = warpx.getdt(lev);
+        const amrex::Real dt = warpx.getdt(lev);
         const amrex::Real time_shift_delta = (icomp == 0 ? 0.0_rt : dt);
         const std::array<amrex::Real,3>& xyzmin = WarpX::LowerCorner(
                 tilebox, depos_lev, time_shift_delta);
@@ -1359,15 +1359,15 @@ WarpXParticleContainer::ApplyBoundaryConditions (){
             auto GetPosition = GetParticlePosition<PIdx>(pti);
             auto SetPosition = SetParticlePosition<PIdx>(pti);
 #ifndef WARPX_DIM_1D_Z
-            const Real xmin = Geom(lev).ProbLo(0);
-            const Real xmax = Geom(lev).ProbHi(0);
+            const amrex::Real xmin = Geom(lev).ProbLo(0);
+            const amrex::Real xmax = Geom(lev).ProbHi(0);
 #endif
 #ifdef WARPX_DIM_3D
-            const Real ymin = Geom(lev).ProbLo(1);
-            const Real ymax = Geom(lev).ProbHi(1);
+            const amrex::Real ymin = Geom(lev).ProbLo(1);
+            const amrex::Real ymax = Geom(lev).ProbHi(1);
 #endif
-            const Real zmin = Geom(lev).ProbLo(WARPX_ZINDEX);
-            const Real zmax = Geom(lev).ProbHi(WARPX_ZINDEX);
+            const amrex::Real zmin = Geom(lev).ProbLo(WARPX_ZINDEX);
+            const amrex::Real zmax = Geom(lev).ProbHi(WARPX_ZINDEX);
 
             ParticleTileType& ptile = ParticlesAt(lev, pti);
             ParticleType * const pp = ptile.GetArrayOfStructs()().data();

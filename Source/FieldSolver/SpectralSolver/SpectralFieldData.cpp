@@ -257,7 +257,7 @@ SpectralFieldData::ForwardTransform (const int lev,
             }
             realspace_bx.enclosedCells(); // Discard last point in nodal direction
             AMREX_ALWAYS_ASSERT( realspace_bx.contains(tmpRealField[mfi].box()) );
-            const Array4<const Real> mf_arr = mf[mfi].array();
+            const Array4<const amrex::Real> mf_arr = mf[mfi].array();
             const Array4<amrex::Real> tmp_arr = tmpRealField[mfi].array();
             ParallelFor( tmpRealField[mfi].box(),
             [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept {

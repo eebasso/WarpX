@@ -73,7 +73,7 @@ WarpX::Evolve (int numsteps)
     bool early_params_checked = false; // check typos in inputs after step 1
     bool exit_loop_due_to_interrupt_signal = false;
 
-    static Real evolve_time = 0;
+    static amrex::Real evolve_time = 0;
 
     const int step_begin = istep[0];
     for (int step = istep[0]; step < numsteps_max && cur_time < stop_time; ++step)

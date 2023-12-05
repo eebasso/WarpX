@@ -63,20 +63,20 @@ Index filterCreateTransformFromFAB (DstTile& dst1, DstTile& dst2, const amrex::B
     constexpr int spacedim = AMREX_SPACEDIM;
 
 #if defined(WARPX_DIM_1D_Z)
-    const Real zlo_global = geom.ProbLo(0);
-    const Real dz         = geom.CellSize(0);
+    const amrex::Real zlo_global = geom.ProbLo(0);
+    const amrex::Real dz         = geom.CellSize(0);
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-    const Real xlo_global = geom.ProbLo(0);
-    const Real dx         = geom.CellSize(0);
-    const Real zlo_global = geom.ProbLo(1);
-    const Real dz         = geom.CellSize(1);
+    const amrex::Real xlo_global = geom.ProbLo(0);
+    const amrex::Real dx         = geom.CellSize(0);
+    const amrex::Real zlo_global = geom.ProbLo(1);
+    const amrex::Real dz         = geom.CellSize(1);
 #elif defined(WARPX_DIM_3D)
-    const Real xlo_global = geom.ProbLo(0);
-    const Real dx         = geom.CellSize(0);
-    const Real ylo_global = geom.ProbLo(1);
-    const Real dy         = geom.CellSize(1);
-    const Real zlo_global = geom.ProbLo(2);
-    const Real dz         = geom.CellSize(2);
+    const amrex::Real xlo_global = geom.ProbLo(0);
+    const amrex::Real dx         = geom.CellSize(0);
+    const amrex::Real ylo_global = geom.ProbLo(1);
+    const amrex::Real dy         = geom.CellSize(1);
+    const amrex::Real zlo_global = geom.ProbLo(2);
+    const amrex::Real dz         = geom.CellSize(2);
 #endif
 
     const auto arrNumPartCreation = src_FAB->array();

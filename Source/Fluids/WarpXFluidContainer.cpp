@@ -408,7 +408,7 @@ void WarpXFluidContainer::AdvectivePush_Muscl (int lev)
 
     // Grab the grid spacing
     WarpX &warpx = WarpX::GetInstance();
-    const Real dt = warpx.getdt(lev);
+    const amrex::Real dt = warpx.getdt(lev);
     const amrex::Geometry &geom = warpx.Geom(lev);
     const auto dx = geom.CellSizeArray();
     const amrex::Real clight = PhysConst::c;
@@ -878,7 +878,7 @@ void WarpXFluidContainer::centrifugal_source_rz (int lev)
     WARPX_PROFILE("WarpXFluidContainer::centrifugal_source_rz");
 
     WarpX &warpx = WarpX::GetInstance();
-    const Real dt = warpx.getdt(lev);
+    const amrex::Real dt = warpx.getdt(lev);
     const amrex::Geometry &geom = warpx.Geom(lev);
     const auto dx = geom.CellSizeArray();
     const auto problo = geom.ProbLoArray();
@@ -952,7 +952,7 @@ void WarpXFluidContainer::GatherAndPush (
     WarpX &warpx = WarpX::GetInstance();
     const amrex::Real q = getCharge();
     const amrex::Real m = getMass();
-    const Real dt = warpx.getdt(lev);
+    const amrex::Real dt = warpx.getdt(lev);
     const amrex::Geometry &geom = warpx.Geom(lev);
     const auto dx = geom.CellSizeArray();
     const auto problo = geom.ProbLoArray();

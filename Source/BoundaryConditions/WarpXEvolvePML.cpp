@@ -255,18 +255,18 @@ WarpX::DampJPML (int lev, PatchType patch_type)
             auto const& pml_jxfab = pml_j[0]->array(mfi);
             auto const& pml_jyfab = pml_j[1]->array(mfi);
             auto const& pml_jzfab = pml_j[2]->array(mfi);
-            const Real* sigma_cumsum_fac_j_x = sigba[mfi].sigma_cumsum_fac[0].data();
-            const Real* sigma_star_cumsum_fac_j_x = sigba[mfi].sigma_star_cumsum_fac[0].data();
+            const amrex::Real* sigma_cumsum_fac_j_x = sigba[mfi].sigma_cumsum_fac[0].data();
+            const amrex::Real* sigma_star_cumsum_fac_j_x = sigba[mfi].sigma_star_cumsum_fac[0].data();
 #if defined(WARPX_DIM_3D)
-            const Real* sigma_cumsum_fac_j_y = sigba[mfi].sigma_cumsum_fac[1].data();
-            const Real* sigma_star_cumsum_fac_j_y = sigba[mfi].sigma_star_cumsum_fac[1].data();
-            const Real* sigma_cumsum_fac_j_z = sigba[mfi].sigma_cumsum_fac[2].data();
-            const Real* sigma_star_cumsum_fac_j_z = sigba[mfi].sigma_star_cumsum_fac[2].data();
+            const amrex::Real* sigma_cumsum_fac_j_y = sigba[mfi].sigma_cumsum_fac[1].data();
+            const amrex::Real* sigma_star_cumsum_fac_j_y = sigba[mfi].sigma_star_cumsum_fac[1].data();
+            const amrex::Real* sigma_cumsum_fac_j_z = sigba[mfi].sigma_cumsum_fac[2].data();
+            const amrex::Real* sigma_star_cumsum_fac_j_z = sigba[mfi].sigma_star_cumsum_fac[2].data();
 #else
-            const Real* sigma_cumsum_fac_j_y = nullptr;
-            const Real* sigma_star_cumsum_fac_j_y = nullptr;
-            const Real* sigma_cumsum_fac_j_z = sigba[mfi].sigma_cumsum_fac[1].data();
-            const Real* sigma_star_cumsum_fac_j_z = sigba[mfi].sigma_star_cumsum_fac[1].data();
+            const amrex::Real* sigma_cumsum_fac_j_y = nullptr;
+            const amrex::Real* sigma_star_cumsum_fac_j_y = nullptr;
+            const amrex::Real* sigma_cumsum_fac_j_z = sigba[mfi].sigma_cumsum_fac[1].data();
+            const amrex::Real* sigma_star_cumsum_fac_j_z = sigba[mfi].sigma_star_cumsum_fac[1].data();
 #endif
 
 #ifdef AMREX_USE_EB

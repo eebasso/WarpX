@@ -72,11 +72,11 @@ SpectralBaseAlgorithm::ComputeSpectralDivE (
         // Extract arrays for the fields to be updated
         const Array4<Complex> fields = field_data.fields[mfi].array();
         // Extract pointers for the k vectors
-        const Real* modified_kx_arr = modified_kx_vec[mfi].dataPtr();
+        const amrex::Real* modified_kx_arr = modified_kx_vec[mfi].dataPtr();
 #if defined(WARPX_DIM_3D)
-        const Real* modified_ky_arr = modified_ky_vec[mfi].dataPtr();
+        const amrex::Real* modified_ky_arr = modified_ky_vec[mfi].dataPtr();
 #endif
-        const Real* modified_kz_arr = modified_kz_vec[mfi].dataPtr();
+        const amrex::Real* modified_kz_arr = modified_kz_vec[mfi].dataPtr();
 
         // Loop over indices within one box
         ParallelFor(bx,
@@ -87,13 +87,13 @@ SpectralBaseAlgorithm::ComputeSpectralDivE (
             const Complex Ey = fields(i,j,k,Idx.Ey);
             const Complex Ez = fields(i,j,k,Idx.Ez);
             // k vector values
-            const Real kx = modified_kx_arr[i];
+            const amrex::Real kx = modified_kx_arr[i];
 #if defined(WARPX_DIM_3D)
-            const Real ky = modified_ky_arr[j];
-            const Real kz = modified_kz_arr[k];
+            const amrex::Real ky = modified_ky_arr[j];
+            const amrex::Real kz = modified_kz_arr[k];
 #else
-            constexpr Real ky = 0;
-            const Real kz = modified_kz_arr[j];
+            constexpr amrex::Real ky = 0;
+            const amrex::Real kz = modified_kz_arr[j];
 #endif
             const Complex I = Complex{0,1};
 

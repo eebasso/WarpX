@@ -81,7 +81,7 @@ CreateSlice( const amrex::MultiFab& mf, const amrex::Vector<Geometry> &dom_geom,
         SliceType[idim] = conversionType.nodeCentered(idim);
     }
 
-    const RealBox& real_box = dom_geom[0].ProbDomain();
+    const amrex::RealBox& real_box = dom_geom[0].ProbDomain();
     amrex::RealBox slice_cc_nd_box;
     const int default_grid_size = 32;
     int slice_grid_size = default_grid_size;
@@ -421,7 +421,7 @@ void
 InterpolateSliceValues(amrex::MultiFab& smf, amrex::IntVect interp_lo, amrex::RealBox slice_realbox,
                        amrex::Vector<Geometry> geom, int ncomp, int nghost,
                        amrex::IntVect slice_lo, amrex::IntVect /*slice_hi*/, amrex::IntVect SliceType,
-                       const RealBox real_box)
+                       const amrex::RealBox real_box)
 {
     for (MFIter mfi(smf); mfi.isValid(); ++mfi)
     {
@@ -442,7 +442,7 @@ void
 InterpolateLo(const Box& bx, FArrayBox &fabox, amrex::IntVect slice_lo,
              amrex::Vector<Geometry> geom, int idir, amrex::IntVect IndType,
              amrex::RealBox slice_realbox, int srccomp, int ncomp,
-             int /*nghost*/, const RealBox real_box )
+             int /*nghost*/, const amrex::RealBox real_box )
 {
     auto fabarr = fabox.array();
     const auto lo = amrex::lbound(bx);

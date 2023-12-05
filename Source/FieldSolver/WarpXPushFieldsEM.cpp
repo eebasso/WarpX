@@ -1215,7 +1215,7 @@ WarpX::ApplyInverseVolumeScalingToCurrentDensity (amrex::MultiFab* Jx, amrex::Mu
 {
     const amrex::IntVect ngJ = Jx->nGrowVect();
     const std::array<amrex::Real,3>& dx = WarpX::CellSize(lev);
-    const Real dr = dx[0];
+    const amrex::Real dr = dx[0];
 
     constexpr int NODE = amrex::IndexType::NODE;
 
@@ -1238,10 +1238,10 @@ WarpX::ApplyInverseVolumeScalingToCurrentDensity (amrex::MultiFab* Jx, amrex::Mu
         // Note that this is done before the tilebox.grow so that
         // these do not include the guard cells.
         const std::array<amrex::Real, 3>& xyzmin = WarpX::LowerCorner(tilebox, lev, 0._rt);
-        const Real rmin  = xyzmin[0];
-        const Real rminr = xyzmin[0] + (tbr.type(0) == NODE ? 0._rt : 0.5_rt*dx[0]);
-        const Real rmint = xyzmin[0] + (tbt.type(0) == NODE ? 0._rt : 0.5_rt*dx[0]);
-        const Real rminz = xyzmin[0] + (tbz.type(0) == NODE ? 0._rt : 0.5_rt*dx[0]);
+        const amrex::Real rmin  = xyzmin[0];
+        const amrex::Real rminr = xyzmin[0] + (tbr.type(0) == NODE ? 0._rt : 0.5_rt*dx[0]);
+        const amrex::Real rmint = xyzmin[0] + (tbt.type(0) == NODE ? 0._rt : 0.5_rt*dx[0]);
+        const amrex::Real rminz = xyzmin[0] + (tbz.type(0) == NODE ? 0._rt : 0.5_rt*dx[0]);
         const Dim3 lo = lbound(tilebox);
         const int irmin = lo.x;
 
@@ -1388,7 +1388,7 @@ WarpX::ApplyInverseVolumeScalingToChargeDensity (amrex::MultiFab* Rho, int lev)
 {
     const amrex::IntVect ngRho = Rho->nGrowVect();
     const std::array<amrex::Real,3>& dx = WarpX::CellSize(lev);
-    const Real dr = dx[0];
+    const amrex::Real dr = dx[0];
 
     constexpr int NODE = amrex::IndexType::NODE;
 
@@ -1410,8 +1410,8 @@ WarpX::ApplyInverseVolumeScalingToChargeDensity (amrex::MultiFab* Rho, int lev)
         // these do not include the guard cells.
         const std::array<amrex::Real, 3>& xyzmin = WarpX::LowerCorner(tilebox, lev, 0._rt);
         const Dim3 lo = lbound(tilebox);
-        const Real rmin = xyzmin[0];
-        const Real rminr = xyzmin[0] + (tb.type(0) == NODE ? 0._rt : 0.5_rt*dx[0]);
+        const amrex::Real rmin = xyzmin[0];
+        const amrex::Real rminr = xyzmin[0] + (tb.type(0) == NODE ? 0._rt : 0.5_rt*dx[0]);
         const int irmin = lo.x;
         const int ishift = (rminr > rmin ? 1 : 0);
 

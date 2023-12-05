@@ -528,7 +528,7 @@ WarpX::InitDiagnostics () {
 void
 WarpX::InitFromScratch ()
 {
-    const Real time = 0.0;
+    const amrex::Real time = 0.0;
 
     AmrCore::InitFromScratch(time);  // This will call MakeNewLevelFromScratch
 
@@ -660,12 +660,12 @@ WarpX::computeMaxStepBoostAccelerator() {
 
     // End of the plasma: Transform input argument
     // zmax_plasma_to_compute_max_step to boosted frame.
-    const Real len_plasma_boost = zmax_plasma_to_compute_max_step/gamma_boost;
+    const amrex::Real len_plasma_boost = zmax_plasma_to_compute_max_step/gamma_boost;
     // Plasma velocity
-    const Real v_plasma_boost = -beta_boost * PhysConst::c;
+    const amrex::Real v_plasma_boost = -beta_boost * PhysConst::c;
     // Get time at which the lower end of the simulation domain passes the
     // upper end of the plasma (in the z direction).
-    const Real interaction_time_boost = (len_plasma_boost-zmin_domain_boost_step_0)/
+    const amrex::Real interaction_time_boost = (len_plasma_boost-zmin_domain_boost_step_0)/
         (moving_window_v-v_plasma_boost);
     // Divide by dt, and update value of max_step.
     const auto computed_max_step = (do_subcycling)?
@@ -685,7 +685,7 @@ WarpX::InitNCICorrector ()
         for (int lev = 0; lev <= max_level; ++lev)
         {
             const Geometry& gm = Geom(lev);
-            const Real* dx = gm.CellSize();
+            const amrex::Real* dx = gm.CellSize();
 #if defined(WARPX_DIM_3D)
                 const auto dz = dx[2];
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
@@ -1021,7 +1021,7 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
             dx_lev[idim] = dx_lev[idim] * refratio[idim];
         }
     }
-    const RealBox& real_box = geom[lev].ProbDomain();
+    const amrex::RealBox& real_box = geom[lev].ProbDomain();
     const amrex::IntVect x_nodal_flag = mfx->ixType().toIntVect();
     const amrex::IntVect y_nodal_flag = mfy->ixType().toIntVect();
     const amrex::IntVect z_nodal_flag = mfz->ixType().toIntVect();

@@ -179,17 +179,17 @@ void FieldMaximum::ComputeDiags (int step)
             reduce_op.eval(box, reduce_data,
             [=] AMREX_GPU_DEVICE (int i, int j, int k) -> ReduceTuple
             {
-                const Real Ex_interp = ablastr::coarsen::sample::Interp(arrEx, Extype, cellCenteredtype,
+                const amrex::Real Ex_interp = ablastr::coarsen::sample::Interp(arrEx, Extype, cellCenteredtype,
                                                                         reduction_coarsening_ratio, i, j, k, reduction_comp);
-                const Real Ey_interp = ablastr::coarsen::sample::Interp(arrEy, Eytype, cellCenteredtype,
+                const amrex::Real Ey_interp = ablastr::coarsen::sample::Interp(arrEy, Eytype, cellCenteredtype,
                                                                         reduction_coarsening_ratio, i, j, k, reduction_comp);
-                const Real Ez_interp = ablastr::coarsen::sample::Interp(arrEz, Eztype, cellCenteredtype,
+                const amrex::Real Ez_interp = ablastr::coarsen::sample::Interp(arrEz, Eztype, cellCenteredtype,
                                                                         reduction_coarsening_ratio, i, j, k, reduction_comp);
-                const Real Bx_interp = ablastr::coarsen::sample::Interp(arrBx, Bxtype, cellCenteredtype,
+                const amrex::Real Bx_interp = ablastr::coarsen::sample::Interp(arrBx, Bxtype, cellCenteredtype,
                                                                         reduction_coarsening_ratio, i, j, k, reduction_comp);
-                const Real By_interp = ablastr::coarsen::sample::Interp(arrBy, Bytype, cellCenteredtype,
+                const amrex::Real By_interp = ablastr::coarsen::sample::Interp(arrBy, Bytype, cellCenteredtype,
                                                                         reduction_coarsening_ratio, i, j, k, reduction_comp);
-                const Real Bz_interp = ablastr::coarsen::sample::Interp(arrBz, Bztype, cellCenteredtype,
+                const amrex::Real Bz_interp = ablastr::coarsen::sample::Interp(arrBz, Bztype, cellCenteredtype,
                                                                         reduction_coarsening_ratio, i, j, k, reduction_comp);
                 return {amrex::Math::abs(Ex_interp),
                         amrex::Math::abs(Ey_interp),

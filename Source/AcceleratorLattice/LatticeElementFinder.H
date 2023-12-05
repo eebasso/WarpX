@@ -54,7 +54,7 @@ struct LatticeElementFinder
                         AcceleratorLattice const& accelerator_lattice);
 
     /* Define the location and size of the index lookup table */
-    /* Use the type Real to be consistent with the way the main grid is defined */
+    /* Use the type amrex::Real to be consistent with the way the main grid is defined */
     int m_nz;
     amrex::Real m_zmin;
     amrex::Real m_dz;

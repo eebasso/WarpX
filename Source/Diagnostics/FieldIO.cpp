@@ -47,13 +47,13 @@ getVec( const amrex::IntVect& v, bool reverse)
   return u;
 }
 /** \brief
- * Convert Real* pointer to a std::vector<double>,
+ * Convert amrex::Real* pointer to a std::vector<double>,
  * (used for compatibility with the openPMD API)
  */
 std::vector<double>
-getVec( const Real* v , bool reverse)
+getVec( const amrex::Real* v , bool reverse)
 {
-  // Convert Real* v to and std::vector u
+  // Convert amrex::Real* v to and std::vector u
   std::vector<double> u = {
     AMREX_D_DECL(
                  static_cast<double>(v[0]),
@@ -96,14 +96,14 @@ getReversedVec( const amrex::IntVect& v )
 }
 
 /** \brief
- * Convert Real* pointer to a std::vector<double>,
+ * Convert amrex::Real* pointer to a std::vector<double>,
  * and reverse the order of the elements
  * (used for compatibility with the openPMD API)
  */
 std::vector<double>
-getReversedVec( const Real* v )
+getReversedVec( const amrex::Real* v )
 {
-  // Convert Real* v to and std::vector u
+  // Convert amrex::Real* v to and std::vector u
   std::vector<double> u = {
     AMREX_D_DECL(
                  static_cast<double>(v[0]),

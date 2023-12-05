@@ -240,7 +240,7 @@ RigidInjectedParticleContainer::PushPX (WarpXParIter& pti,
     }
 
     const bool do_scale = not done_injecting_lev;
-    const Real v_boost = WarpX::beta_boost*PhysConst::c;
+    const amrex::Real v_boost = WarpX::beta_boost*PhysConst::c;
     PhysicalParticleContainer::PushPX(pti, exfab, eyfab, ezfab, bxfab, byfab, bzfab,
                                       ngEB, e_is_nodal, offset, np_to_push, lev, gather_lev, dt,
                                       ScaleFields(do_scale, dt, zinject_plane_lev_previous,

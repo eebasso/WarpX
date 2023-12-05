@@ -71,9 +71,9 @@ WarpX::Hybrid_QED_Push (int lev, PatchType patch_type, amrex::Real a_dt)
 {
     const int patch_level = (patch_type == PatchType::fine) ? lev : lev-1;
     const std::array<amrex::Real,3>& dx_vec= WarpX::CellSize(patch_level);
-    const Real dx = dx_vec[0];
-    const Real dy = dx_vec[1];
-    const Real dz = dx_vec[2];
+    const amrex::Real dx = dx_vec[0];
+    const amrex::Real dy = dx_vec[1];
+    const amrex::Real dz = dx_vec[2];
 
     MultiFab *Ex, *Ey, *Ez, *Bx, *By, *Bz, *Jx, *Jy, *Jz;
     if (patch_type == PatchType::fine)
@@ -169,7 +169,7 @@ WarpX::Hybrid_QED_Push (int lev, PatchType patch_type, amrex::Real a_dt)
         );
 
         // Make local copy of xi, to use on device.
-        const Real xi_c2 = WarpX::quantum_xi_c2;
+        const amrex::Real xi_c2 = WarpX::quantum_xi_c2;
 
         // Apply QED correction to electric field, using temporary arrays.
         amrex::ParallelFor(

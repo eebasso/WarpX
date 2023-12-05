@@ -250,11 +250,11 @@ void NullifyMF(amrex::MultiFab& mf, int lev, amrex::Real zmin, amrex::Real zmax)
             amrex::ParallelFor(bx, ncomp,
                 [=] AMREX_GPU_DEVICE(int i, int j, int k, int n) noexcept{
 #if defined(WARPX_DIM_3D)
-                    const Real z_gridpoint = zmin_box+(k-lo_ind)*dz;
+                    const amrex::Real z_gridpoint = zmin_box+(k-lo_ind)*dz;
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-                    const Real z_gridpoint = zmin_box+(j-lo_ind)*dz;
+                    const amrex::Real z_gridpoint = zmin_box+(j-lo_ind)*dz;
 #else
-                    const Real z_gridpoint = zmin_box+(i-lo_ind)*dz;
+                    const amrex::Real z_gridpoint = zmin_box+(i-lo_ind)*dz;
 #endif
                     if ( (z_gridpoint >= zmin) && (z_gridpoint < zmax) ) {
                         arr(i,j,k,n) = 0.;

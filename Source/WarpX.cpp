@@ -2665,7 +2665,7 @@ void WarpX::AllocLevelSpectralSolverRZ (amrex::Vector<std::unique_ptr<SpectralSo
                                         const amrex::DistributionMapping& dm,
                                         const std::array<amrex::Real,3>& dx)
 {
-    const RealVect dx_vect(dx[0], dx[2]);
+    const amrex::RealVect dx_vect(dx[0], dx[2]);
 
     amrex::Real solver_dt = dt[lev];
     if (WarpX::do_multi_J) solver_dt /= static_cast<amrex::Real>(WarpX::do_multi_J_n_depositions);
@@ -2713,11 +2713,11 @@ void WarpX::AllocLevelSpectralSolver (amrex::Vector<std::unique_ptr<SpectralSolv
                                       const bool pml_flag)
 {
 #if defined(WARPX_DIM_3D)
-    const RealVect dx_vect(dx[0], dx[1], dx[2]);
+    const amrex::RealVect dx_vect(dx[0], dx[1], dx[2]);
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-    const RealVect dx_vect(dx[0], dx[2]);
+    const amrex::RealVect dx_vect(dx[0], dx[2]);
 #elif defined(WARPX_DIM_1D_Z)
-    const RealVect dx_vect(dx[2]);
+    const amrex::RealVect dx_vect(dx[2]);
 #endif
 
     amrex::Real solver_dt = dt[lev];
@@ -2752,7 +2752,7 @@ std::array<amrex::Real,3>
 WarpX::CellSize (int lev)
 {
     const amrex::Geometry& gm = GetInstance().Geom(lev);
-    const Real* dx = gm.CellSize();
+    const amrex::Real* dx = gm.CellSize();
 #if defined(WARPX_DIM_3D)
     return { dx[0], dx[1], dx[2] };
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
@@ -2766,7 +2766,7 @@ amrex::RealBox
 WarpX::getRealBox(const Box& bx, int lev)
 {
     const amrex::Geometry& gm = GetInstance().Geom(lev);
-    const RealBox grid_box{bx, gm.CellSize(), gm.ProbLo()};
+    const amrex::RealBox grid_box{bx, gm.CellSize(), gm.ProbLo()};
     return( grid_box );
 }
 
@@ -2774,9 +2774,9 @@ std::array<amrex::Real,3>
 WarpX::LowerCorner(const Box& bx, const int lev, const amrex::Real time_shift_delta)
 {
     auto & warpx = GetInstance();
-    const RealBox grid_box = getRealBox( bx, lev );
+    const amrex::RealBox grid_box = getRealBox( bx, lev );
 
-    const Real* xyzmin = grid_box.lo();
+    const amrex::Real* xyzmin = grid_box.lo();
 
     const amrex::Real cur_time = warpx.gett_new(lev);
     const amrex::Real time_shift = (cur_time + time_shift_delta - warpx.time_of_last_gal_shift);
@@ -2799,9 +2799,9 @@ std::array<amrex::Real,3>
 WarpX::UpperCorner(const Box& bx, const int lev, const amrex::Real time_shift_delta)
 {
     auto & warpx = GetInstance();
-    const RealBox grid_box = getRealBox( bx, lev );
+    const amrex::RealBox grid_box = getRealBox( bx, lev );
 
-    const Real* xyzmax = grid_box.hi();
+    const amrex::Real* xyzmax = grid_box.hi();
 
     const amrex::Real cur_time = warpx.gett_new(lev);
     const amrex::Real time_shift = (cur_time + time_shift_delta - warpx.time_of_last_gal_shift);
@@ -2834,10 +2834,10 @@ WarpX::ComputeDivB (amrex::MultiFab& divB, int const dcomp,
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(grid_type != GridType::Collocated,
         "ComputeDivB not implemented with warpx.grid_type=Collocated.");
 
-    const Real dxinv = 1._rt/dx[0], dyinv = 1._rt/dx[1], dzinv = 1._rt/dx[2];
+    const amrex::Real dxinv = 1._rt/dx[0], dyinv = 1._rt/dx[1], dzinv = 1._rt/dx[2];
 
 #ifdef WARPX_DIM_RZ
-    const Real rmin = GetInstance().Geom(0).ProbLo(0);
+    const amrex::Real rmin = GetInstance().Geom(0).ProbLo(0);
 #endif
 
 #ifdef AMREX_USE_OMP
@@ -2871,10 +2871,10 @@ WarpX::ComputeDivB (amrex::MultiFab& divB, int const dcomp,
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(grid_type != GridType::Collocated,
         "ComputeDivB not implemented with warpx.grid_type=collocated.");
 
-    const Real dxinv = 1._rt/dx[0], dyinv = 1._rt/dx[1], dzinv = 1._rt/dx[2];
+    const amrex::Real dxinv = 1._rt/dx[0], dyinv = 1._rt/dx[1], dzinv = 1._rt/dx[2];
 
 #ifdef WARPX_DIM_RZ
-    const Real rmin = GetInstance().Geom(0).ProbLo(0);
+    const amrex::Real rmin = GetInstance().Geom(0).ProbLo(0);
 #endif
 
 #ifdef AMREX_USE_OMP

@@ -102,9 +102,9 @@ WarpXLaserProfiles::GaussianLaserProfile::fill_amplitude (
 {
     const Complex I(0,1);
     // Calculate a few factors which are independent of the macroparticle
-    const Real k0 = 2._rt*MathConst::pi/m_common_params.wavelength;
-    const Real inv_tau2 = 1._rt /(m_params.duration * m_params.duration);
-    const Real oscillation_phase = k0 * PhysConst::c * ( t - m_params.t_peak ) + m_params.phi0;
+    const amrex::Real k0 = 2._rt*MathConst::pi/m_common_params.wavelength;
+    const amrex::Real inv_tau2 = 1._rt /(m_params.duration * m_params.duration);
+    const amrex::Real oscillation_phase = k0 * PhysConst::c * ( t - m_params.t_peak ) + m_params.phi0;
     // The coefficients below contain info about Gouy phase,
     // laser diffraction, and phase front curvature
     const Complex diffract_factor =

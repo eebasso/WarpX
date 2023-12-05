@@ -37,7 +37,7 @@ using namespace amrex;
  */
 SpectralKSpace::SpectralKSpace( const amrex::BoxArray& realspace_ba,
                                 const amrex::DistributionMapping& dm,
-                                const RealVect realspace_dx )
+                                const amrex::RealVect realspace_dx )
     : dx(realspace_dx)  // Store the cell size as member `dx`
 {
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
@@ -100,7 +100,7 @@ SpectralKSpace::getKComponent( const amrex::DistributionMapping& dm,
 
         // Fill the k vector
         amrex::IntVect fft_size = realspace_ba[mfi].length();
-        const Real dk = 2*MathConst::pi/(fft_size[i_dim]*dx[i_dim]);
+        const amrex::Real dk = 2*MathConst::pi/(fft_size[i_dim]*dx[i_dim]);
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE( bx.smallEnd(i_dim) == 0,
             "Expected box to start at 0, in spectral space.");
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE( bx.bigEnd(i_dim) == N-1,
@@ -222,7 +222,7 @@ SpectralKSpace::getModifiedKComponent( const amrex::DistributionMapping& dm,
         // Loop over boxes and allocate the corresponding DeviceVector
         // for each box owned by the local MPI proc
         for ( MFIter mfi(spectralspace_ba, dm); mfi.isValid(); ++mfi ){
-            const Real delta_x = dx[i_dim];
+            const amrex::Real delta_x = dx[i_dim];
             const Gpu::DeviceVector<amrex::Real>& k = k_vec[i_dim][mfi];
             Gpu::DeviceVector<amrex::Real>& modified_k = modified_k_comp[mfi];
 

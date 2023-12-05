@@ -708,7 +708,7 @@ MultiParticleContainer::SetParticleDistributionMap (int lev, DistributionMapping
  * calls virtual function ContinuousInjection.
  */
 void
-MultiParticleContainer::ContinuousInjection (const RealBox& injection_box) const
+MultiParticleContainer::ContinuousInjection (const amrex::RealBox& injection_box) const
 {
     for (auto& pc : allcontainers){
         if (pc->do_continuous_injection){
@@ -915,7 +915,7 @@ MultiParticleContainer::doFieldIonization (int lev,
 }
 
 void
-MultiParticleContainer::doCollisions ( Real cur_time, amrex::Real dt )
+MultiParticleContainer::doCollisions ( amrex::Real cur_time, amrex::Real dt )
 {
     WARPX_PROFILE("MultiParticleContainer::doCollisions()");
     collisionhandler->doCollisions(cur_time, dt, this);

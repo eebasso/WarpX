@@ -131,10 +131,10 @@ namespace
                                   amrex::Real gamma_boost, amrex::Real beta_boost, amrex::Real t) noexcept
     {
         const XDim3 u_bulk = inj_mom->getBulkMomentum(pos.x, pos.y, pos.z);
-        const Real gamma_bulk = std::sqrt(1._rt +
+        const amrex::Real gamma_bulk = std::sqrt(1._rt +
                   (u_bulk.x*u_bulk.x+u_bulk.y*u_bulk.y+u_bulk.z*u_bulk.z));
-        const Real betaz_bulk = u_bulk.z/gamma_bulk;
-        const Real z0 = gamma_boost * ( pos.z*(1.0_rt-beta_boost*betaz_bulk)
+        const amrex::Real betaz_bulk = u_bulk.z/gamma_bulk;
+        const amrex::Real z0 = gamma_boost * ( pos.z*(1.0_rt-beta_boost*betaz_bulk)
                              - PhysConst::c*t*(betaz_bulk-beta_boost) );
         return z0;
     }
@@ -516,10 +516,10 @@ void PhysicalParticleContainer::MapParticletoBoostedFrame (
 void
 PhysicalParticleContainer::AddGaussianBeam (
     PlasmaInjector const& plasma_injector,
-    const Real x_m, const Real y_m, const Real z_m,
-    const Real x_rms, const Real y_rms, const Real z_rms,
-    const Real x_cut, const Real y_cut, const Real z_cut,
-    const Real q_tot, long npart,
+    const amrex::Real x_m, const amrex::Real y_m, const amrex::Real z_m,
+    const amrex::Real x_rms, const amrex::Real y_rms, const amrex::Real z_rms,
+    const amrex::Real x_cut, const amrex::Real y_cut, const amrex::Real z_cut,
+    const amrex::Real q_tot, long npart,
     const int do_symmetrize,
     const int symmetrization_order) {
 
@@ -541,20 +541,20 @@ PhysicalParticleContainer::AddGaussianBeam (
         }
         for (long i = 0; i < npart; ++i) {
 #if defined(WARPX_DIM_3D) || defined(WARPX_DIM_RZ)
-            const Real weight = q_tot/(npart*charge);
-            const Real x = amrex::RandomNormal(x_m, x_rms);
-            const Real y = amrex::RandomNormal(y_m, y_rms);
-            const Real z = amrex::RandomNormal(z_m, z_rms);
+            const amrex::Real weight = q_tot/(npart*charge);
+            const amrex::Real x = amrex::RandomNormal(x_m, x_rms);
+            const amrex::Real y = amrex::RandomNormal(y_m, y_rms);
+            const amrex::Real z = amrex::RandomNormal(z_m, z_rms);
 #elif defined(WARPX_DIM_XZ)
-            const Real weight = q_tot/(npart*charge*y_rms);
-            const Real x = amrex::RandomNormal(x_m, x_rms);
-            constexpr Real y = 0._prt;
-            const Real z = amrex::RandomNormal(z_m, z_rms);
+            const amrex::Real weight = q_tot/(npart*charge*y_rms);
+            const amrex::Real x = amrex::RandomNormal(x_m, x_rms);
+            constexpr amrex::Real y = 0._prt;
+            const amrex::Real z = amrex::RandomNormal(z_m, z_rms);
 #elif defined(WARPX_DIM_1D_Z)
-            const Real weight = q_tot/(npart*charge*x_rms*y_rms);
-            constexpr Real x = 0._prt;
-            constexpr Real y = 0._prt;
-            const Real z = amrex::RandomNormal(z_m, z_rms);
+            const amrex::Real weight = q_tot/(npart*charge*x_rms*y_rms);
+            constexpr amrex::Real x = 0._prt;
+            constexpr amrex::Real y = 0._prt;
+            const amrex::Real z = amrex::RandomNormal(z_m, z_rms);
 #endif
             if (plasma_injector.insideBounds(x, y, z)  &&
                 std::abs( x - x_m ) <= x_cut * x_rms     &&
@@ -1033,11 +1033,11 @@ PhysicalParticleContainer::AddPlasma (PlasmaInjector const& plasma_injector, int
     InjectorPosition* inj_pos = plasma_injector.getInjectorPosition();
     InjectorDensity*  inj_rho = plasma_injector.getInjectorDensity();
     InjectorMomentum* inj_mom = plasma_injector.getInjectorMomentumDevice();
-    const Real gamma_boost = WarpX::gamma_boost;
-    const Real beta_boost = WarpX::beta_boost;
-    const Real t = WarpX::GetInstance().gett_new(lev);
-    const Real density_min = plasma_injector.density_min;
-    const Real density_max = plasma_injector.density_max;
+    const amrex::Real gamma_boost = WarpX::gamma_boost;
+    const amrex::Real beta_boost = WarpX::beta_boost;
+    const amrex::Real t = WarpX::GetInstance().gett_new(lev);
+    const amrex::Real density_min = plasma_injector.density_min;
+    const amrex::Real density_max = plasma_injector.density_max;
 
 #ifdef WARPX_DIM_RZ
     const int nmodes = WarpX::n_rz_azimuthal_modes;
@@ -1072,13 +1072,13 @@ PhysicalParticleContainer::AddPlasma (PlasmaInjector const& plasma_injector, int
 
         for (int dir=0; dir<AMREX_SPACEDIM; dir++) {
             if ( tile_realbox.lo(dir) <= part_realbox.hi(dir) ) {
-                const Real ncells_adjust = std::floor( (tile_realbox.lo(dir) - part_realbox.lo(dir))/dx[dir] );
+                const amrex::Real ncells_adjust = std::floor( (tile_realbox.lo(dir) - part_realbox.lo(dir))/dx[dir] );
                 overlap_realbox.setLo( dir, part_realbox.lo(dir) + std::max(ncells_adjust, 0._rt) * dx[dir]);
             } else {
                 no_overlap = true; break;
             }
             if ( tile_realbox.hi(dir) >= part_realbox.lo(dir) ) {
-                const Real ncells_adjust = std::floor( (part_realbox.hi(dir) - tile_realbox.hi(dir))/dx[dir] );
+                const amrex::Real ncells_adjust = std::floor( (part_realbox.hi(dir) - tile_realbox.hi(dir))/dx[dir] );
                 overlap_realbox.setHi( dir, part_realbox.hi(dir) - std::max(ncells_adjust, 0._rt) * dx[dir]);
             } else {
                 no_overlap = true; break;
@@ -1349,15 +1349,15 @@ PhysicalParticleContainer::AddPlasma (PlasmaInjector const& plasma_injector, int
 
                 // Save the x and y values to use in the insideBounds checks.
                 // This is needed with WARPX_DIM_RZ since x and y are modified.
-                const Real xb = pos.x;
-                const Real yb = pos.y;
+                const amrex::Real xb = pos.x;
+                const amrex::Real yb = pos.y;
 
 #ifdef WARPX_DIM_RZ
                 // Replace the x and y, setting an angle theta.
                 // These x and y are used to get the momentum and density
                 // With only 1 mode, the angle doesn't matter so
                 // choose it randomly.
-                const Real theta = (nmodes == 1 && rz_random_theta)?
+                const amrex::Real theta = (nmodes == 1 && rz_random_theta)?
                     (2._rt*MathConst::pi*amrex::Random(engine)):
                     (2._rt*MathConst::pi*r.y + theta_offset);
                 pos.x = xb*std::cos(theta);
@@ -1373,7 +1373,7 @@ PhysicalParticleContainer::AddPlasma (PlasmaInjector const& plasma_injector, int
                     // the next generated particle.
 
                     // include ballistic correction for plasma species with bulk motion
-                    const Real z0 = applyBallisticCorrection(pos, inj_mom, gamma_boost,
+                    const amrex::Real z0 = applyBallisticCorrection(pos, inj_mom, gamma_boost,
                                                              beta_boost, t);
                     if (!inj_pos->insideBounds(xb, yb, z0)) {
                         ZeroInitializeAndSetNegativeID(p, pa, ip, loc_do_field_ionization, pi
@@ -1402,7 +1402,7 @@ PhysicalParticleContainer::AddPlasma (PlasmaInjector const& plasma_injector, int
                     dens = amrex::min(dens, density_max);
                 } else {
                     // Boosted-frame simulation
-                    const Real z0_lab = applyBallisticCorrection(pos, inj_mom, gamma_boost,
+                    const amrex::Real z0_lab = applyBallisticCorrection(pos, inj_mom, gamma_boost,
                                                                  beta_boost, t);
 
                     // If the particle is not within the lab-frame zmin, zmax, etc.
@@ -1433,8 +1433,8 @@ PhysicalParticleContainer::AddPlasma (PlasmaInjector const& plasma_injector, int
 
                     // get the full momentum, including thermal motion
                     u = inj_mom->getMomentum(pos.x, pos.y, 0._rt, engine);
-                    const Real gamma_lab = std::sqrt( 1._rt+(u.x*u.x+u.y*u.y+u.z*u.z) );
-                    const Real betaz_lab = u.z/(gamma_lab);
+                    const amrex::Real gamma_lab = std::sqrt( 1._rt+(u.x*u.x+u.y*u.y+u.z*u.z) );
+                    const amrex::Real betaz_lab = u.z/(gamma_lab);
 
                     // At this point u and dens are the lab-frame quantities
                     // => Perform Lorentz transform
@@ -1643,13 +1643,13 @@ PhysicalParticleContainer::AddPlasmaFlux (PlasmaInjector const& plasma_injector,
                     static_cast<int>(std::round((overlap_realbox.lo(dir)-problo[dir])/dx[dir]));
             } else {
                 if ( tile_realbox.lo(dir) <= part_realbox.hi(dir) ) {
-                    const Real ncells_adjust = std::floor( (tile_realbox.lo(dir) - part_realbox.lo(dir))/dx[dir] );
+                    const amrex::Real ncells_adjust = std::floor( (tile_realbox.lo(dir) - part_realbox.lo(dir))/dx[dir] );
                     overlap_realbox.setLo( dir, part_realbox.lo(dir) + std::max(ncells_adjust, 0._rt) * dx[dir]);
                 } else {
                     no_overlap = true; break;
                 }
                 if ( tile_realbox.hi(dir) >= part_realbox.lo(dir) ) {
-                    const Real ncells_adjust = std::floor( (part_realbox.hi(dir) - tile_realbox.hi(dir))/dx[dir] );
+                    const amrex::Real ncells_adjust = std::floor( (part_realbox.hi(dir) - tile_realbox.hi(dir))/dx[dir] );
                     overlap_realbox.setHi( dir, part_realbox.hi(dir) - std::max(ncells_adjust, 0._rt) * dx[dir]);
                 } else {
                     no_overlap = true; break;
@@ -1894,7 +1894,7 @@ PhysicalParticleContainer::AddPlasmaFlux (PlasmaInjector const& plasma_injector,
                 // These x and y are used to get the momentum and flux
                 // With only 1 mode, the angle doesn't matter so
                 // choose it randomly.
-                const Real theta = (nmodes == 1 && rz_random_theta)?
+                const amrex::Real theta = (nmodes == 1 && rz_random_theta)?
                     (2._prt*MathConst::pi*amrex::Random(engine)):
                     (2._prt*MathConst::pi*r.y);
                 amrex::Real const cos_theta = std::cos(theta);
@@ -1962,9 +1962,9 @@ PhysicalParticleContainer::AddPlasmaFlux (PlasmaInjector const& plasma_injector,
                          t_weight *= dx[0];
                     }
                 }
-                const Real weight = t_weight;
+                const amrex::Real weight = t_weight;
 #else
-                const Real weight = flux * scale_fac * dt;
+                const amrex::Real weight = flux * scale_fac * dt;
 #endif
                 pa[PIdx::w ][ip] = weight;
                 pa[PIdx::ux][ip] = pu.x;
@@ -2988,13 +2988,13 @@ PhysicalParticleContainer::InitIonizationModule ()
     // without Gamma function
     constexpr auto a3 = PhysConst::alpha*PhysConst::alpha*PhysConst::alpha;
     constexpr auto a4 = a3 * PhysConst::alpha;
-    constexpr Real wa = a3 * PhysConst::c / PhysConst::r_e;
-    constexpr Real Ea = PhysConst::m_e * PhysConst::c*PhysConst::c /PhysConst::q_e *
+    constexpr amrex::Real wa = a3 * PhysConst::c / PhysConst::r_e;
+    constexpr amrex::Real Ea = PhysConst::m_e * PhysConst::c*PhysConst::c /PhysConst::q_e *
         a4/PhysConst::r_e;
-    constexpr Real UH = utils::physics::table_ionization_energies[0];
-    const Real l_eff = std::sqrt(UH/h_ionization_energies[0]) - 1._rt;
+    constexpr amrex::Real UH = utils::physics::table_ionization_energies[0];
+    const amrex::Real l_eff = std::sqrt(UH/h_ionization_energies[0]) - 1._rt;
 
-    const Real dt = WarpX::GetInstance().getdt(0);
+    const amrex::Real dt = WarpX::GetInstance().getdt(0);
 
     ionization_energies.resize(ion_atomic_number);
     adk_power.resize(ion_atomic_number);
@@ -3011,10 +3011,10 @@ PhysicalParticleContainer::InitIonizationModule ()
     amrex::Real * AMREX_RESTRICT p_adk_exp_prefactor = adk_exp_prefactor.data();
     amrex::ParallelFor(ion_atomic_number, [=] AMREX_GPU_DEVICE (int i) noexcept
     {
-        const Real n_eff = (i+1) * std::sqrt(UH/p_ionization_energies[i]);
-        const Real C2 = std::pow(2._rt,2._rt*n_eff)/(n_eff*std::tgamma(n_eff+l_eff+1._rt)*std::tgamma(n_eff-l_eff));
+        const amrex::Real n_eff = (i+1) * std::sqrt(UH/p_ionization_energies[i]);
+        const amrex::Real C2 = std::pow(2._rt,2._rt*n_eff)/(n_eff*std::tgamma(n_eff+l_eff+1._rt)*std::tgamma(n_eff-l_eff));
         p_adk_power[i] = -(2._rt*n_eff - 1._rt);
-        const Real Uion = p_ionization_energies[i];
+        const amrex::Real Uion = p_ionization_energies[i];
         p_adk_prefactor[i] = dt * wa * C2 * ( Uion/(2._rt*UH) )
             * std::pow(2._rt*std::pow((Uion/UH),3._rt/2._rt)*Ea,2._rt*n_eff - 1._rt);
         p_adk_exp_prefactor[i] = -2._rt/3._rt * std::pow( Uion/UH,3._rt/2._rt) * Ea;

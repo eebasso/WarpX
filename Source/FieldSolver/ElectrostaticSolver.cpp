@@ -465,7 +465,7 @@ WarpX::computeE (amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>, 3> >
 {
     for (int lev = 0; lev <= max_level; lev++) {
 
-        const Real* dx = Geom(lev).CellSize();
+        const amrex::Real* dx = Geom(lev).CellSize();
 
 #ifdef AMREX_USE_OMP
 #    pragma omp parallel if (Gpu::notInLaunchRegion())
@@ -473,14 +473,14 @@ WarpX::computeE (amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>, 3> >
         for ( MFIter mfi(*phi[lev], TilingIfNotGPU()); mfi.isValid(); ++mfi )
         {
 #if defined(WARPX_DIM_3D)
-            const Real inv_dx = 1._rt/dx[0];
-            const Real inv_dy = 1._rt/dx[1];
-            const Real inv_dz = 1._rt/dx[2];
+            const amrex::Real inv_dx = 1._rt/dx[0];
+            const amrex::Real inv_dy = 1._rt/dx[1];
+            const amrex::Real inv_dz = 1._rt/dx[2];
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-            const Real inv_dx = 1._rt/dx[0];
-            const Real inv_dz = 1._rt/dx[1];
+            const amrex::Real inv_dx = 1._rt/dx[0];
+            const amrex::Real inv_dz = 1._rt/dx[1];
 #else
-            const Real inv_dz = 1._rt/dx[0];
+            const amrex::Real inv_dz = 1._rt/dx[0];
 #endif
             const amrex::IntVect ex_type = E[lev][0]->ixType().toIntVect();
             const amrex::IntVect ey_type = E[lev][1]->ixType().toIntVect();
@@ -495,9 +495,9 @@ WarpX::computeE (amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>, 3> >
             const auto& Ey_arr = (*E[lev][1])[mfi].array();
             const auto& Ez_arr = (*E[lev][2])[mfi].array();
 
-            const Real beta_x = beta[0];
-            const Real beta_y = beta[1];
-            const Real beta_z = beta[2];
+            const amrex::Real beta_x = beta[0];
+            const amrex::Real beta_y = beta[1];
+            const amrex::Real beta_z = beta[2];
 
             // Calculate the electric field
             // Use discretized derivative that matches the staggering of the grid.
@@ -645,7 +645,7 @@ WarpX::computeB (amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>, 3> >
 
     for (int lev = 0; lev <= max_level; lev++) {
 
-        const Real* dx = Geom(lev).CellSize();
+        const amrex::Real* dx = Geom(lev).CellSize();
 
 #ifdef AMREX_USE_OMP
 #    pragma omp parallel if (Gpu::notInLaunchRegion())
@@ -653,14 +653,14 @@ WarpX::computeB (amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>, 3> >
         for ( MFIter mfi(*phi[lev], TilingIfNotGPU()); mfi.isValid(); ++mfi )
         {
 #if defined(WARPX_DIM_3D)
-            const Real inv_dx = 1._rt/dx[0];
-            const Real inv_dy = 1._rt/dx[1];
-            const Real inv_dz = 1._rt/dx[2];
+            const amrex::Real inv_dx = 1._rt/dx[0];
+            const amrex::Real inv_dy = 1._rt/dx[1];
+            const amrex::Real inv_dz = 1._rt/dx[2];
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-            const Real inv_dx = 1._rt/dx[0];
-            const Real inv_dz = 1._rt/dx[1];
+            const amrex::Real inv_dx = 1._rt/dx[0];
+            const amrex::Real inv_dz = 1._rt/dx[1];
 #else
-            const Real inv_dz = 1._rt/dx[0];
+            const amrex::Real inv_dz = 1._rt/dx[0];
 #endif
             const amrex::IntVect bx_type = B[lev][0]->ixType().toIntVect();
             const amrex::IntVect by_type = B[lev][1]->ixType().toIntVect();
@@ -675,11 +675,11 @@ WarpX::computeB (amrex::Vector<std::array<std::unique_ptr<amrex::MultiFab>, 3> >
             const auto& By_arr = (*B[lev][1])[mfi].array();
             const auto& Bz_arr = (*B[lev][2])[mfi].array();
 
-            const Real beta_x = beta[0];
-            const Real beta_y = beta[1];
-            const Real beta_z = beta[2];
+            const amrex::Real beta_x = beta[0];
+            const amrex::Real beta_y = beta[1];
+            const amrex::Real beta_z = beta[2];
 
-            constexpr Real inv_c = 1._rt/PhysConst::c;
+            constexpr amrex::Real inv_c = 1._rt/PhysConst::c;
 
             // Calculate the magnetic field
             // Use discretized derivative that matches the staggering of the grid.
