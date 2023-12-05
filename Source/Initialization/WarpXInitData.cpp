@@ -582,10 +582,12 @@ WarpX::InitPML ()
             // Domain box at level, lev
             const amrex::Box DomainBox = Geom(lev).Domain();
             for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
-                if (levelBox.smallEnd(idim) == DomainBox.smallEnd(idim))
+                if (levelBox.smallEnd(idim) == DomainBox.smallEnd(idim)) {
                     do_pml_Lo[lev][idim] = do_pml_Lo[0][idim];
-                if (levelBox.bigEnd(idim) == DomainBox.bigEnd(idim))
+                }
+                if (levelBox.bigEnd(idim) == DomainBox.bigEnd(idim)) {
                     do_pml_Hi[lev][idim] = do_pml_Hi[0][idim];
+                }
             }
 
 #ifdef WARPX_DIM_RZ
@@ -618,8 +620,9 @@ WarpX::ComputePMLFactors ()
     {
         for (int lev = 0; lev <= finest_level; ++lev)
         {
-            if (pml[lev])
+            if (pml[lev]) {
                 pml[lev]->ComputePMLFactors(dt[lev]);
+            }
         }
     }
 }
@@ -749,14 +752,14 @@ WarpX::InitLevelData (int lev, Real /*time*/)
 
     // if the input string is "constant", the values for the
     // external grid must be provided in the input.
-    if (B_ext_grid_s == "constant")
+    if (B_ext_grid_s == "constant") {
         utils::parser::getArrWithParser(pp_warpx, "B_external_grid", B_external_grid);
-
+    }
     // if the input string is "constant", the values for the
     // external grid must be provided in the input.
-    if (E_ext_grid_s == "constant")
+    if (E_ext_grid_s == "constant") {
         utils::parser::getArrWithParser(pp_warpx, "E_external_grid", E_external_grid);
-
+    }
     // initialize the averaged fields only if the averaged algorithm
     // is activated ('psatd.do_time_averaging=1')
     const ParmParse pp_psatd("psatd");
@@ -1065,7 +1068,7 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
             [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
 #ifdef WARPX_DIM_3D
-                if((field=='E' and lx(i, j, k)<=0) or (field=='B' and Sx(i, j, k)<=0))  return;
+                if((field=='E' and lx(i, j, k)<=0) or (field=='B' and Sx(i, j, k)<=0)) { return; }
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
                 //In XZ and RZ Ex is associated with a x-edge, while Bx is associated with a z-edge
                 if((field=='E' and lx(i, j, k)<=0) or (field=='B' and lz(i, j, k)<=0)) { return; }
@@ -1098,7 +1101,7 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
             [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
 #ifdef WARPX_DIM_3D
-                if((field=='E' and ly(i, j, k)<=0) or (field=='B' and Sy(i, j, k)<=0))  return;
+                if((field=='E' and ly(i, j, k)<=0) or (field=='B' and Sy(i, j, k)<=0)) { return; }
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
                 //In XZ and RZ Ey is associated with a mesh node, so we need to check if  the mesh node is covered
                 if((field=='E' and (lx(std::min(i  , lx_hi.x), std::min(j  , lx_hi.y), k)<=0
@@ -1133,7 +1136,7 @@ WarpX::InitializeExternalFieldsOnGridUsingParser (
             [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
 #ifdef WARPX_DIM_3D
-                if((field=='E' and lz(i, j, k)<=0) or (field=='B' and Sz(i, j, k)<=0))  return;
+                if((field=='E' and lz(i, j, k)<=0) or (field=='B' and Sz(i, j, k)<=0)) { return; }
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
                 //In XZ and RZ Ez is associated with a z-edge, while Bz is associated with a x-edge
                 if((field=='E' and lz(i, j, k)<=0) or (field=='B' and lx(i, j, k)<=0)) { return; }
