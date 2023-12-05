@@ -154,7 +154,7 @@ FieldProbe::FieldProbe (std::string rd_name)
 
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(interp_order <= WarpX::nox ,
                                      "Field probe interp_order should be less than or equal to algo.particle_shape");
-    if (ParallelDescriptor::IOProcessor())
+    if (amrex::ParallelDescriptor::IOProcessor())
     {
         if ( m_write_header )
         {
@@ -236,7 +236,7 @@ void FieldProbe::InitData ()
     amrex::Vector<amrex::ParticleReal> zpos;
 
     // for now, only one MPI rank adds probe "particles"
-    if (ParallelDescriptor::IOProcessor())
+    if (amrex::ParallelDescriptor::IOProcessor())
     {
         if (m_probe_geometry == DetectorGeometry::Point)
         {
@@ -582,7 +582,7 @@ void FieldProbe::ComputeDiags (int step)
         if (m_intervals.contains(step+1))
         {
             // returns total number of mpi notes into mpisize
-            const int mpisize = ParallelDescriptor::NProcs();
+            const int mpisize = amrex::ParallelDescriptor::NProcs();
 
             // allocates data space for length_array. Will contain size of m_data from each processor
             amrex::Vector<int> length_vector;

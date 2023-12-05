@@ -126,7 +126,7 @@ ParticleHistogram::ParticleHistogram (std::string rd_name):
     // resize data array
     m_data.resize(m_bin_num,0.0_rt);
 
-    if (ParallelDescriptor::IOProcessor())
+    if (amrex::ParallelDescriptor::IOProcessor())
     {
         if ( m_write_header )
         {
@@ -251,8 +251,8 @@ void ParticleHistogram::ComputeDiags (int step)
         d_data.begin(), d_data.end(), m_data.begin());
 
     // reduced sum over mpi ranks
-    ParallelDescriptor::ReduceRealSum
-        (m_data.data(), static_cast<int>(m_data.size()), ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::ReduceRealSum
+        (m_data.data(), static_cast<int>(m_data.size()), amrex::ParallelDescriptor::IOProcessorNumber());
 
     // normalize the maximum value to be one
     if ( m_norm == NormalizationType::max_to_unity )

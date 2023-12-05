@@ -59,7 +59,7 @@ FieldMaximum::FieldMaximum (std::string rd_name)
     // resize data array
     m_data.resize(noutputs*nLevel, 0.0_rt);
 
-    if (ParallelDescriptor::IOProcessor())
+    if (amrex::ParallelDescriptor::IOProcessor())
     {
         if ( m_write_header )
         {
@@ -217,7 +217,7 @@ void FieldMaximum::ComputeDiags (int step)
         amrex::Real hv_B  = amrex::get<7>(hv); // highest value of |B|**2
 
         // MPI reduce
-        ParallelDescriptor::ReduceRealMax({hv_Ex,hv_Ey,hv_Ez,
+        amrex::ParallelDescriptor::ReduceRealMax({hv_Ex,hv_Ey,hv_Ez,
                                            hv_Bx,hv_By,hv_Bz, hv_E, hv_B});
 
         // Fill output array

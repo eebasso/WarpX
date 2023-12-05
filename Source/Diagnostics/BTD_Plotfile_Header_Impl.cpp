@@ -274,7 +274,7 @@ BTDMultiFabHeaderImpl::WriteMultiFabHeader ()
 
     // multifab header version
     FabHeaderFile << m_vers << '\n';
-    // VisMF :: how
+    // amrex::VisMF :: how
     FabHeaderFile << m_how << '\n';
     // number of components
     FabHeaderFile << m_ncomp << '\n';

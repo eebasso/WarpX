@@ -52,7 +52,7 @@ ParticleEnergy::ParticleEnergy (std::string rd_name)
     // get species names (std::vector<std::string>)
     const auto species_names = mypc.GetSpeciesNames();
 
-    if (ParallelDescriptor::IOProcessor())
+    if (amrex::ParallelDescriptor::IOProcessor())
     {
         if ( m_write_header )
         {
@@ -153,7 +153,7 @@ void ParticleEnergy::ComputeDiags (int step)
         }
 
         // Reduced sum over MPI ranks
-        ParallelDescriptor::ReduceRealSum({Etot,Ws}, ParallelDescriptor::IOProcessorNumber());
+        amrex::ParallelDescriptor::ReduceRealSum({Etot,Ws}, amrex::ParallelDescriptor::IOProcessorNumber());
 
         // Accumulate sum of weights over all species (must come after MPI reduction of Ws)
         Wtot += Ws;

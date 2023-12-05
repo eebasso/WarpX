@@ -54,7 +54,7 @@ FlushFormatAscent::WriteToFile (
     ascent::Ascent ascent;
     conduit::Node opts;
     opts["exceptions"] = "catch";
-    opts["mpi_comm"] = MPI_Comm_c2f(ParallelDescriptor::Communicator());
+    opts["mpi_comm"] = MPI_Comm_c2f(amrex::ParallelDescriptor::Communicator());
     ascent.open(opts);
     ascent.publish(bp_mesh);
     WARPX_PROFILE_VAR_STOP(prof_ascent_publish);

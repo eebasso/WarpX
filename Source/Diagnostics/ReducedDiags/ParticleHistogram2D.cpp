@@ -243,8 +243,8 @@ void ParticleHistogram2D::ComputeDiags (int step)
 
     // reduced sum over mpi ranks
     const int size = static_cast<int> (d_data_2D.size());
-    ParallelDescriptor::ReduceRealSum
-            (h_table_data.p, size, ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::ReduceRealSum
+            (h_table_data.p, size, amrex::ParallelDescriptor::IOProcessorNumber());
 
     // Return for all that are not IO processor
     if ( !ParallelDescriptor::IOProcessor() ) { return; }

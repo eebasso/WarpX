@@ -454,8 +454,8 @@ LaserParticleContainer::InitData (int lev)
 #endif
     }
 
-    const int nprocs = ParallelDescriptor::NProcs();
-    const int myproc = ParallelDescriptor::MyProc();
+    const int nprocs = amrex::ParallelDescriptor::NProcs();
+    const int myproc = amrex::ParallelDescriptor::MyProc();
 
 #if defined(WARPX_DIM_3D)
     const Box plane_box {IntVect(plane_lo[0],plane_lo[1],0),

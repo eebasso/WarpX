@@ -456,7 +456,7 @@ WarpX::InitData ()
         m_hybrid_pic_model->InitData();
     }
 
-    if (ParallelDescriptor::IOProcessor()) {
+    if (amrex::ParallelDescriptor::IOProcessor()) {
         std::cout << "\nGrids Summary:\n";
         printGridSummary(std::cout, 0, finestLevel());
     }
@@ -1173,7 +1173,7 @@ WarpX::PerformanceHints ()
     for (int ilev = 0; ilev <= finestLevel(); ++ilev) {
         total_nboxes += boxArray(ilev).size();
     }
-    auto const nprocs = ParallelDescriptor::NProcs();
+    auto const nprocs = amrex::ParallelDescriptor::NProcs();
 
     // Check: are there more MPI ranks than Boxes?
     if (nprocs > total_nboxes) {

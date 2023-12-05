@@ -67,7 +67,7 @@ PML_RZ::ApplyDamping (amrex::MultiFab* Et_fp, amrex::MultiFab* Ez_fp,
     const amrex::Real cdt_over_dr = PhysConst::c*dt/dr;
 
 #ifdef AMREX_USE_OMP
-#pragma omp parallel if (Gpu::notInLaunchRegion())
+#pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
     for ( amrex::MFIter mfi(*Et_fp, amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi )
     {
@@ -166,10 +166,10 @@ PML_RZ::CheckPoint (const std::string& dir) const
 {
     if (pml_E_fp[0])
     {
-        VisMF::AsyncWrite(*pml_E_fp[0], dir+"_Er_fp");
-        VisMF::AsyncWrite(*pml_E_fp[1], dir+"_Et_fp");
-        VisMF::AsyncWrite(*pml_B_fp[0], dir+"_Br_fp");
-        VisMF::AsyncWrite(*pml_B_fp[1], dir+"_Bt_fp");
+        amrex::VisMF::AsyncWrite(*pml_E_fp[0], dir+"_Er_fp");
+        amrex::VisMF::AsyncWrite(*pml_E_fp[1], dir+"_Et_fp");
+        amrex::VisMF::AsyncWrite(*pml_B_fp[0], dir+"_Br_fp");
+        amrex::VisMF::AsyncWrite(*pml_B_fp[1], dir+"_Bt_fp");
     }
 }
 
@@ -178,10 +178,10 @@ PML_RZ::Restart (const std::string& dir)
 {
     if (pml_E_fp[0])
     {
-        VisMF::Read(*pml_E_fp[0], dir+"_Er_fp");
-        VisMF::Read(*pml_E_fp[1], dir+"_Et_fp");
-        VisMF::Read(*pml_B_fp[0], dir+"_Br_fp");
-        VisMF::Read(*pml_B_fp[1], dir+"_Bt_fp");
+        amrex::VisMF::Read(*pml_E_fp[0], dir+"_Er_fp");
+        amrex::VisMF::Read(*pml_E_fp[1], dir+"_Et_fp");
+        amrex::VisMF::Read(*pml_B_fp[0], dir+"_Br_fp");
+        amrex::VisMF::Read(*pml_B_fp[1], dir+"_Bt_fp");
     }
 }
 

@@ -1299,22 +1299,22 @@ PML::CheckPoint (const std::string& dir) const
 {
     if (pml_E_fp[0])
     {
-        VisMF::AsyncWrite(*pml_E_fp[0], dir+"_Ex_fp");
-        VisMF::AsyncWrite(*pml_E_fp[1], dir+"_Ey_fp");
-        VisMF::AsyncWrite(*pml_E_fp[2], dir+"_Ez_fp");
-        VisMF::AsyncWrite(*pml_B_fp[0], dir+"_Bx_fp");
-        VisMF::AsyncWrite(*pml_B_fp[1], dir+"_By_fp");
-        VisMF::AsyncWrite(*pml_B_fp[2], dir+"_Bz_fp");
+        amrex::VisMF::AsyncWrite(*pml_E_fp[0], dir+"_Ex_fp");
+        amrex::VisMF::AsyncWrite(*pml_E_fp[1], dir+"_Ey_fp");
+        amrex::VisMF::AsyncWrite(*pml_E_fp[2], dir+"_Ez_fp");
+        amrex::VisMF::AsyncWrite(*pml_B_fp[0], dir+"_Bx_fp");
+        amrex::VisMF::AsyncWrite(*pml_B_fp[1], dir+"_By_fp");
+        amrex::VisMF::AsyncWrite(*pml_B_fp[2], dir+"_Bz_fp");
     }
 
     if (pml_E_cp[0])
     {
-        VisMF::AsyncWrite(*pml_E_cp[0], dir+"_Ex_cp");
-        VisMF::AsyncWrite(*pml_E_cp[1], dir+"_Ey_cp");
-        VisMF::AsyncWrite(*pml_E_cp[2], dir+"_Ez_cp");
-        VisMF::AsyncWrite(*pml_B_cp[0], dir+"_Bx_cp");
-        VisMF::AsyncWrite(*pml_B_cp[1], dir+"_By_cp");
-        VisMF::AsyncWrite(*pml_B_cp[2], dir+"_Bz_cp");
+        amrex::VisMF::AsyncWrite(*pml_E_cp[0], dir+"_Ex_cp");
+        amrex::VisMF::AsyncWrite(*pml_E_cp[1], dir+"_Ey_cp");
+        amrex::VisMF::AsyncWrite(*pml_E_cp[2], dir+"_Ez_cp");
+        amrex::VisMF::AsyncWrite(*pml_B_cp[0], dir+"_Bx_cp");
+        amrex::VisMF::AsyncWrite(*pml_B_cp[1], dir+"_By_cp");
+        amrex::VisMF::AsyncWrite(*pml_B_cp[2], dir+"_Bz_cp");
     }
 }
 
@@ -1323,22 +1323,22 @@ PML::Restart (const std::string& dir)
 {
     if (pml_E_fp[0])
     {
-        VisMF::Read(*pml_E_fp[0], dir+"_Ex_fp");
-        VisMF::Read(*pml_E_fp[1], dir+"_Ey_fp");
-        VisMF::Read(*pml_E_fp[2], dir+"_Ez_fp");
-        VisMF::Read(*pml_B_fp[0], dir+"_Bx_fp");
-        VisMF::Read(*pml_B_fp[1], dir+"_By_fp");
-        VisMF::Read(*pml_B_fp[2], dir+"_Bz_fp");
+        amrex::VisMF::Read(*pml_E_fp[0], dir+"_Ex_fp");
+        amrex::VisMF::Read(*pml_E_fp[1], dir+"_Ey_fp");
+        amrex::VisMF::Read(*pml_E_fp[2], dir+"_Ez_fp");
+        amrex::VisMF::Read(*pml_B_fp[0], dir+"_Bx_fp");
+        amrex::VisMF::Read(*pml_B_fp[1], dir+"_By_fp");
+        amrex::VisMF::Read(*pml_B_fp[2], dir+"_Bz_fp");
     }
 
     if (pml_E_cp[0])
     {
-        VisMF::Read(*pml_E_cp[0], dir+"_Ex_cp");
-        VisMF::Read(*pml_E_cp[1], dir+"_Ey_cp");
-        VisMF::Read(*pml_E_cp[2], dir+"_Ez_cp");
-        VisMF::Read(*pml_B_cp[0], dir+"_Bx_cp");
-        VisMF::Read(*pml_B_cp[1], dir+"_By_cp");
-        VisMF::Read(*pml_B_cp[2], dir+"_Bz_cp");
+        amrex::VisMF::Read(*pml_E_cp[0], dir+"_Ex_cp");
+        amrex::VisMF::Read(*pml_E_cp[1], dir+"_Ey_cp");
+        amrex::VisMF::Read(*pml_E_cp[2], dir+"_Ez_cp");
+        amrex::VisMF::Read(*pml_B_cp[0], dir+"_Bx_cp");
+        amrex::VisMF::Read(*pml_B_cp[1], dir+"_By_cp");
+        amrex::VisMF::Read(*pml_B_cp[2], dir+"_Bz_cp");
     }
 }
 

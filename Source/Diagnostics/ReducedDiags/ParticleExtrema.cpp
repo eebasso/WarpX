@@ -120,7 +120,7 @@ ParticleExtrema::ParticleExtrema (std::string rd_name)
 
         m_data.resize(all_diag_names.size());
 
-        if (ParallelDescriptor::IOProcessor())
+        if (amrex::ParallelDescriptor::IOProcessor())
         {
             if ( m_write_header )
             {
@@ -342,8 +342,8 @@ void ParticleExtrema::ComputeDiags (int step)
         [=] AMREX_GPU_HOST_DEVICE (const PType& p)
         { return p.rdata(PIdx::w); });
 
-        ParallelDescriptor::ReduceRealMin({xmin,ymin,zmin,uxmin,uymin,uzmin,gmin,wmin});
-        ParallelDescriptor::ReduceRealMax({xmax,ymax,zmax,uxmax,uymax,uzmax,gmax,wmax});
+        amrex::ParallelDescriptor::ReduceRealMin({xmin,ymin,zmin,uxmin,uymin,uzmin,gmin,wmin});
+        amrex::ParallelDescriptor::ReduceRealMax({xmax,ymax,zmax,uxmax,uymax,uzmax,gmax,wmax});
 
 #if (defined WARPX_QED)
         // get number of level (int)
@@ -464,8 +464,8 @@ void ParticleExtrema::ComputeDiags (int step)
             }
             chimin_f = *std::min_element(chimin.begin(), chimin.end());
             chimax_f = *std::max_element(chimax.begin(), chimax.end());
-            ParallelDescriptor::ReduceRealMin(chimin_f, ParallelDescriptor::IOProcessorNumber());
-            ParallelDescriptor::ReduceRealMax(chimax_f, ParallelDescriptor::IOProcessorNumber());
+            amrex::ParallelDescriptor::ReduceRealMin(chimin_f, amrex::ParallelDescriptor::IOProcessorNumber());
+            amrex::ParallelDescriptor::ReduceRealMax(chimax_f, amrex::ParallelDescriptor::IOProcessorNumber());
         }
 #endif
 

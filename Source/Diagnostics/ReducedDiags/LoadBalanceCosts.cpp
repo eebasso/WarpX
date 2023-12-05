@@ -157,9 +157,9 @@ void LoadBalanceCosts::ComputeDiags (int step)
     }
 
     // parallel reduce to IO proc and get data over all procs
-    ParallelDescriptor::ReduceRealSum(m_data.data(),
+    amrex::ParallelDescriptor::ReduceRealSum(m_data.data(),
                                       static_cast<int>(m_data.size()),
-                                      ParallelDescriptor::IOProcessorNumber());
+                                      amrex::ParallelDescriptor::IOProcessorNumber());
 
 #ifdef AMREX_USE_MPI
     // now parallel reduce to IO proc and get string data (host name) over all procs
@@ -173,15 +173,15 @@ void LoadBalanceCosts::ComputeDiags (int step)
 
     // IO proc will collect messages from other procs;
     // receive counts and displacements needed only by IO proc
-    m_data_string_recvcount.resize(ParallelDescriptor::NProcs(), 0);
-    m_data_string_recvcount.assign(ParallelDescriptor::NProcs(), 0);
-    m_data_string_disp.resize(ParallelDescriptor::NProcs(), 0);
-    m_data_string_disp.assign(ParallelDescriptor::NProcs(), 0);
+    m_data_string_recvcount.resize(amrex::ParallelDescriptor::NProcs(), 0);
+    m_data_string_recvcount.assign(amrex::ParallelDescriptor::NProcs(), 0);
+    m_data_string_disp.resize(amrex::ParallelDescriptor::NProcs(), 0);
+    m_data_string_disp.assign(amrex::ParallelDescriptor::NProcs(), 0);
 
     // get the string lengths on IO proc
-    ParallelDescriptor::Gather(&length, 1,                     // send
+    amrex::ParallelDescriptor::Gather(&length, 1,                     // send
                                m_data_string_recvcount.data(), 1, // receive
-                               ParallelDescriptor::IOProcessorNumber());
+                               amrex::ParallelDescriptor::IOProcessorNumber());
 
     // determine total length of collected strings for root, and set displacements;
     // + 1 is for chosen separation between words in the gathered string; this
@@ -204,16 +204,16 @@ void LoadBalanceCosts::ComputeDiags (int step)
 
     // now the root process knows cnts and locations to place messages from sending processes;
     // collect the hostnames; m_data_string_recvbuf will provide mapping from rank-->hostname
-    ParallelDescriptor::Gatherv(&hostname[0],              /* hostname ID */
+    amrex::ParallelDescriptor::Gatherv(&hostname[0],              /* hostname ID */
                                 length,                    /* length of hostname */
                                 m_data_string_recvbuf.data(), /* write data into string buffer */
                                 m_data_string_recvcount,   /* how many messages to receive */
                                 m_data_string_disp,        /* starting position in recv buffer to place received msg */
-                                ParallelDescriptor::IOProcessorNumber());
+                                amrex::ParallelDescriptor::IOProcessorNumber());
 #endif
 
     // cleanup
-    if (ParallelDescriptor::MyProc() == ParallelDescriptor::IOProcessorNumber())
+    if (amrex::ParallelDescriptor::MyProc() == amrex::ParallelDescriptor::IOProcessorNumber())
     {
 #ifdef AMREX_USE_MPI
         const std::string m_data_stdstring_recvbuf(m_data_string_recvbuf.begin(), m_data_string_recvbuf.end());

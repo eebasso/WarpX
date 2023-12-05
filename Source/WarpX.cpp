@@ -83,7 +83,6 @@
 #include <string>
 #include <utility>
 
-using namespace amrex;
 using namespace amrex::literals;
 
 amrex::Vector<amrex::Real> WarpX::E_external_grid(3, 0.0);
@@ -576,7 +575,7 @@ WarpX::ReadParameters ()
                 (numprocs_in.size() == AMREX_SPACEDIM,
                  "warpx.numprocs, if specified, must have AMREX_SPACEDIM numbers");
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE
-                (ParallelDescriptor::NProcs() == AMREX_D_TERM(numprocs_in[0],
+                (amrex::ParallelDescriptor::NProcs() == AMREX_D_TERM(numprocs_in[0],
                                                              *numprocs_in[1],
                                                              *numprocs_in[2]),
                  "warpx.numprocs, if specified, its product must be equal to the number of processes");
@@ -635,19 +634,19 @@ WarpX::ReadParameters ()
         std::string random_seed = "default";
         pp_warpx.query("random_seed", random_seed);
         if ( random_seed != "default" ) {
-            const unsigned long myproc_1 = ParallelDescriptor::MyProc() + 1;
+            const unsigned long myproc_1 = amrex::ParallelDescriptor::MyProc() + 1;
             if ( random_seed == "random" ) {
                 std::random_device rd;
                 std::uniform_int_distribution<int> dist(2, INT_MAX);
                 const unsigned long cpu_seed = myproc_1 * dist(rd);
                 const unsigned long gpu_seed = myproc_1 * dist(rd);
-                ResetRandomSeed(cpu_seed, gpu_seed);
+                amrex::ResetRandomSeed(cpu_seed, gpu_seed);
             } else if ( std::stoi(random_seed) > 0 ) {
-                const unsigned long nprocs = ParallelDescriptor::NProcs();
+                const unsigned long nprocs = amrex::ParallelDescriptor::NProcs();
                 const unsigned long seed_long = std::stoul(random_seed);
                 const unsigned long cpu_seed = myproc_1 * seed_long;
                 const unsigned long gpu_seed = (myproc_1 + nprocs) * seed_long;
-                ResetRandomSeed(cpu_seed, gpu_seed);
+                amrex::ResetRandomSeed(cpu_seed, gpu_seed);
             } else {
                 WARPX_ABORT_WITH_MESSAGE(
                     "warpx.random_seed must be \"default\", \"random\" or an integer > 0.");
@@ -997,9 +996,9 @@ WarpX::ReadParameters ()
             pp_vismf.add("usesingleread", use_single_read);
             pp_vismf.add("usesinglewrite", use_single_write);
             utils::parser::queryWithParser(pp_warpx, "mffile_nstreams", mffile_nstreams);
-            VisMF::SetMFFileInStreams(mffile_nstreams);
+            amrex::VisMF::SetMFFileInStreams(mffile_nstreams);
             utils::parser::queryWithParser(pp_warpx, "field_io_nfiles", field_io_nfiles);
-            VisMF::SetNOutFiles(field_io_nfiles);
+            amrex::VisMF::SetNOutFiles(field_io_nfiles);
             utils::parser::queryWithParser(pp_warpx, "particle_io_nfiles", particle_io_nfiles);
             amrex::ParmParse pp_particles("particles");
             pp_particles.add("particles_nfiles", particle_io_nfiles);
@@ -2642,7 +2641,7 @@ WarpX::AllocLevelMFs (int lev, const amrex::BoxArray& ba, const amrex::Distribut
 
     if (load_balance_intervals.isActivated())
     {
-        costs[lev] = std::make_unique<LayoutData<amrex::Real>>(ba, dm);
+        costs[lev] = std::make_unique<amrex::LayoutData<amrex::Real>>(ba, dm);
         load_balance_efficiency[lev] = -1;
     }
 }
@@ -2763,7 +2762,7 @@ WarpX::CellSize (int lev)
 }
 
 amrex::RealBox
-WarpX::getRealBox(const Box& bx, int lev)
+WarpX::getRealBox(const amrex::Box& bx, int lev)
 {
     const amrex::Geometry& gm = GetInstance().Geom(lev);
     const amrex::RealBox grid_box{bx, gm.CellSize(), gm.ProbLo()};
@@ -2771,7 +2770,7 @@ WarpX::getRealBox(const Box& bx, int lev)
 }
 
 std::array<amrex::Real,3>
-WarpX::LowerCorner(const Box& bx, const int lev, const amrex::Real time_shift_delta)
+WarpX::LowerCorner(const amrex::Box& bx, const int lev, const amrex::Real time_shift_delta)
 {
     auto & warpx = GetInstance();
     const amrex::RealBox grid_box = getRealBox( bx, lev );
@@ -2796,7 +2795,7 @@ WarpX::LowerCorner(const Box& bx, const int lev, const amrex::Real time_shift_de
 }
 
 std::array<amrex::Real,3>
-WarpX::UpperCorner(const Box& bx, const int lev, const amrex::Real time_shift_delta)
+WarpX::UpperCorner(const amrex::Box& bx, const int lev, const amrex::Real time_shift_delta)
 {
     auto & warpx = GetInstance();
     const amrex::RealBox grid_box = getRealBox( bx, lev );
@@ -2820,7 +2819,7 @@ WarpX::UpperCorner(const Box& bx, const int lev, const amrex::Real time_shift_de
 #endif
 }
 
-IntVect
+amrex::IntVect
 WarpX::RefRatio (int lev)
 {
     return GetInstance().refRatio(lev);
@@ -2841,11 +2840,11 @@ WarpX::ComputeDivB (amrex::MultiFab& divB, int const dcomp,
 #endif
 
 #ifdef AMREX_USE_OMP
-#pragma omp parallel if (Gpu::notInLaunchRegion())
+#pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for (MFIter mfi(divB, TilingIfNotGPU()); mfi.isValid(); ++mfi)
+    for (amrex::MFIter mfi(divB, amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi)
     {
-        const Box& bx = mfi.tilebox();
+        const amrex::Box& bx = mfi.tilebox();
         amrex::Array4<const amrex::Real> const& Bxfab = B[0]->array(mfi);
         amrex::Array4<const amrex::Real> const& Byfab = B[1]->array(mfi);
         amrex::Array4<const amrex::Real> const& Bzfab = B[2]->array(mfi);
@@ -2878,11 +2877,11 @@ WarpX::ComputeDivB (amrex::MultiFab& divB, int const dcomp,
 #endif
 
 #ifdef AMREX_USE_OMP
-#pragma omp parallel if (Gpu::notInLaunchRegion())
+#pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-    for (MFIter mfi(divB, TilingIfNotGPU()); mfi.isValid(); ++mfi)
+    for (amrex::MFIter mfi(divB, amrex::TilingIfNotGPU()); mfi.isValid(); ++mfi)
     {
-        const Box bx = mfi.growntilebox(ngrow);
+        const amrex::Box bx = mfi.growntilebox(ngrow);
         amrex::Array4<const amrex::Real> const& Bxfab = B[0]->array(mfi);
         amrex::Array4<const amrex::Real> const& Byfab = B[1]->array(mfi);
         amrex::Array4<const amrex::Real> const& Bzfab = B[2]->array(mfi);
@@ -3001,24 +3000,24 @@ WarpX::BuildBufferMasks ()
         for (int ipass = 0; ipass < 2; ++ipass)
         {
             const int ngbuffer = (ipass == 0) ? n_current_deposition_buffer : n_field_gather_buffer;
-            iMultiFab* bmasks = (ipass == 0) ? current_buffer_masks[lev].get() : gather_buffer_masks[lev].get();
+            amrex::iMultiFab* bmasks = (ipass == 0) ? current_buffer_masks[lev].get() : gather_buffer_masks[lev].get();
             if (bmasks)
             {
                 const amrex::IntVect ngtmp = ngbuffer + bmasks->nGrowVect();
-                iMultiFab tmp(bmasks->boxArray(), bmasks->DistributionMap(), 1, ngtmp);
+                amrex::iMultiFab tmp(bmasks->boxArray(), bmasks->DistributionMap(), 1, ngtmp);
                 const int covered = 1;
                 const int notcovered = 0;
                 const int physbnd = 1;
                 const int interior = 1;
-                const Box& dom = Geom(lev).Domain();
+                const amrex::Box& dom = Geom(lev).Domain();
                 const amrex::Periodicity& period = Geom(lev).periodicity();
                 tmp.BuildMask(dom, period, covered, notcovered, physbnd, interior);
 #ifdef AMREX_USE_OMP
 #pragma omp parallel if (amrex::Gpu::notInLaunchRegion())
 #endif
-                for (MFIter mfi(*bmasks, true); mfi.isValid(); ++mfi)
+                for (amrex::MFIter mfi(*bmasks, true); mfi.isValid(); ++mfi)
                 {
-                    const Box tbx = mfi.growntilebox();
+                    const amrex::Box tbx = mfi.growntilebox();
                     BuildBufferMasksInBox( tbx, (*bmasks)[mfi], tmp[mfi], ngbuffer );
                 }
             }
@@ -3188,8 +3187,8 @@ WarpX::StoreCurrent (int lev)
 {
     for (int idim = 0; idim < 3; ++idim) {
         if (current_store[lev][idim]) {
-            MultiFab::Copy(*current_store[lev][idim], *current_fp[lev][idim],
-                           0, 0, 1, current_store[lev][idim]->nGrowVect());
+            amrex::MultiFab::Copy(*current_store[lev][idim], *current_fp[lev][idim],
+                                  0, 0, 1, current_store[lev][idim]->nGrowVect());
         }
     }
 }

@@ -532,7 +532,7 @@ PhysicalParticleContainer::AddGaussianBeam (
     Gpu::HostVector<ParticleReal> particle_uz;
     Gpu::HostVector<ParticleReal> particle_w;
 
-    if (ParallelDescriptor::IOProcessor()) {
+    if (amrex::ParallelDescriptor::IOProcessor()) {
         // If do_symmetrize, create either 4x or 8x fewer particles, and
         // Replicate each particle either 4 times (x,y) (-x,y) (x,-y) (-x,-y)
         // or 8 times, additionally (y,x), (-y,x), (y,-x), (-y,-x)
@@ -660,7 +660,7 @@ PhysicalParticleContainer::AddPlasmaFromFile(PlasmaInjector & plasma_injector,
 
 #ifdef WARPX_USE_OPENPMD
     //TODO: Make changes for read/write in multiple MPI ranks
-    if (ParallelDescriptor::IOProcessor()) {
+    if (amrex::ParallelDescriptor::IOProcessor()) {
         // take ownership of the series and close it when done
         auto series = std::move(plasma_injector.m_openpmd_input_series);
 
@@ -1175,7 +1175,7 @@ PhysicalParticleContainer::AddPlasma (PlasmaInjector const& plasma_injector, int
             static_cast<Long>(pid + max_new_particles) < LastParticleID,
             "ERROR: overflow on particle id numbers");
 
-        const int cpuid = ParallelDescriptor::MyProc();
+        const int cpuid = amrex::ParallelDescriptor::MyProc();
 
         auto& particle_tile = GetParticles(lev)[std::make_pair(grid_id,tile_id)];
 
@@ -1728,7 +1728,7 @@ PhysicalParticleContainer::AddPlasmaFlux (PlasmaInjector const& plasma_injector,
             static_cast<Long>(pid + max_new_particles) < LastParticleID,
             "overflow on particle id numbers");
 
-        const int cpuid = ParallelDescriptor::MyProc();
+        const int cpuid = amrex::ParallelDescriptor::MyProc();
 
         auto& particle_tile = tmp_pc.DefineAndReturnParticleTile(0, grid_id, tile_id);
 

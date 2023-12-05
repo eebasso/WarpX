@@ -42,7 +42,7 @@ ReducedDiags::ReducedDiags (std::string rd_name)
     pp_amr.query("restart", restart_chkfile);
     bool IsNotRestart = restart_chkfile.empty();
 
-    if (ParallelDescriptor::IOProcessor())
+    if (amrex::ParallelDescriptor::IOProcessor())
     {
         // create folder
         constexpr int permission_flag_rwxrxrx = 0755;

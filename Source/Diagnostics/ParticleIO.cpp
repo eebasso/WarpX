@@ -130,7 +130,7 @@ MultiParticleContainer::Restart (const std::string& dir)
         const std::string header_fn = dir + "/" + species_names[i] + "/Header";
 
         amrex::Vector<char> fileCharPtr;
-        ParallelDescriptor::ReadAndBcastFile(header_fn, fileCharPtr);
+        amrex::ParallelDescriptor::ReadAndBcastFile(header_fn, fileCharPtr);
         const std::string fileCharPtrString(fileCharPtr.dataPtr());
         std::istringstream is(fileCharPtrString, std::istringstream::in);
         is.exceptions(std::ios_base::failbit | std::ios_base::badbit);

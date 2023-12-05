@@ -86,37 +86,37 @@ WarpX::LoadBalance ()
             ? DistributionMapping::makeSFC(*costs[lev],
                                            currentEfficiency, proposedEfficiency,
                                            false,
-                                           ParallelDescriptor::IOProcessorNumber())
+                                           amrex::ParallelDescriptor::IOProcessorNumber())
             : DistributionMapping::makeKnapSack(*costs[lev],
                                                 currentEfficiency, proposedEfficiency,
                                                 nmax,
                                                 false,
-                                                ParallelDescriptor::IOProcessorNumber());
+                                                amrex::ParallelDescriptor::IOProcessorNumber());
         // As specified in the above calls to makeSFC and makeKnapSack, the new
         // distribution mapping is NOT communicated to all ranks; the loadbalanced
         // dm is up-to-date only on root, and we can decide whether to broadcast
         if ((load_balance_efficiency_ratio_threshold > 0.0)
-            && (ParallelDescriptor::MyProc() == ParallelDescriptor::IOProcessorNumber()))
+            && (amrex::ParallelDescriptor::MyProc() == amrex::ParallelDescriptor::IOProcessorNumber()))
         {
             doLoadBalance = (proposedEfficiency > load_balance_efficiency_ratio_threshold*currentEfficiency);
         }
 
-        ParallelDescriptor::Bcast(&doLoadBalance, 1,
-                                  ParallelDescriptor::IOProcessorNumber());
+        amrex::ParallelDescriptor::Bcast(&doLoadBalance, 1,
+                                  amrex::ParallelDescriptor::IOProcessorNumber());
 
         if (doLoadBalance)
         {
             amrex::Vector<int> pmap;
-            if (ParallelDescriptor::MyProc() == ParallelDescriptor::IOProcessorNumber())
+            if (amrex::ParallelDescriptor::MyProc() == amrex::ParallelDescriptor::IOProcessorNumber())
             {
                 pmap = newdm.ProcessorMap();
             } else
             {
                 pmap.resize(static_cast<std::size_t>(nboxes));
             }
-            ParallelDescriptor::Bcast(pmap.data(), pmap.size(), ParallelDescriptor::IOProcessorNumber());
+            amrex::ParallelDescriptor::Bcast(pmap.data(), pmap.size(), amrex::ParallelDescriptor::IOProcessorNumber());
 
-            if (ParallelDescriptor::MyProc() != ParallelDescriptor::IOProcessorNumber())
+            if (amrex::ParallelDescriptor::MyProc() != amrex::ParallelDescriptor::IOProcessorNumber())
             {
                 newdm = DistributionMapping(pmap);
             }
@@ -163,7 +163,7 @@ WarpX::RemakeLevel (int lev, amrex::Real /*time*/, const amrex::BoxArray& ba, co
 {
     if (ba == boxArray(lev))
     {
-        if (ParallelDescriptor::NProcs() == 1) return;
+        if (amrex::ParallelDescriptor::NProcs() == 1) return;
 
         // Fine patch
         for (int idim=0; idim < 3; ++idim)

@@ -57,7 +57,7 @@ ChargeOnEB::ChargeOnEB (std::string rd_name)
             utils::parser::makeParser(weighting_string,{"x","y","z"}));
     }
 
-    if (ParallelDescriptor::IOProcessor())
+    if (amrex::ParallelDescriptor::IOProcessor())
     {
         if ( m_write_header )
         {

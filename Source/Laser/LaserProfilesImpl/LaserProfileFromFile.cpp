@@ -164,7 +164,7 @@ void
 WarpXLaserProfiles::FromFileLaserProfile::parse_lasy_file(std::string lasy_file_name)
 {
 #ifdef WARPX_USE_OPENPMD
-    if(ParallelDescriptor::IOProcessor()){
+    if(amrex::ParallelDescriptor::IOProcessor()){
         auto series = io::Series(lasy_file_name, io::Access::READ_ONLY);
         auto i = series.iterations[0];
         auto E = i.meshes["laserEnvelope"];
@@ -216,20 +216,20 @@ WarpXLaserProfiles::FromFileLaserProfile::parse_lasy_file(std::string lasy_file_
     }
 
     //Broadcast parameters
-    ParallelDescriptor::Bcast(&m_params.file_in_cartesian_geom, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.nt, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.nx, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.ny, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.nr, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.n_rz_azimuthal_components, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.t_min, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.t_max, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.x_min, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.x_max, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.y_min, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.y_max, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.r_min, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.r_max, 1, ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.file_in_cartesian_geom, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.nt, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.nx, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.ny, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.nr, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.n_rz_azimuthal_components, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.t_min, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.t_max, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.x_min, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.x_max, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.y_min, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.y_max, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.r_min, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.r_max, 1, amrex::ParallelDescriptor::IOProcessorNumber());
 #else
     amrex::ignore_unused(lasy_file_name);
 #endif
@@ -238,7 +238,7 @@ WarpXLaserProfiles::FromFileLaserProfile::parse_lasy_file(std::string lasy_file_
 void
 WarpXLaserProfiles::FromFileLaserProfile::parse_binary_file (std::string binary_file_name)
 {
-    if(ParallelDescriptor::IOProcessor()){
+    if(amrex::ParallelDescriptor::IOProcessor()){
         std::ifstream inp(binary_file_name, std::ios::binary);
         if(!inp) WARPX_ABORT_WITH_MESSAGE("Failed to open binary file");
         inp.exceptions(std::ios_base::failbit | std::ios_base::badbit);
@@ -287,15 +287,15 @@ WarpXLaserProfiles::FromFileLaserProfile::parse_binary_file (std::string binary_
     }
 
     //Broadcast parameters
-    ParallelDescriptor::Bcast(&m_params.nt, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.nx, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.ny, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.t_min, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.t_max, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.x_min, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.x_max, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.y_min, 1, ParallelDescriptor::IOProcessorNumber());
-    ParallelDescriptor::Bcast(&m_params.y_max, 1, ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.nt, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.nx, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.ny, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.t_min, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.t_max, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.x_min, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.x_max, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.y_min, 1, amrex::ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(&m_params.y_max, 1, amrex::ParallelDescriptor::IOProcessorNumber());
 }
 
 std::pair<int,int>
@@ -324,7 +324,7 @@ WarpXLaserProfiles::FromFileLaserProfile::read_data_t_chunk (int t_begin, int t_
         (i_last-i_first+1)*m_params.nx*m_params.ny;
     m_params.E_lasy_data.resize(data_size);
     amrex::Vector<Complex> h_E_lasy_data(m_params.E_lasy_data.size());
-    if(ParallelDescriptor::IOProcessor()){
+    if(amrex::ParallelDescriptor::IOProcessor()){
         auto series = io::Series(m_params.lasy_file_name, io::Access::READ_ONLY);
         auto i = series.iterations[0];
         auto E = i.meshes["laserEnvelope"];
@@ -355,8 +355,8 @@ WarpXLaserProfiles::FromFileLaserProfile::read_data_t_chunk (int t_begin, int t_
         }
     }
     //Broadcast E_lasy_data
-    ParallelDescriptor::Bcast(h_E_lasy_data.dataPtr(),
-        h_E_lasy_data.size(), ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(h_E_lasy_data.dataPtr(),
+        h_E_lasy_data.size(), amrex::ParallelDescriptor::IOProcessorNumber());
     Gpu::copyAsync(Gpu::hostToDevice,h_E_lasy_data.begin(),h_E_lasy_data.end(),m_params.E_lasy_data.begin());
     Gpu::synchronize();
     //Update first and last indices
@@ -380,7 +380,7 @@ WarpXLaserProfiles::FromFileLaserProfile::read_binary_data_t_chunk (int t_begin,
     const int data_size = (i_last-i_first+1)*m_params.nx*m_params.ny;
     m_params.E_binary_data.resize(data_size);
     amrex::Vector<amrex::Real> h_E_binary_data(m_params.E_binary_data.size());
-    if(ParallelDescriptor::IOProcessor()){
+    if(amrex::ParallelDescriptor::IOProcessor()){
         //Read data chunk
         std::ifstream inp(m_params.binary_file_name, std::ios::binary);
         if(!inp) WARPX_ABORT_WITH_MESSAGE("Failed to open binary file");
@@ -412,8 +412,8 @@ WarpXLaserProfiles::FromFileLaserProfile::read_binary_data_t_chunk (int t_begin,
     }
 
     //Broadcast E_binary_data
-    ParallelDescriptor::Bcast(h_E_binary_data.dataPtr(),
-        h_E_binary_data.size(), ParallelDescriptor::IOProcessorNumber());
+    amrex::ParallelDescriptor::Bcast(h_E_binary_data.dataPtr(),
+        h_E_binary_data.size(), amrex::ParallelDescriptor::IOProcessorNumber());
 
     Gpu::copyAsync(Gpu::hostToDevice,h_E_binary_data.begin(),h_E_binary_data.end(),m_params.E_binary_data.begin());
     Gpu::synchronize();

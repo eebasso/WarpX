@@ -354,7 +354,7 @@ void CheckGriddingForRZSpectral ()
     // more blocks than processors.
     // The factor of 8 is there to make some room for higher order
     // shape factors and filtering.
-    const int nprocs = ParallelDescriptor::NProcs();
+    const int nprocs = amrex::ParallelDescriptor::NProcs();
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(n_cell[1] >= 8*nprocs,
                                      "With RZ spectral, there must be at least eight z-cells per processor so that there can be at least one block per processor.");
 

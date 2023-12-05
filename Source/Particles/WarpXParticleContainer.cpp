@@ -1117,7 +1117,7 @@ amrex::ParticleReal WarpXParticleContainer::sumParticleCharge(bool local) {
 
     total_charge = get<0>(reduce_data.value());
 
-    if (!local) ParallelDescriptor::ReduceRealSum(total_charge);
+    if (!local) amrex::ParallelDescriptor::ReduceRealSum(total_charge);
     total_charge *= this->charge;
     return total_charge;
 }
@@ -1194,8 +1194,8 @@ std::array<ParticleReal, 3> WarpXParticleContainer::meanParticleVelocity(bool lo
     }
 
     if (!local) {
-        ParallelDescriptor::ReduceRealSum<ParticleReal>({vx_total,vy_total,vz_total});
-        ParallelDescriptor::ReduceLongSum(np_total);
+        amrex::ParallelDescriptor::ReduceRealSum<ParticleReal>({vx_total,vy_total,vz_total});
+        amrex::ParallelDescriptor::ReduceLongSum(np_total);
     }
 
     std::array<amrex::ParticleReal, 3> mean_v;
@@ -1230,7 +1230,7 @@ amrex::ParticleReal WarpXParticleContainer::maxParticleVelocity(bool local) {
         }
     }
 
-    if (!local) ParallelAllReduce::Max(max_v, ParallelDescriptor::Communicator());
+    if (!local) ParallelAllReduce::Max(max_v, amrex::ParallelDescriptor::Communicator());
     return max_v;
 }
 

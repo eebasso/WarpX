@@ -56,10 +56,10 @@ namespace ablastr::coarsen::average
             amrex::Array4<amrex::Real> const &arr_dst = mf_dst.array(mfi);
             amrex::Array4<amrex::Real const> const &arr_src = mf_src.const_array(mfi);
             amrex::ParallelFor(bx, ncomp,
-                        [=] AMREX_GPU_DEVICE(int i, int j, int k, int n) {
-                            arr_dst(i, j, k, n) = Interp(
-                                arr_src, sf, sc, cr, i, j, k, n);
-                        });
+                [=] AMREX_GPU_DEVICE(int i, int j, int k, int n) {
+                    arr_dst(i, j, k, n) = Interp(
+                        arr_src, sf, sc, cr, i, j, k, n);
+                });
         }
     }
 

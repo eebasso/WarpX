@@ -100,7 +100,7 @@ FieldProbeParticleContainer::AddNParticles (int lev,
     {
         ParticleType p;
         p.id() = ParticleType::NextID();
-        p.cpu() = ParallelDescriptor::MyProc();
+        p.cpu() = amrex::ParallelDescriptor::MyProc();
 #if defined(WARPX_DIM_3D)
         p.pos(0) = x[i];
         p.pos(1) = y[i];

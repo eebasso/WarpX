@@ -673,7 +673,7 @@ MultiParticleContainer::NumberOfParticlesInGrid (int lev) const
                 r[j] += ri[j];
             }
         }
-        ParallelDescriptor::ReduceLongSum(r.data(),static_cast<int>(r.size()));
+        amrex::ParallelDescriptor::ReduceLongSum(r.data(),static_cast<int>(r.size()));
         return r;
     }
 }
@@ -1035,8 +1035,8 @@ void MultiParticleContainer::InitQuantumSync ()
             WARPX_ABORT_WITH_MESSAGE("Quantum Synchrotron table name should be provided");
         }
         amrex::Vector<char> table_data;
-        ParallelDescriptor::ReadAndBcastFile(load_table_name, table_data);
-        ParallelDescriptor::Barrier();
+        amrex::ParallelDescriptor::ReadAndBcastFile(load_table_name, table_data);
+        amrex::ParallelDescriptor::Barrier();
         m_shr_p_qs_engine->init_lookup_tables_from_raw_data(table_data,
             qs_minimum_chi_part);
     }
@@ -1093,8 +1093,8 @@ void MultiParticleContainer::InitBreitWheeler ()
             WARPX_ABORT_WITH_MESSAGE("Breit Wheeler table name should be provided");
         }
         amrex::Vector<char> table_data;
-        ParallelDescriptor::ReadAndBcastFile(load_table_name, table_data);
-        ParallelDescriptor::Barrier();
+        amrex::ParallelDescriptor::ReadAndBcastFile(load_table_name, table_data);
+        amrex::ParallelDescriptor::Barrier();
         m_shr_p_bw_engine->init_lookup_tables_from_raw_data(
             table_data, bw_minimum_chi_part);
     }
@@ -1130,7 +1130,7 @@ MultiParticleContainer::QuantumSyncGenerateTable ()
     amrex::Real qs_minimum_chi_part;
     utils::parser::getWithParser(pp_qed_qs, "chi_min", qs_minimum_chi_part);
 
-    if(ParallelDescriptor::IOProcessor()){
+    if(amrex::ParallelDescriptor::IOProcessor()){
         PicsarQuantumSyncCtrl ctrl;
 
         //==Table parameters==
@@ -1191,10 +1191,10 @@ MultiParticleContainer::QuantumSyncGenerateTable ()
             amrex::Vector<char>{data.begin(), data.end()});
     }
 
-    ParallelDescriptor::Barrier();
+    amrex::ParallelDescriptor::Barrier();
     amrex::Vector<char> table_data;
-    ParallelDescriptor::ReadAndBcastFile(table_name, table_data);
-    ParallelDescriptor::Barrier();
+    amrex::ParallelDescriptor::ReadAndBcastFile(table_name, table_data);
+    amrex::ParallelDescriptor::Barrier();
 
     //No need to initialize from raw data for the processor that
     //has just generated the table
@@ -1220,7 +1220,7 @@ MultiParticleContainer::BreitWheelerGenerateTable ()
     amrex::Real bw_minimum_chi_part;
     utils::parser::getWithParser(pp_qed_bw, "chi_min", bw_minimum_chi_part);
 
-    if(ParallelDescriptor::IOProcessor()){
+    if(amrex::ParallelDescriptor::IOProcessor()){
         PicsarBreitWheelerCtrl ctrl;
 
         //==Table parameters==
@@ -1276,10 +1276,10 @@ MultiParticleContainer::BreitWheelerGenerateTable ()
             amrex::Vector<char>{data.begin(), data.end()});
     }
 
-    ParallelDescriptor::Barrier();
+    amrex::ParallelDescriptor::Barrier();
     amrex::Vector<char> table_data;
-    ParallelDescriptor::ReadAndBcastFile(table_name, table_data);
-    ParallelDescriptor::Barrier();
+    amrex::ParallelDescriptor::ReadAndBcastFile(table_name, table_data);
+    amrex::ParallelDescriptor::Barrier();
 
     //No need to initialize from raw data for the processor that
     //has just generated the table

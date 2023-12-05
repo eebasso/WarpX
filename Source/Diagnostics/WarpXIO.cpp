@@ -59,11 +59,11 @@ WarpX::GetRestartDMap (const std::string& chkfile, const amrex::BoxArray& ba, in
     DMFileName += "/DM";
 
     if (!amrex::FileExists(DMFileName)) {
-        return amrex::DistributionMapping{ba, ParallelDescriptor::NProcs()};
+        return amrex::DistributionMapping{ba, amrex::ParallelDescriptor::NProcs()};
     }
 
     amrex::Vector<char> fileCharPtr;
-    ParallelDescriptor::ReadAndBcastFile(DMFileName, fileCharPtr);
+    amrex::ParallelDescriptor::ReadAndBcastFile(DMFileName, fileCharPtr);
     const std::string fileCharPtrString(fileCharPtr.dataPtr());
     std::istringstream DMFile(fileCharPtrString, std::istringstream::in);
     if ( ! DMFile.good()) amrex::FileOpenFailed(DMFileName);
@@ -71,14 +71,14 @@ WarpX::GetRestartDMap (const std::string& chkfile, const amrex::BoxArray& ba, in
 
     int nprocs_in_checkpoint;
     DMFile >> nprocs_in_checkpoint;
-    if (nprocs_in_checkpoint != ParallelDescriptor::NProcs()) {
-        return amrex::DistributionMapping{ba, ParallelDescriptor::NProcs()};
+    if (nprocs_in_checkpoint != amrex::ParallelDescriptor::NProcs()) {
+        return amrex::DistributionMapping{ba, amrex::ParallelDescriptor::NProcs()};
     }
 
     amrex::DistributionMapping dm;
     dm.readFrom(DMFile);
     if (dm.size() != ba.size()) {
-        return amrex::DistributionMapping{ba, ParallelDescriptor::NProcs()};
+        return amrex::DistributionMapping{ba, amrex::ParallelDescriptor::NProcs()};
     }
 
     return dm;
@@ -96,10 +96,10 @@ WarpX::InitFromCheckpoint ()
     {
         const std::string File(restart_chkfile + "/WarpXHeader");
 
-        const VisMF::IO_Buffer io_buffer(VisMF::GetIOBufferSize());
+        const amrex::VisMF::IO_Buffer io_buffer(VisMF::GetIOBufferSize());
 
         amrex::Vector<char> fileCharPtr;
-        ParallelDescriptor::ReadAndBcastFile(File, fileCharPtr);
+        amrex::ParallelDescriptor::ReadAndBcastFile(File, fileCharPtr);
         const std::string fileCharPtrString(fileCharPtr.dataPtr());
         std::istringstream is(fileCharPtrString, std::istringstream::in);
         is.exceptions(std::ios_base::failbit | std::ios_base::badbit);
@@ -294,85 +294,85 @@ WarpX::InitFromCheckpoint ()
             }
         }
 
-        VisMF::Read(*Efield_fp[lev][0],
+        amrex::VisMF::Read(*Efield_fp[lev][0],
                     amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ex_fp"));
-        VisMF::Read(*Efield_fp[lev][1],
+        amrex::VisMF::Read(*Efield_fp[lev][1],
                     amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ey_fp"));
-        VisMF::Read(*Efield_fp[lev][2],
+        amrex::VisMF::Read(*Efield_fp[lev][2],
                     amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ez_fp"));
 
-        VisMF::Read(*Bfield_fp[lev][0],
+        amrex::VisMF::Read(*Bfield_fp[lev][0],
                     amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Bx_fp"));
-        VisMF::Read(*Bfield_fp[lev][1],
+        amrex::VisMF::Read(*Bfield_fp[lev][1],
                     amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "By_fp"));
-        VisMF::Read(*Bfield_fp[lev][2],
+        amrex::VisMF::Read(*Bfield_fp[lev][2],
                     amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Bz_fp"));
 
         if (WarpX::fft_do_time_averaging)
         {
-            VisMF::Read(*Efield_avg_fp[lev][0],
+            amrex::VisMF::Read(*Efield_avg_fp[lev][0],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ex_avg_fp"));
-            VisMF::Read(*Efield_avg_fp[lev][1],
+            amrex::VisMF::Read(*Efield_avg_fp[lev][1],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ey_avg_fp"));
-            VisMF::Read(*Efield_avg_fp[lev][2],
+            amrex::VisMF::Read(*Efield_avg_fp[lev][2],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ez_avg_fp"));
 
-            VisMF::Read(*Bfield_avg_fp[lev][0],
+            amrex::VisMF::Read(*Bfield_avg_fp[lev][0],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Bx_avg_fp"));
-            VisMF::Read(*Bfield_avg_fp[lev][1],
+            amrex::VisMF::Read(*Bfield_avg_fp[lev][1],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "By_avg_fp"));
-            VisMF::Read(*Bfield_avg_fp[lev][2],
+            amrex::VisMF::Read(*Bfield_avg_fp[lev][2],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Bz_avg_fp"));
         }
 
         if (is_synchronized) {
-            VisMF::Read(*current_fp[lev][0],
+            amrex::VisMF::Read(*current_fp[lev][0],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "jx_fp"));
-            VisMF::Read(*current_fp[lev][1],
+            amrex::VisMF::Read(*current_fp[lev][1],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "jy_fp"));
-            VisMF::Read(*current_fp[lev][2],
+            amrex::VisMF::Read(*current_fp[lev][2],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "jz_fp"));
         }
 
         if (lev > 0)
         {
-            VisMF::Read(*Efield_cp[lev][0],
+            amrex::VisMF::Read(*Efield_cp[lev][0],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ex_cp"));
-            VisMF::Read(*Efield_cp[lev][1],
+            amrex::VisMF::Read(*Efield_cp[lev][1],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ey_cp"));
-            VisMF::Read(*Efield_cp[lev][2],
+            amrex::VisMF::Read(*Efield_cp[lev][2],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ez_cp"));
 
-            VisMF::Read(*Bfield_cp[lev][0],
+            amrex::VisMF::Read(*Bfield_cp[lev][0],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Bx_cp"));
-            VisMF::Read(*Bfield_cp[lev][1],
+            amrex::VisMF::Read(*Bfield_cp[lev][1],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "By_cp"));
-            VisMF::Read(*Bfield_cp[lev][2],
+            amrex::VisMF::Read(*Bfield_cp[lev][2],
                         amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Bz_cp"));
 
             if (WarpX::fft_do_time_averaging)
             {
-                VisMF::Read(*Efield_avg_cp[lev][0],
+                amrex::VisMF::Read(*Efield_avg_cp[lev][0],
                             amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ex_avg_cp"));
-                VisMF::Read(*Efield_avg_cp[lev][1],
+                amrex::VisMF::Read(*Efield_avg_cp[lev][1],
                             amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ey_avg_cp"));
-                VisMF::Read(*Efield_avg_cp[lev][2],
+                amrex::VisMF::Read(*Efield_avg_cp[lev][2],
                             amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Ez_avg_cp"));
 
-                VisMF::Read(*Bfield_avg_cp[lev][0],
+                amrex::VisMF::Read(*Bfield_avg_cp[lev][0],
                             amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Bx_avg_cp"));
-                VisMF::Read(*Bfield_avg_cp[lev][1],
+                amrex::VisMF::Read(*Bfield_avg_cp[lev][1],
                             amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "By_avg_cp"));
-                VisMF::Read(*Bfield_avg_cp[lev][2],
+                amrex::VisMF::Read(*Bfield_avg_cp[lev][2],
                             amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "Bz_avg_cp"));
             }
 
             if (is_synchronized) {
-                VisMF::Read(*current_cp[lev][0],
+                amrex::VisMF::Read(*current_cp[lev][0],
                             amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "jx_cp"));
-                VisMF::Read(*current_cp[lev][1],
+                amrex::VisMF::Read(*current_cp[lev][1],
                             amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "jy_cp"));
-                VisMF::Read(*current_cp[lev][2],
+                amrex::VisMF::Read(*current_cp[lev][2],
                             amrex::MultiFabFileFullPrefix(lev, restart_chkfile, level_prefix, "jz_cp"));
             }
         }

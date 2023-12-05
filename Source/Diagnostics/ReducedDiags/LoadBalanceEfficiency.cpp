@@ -32,7 +32,7 @@ LoadBalanceEfficiency::LoadBalanceEfficiency (std::string rd_name)
     // resize data array
     m_data.resize(nLevel, 0.0_rt);
 
-    if (ParallelDescriptor::IOProcessor())
+    if (amrex::ParallelDescriptor::IOProcessor())
     {
         if ( m_write_header )
         {

@@ -84,8 +84,8 @@ FlushFormatPlotfile::WriteToFile (
     }
 
     amrex::Vector<std::string> rfs;
-    const VisMF::Header::Version current_version = VisMF::GetHeaderVersion();
-    VisMF::SetHeaderVersion(amrex::VisMF::Header::Version_v1);
+    const amrex::VisMF::Header::Version current_version = amrex::VisMF::GetHeaderVersion();
+    amrex::VisMF::SetHeaderVersion(amrex::VisMF::Header::Version_v1);
     if (plot_raw_fields) rfs.emplace_back("raw_fields");
     amrex::WriteMultiLevelPlotfile(filename, nlev,
                                    amrex::GetVecOfConstPtrs(mf),
@@ -105,7 +105,7 @@ FlushFormatPlotfile::WriteToFile (
 
     WriteWarpXHeader(filename, geom);
 
-    VisMF::SetHeaderVersion(current_version);
+    amrex::VisMF::SetHeaderVersion(current_version);
 }
 
 void
@@ -114,7 +114,7 @@ FlushFormatPlotfile::WriteJobInfo(const std::string& dir) const
 
     auto & warpx = WarpX::GetInstance();
 
-    if (ParallelDescriptor::IOProcessor())
+    if (amrex::ParallelDescriptor::IOProcessor())
     {
         // job_info file with details about the run
         std::ofstream jobInfoFile;
@@ -132,7 +132,7 @@ FlushFormatPlotfile::WriteJobInfo(const std::string& dir) const
         jobInfoFile << " WarpX Job Information\n";
         jobInfoFile << PrettyLine;
 
-        jobInfoFile << "number of MPI processes: " << ParallelDescriptor::NProcs() << "\n";
+        jobInfoFile << "number of MPI processes: " << amrex::ParallelDescriptor::NProcs() << "\n";
 #ifdef AMREX_USE_OMP
         jobInfoFile << "number of threads:       " << omp_get_max_threads() << "\n";
 #endif
@@ -236,9 +236,9 @@ FlushFormatPlotfile::WriteWarpXHeader(
     amrex::Vector<amrex::Geometry>& geom) const
 {
     auto & warpx = WarpX::GetInstance();
-    if (ParallelDescriptor::IOProcessor())
+    if (amrex::ParallelDescriptor::IOProcessor())
     {
-        VisMF::IO_Buffer io_buffer(VisMF::IO_Buffer_Size);
+        amrex::VisMF::IO_Buffer io_buffer(VisMF::IO_Buffer_Size);
         std::ofstream HeaderFile;
         HeaderFile.rdbuf()->pubsetbuf(io_buffer.dataPtr(), io_buffer.size());
         const std::string HeaderFileName(name + "/WarpXHeader");
@@ -435,12 +435,12 @@ WriteRawMF ( const amrex::MultiFab& F, const amrex::DistributionMapping& dm,
                             filename, level_prefix, field_name);
     if (plot_guards) {
         // Dump original MultiFab F
-        VisMF::Write(F, prefix);
+        amrex::VisMF::Write(F, prefix);
     } else {
         // Copy original MultiFab into one that does not have guard cells
         MultiFab tmpF( F.boxArray(), dm, F.nComp(), 0);
         MultiFab::Copy(tmpF, F, 0, 0, F.nComp(), 0);
-        VisMF::Write(tmpF, prefix);
+        amrex::VisMF::Write(tmpF, prefix);
     }
 }
 
@@ -462,7 +462,7 @@ WriteZeroRawMF( const amrex::MultiFab& F, const amrex::DistributionMapping& dm,
 
     MultiFab tmpF(F.boxArray(), dm, F.nComp(), ng);
     tmpF.setVal(0.);
-    VisMF::Write(tmpF, prefix);
+    amrex::VisMF::Write(tmpF, prefix);
 }
 
 /** \brief Write the coarse vector multifab `F*_cp` to the file `filename`
