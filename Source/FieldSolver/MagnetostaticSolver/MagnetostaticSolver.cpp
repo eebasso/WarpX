@@ -381,7 +381,7 @@ void MagnetostaticSolver::EBCalcBfromVectorPotentialPerLevel::doInterp(const std
 
         const Box bx = mfi.tilebox();
 
-        ParallelFor(bx, [=] AMREX_GPU_DEVICE (int j, int k, int l) noexcept
+        amrex::ParallelFor(bx, [=] AMREX_GPU_DEVICE (int j, int k, int l) noexcept
         {
             warpx_interp(j, k, l, dst_arr, src_arr, dst_stag, src_stag, fg_nox, fg_noy, fg_noz,
                 stencil_coeffs_x, stencil_coeffs_y, stencil_coeffs_z);

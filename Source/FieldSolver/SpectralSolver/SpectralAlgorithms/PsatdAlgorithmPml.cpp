@@ -112,7 +112,7 @@ void PsatdAlgorithmPml::pushSpectralFields(SpectralFieldData& f) const
         const amrex::Real dt = m_dt;
 
         // Loop over indices within one box
-        ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
+        amrex::ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
         {
             // Record old values of the fields to be updated
             const Complex Exy = fields(i,j,k,Idx.Exy);
@@ -417,7 +417,7 @@ void PsatdAlgorithmPml::InitializeSpectralCoefficients (
         amrex::Real vg_z = m_v_galilean[2];
 
         // Loop over indices within one box
-        ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
+        amrex::ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
         {
             // Calculate norm of vector
             const amrex::Real knorm = std::sqrt(

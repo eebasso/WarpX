@@ -12,6 +12,7 @@
 #include <AMReX_GpuQualifiers.H>
 #include <AMReX_Periodicity.H>
 #include <AMReX_Vector.H>
+#include <AMReX_MFParallelFor.H>
 
 #include <AMReX_BaseFwd.H>
 
@@ -29,7 +30,7 @@ mixedCopy (amrex::FabArray<FAB1>& dst, amrex::FabArray<FAB2> const& src, int src
 {
     auto const& srcma = src.const_arrays();
     auto const& dstma = dst.arrays();
-    ParallelFor(dst, nghost, numcomp,
+    amrex::ParallelFor(dst, nghost, numcomp,
     [=] AMREX_GPU_DEVICE (int box_no, int i, int j, int k, int n) noexcept
     {
         dstma[box_no](i,j,k,dstcomp+n) = (typename FAB1::value_type) srcma[box_no](i,j,k,srccomp+n);

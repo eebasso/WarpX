@@ -79,7 +79,7 @@ SpectralBaseAlgorithm::ComputeSpectralDivE (
         const amrex::Real* modified_kz_arr = modified_kz_vec[mfi].dataPtr();
 
         // Loop over indices within one box
-        ParallelFor(bx,
+        amrex::ParallelFor(bx,
         [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
         {
             // Shortcuts for the components of E

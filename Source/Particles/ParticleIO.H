@@ -66,7 +66,7 @@ particlesConvertUnits (ConvertDirection convert_direction, T_ParticleContainer* 
             ParticleReal* AMREX_RESTRICT uz = attribs[PIdx::uz].dataPtr();
             // Loop over the particles and convert momentum
             const long np = pti.numParticles();
-            ParallelFor( np,
+            amrex::ParallelFor( np,
                          [=] AMREX_GPU_DEVICE (long i) {
                 ux[i] *= factor;
                 uy[i] *= factor;

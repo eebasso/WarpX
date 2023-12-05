@@ -527,7 +527,7 @@ void HybridPICModel::FillElectronPressureMF (
         // Extract tileboxes for which to loop
         const Box& tilebox  = mfi.tilebox();
 
-        ParallelFor(tilebox, [=] AMREX_GPU_DEVICE (int i, int j, int k) {
+        amrex::ParallelFor(tilebox, [=] AMREX_GPU_DEVICE (int i, int j, int k) {
             Pe(i, j, k) = ElectronPressure::get_pressure(
                 n0_ref, elec_temp, gamma, rho(i, j, k)
             );

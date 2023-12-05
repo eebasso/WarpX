@@ -69,7 +69,7 @@ namespace ablastr::coarsen::sample
             const amrex::Box& bx = mfi.growntilebox( ngrowvect );
             amrex::Array4<amrex::Real> const& arr_dst = mf_dst.array( mfi );
             amrex::Array4<amrex::Real const> const& arr_src = mf_src.const_array( mfi );
-            ParallelFor( bx, ncomp,
+            amrex::ParallelFor( bx, ncomp,
                          [=] AMREX_GPU_DEVICE( int i, int j, int k, int n )
                          {
                              arr_dst(i,j,k,n+dcomp) = Interp(

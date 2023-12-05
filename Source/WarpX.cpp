@@ -2456,7 +2456,7 @@ WarpX::AllocLevelMFs (int lev, const amrex::BoxArray& ba, const amrex::Distribut
     if (aux_is_nodal and grid_type != GridType::Collocated)
     {
         // Create aux multifabs on Nodal Box Array
-        amrex::BoxArray const nba = amrex::convert(ba,IntVect::TheNodeVector());
+        amrex::BoxArray const nba = amrex::convert(ba,amrex::IntVect::TheNodeVector());
 
         AllocInitMultiFab(Bfield_aux[lev][0], nba, dm, ncomps, ngEB, lev, "Bfield_aux[x]", 0.0_rt);
         AllocInitMultiFab(Bfield_aux[lev][1], nba, dm, ncomps, ngEB, lev, "Bfield_aux[y]", 0.0_rt);
@@ -2603,7 +2603,7 @@ WarpX::AllocLevelMFs (int lev, const amrex::BoxArray& ba, const amrex::Distribut
 
         if (n_field_gather_buffer > 0 || mypc->nSpeciesGatherFromMainGrid() > 0) {
             if (aux_is_nodal) {
-                amrex::BoxArray const& cnba = amrex::convert(cba,IntVect::TheNodeVector());
+                amrex::BoxArray const& cnba = amrex::convert(cba,amrex::IntVect::TheNodeVector());
                 AllocInitMultiFab(Bfield_cax[lev][0], cnba,dm,ncomps,ngEB,lev, "Bfield_cax[x]");
                 AllocInitMultiFab(Bfield_cax[lev][1], cnba,dm,ncomps,ngEB,lev, "Bfield_cax[y]");
                 AllocInitMultiFab(Bfield_cax[lev][2], cnba,dm,ncomps,ngEB,lev, "Bfield_cax[z]");
@@ -2851,7 +2851,7 @@ WarpX::ComputeDivB (amrex::MultiFab& divB, int const dcomp,
         amrex::Array4<const amrex::Real> const& Bzfab = B[2]->array(mfi);
         amrex::Array4<amrex::Real> const& divBfab = divB.array(mfi);
 
-        ParallelFor(bx,
+        amrex::ParallelFor(bx,
         [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
         {
             warpx_computedivb(i, j, k, dcomp, divBfab, Bxfab, Byfab, Bzfab, dxinv, dyinv, dzinv
@@ -2888,7 +2888,7 @@ WarpX::ComputeDivB (amrex::MultiFab& divB, int const dcomp,
         amrex::Array4<const amrex::Real> const& Bzfab = B[2]->array(mfi);
         amrex::Array4<amrex::Real> const& divBfab = divB.array(mfi);
 
-        ParallelFor(bx,
+        amrex::ParallelFor(bx,
         [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
         {
             warpx_computedivb(i, j, k, dcomp, divBfab, Bxfab, Byfab, Bzfab, dxinv, dyinv, dzinv

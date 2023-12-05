@@ -180,7 +180,7 @@ PsatdAlgorithmJConstantInTime::pushSpectralFields (SpectralFieldData& f) const
         const amrex::Real vgz = m_v_galilean[2];
 
         // Loop over indices within one box
-        ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
+        amrex::ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
         {
             // Record old values of the fields to be updated
             const Complex Ex_old = fields(i,j,k,Idx.Ex);
@@ -401,7 +401,7 @@ void PsatdAlgorithmJConstantInTime::InitializeSpectralCoefficients (
         const amrex::Real vg_z = m_v_galilean[2];
 
         // Loop over indices within one box
-        ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
+        amrex::ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
         {
             // Calculate norm of k vector
             const amrex::Real knorm_s = std::sqrt(
@@ -555,7 +555,7 @@ void PsatdAlgorithmJConstantInTime::InitializeSpectralCoefficientsAveraging (
         const amrex::Real vg_z = m_v_galilean[2];
 
         // Loop over indices within one box
-        ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
+        amrex::ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
         {
             // Calculate norm of k vector
             const amrex::Real knorm_s = std::sqrt(
@@ -734,7 +734,7 @@ void PsatdAlgorithmJConstantInTime::CurrentCorrection (SpectralFieldData& field_
         const amrex::Real vgz = m_v_galilean[2];
 
         // Loop over indices within one box
-        ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
+        amrex::ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
         {
             // Shortcuts for the values of J and rho
             const Complex Jx = fields(i,j,k,Idx.Jx_mid);
@@ -823,7 +823,7 @@ PsatdAlgorithmJConstantInTime::VayDeposition (SpectralFieldData& field_data)
         const amrex::Real* const modified_kz_arr = modified_kz_vec[mfi].dataPtr();
 
         // Loop over indices within one box
-        ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
+        amrex::ParallelFor(bx, [=] AMREX_GPU_DEVICE(int i, int j, int k) noexcept
         {
             // Shortcuts for the values of D
             const Complex Dx = fields(i,j,k,Idx.Jx_mid);

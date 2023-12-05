@@ -248,7 +248,7 @@ SpectralFieldDataRZ::FABZForwardTransform (amrex::MFIter const & mfi, amrex::Box
     amrex::Array4<Complex> const& complex_arr = tempHTransformed[mfi].array();
 
     int const modes = n_rz_azimuthal_modes;
-    ParallelFor(realspace_bx, modes,
+    amrex::ParallelFor(realspace_bx, modes,
     [=] AMREX_GPU_DEVICE(int i, int j, int k, int mode) noexcept {
         int const mode_r = 2*mode;
         int const mode_i = 2*mode + 1;
@@ -327,7 +327,7 @@ SpectralFieldDataRZ::FABZForwardTransform (amrex::MFIter const & mfi, amrex::Box
     const amrex::Real inv_nz = 1._rt/nz;
     const int n_fields = m_n_fields;
 
-    ParallelFor(spectralspace_bx, modes,
+    amrex::ParallelFor(spectralspace_bx, modes,
     [=] AMREX_GPU_DEVICE(int i, int j, int k, int mode) noexcept {
         Complex spectral_field_value = tmp_arr(i,j,k,mode);
         // Apply proper shift.
@@ -364,7 +364,7 @@ SpectralFieldDataRZ::FABZBackwardTransform (amrex::MFIter const & mfi, amrex::Bo
 
     int const modes = n_rz_azimuthal_modes;
     const int n_fields = m_n_fields;
-    ParallelFor(spectralspace_bx, modes,
+    amrex::ParallelFor(spectralspace_bx, modes,
     [=] AMREX_GPU_DEVICE(int i, int j, int k, int mode) noexcept {
         int const ic = field_index + mode*n_fields;
         Complex spectral_field_value = fields_arr(i,j,k,ic);
@@ -434,7 +434,7 @@ SpectralFieldDataRZ::FABZBackwardTransform (amrex::MFIter const & mfi, amrex::Bo
     amrex::Array4<amrex::Real> const& split_arr = tempHTransformedSplit[mfi].array();
     amrex::Array4<const Complex> const& complex_arr = tempHTransformed[mfi].array();
 
-    ParallelFor(realspace_bx, modes,
+    amrex::ParallelFor(realspace_bx, modes,
     [=] AMREX_GPU_DEVICE(int i, int j, int k, int mode) noexcept {
         int const mode_r = 2*mode;
         int const mode_i = 2*mode + 1;
@@ -626,7 +626,7 @@ SpectralFieldDataRZ::BackwardTransform (const int lev,
         // Get the intersection of the two boxes in case the field_mf has fewer z-guard cells
         realspace_bx &= realspace_bx_with_guards;
 
-        ParallelFor(realspace_bx, m_ncomps,
+        amrex::ParallelFor(realspace_bx, m_ncomps,
         [=] AMREX_GPU_DEVICE(int i, int j, int k, int icomp) noexcept {
             int ii = i;
             amrex::Real sign = +1._rt;
@@ -716,7 +716,7 @@ SpectralFieldDataRZ::BackwardTransform (const int lev,
         // Get the intersection of the two boxes in case the field_mf has fewer z-guard cells
         realspace_bx &= realspace_bx_with_guards;
 
-        ParallelFor(realspace_bx, m_ncomps,
+        amrex::ParallelFor(realspace_bx, m_ncomps,
         [=] AMREX_GPU_DEVICE(int i, int j, int k, int icomp) noexcept {
             int ii = i;
             amrex::Real sign = +1._rt;
@@ -796,7 +796,7 @@ SpectralFieldDataRZ::ApplyFilter (const int lev, int const field_index)
         amrex::Box const& spectralspace_bx = fields[mfi].box();
         int const nr = spectralspace_bx.length(0);
 
-        ParallelFor(spectralspace_bx, modes,
+        amrex::ParallelFor(spectralspace_bx, modes,
         [=] AMREX_GPU_DEVICE(int i, int j, int k, int mode) noexcept {
             int const ic = field_index + mode*n_fields;
             int const ir = i + nr*mode;
@@ -841,7 +841,7 @@ SpectralFieldDataRZ::ApplyFilter (const int lev, int const field_index1,
         amrex::Box const& spectralspace_bx = fields[mfi].box();
         int const nr = spectralspace_bx.length(0);
 
-        ParallelFor(spectralspace_bx, modes,
+        amrex::ParallelFor(spectralspace_bx, modes,
         [=] AMREX_GPU_DEVICE(int i, int j, int k, int mode) noexcept {
             int const ic1 = field_index1 + mode*n_fields;
             int const ic2 = field_index2 + mode*n_fields;

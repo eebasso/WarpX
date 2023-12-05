@@ -445,7 +445,7 @@ PsatdAlgorithmRZ::CurrentCorrection (SpectralFieldDataRZ& field_data)
 
         // Loop over indices within one box
         int const modes = field_data.n_rz_azimuthal_modes;
-        ParallelFor(bx, modes,
+        amrex::ParallelFor(bx, modes,
         [=] AMREX_GPU_DEVICE(int i, int j, int k, int mode) noexcept
         {
             // All of the fields of each mode are grouped together
