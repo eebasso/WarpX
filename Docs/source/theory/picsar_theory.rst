@@ -518,7 +518,7 @@ The quantity :math:`\boldsymbol{D}` is deposited in real space by averaging the 
    \bigg]
    \end{split} \\[8pt]
    \begin{split}
-   D_z = & v \sum_i \frac{1}{\Delta x\Delta y\Delta z} \frac{q_i w_i}{6\Delta t}
+   D_z = & \sum_i \frac{1}{\Delta x\Delta y\Delta z} \frac{q_i w_i}{6\Delta t}
    \bigg[
    2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n+1}) - 2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n}) \\[4pt]
    & + \Gamma(x_i^{n},y_i^{n+1},z_i^{n+1}) - \Gamma(x_i^{n},y_i^{n+1},z_i^{n})
@@ -566,7 +566,7 @@ offer better conservation of the respective quantities for a finite
 time step. The uniform scheme does not conserve momentum nor energy
 in the sense defined for the others but is given for completeness,
 as it has been shown to offer some interesting properties in the modeling
-of relativistically drifting plasmas :cite:p:`GodfreyJCP2013`.
+of relativistically drifting plasmas :cite:p:`pic-GodfreyJCP2013`.
 
 .. _theory-pic-filter:
 
