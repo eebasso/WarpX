@@ -6,10 +6,6 @@
 
    \maketitle
 
-.. raw:: latex
-
-   \linenumbers
-
 .. _theory-pic:
 
 Particle-in-Cell Method
@@ -38,19 +34,21 @@ equations
    \nabla\cdot\mathbf{B} & = 0\label{Eq:divb-1}
    \end{aligned}
 
+test
+
+.. math:: \frac{\mathbf{\partial B}}{\partial t} = -\nabla\times\mathbf{E}
+.. math:: \frac{\mathbf{\partial E}}{\partial t} = \nabla\times\mathbf{B}-\mathbf{J}
+.. math:: \nabla\cdot\mathbf{E} = \rho
+.. math:: \nabla\cdot\mathbf{B} = 0
+
 given here in natural units (:math:`\epsilon_0=\mu_0=c=1`), where :math:`t` is time, :math:`\mathbf{E}` and
 :math:`\mathbf{B}` are the electric and magnetic field components, and
 :math:`\rho` and :math:`\mathbf{J}` are the charge and current densities. The
 charged particles are advanced in time using the Newton-Lorentz equations
 of motion
 
-.. math::
-
-   \begin{aligned}
-   \frac{d\mathbf{x}}{dt} & = \mathbf{v},\label{Eq:Lorentz_x-1}
-   \\
-   \frac{d\left(\gamma\mathbf{v}\right)}{dt} & = \frac{q}{m}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right),\label{Eq:Lorentz_v-1}
-   \end{aligned}
+.. math:: \frac{d\mathbf{x}}{dt} = \mathbf{v},\label{Eq:Lorentz_x-1}
+.. math:: \frac{d\left(\gamma\mathbf{v}\right)}{dt} = \frac{q}{m}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right),\label{Eq:Lorentz_v-1}
 
 where :math:`m`, :math:`q`, :math:`\mathbf{x}`, :math:`\mathbf{v}` and :math:`\gamma=1/\sqrt{1-v^{2}}`
 are respectively the mass, charge, position, velocity and relativistic
@@ -85,11 +83,7 @@ Boris relativistic velocity rotation
 
 The solution proposed by Boris (Boris 1970) is given by
 
-.. math::
-
-   \begin{aligned}
-   \mathbf{\bar{v}}^{i} & = \frac{\gamma^{i+1/2}\mathbf{v}^{i+1/2}+\gamma^{i-1/2}\mathbf{v}^{i-1/2}}{2\bar{\gamma}^{i}}.\label{Eq:boris_v}
-   \end{aligned}
+.. math:: \mathbf{\bar{v}}^{i} = \frac{\gamma^{i+1/2}\mathbf{v}^{i+1/2}+\gamma^{i-1/2}\mathbf{v}^{i-1/2}}{2\bar{\gamma}^{i}}.\label{Eq:boris_v}
 
 where :math:`\bar{\gamma}^{i}` is defined by :math:`\bar{\gamma}^{i} \equiv (\gamma^{i+1/2}+\gamma^{i-1/2} )/2`.
 
@@ -101,9 +95,12 @@ velocity is updated using the following sequence:
 .. math::
 
    \begin{aligned}
-   \mathbf{u^{-}}     & = \mathbf{u}^{i-1/2}+\left(q\Delta t/2m\right)\mathbf{E}^{i}\\
-   \mathbf{u'}        & = \mathbf{u}^{-}+\mathbf{u}^{-}\times\mathbf{t}\\
-   \mathbf{u}^{+}     & = \mathbf{u}^{-}+\mathbf{u'}\times2\mathbf{t}/(1+t^{2})\\
+   \mathbf{u^{-}}     & = \mathbf{u}^{i-1/2}+\left(q\Delta t/2m\right)\mathbf{E}^{i}
+   \\
+   \mathbf{u'}        & = \mathbf{u}^{-}+\mathbf{u}^{-}\times\mathbf{t}
+   \\
+   \mathbf{u}^{+}     & = \mathbf{u}^{-}+\mathbf{u'}\times2\mathbf{t}/(1+\mathbf{t}^{2})
+   \\
    \mathbf{u}^{i+1/2} & = \mathbf{u}^{+}+\left(q\Delta t/2m\right)\mathbf{E}^{i}
    \end{aligned}
 
@@ -122,24 +119,24 @@ not Lorentz invariant and can lead to significant errors in the treatment
 of relativistic dynamics. A Lorentz invariant formulation is obtained
 by considering the following velocity average
 
-.. math::
-
-   \begin{aligned}
-   \mathbf{\bar{v}}^{i}= & \frac{\mathbf{v}^{i+1/2}+\mathbf{v}^{i-1/2}}{2},\label{Eq:new_v}\end{aligned}
+.. math:: \mathbf{\bar{v}}^{i} = \frac{\mathbf{v}^{i+1/2}+\mathbf{v}^{i-1/2}}{2}.\label{Eq:new_v}
 
 This gives a system that is solvable analytically (see (Vay 2008)
 for a detailed derivation), giving the following velocity update:
 
-.. math::
+.. math:: \mathbf{u}^{i+1/2} = \frac{\mathbf{u^{*}}+\left(\mathbf{u^{*}}\cdot\mathbf{t}\right)\mathbf{t}+\mathbf{u^{*}}\times\mathbf{t}}{1+\mathbf{t}^{2}},\label{pusher_upr}
 
-   \begin{aligned}
-   \mathbf{u^{*}}= & \mathbf{u}^{i-1/2}+\frac{q\Delta t}{m}\left(\mathbf{E}^{i}+\frac{\mathbf{v}^{i-1/2}}{2}\times\mathbf{B}^{i}\right),\label{pusher_gamma}\\
-   \mathbf{u}^{i+1/2}= & \left[\mathbf{u^{*}}+\left(\mathbf{u^{*}}\cdot\mathbf{t}\right)\mathbf{t}+\mathbf{u^{*}}\times\mathbf{t}\right]/\left(1+t^{2}\right),\label{pusher_upr}\end{aligned}
+where
 
-where :math:`\mathbf{t}=\boldsymbol{\tau}/\gamma^{i+1/2}`, :math:`\boldsymbol{\tau}=\left(q\Delta t/2m\right)\mathbf{B}^{i}`,
-:math:`\gamma^{i+1/2}=\sqrt{\sigma+\sqrt{\sigma^{2}+\left(\tau^{2}+w^{2}\right)}}`,
-:math:`w=\mathbf{u^{*}}\cdot\boldsymbol{\tau}`, :math:`\sigma=\left(\gamma'^{2}-\tau^{2}\right)/2`
-and :math:`\gamma'=\sqrt{1+(\mathbf{u}^{*}/c)^{2}}`. This Lorentz invariant formulation
+.. math:: \mathbf{u^{*}} = \mathbf{u}^{i-1/2}+\frac{q\Delta t}{m}\left(\mathbf{E}^{i}+\frac{\mathbf{v}^{i-1/2}}{2}\times\mathbf{B}^{i}\right),\label{pusher_gamma}
+.. math:: \mathbf{t}=\boldsymbol{\tau}/\gamma^{i+1/2},
+.. math:: \boldsymbol{\tau}=\left(q\Delta t/2m\right)\mathbf{B}^{i},
+.. math:: \gamma^{i+1/2}=\sqrt{\sigma+\sqrt{\sigma^{2}+\left(\boldsymbol{\tau}^{2}+w^{2}\right)}},
+.. math:: w=\mathbf{u^{*}}\cdot\boldsymbol{\tau},
+.. math:: \sigma=\left(\gamma'^{2}-\boldsymbol{\tau}^{2}\right)/2,
+.. math:: \gamma'=\sqrt{1+(\mathbf{u}^{*}/c)^{2}}.
+
+This Lorentz invariant formulation
 is particularly well suited for the modeling of ultra-relativistic
 charged particle beams, where the accurate account of the cancellation
 of the self-generated electric and magnetic fields is essential, as
@@ -161,6 +158,11 @@ analytical time-domain (PSATD) and pseudo-spectral time-domain (PSTD)
 algorithms. Extension to multiresolution (or mesh refinement) PIC
 is described in, e.g. (Vay et al. 2012; Vay, Adam, and Heron 2004).
 
+.. figure:: Yee_grid.png
+   :alt: [fig:yee_grid](left) Layout of field components on the staggered “Yee” grid. Current densities and electric fields are defined on the edges of the cells and magnetic fields on the faces. (right) Time integration using a second-order finite-difference "leapfrog" integrator.
+
+   [fig:yee_grid](left) Layout of field components on the staggered “Yee” grid. Current densities and electric fields are defined on the edges of the cells and magnetic fields on the faces. (right) Time integration using a second-order finite-difference "leapfrog" integrator.
+
 .. _theory-pic-mwsolve-fdtd:
 
 Finite-Difference Time-Domain (FDTD)
@@ -169,26 +171,25 @@ Finite-Difference Time-Domain (FDTD)
 The most popular algorithm for electromagnetic PIC codes is the Finite-Difference
 Time-Domain (or FDTD) solver
 
-.. math::
+.. math:: D_{t}\mathbf{B} & = -\nabla\times\mathbf{E}\label{Eq:Faraday-2}
 
-   \begin{aligned}
-   D_{t}\mathbf{B} & = & -\nabla\times\mathbf{E}\label{Eq:Faraday-2}\\
-   D_{t}\mathbf{E} & = & \nabla\times\mathbf{B}-\mathbf{J}\label{Eq:Ampere-2}\\
-   \left[\nabla\cdot\mathbf{E}\right. & = & \left.\rho\right]\label{Eq:Gauss-2}\\
-   \left[\nabla\cdot\mathbf{B}\right. & = & \left.0\right].\label{Eq:divb-2}\end{aligned}
+.. math:: D_{t}\mathbf{E} & = \nabla\times\mathbf{B}-\mathbf{J}\label{Eq:Ampere-2}
 
-.. figure:: Yee_grid.png
-   :alt: [fig:yee_grid](left) Layout of field components on the staggered “Yee” grid. Current densities and electric fields are defined on the edges of the cells and magnetic fields on the faces. (right) Time integration using a second-order finite-difference "leapfrog" integrator.
+.. math:: \left[\nabla\cdot\mathbf{E} = \rho\right]\label{Eq:Gauss-2}
 
-   [fig:yee_grid](left) Layout of field components on the staggered “Yee” grid. Current densities and electric fields are defined on the edges of the cells and magnetic fields on the faces. (right) Time integration using a second-order finite-difference "leapfrog" integrator.
+.. math:: \left[\nabla\cdot\mathbf{B} = 0\right].\label{Eq:divb-2}
 
 The differential operator is defined as :math:`\nabla=D_{x}\mathbf{\hat{x}}+D_{y}\mathbf{\hat{y}}+D_{z}\mathbf{\hat{z}}`
 and the finite-difference operators in time and space are defined
 respectively as
 
-.. math:: D_{t}G|_{i,j,k}^{n}=\left(G|_{i,j,k}^{n+1/2}-G|_{i,j,k}^{n-1/2}\right)/\Delta t
+.. math::
+   \begin{align}
+   D_{t}G|_{i,j,k}^{n} & = \frac{(G|_{i,j,k}^{n+1/2}-G|_{i,j,k}^{n-1/2})}{\Delta t}\quad\mathrm{and}
+   \\
+   D_{x}G|_{i,j,k}^{n} & = \frac{G|_{i+1/2,j,k}^{n}-G|_{i-1/2,j,k}^{n}}{\Delta x},
+   \end{align}
 
-and :math:`D_{x}G|_{i,j,k}^{n}=\left(G|_{i+1/2,j,k}^{n}-G|_{i-1/2,j,k}^{n}\right)/\Delta x`,
 where :math:`\Delta t` and :math:`\Delta x` are respectively the time step and
 the grid cell size along :math:`x`, :math:`n` is the time index and :math:`i`, :math:`j`
 and :math:`k` are the spatial indices along :math:`x`, :math:`y` and :math:`z` respectively.
@@ -220,21 +221,34 @@ along each dimension (i.e. cubic cells in 3D). The “Cole-Karkkainnen”
 (based on extended stencils) of the Maxwell-Ampere equation and can be
 implemented as follows (Vay et al. 2011):
 
-.. math::
+.. math:: D_{t}\mathbf{B} = -\nabla^{*}\times\mathbf{E}\label{Eq:Faraday}
 
-   \begin{aligned}
-   D_{t}\mathbf{B} & = & -\nabla^{*}\times\mathbf{E}\label{Eq:Faraday}\\
-   D_{t}\mathbf{E} & = & \nabla\times\mathbf{B}-\mathbf{J}\label{Eq:Ampere}\\
-   \left[\nabla\cdot\mathbf{E}\right. & = & \left.\rho\right]\label{Eq:Gauss}\\
-   \left[\nabla^{*}\cdot\mathbf{B}\right. & = & \left.0\right]\label{Eq:divb}\end{aligned}
+.. math:: D_{t}\mathbf{E} = \nabla\times\mathbf{B}-\mathbf{J}\label{Eq:Ampere}
+
+.. math:: \left[\nabla\cdot\mathbf{E} = \rho\right]\label{Eq:Gauss}
+
+.. math:: \left[\nabla^{*}\cdot\mathbf{B}= 0\right]\label{Eq:divb}
 
 Eq. `[Eq:Gauss] <#Eq:Gauss>`__ and `[Eq:divb] <#Eq:divb>`__ are not being solved explicitly
 but verified via appropriate initial conditions and current deposition
-procedure. The NSFD differential operators is given by :math:`\nabla^{*}=D_{x}^{*}\mathbf{\hat{x}}+D_{y}^{*}\mathbf{\hat{y}}+D_{z}^{*}\mathbf{\hat{z}}`
-where :math:`D_{x}^{*}=\left(\alpha+\beta S_{x}^{1}+\xi S_{x}^{2}\right)D_{x}`
-with :math:`S_{x}^{1}G|_{i,j,k}^{n}=G|_{i,j+1,k}^{n}+G|_{i,j-1,k}^{n}+G|_{i,j,k+1}^{n}+G|_{i,j,k-1}^{n}`,
-:math:`S_{x}^{2}G|_{i,j,k}^{n}=G|_{i,j+1,k+1}^{n}+G|_{i,j-1,k+1}^{n}+G|_{i,j+1,k-1}^{n}+G|_{i,j-1,k-1}^{n}`.
-:math:`G` is a sample vector component, while :math:`\alpha`, :math:`\beta` and :math:`\xi`
+procedure. The NSFD differential operator is given by
+
+.. math:: \nabla^{*}=D_{x}^{*}\mathbf{\hat{x}}+D_{y}^{*}\mathbf{\hat{y}}+D_{z}^{*}\mathbf{\hat{z}}
+
+where
+
+.. math:: D_{x}^{*}=\left(\alpha+\beta S_{x}^{1}+\xi S_{x}^{2}\right)D_{x}
+
+with
+
+.. math::
+   \begin{align}
+   S_{x}^{1}G|_{i,j,k}^{n} & = G|_{i,j+1,k}^{n}+G|_{i,j-1,k}^{n}+G|_{i,j,k+1}^{n}+G|_{i,j,k-1}^{n},
+   \\
+   S_{x}^{2}G|_{i,j,k}^{n} & = G|_{i,j+1,k+1}^{n}+G|_{i,j-1,k+1}^{n}+G|_{i,j+1,k-1}^{n}+G|_{i,j-1,k-1}^{n}.
+   \end{align}
+
+Here :math:`G` is a sample vector component, while :math:`\alpha`, :math:`\beta` and :math:`\xi`
 are constant scalars satisfying :math:`\alpha+4\beta+4\xi=1`. As with
 the FDTD algorithm, the quantities with half-integer are located between
 the nodes (electric field components) or in the center of the cell
@@ -269,13 +283,10 @@ Pseudo Spectral Analytical Time Domain (PSATD)
 
 Maxwell’s equations in Fourier space are given by
 
-.. math::
-
-   \begin{aligned}
-   \frac{\partial\mathbf{\tilde{E}}}{\partial t} & = & i\mathbf{k}\times\mathbf{\tilde{B}}-\mathbf{\tilde{J}}\\
-   \frac{\partial\mathbf{\tilde{B}}}{\partial t} & = & -i\mathbf{k}\times\mathbf{\tilde{E}}\\
-   {}[i\mathbf{k}\cdot\mathbf{\tilde{E}}& = & \tilde{\rho}]\\
-   {}[i\mathbf{k}\cdot\mathbf{\tilde{B}}& = & 0]\end{aligned}
+.. math:: \frac{\partial\mathbf{\tilde{E}}}{\partial t} = i\mathbf{k}\times\mathbf{\tilde{B}}-\mathbf{\tilde{J}}
+.. math:: \frac{\partial\mathbf{\tilde{B}}}{\partial t} = -i\mathbf{k}\times\mathbf{\tilde{E}}
+.. math:: {}[i\mathbf{k}\cdot\mathbf{\tilde{E}} = \tilde{\rho}]
+.. math:: {}[i\mathbf{k}\cdot\mathbf{\tilde{B}} = 0]
 
 where :math:`\tilde{a}` is the Fourier Transform of the quantity :math:`a`.
 As with the real space formulation, provided that the continuity equation
@@ -284,16 +295,27 @@ the last two equations will automatically be satisfied at any time
 if satisfied initially and do not need to be explicitly integrated.
 
 Decomposing the electric field and current between longitudinal and
-transverse components :math:`\mathbf{\tilde{E}}=\mathbf{\tilde{E}}_{L}+\mathbf{\tilde{E}}_{T}=\mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{E}})-\mathbf{\hat{k}}\times(\mathbf{\hat{k}}\times\mathbf{\tilde{E}})`
-and :math:`\mathbf{\tilde{J}}=\mathbf{\tilde{J}}_{L}+\mathbf{\tilde{J}}_{T}=\mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{J}})-\mathbf{\hat{k}}\times(\mathbf{\hat{k}}\times\mathbf{\tilde{J}})`
+transverse components
+
+.. math::
+
+   \begin{aligned}
+   \mathbf{\tilde{E}} & = \mathbf{\tilde{E}}_{L}+\mathbf{\tilde{E}}_{T}=\mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{E}})-\mathbf{\hat{k}}\times(\mathbf{\hat{k}}\times\mathbf{\tilde{E}})
+   \\
+   \mathbf{\tilde{J}} & = \mathbf{\tilde{J}}_{L}+\mathbf{\tilde{J}}_{T}=\mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{J}})-\mathbf{\hat{k}}\times(\mathbf{\hat{k}}\times\mathbf{\tilde{J}})
+   \end{aligned}
+
 gives
 
 .. math::
 
    \begin{aligned}
-   \frac{\partial\mathbf{\tilde{E}}_{T}}{\partial t} & = & i\mathbf{k}\times\mathbf{\tilde{B}}-\mathbf{\tilde{J}_{T}}\\
-   \frac{\partial\mathbf{\tilde{E}}_{L}}{\partial t} & = & -\mathbf{\tilde{J}_{L}}\\
-   \frac{\partial\mathbf{\tilde{B}}}{\partial t} & = & -i\mathbf{k}\times\mathbf{\tilde{E}}\end{aligned}
+   \frac{\partial\mathbf{\tilde{E}}_{T}}{\partial t} & = i\mathbf{k}\times\mathbf{\tilde{B}}-\mathbf{\tilde{J}_{T}}
+   \\
+   \frac{\partial\mathbf{\tilde{E}}_{L}}{\partial t} & = -\mathbf{\tilde{J}_{L}}
+   \\
+   \frac{\partial\mathbf{\tilde{B}}}{\partial t} & = -i\mathbf{k}\times\mathbf{\tilde{E}}
+   \end{aligned}
 
 with :math:`\mathbf{\hat{k}}=\mathbf{k}/k`.
 
@@ -307,10 +329,12 @@ for a more detailed derivation):
 .. math::
 
    \begin{aligned}
-   \mathbf{\tilde{E}}_{T}^{n+1} & = & C\mathbf{\tilde{E}}_{T}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}_{T}^{n+1/2}\label{Eq:PSATD_transverse_1}\\
-   \mathbf{\tilde{E}}_{L}^{n+1} & = & \mathbf{\tilde{E}}_{L}^{n}-\Delta t\mathbf{\tilde{J}}_{L}^{n+1/2}\\
-   \mathbf{\tilde{B}}^{n+1} & = & C\mathbf{\tilde{B}}^{n}-iS\mathbf{\hat{k}}\times\mathbf{\tilde{E}}^{n}\\
-   &+&i\frac{1-C}{k}\mathbf{\hat{k}}\times\mathbf{\tilde{J}}^{n+1/2}\label{Eq:PSATD_transverse_2}\end{aligned}
+   \mathbf{\tilde{E}}_{T}^{n+1} & = C\mathbf{\tilde{E}}_{T}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}_{T}^{n+1/2}\label{Eq:PSATD_transverse_1}
+   \\
+   \mathbf{\tilde{E}}_{L}^{n+1} & = \mathbf{\tilde{E}}_{L}^{n}-\Delta t\mathbf{\tilde{J}}_{L}^{n+1/2}
+   \\
+   \mathbf{\tilde{B}}^{n+1} & = C\mathbf{\tilde{B}}^{n}-iS\mathbf{\hat{k}}\times\mathbf{\tilde{E}}^{n} + i\frac{1-C}{k}\mathbf{\hat{k}}\times\mathbf{\tilde{J}}^{n+1/2}\label{Eq:PSATD_transverse_2}
+   \end{aligned}
 
 with :math:`C=\cos\left(k\Delta t\right)` and :math:`S=\sin\left(k\Delta t\right)`.
 
@@ -319,11 +343,16 @@ Combining the transverse and longitudinal components, gives
 .. math::
 
    \begin{aligned}
-   \mathbf{\tilde{E}}^{n+1} & = & C\mathbf{\tilde{E}}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}^{n+1/2}\\
-    & + &(1-C)\mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{E}}^{n})\nonumber \\
-    & + & \mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{J}}^{n+1/2})\left(\frac{S}{k}-\Delta t\right),\label{Eq_PSATD_1}\\
-   \mathbf{\tilde{B}}^{n+1} & = & C\mathbf{\tilde{B}}^{n}-iS\mathbf{\hat{k}}\times\mathbf{\tilde{E}}^{n}\\
-   &+&i\frac{1-C}{k}\mathbf{\hat{k}}\times\mathbf{\tilde{J}}^{n+1/2}.\label{Eq_PSATD_2}\end{aligned}
+   \mathbf{\tilde{E}}^{n+1} = & \: C\mathbf{\tilde{E}}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}^{n+1/2}
+   \\
+   & + (1-C)\mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{E}}^{n})\nonumber
+   \\
+   & + \mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{J}}^{n+1/2})\left(\frac{S}{k}-\Delta t\right),\label{Eq_PSATD_1}
+   \\
+   \mathbf{\tilde{B}}^{n+1} = & \: C\mathbf{\tilde{B}}^{n}-iS\mathbf{\hat{k}}\times\mathbf{\tilde{E}}^{n}
+   \\
+   & + i\frac{1-C}{k}\mathbf{\hat{k}}\times\mathbf{\tilde{J}}^{n+1/2}.\label{Eq_PSATD_2}
+   \end{aligned}
 
 For fields generated by the source terms without the self-consistent
 dynamics of the charged particles, this algorithm is free of numerical
@@ -339,13 +368,17 @@ formulation reduces to the perhaps better known pseudo-spectral time-domain
 .. math::
 
    \begin{aligned}
-   \mathbf{\tilde{E}}^{n+1} & = & \mathbf{\tilde{E}}^{n}+i\Delta t\mathbf{k}\times\mathbf{\tilde{B}}^{n+1/2}-\Delta t\mathbf{\tilde{J}}^{n+1/2},\\
-   \mathbf{\tilde{B}}^{n+3/2} & = & \mathbf{\tilde{B}}^{n+1/2}-i\Delta t\mathbf{k}\times\mathbf{\tilde{E}}^{n+1}.\end{aligned}
+   \mathbf{\tilde{E}}^{n+1} & = \mathbf{\tilde{E}}^{n}+i\Delta t\mathbf{k}\times\mathbf{\tilde{B}}^{n+1/2}-\Delta t\mathbf{\tilde{J}}^{n+1/2},
+   \\
+   \mathbf{\tilde{B}}^{n+3/2} & = \mathbf{\tilde{B}}^{n+1/2}-i\Delta t\mathbf{k}\times\mathbf{\tilde{E}}^{n+1}.
+   \end{aligned}
 
 The dispersion relation of the PSTD solver is given by :math:`\sin(\frac{\omega\Delta t}{2})=\frac{k\Delta t}{2}.`
 In contrast to the PSATD solver, the PSTD solver is subject to numerical
 dispersion for a finite time step and to a Courant condition that
-is given by :math:`\Delta t\leq \frac{2}{\pi}\left(\frac{1}{\Delta x^{2}}+\frac{1}{\Delta y^{2}}+\frac{1}{\Delta x^{2}}\right)^{-1/2}.`
+is given by
+
+.. math:: \Delta t\leq \frac{2}{\pi}\left(\frac{1}{\Delta x^{2}}+\frac{1}{\Delta y^{2}}+\frac{1}{\Delta x^{2}}\right)^{-1/2}.
 
 The PSATD and PSTD formulations that were just given apply to the
 field components located at the nodes of the grid. As noted in (Ohmura and Okamura 2010),
@@ -375,8 +408,10 @@ orders (Abe et al. 1986).
 .. math::
 
    \begin{aligned}
-   \rho & = & \frac{1}{\Delta x \Delta y \Delta z}\sum_nq_nS_n\\
-   \mathbf{J} & = & \frac{1}{\Delta x \Delta y \Delta z}\sum_nq_n\mathbf{v_n}S_n\end{aligned}
+   \rho & = \frac{1}{\Delta x \Delta y \Delta z}\sum_nq_nS_n
+   \\
+   \mathbf{J} & = \frac{1}{\Delta x \Delta y \Delta z}\sum_nq_n\mathbf{v_n}S_n
+   \end{aligned}
 
 In most applications, it is essential to prevent the accumulation
 of errors resulting from the violation of the discretized Gauss’ Law.
@@ -402,13 +437,22 @@ Current correction
 
 In the case of the pseudospectral solvers, the current deposition
 algorithm generally does not satisfy the discretized continuity equation
-in Fourier space :math:`\tilde{\rho}^{n+1}=\tilde{\rho}^{n}-i\Delta t\mathbf{k}\cdot\mathbf{\tilde{J}}^{n+1/2}`.
+in Fourier space:
+
+.. math:: \tilde{\rho}^{n+1}=\tilde{\rho}^{n}-i\Delta t\mathbf{k}\cdot\mathbf{\tilde{J}}^{n+1/2}.
+
 In this case, a Boris correction (Birdsall and Langdon 1991) can be applied
-in :math:`k` space in the form :math:`\mathbf{\tilde{E}}_{c}^{n+1}=\mathbf{\tilde{E}}^{n+1}-\left(\mathbf{k}\cdot\mathbf{\tilde{E}}^{n+1}+i\tilde{\rho}^{n+1}\right)\mathbf{\hat{k}}/k`,
+in :math:`k` space in the form
+
+.. math:: \mathbf{\tilde{E}}_{c}^{n+1}=\mathbf{\tilde{E}}^{n+1}-\frac{\mathbf{k}\cdot\mathbf{\tilde{E}}^{n+1}+i\tilde{\rho}^{n+1}}{k}\mathbf{\hat{k}},
+
 where :math:`\mathbf{\tilde{E}}_{c}` is the corrected field. Alternatively, a correction
 to the current can be applied (with some similarity to the current
 deposition presented by Morse and Nielson in their potential-based
-model in (Morse and Nielson 1971)) using :math:`\mathbf{\tilde{J}}_{c}^{n+1/2}=\mathbf{\tilde{J}}^{n+1/2}-\left[\mathbf{k}\cdot\mathbf{\tilde{J}}^{n+1/2}-i\left(\tilde{\rho}^{n+1}-\tilde{\rho}^{n}\right)/\Delta t\right]\mathbf{\hat{k}}/k`,
+model in (Morse and Nielson 1971)) using
+
+.. math:: \mathbf{\tilde{J}}_{c}^{n+1/2}=\mathbf{\tilde{J}}^{n+1/2}-\left[\mathbf{k}\cdot\mathbf{\tilde{J}}^{n+1/2}-i\left(\tilde{\rho}^{n+1}-\tilde{\rho}^{n}\right)/\Delta t\right]\mathbf{\hat{k}}/k,
+
 where :math:`\mathbf{\tilde{J}}_{c}` is the corrected current. In this case, the transverse
 component of the current is left untouched while the longitudinal
 component is effectively replaced by the one obtained from integration
@@ -430,19 +474,19 @@ The quantity :math:`\boldsymbol{D}` is deposited in real space by averaging the 
 
 .. math::
    \begin{align}
-   D_x = & \: \sum_i \frac{1}{\Delta x \Delta z} \frac{q_i w_i}{2 \Delta t}
+   D_x & = \sum_i \frac{1}{\Delta x \Delta z} \frac{q_i w_i}{2 \Delta t}
    \bigg[
    \Gamma(x_i^{n+1},z_i^{n+1}) - \Gamma(x_i^{n},z_i^{n+1})
    + \Gamma(x_i^{n+1},z_i^{n}) - \Gamma(x_i^{n},z_i^{n})
    \bigg]
    \\[8pt]
-   D_y = & \: \sum_i \frac{v_i^y}{\Delta x \Delta z} \frac{q_i w_i}{4}
+   D_y & = \sum_i \frac{v_i^y}{\Delta x \Delta z} \frac{q_i w_i}{4}
    \bigg[
    \Gamma(x_i^{n+1},z_i^{n+1}) + \Gamma(x_i^{n+1},z_i^{n})
    + \Gamma(x_i^{n},z_i^{n+1}) + \Gamma(x_i^{n},z_i^{n})
    \bigg]
    \\[8pt]
-   D_z = & \: \sum_i \frac{1}{\Delta x \Delta z} \frac{q_i w_i}{2 \Delta t}
+   D_z & = \sum_i \frac{1}{\Delta x \Delta z} \frac{q_i w_i}{2 \Delta t}
    \bigg[
    \Gamma(x_i^{n+1},z_i^{n+1}) - \Gamma(x_i^{n+1},z_i^{n})
    + \Gamma(x_i^{n},z_i^{n+1}) - \Gamma(x_i^{n},z_i^{n})
@@ -474,7 +518,7 @@ The quantity :math:`\boldsymbol{D}` is deposited in real space by averaging the 
    \bigg]
    \end{split} \\[8pt]
    \begin{split}
-   D_z = & \: \sum_i \frac{1}{\Delta x\Delta y\Delta z} \frac{q_i w_i}{6\Delta t}
+   D_z = & v \sum_i \frac{1}{\Delta x\Delta y\Delta z} \frac{q_i w_i}{6\Delta t}
    \bigg[
    2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n+1}) - 2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n}) \\[4pt]
    & + \Gamma(x_i^{n},y_i^{n+1},z_i^{n+1}) - \Gamma(x_i^{n},y_i^{n+1},z_i^{n})
@@ -515,7 +559,7 @@ Three variations are considered:
    are first interpolated to the staggered positions on an auxiliary
    grid).
 
-As shown in :cite:p:`BirdsallLangdon,HockneyEastwoodBook,LewisJCP1972`,
+As shown in :cite:p:`pic-Birdsalllangdon,pic-HockneyEastwoodBook,pic-LewisJCP1972`,
 the momentum and energy conserving schemes conserve momentum and energy
 respectively at the limit of infinitesimal time steps and generally
 offer better conservation of the respective quantities for a finite
@@ -533,14 +577,22 @@ It is common practice to apply digital filtering to the charge or
 current density in Particle-In-Cell simulations as a complement or
 an alternative to using higher order splines (Birdsall and Langdon 1991).
 A commonly used filter in PIC simulations is the three points filter
-:math:`\phi_{j}^{f}=\alpha\phi_{j}+\left(1-\alpha\right)\left(\phi_{j-1}+\phi_{j+1}\right)/2`
+
+.. math:: \phi_{j}^{f}=\alpha\phi_{j}+\left(1-\alpha\right)\left(\phi_{j-1}+\phi_{j+1}\right)/2
+
 where :math:`\phi^{f}` is the filtered quantity. This filter is called
 a bilinear filter when :math:`\alpha=0.5`. Assuming :math:`\phi=e^{jkx}` and
 :math:`\phi^{f}=g\left(\alpha,k\right)e^{jkx}`, the filter gain :math:`g` is
 given as a function of the filtering coefficient :math:`\alpha` and
-the wavenumber :math:`k` by :math:`g\left(\alpha,k\right)=\alpha+\left(1-\alpha\right)\cos\left(k\Delta x\right)\approx1-\left(1-\alpha\right)\frac{\left(k\Delta x\right)^{2}}{2}+O\left(k^{4}\right)`.
+the wavenumber :math:`k` by
+
+.. math:: g\left(\alpha,k\right)=\alpha+\left(1-\alpha\right)\cos\left(k\Delta x\right)\approx1-\left(1-\alpha\right)\frac{\left(k\Delta x\right)^{2}}{2}+O\left(k^{4}\right)`.
+
 The total attenuation :math:`G` for :math:`n` successive applications of filters
-of coefficients :math:`\alpha_{1}`...\ :math:`\alpha_{n}` is given by :math:`G=\prod_{i=1}^{n}g\left(\alpha_{i},k\right)\approx1-\left(n-\sum_{i=1}^{n}\alpha_{i}\right)\frac{\left(k\Delta x\right)^{2}}{2}+O\left(k^{4}\right)`.
+of coefficients :math:`\alpha_{1}`...\ :math:`\alpha_{n}` is given by
+
+.. math:: G=\prod_{i=1}^{n}g\left(\alpha_{i},k\right)\approx1-\left(n-\sum_{i=1}^{n}\alpha_{i}\right)\frac{\left(k\Delta x\right)^{2}}{2}+O\left(k^{4}\right)`.
+
 A sharper cutoff in :math:`k` space is provided by using :math:`\alpha_{n}=n-\sum_{i=1}^{n-1}\alpha_{i}`,
 so that :math:`G\approx1+O\left(k^{4}\right)`. Such step is called a “compensation”
 step (Birdsall and Langdon 1991). For the bilinear filter (:math:`\alpha=1/2`),
@@ -560,8 +612,14 @@ was proposed in (Vay et al. 2011) and operates as follows.
 The bilinear filter provides complete suppression of the signal at
 the grid Nyquist wavelength (twice the grid cell size). Suppression
 of the signal at integer multiples of the Nyquist wavelength can be
-obtained by using a stride :math:`s` in the filter :math:`\phi_{j}^{f}=\alpha\phi_{j}+\left(1-\alpha\right)\left(\phi_{j-s}+\phi_{j+s}\right)/2`
-for which the gain is given by :math:`g\left(\alpha,k\right)=\alpha+\left(1-\alpha\right)\cos\left(sk\Delta x\right)\approx1-\left(1-\alpha\right)\frac{\left(sk\Delta x\right)^{2}}{2}+O\left(k^{4}\right)`.
+obtained by using a stride :math:`s` in the filter
+
+.. math:: \phi_{j}^{f}=\alpha\phi_{j}+\left(1-\alpha\right)\left(\phi_{j-s}+\phi_{j+s}\right)/2
+
+for which the gain is given by
+
+.. math:: g\left(\alpha,k\right)=\alpha+\left(1-\alpha\right)\cos\left(sk\Delta x\right)\approx1-\left(1-\alpha\right)\frac{\left(sk\Delta x\right)^{2}}{2}+O\left(k^{4}\right).
+
 For a given stride, the gain is given by the gain of the bilinear
 filter shifted in k space, with the pole :math:`g=0` shifted from the wavelength
 :math:`\lambda=2/\Delta x` to :math:`\lambda=2s/\Delta x`, with additional poles,
@@ -877,3 +935,6 @@ Yee, Ks. 1966. “Numerical Solution of Initial Boundary Value Problems Involvin
 .. raw:: html
 
    </div>
+
+.. bibliography::
+    :keyprefix: pic-
