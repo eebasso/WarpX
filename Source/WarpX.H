@@ -552,7 +552,7 @@ public:
     amrex::Vector<amrex::Real> mirror_z_width;
     amrex::Vector<int> mirror_z_npoints;
 
-    /// object with all reduced diagnotics, similar to MultiParticleContainer for species.
+    /// object with all reduced diagnostics, similar to MultiParticleContainer for species.
     std::unique_ptr<MultiReducedDiags> reduced_diags;
 
     void applyMirrors(amrex::Real time);
@@ -717,6 +717,11 @@ public:
 
     void ApplyEfieldBoundary (int lev, PatchType patch_type);
     void ApplyBfieldBoundary (int lev, PatchType patch_type, DtType dt_type);
+
+#ifdef WARPX_DIM_RZ
+    // Applies the boundary conditions that are specific to the axis when in RZ.
+    void ApplyFieldBoundaryOnAxis (amrex::MultiFab* Er, amrex::MultiFab* Et, amrex::MultiFab* Ez, int lev);
+#endif
 
     /**
      * \brief When the Ohm's law solver is used, the electron pressure values
