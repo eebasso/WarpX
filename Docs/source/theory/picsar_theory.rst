@@ -15,10 +15,12 @@
 Particle-in-Cell Method
 =======================
 
+.. _fig-pic:
+
 .. figure:: PIC.png
    :alt: [fig:PIC] The Particle-In-Cell (PIC) method follows the evolution of a collection of charged macro-particles (positively charged in blue on the left plot, negatively charged in red) that evolve self-consistently with their electromagnetic (or electrostatic) fields. The core PIC algorithm involves four operations at each time step: 1) evolve the velocity and position of the particles using the Newton-Lorentz equations, 2) deposit the charge and/or current densities through interpolation from the particles distributions onto the grid, 3) evolve Maxwell’s wave equations (for electromagnetic) or solve Poisson’s equation (for electrostatic) on the grid, 4) interpolate the fields from the grid onto the particles for the next particle push. Additional “add-ons” operations are inserted between these core operations to account for additional physics (e.g. absorption/emission of particles, addition of external forces to account for accelerator focusing or accelerating component) or numerical effects (e.g. smoothing/filtering of the charge/current densities and/or fields on the grid).
 
-   [fig:PIC] The Particle-In-Cell (PIC) method follows the evolution of a collection of charged macro-particles (positively charged in blue on the left plot, negatively charged in red) that evolve self-consistently with their electromagnetic (or electrostatic) fields. The core PIC algorithm involves four operations at each time step: 1) evolve the velocity and position of the particles using the Newton-Lorentz equations, 2) deposit the charge and/or current densities through interpolation from the particles distributions onto the grid, 3) evolve Maxwell’s wave equations (for electromagnetic) or solve Poisson’s equation (for electrostatic) on the grid, 4) interpolate the fields from the grid onto the particles for the next particle push. Additional “add-ons” operations are inserted between these core operations to account for additional physics (e.g. absorption/emission of particles, addition of external forces to account for accelerator focusing or accelerating component) or numerical effects (e.g. smoothing/filtering of the charge/current densities and/or fields on the grid).
+   The Particle-In-Cell (PIC) method follows the evolution of a collection of charged macro-particles (positively charged in blue on the left plot, negatively charged in red) that evolve self-consistently with their electromagnetic (or electrostatic) fields. The core PIC algorithm involves four operations at each time step: 1) evolve the velocity and position of the particles using the Newton-Lorentz equations, 2) deposit the charge and/or current densities through interpolation from the particles distributions onto the grid, 3) evolve Maxwell’s wave equations (for electromagnetic) or solve Poisson’s equation (for electrostatic) on the grid, 4) interpolate the fields from the grid onto the particles for the next particle push. Additional “add-ons” operations are inserted between these core operations to account for additional physics (e.g. absorption/emission of particles, addition of external forces to account for accelerator focusing or accelerating component) or numerical effects (e.g. smoothing/filtering of the charge/current densities and/or fields on the grid).
 
 In the *electromagnetic particle-in-cell method* (Birdsall and Langdon 1991),
 the electromagnetic fields are solved on a grid, usually using Maxwell’s
@@ -27,10 +29,10 @@ equations
 .. math::
 
    \begin{aligned}
-   \frac{\mathbf{\partial B}}{\partial t} & = & -\nabla\times\mathbf{E}\label{Eq:Faraday-1}\\
-   \frac{\mathbf{\partial E}}{\partial t} & = & \nabla\times\mathbf{B}-\mathbf{J}\label{Eq:Ampere-1}\\
-   \nabla\cdot\mathbf{E} & = & \rho\label{Eq:Gauss-1}\\
-   \nabla\cdot\mathbf{B} & = & 0\label{Eq:divb-1}\end{aligned}
+   \frac{\mathbf{\partial B}}{\partial t} & = -\nabla\times\mathbf{E}\label{Eq:Faraday-1}\\
+   \frac{\mathbf{\partial E}}{\partial t} & = \nabla\times\mathbf{B}-\mathbf{J}\label{Eq:Ampere-1}\\
+   \nabla\cdot\mathbf{E} & = \rho\label{Eq:Gauss-1}\\
+   \nabla\cdot\mathbf{B} & = 0\label{Eq:divb-1}\end{aligned}
 
 given here in natural units (:math:`\epsilon_0=\mu_0=c=1`), where :math:`t` is time, :math:`\mathbf{E}` and
 :math:`\mathbf{B}` are the electric and magnetic field components, and
@@ -515,7 +517,7 @@ of relativistically drifting plasmas :raw-latex:`\cite{GodfreyJCP2013}`.
 .. _theory-pic-filter:
 
 Filtering
-=========
+---------
 
 It is common practice to apply digital filtering to the charge or
 current density in Particle-In-Cell simulations as a complement or
