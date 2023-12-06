@@ -5,7 +5,8 @@
 # License: BSD-3-Clause-LBNL
 
 # WarpX PICMI bindings w/o C++ component (used for autoclass docs)
--e Python
+# -e Python # Got rid of this line because it gave the following error:
+# ERROR: Python is not a valid editable requirement. It should either be a path to a local project or a VCS URL (beginning with bzr+http, bzr+https, bzr+ssh, bzr+sftp, bzr+ftp, bzr+lp, bzr+file, git+http, git+https, git+ssh, git+git, git+file, hg+file, hg+http, hg+https, hg+ssh, hg+static-http, svn+ssh, svn+http, svn+https, svn+svn, svn+file).
 breathe
 docutils>=0.17.1
 

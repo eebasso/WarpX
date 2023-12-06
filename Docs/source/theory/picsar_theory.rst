@@ -29,10 +29,14 @@ equations
 .. math::
 
    \begin{aligned}
-   \frac{\mathbf{\partial B}}{\partial t} & = -\nabla\times\mathbf{E}\label{Eq:Faraday-1}\\
-   \frac{\mathbf{\partial E}}{\partial t} & = \nabla\times\mathbf{B}-\mathbf{J}\label{Eq:Ampere-1}\\
-   \nabla\cdot\mathbf{E} & = \rho\label{Eq:Gauss-1}\\
-   \nabla\cdot\mathbf{B} & = 0\label{Eq:divb-1}\end{aligned}
+   \frac{\mathbf{\partial B}}{\partial t} & = -\nabla\times\mathbf{E}\label{Eq:Faraday-1}
+   \\
+   \frac{\mathbf{\partial E}}{\partial t} & = \nabla\times\mathbf{B}-\mathbf{J}\label{Eq:Ampere-1}
+   \\
+   \nabla\cdot\mathbf{E} & = \rho\label{Eq:Gauss-1}
+   \\
+   \nabla\cdot\mathbf{B} & = 0\label{Eq:divb-1}
+   \end{aligned}
 
 given here in natural units (:math:`\epsilon_0=\mu_0=c=1`), where :math:`t` is time, :math:`\mathbf{E}` and
 :math:`\mathbf{B}` are the electric and magnetic field components, and
@@ -43,8 +47,10 @@ of motion
 .. math::
 
    \begin{aligned}
-   \frac{d\mathbf{x}}{dt}= & \mathbf{v},\label{Eq:Lorentz_x-1}\\
-   \frac{d\left(\gamma\mathbf{v}\right)}{dt}= & \frac{q}{m}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right),\label{Eq:Lorentz_v-1}\end{aligned}
+   \frac{d\mathbf{x}}{dt} & = \mathbf{v},\label{Eq:Lorentz_x-1}
+   \\
+   \frac{d\left(\gamma\mathbf{v}\right)}{dt} & = \frac{q}{m}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right),\label{Eq:Lorentz_v-1}
+   \end{aligned}
 
 where :math:`m`, :math:`q`, :math:`\mathbf{x}`, :math:`\mathbf{v}` and :math:`\gamma=1/\sqrt{1-v^{2}}`
 are respectively the mass, charge, position, velocity and relativistic
@@ -64,8 +70,10 @@ equations of motion is given by
 .. math::
 
    \begin{aligned}
-   \frac{\mathbf{x}^{i+1}-\mathbf{x}^{i}}{\Delta t}= & \mathbf{v}^{i+1/2},\label{Eq:leapfrog_x}\\
-   \frac{\gamma^{i+1/2}\mathbf{v}^{i+1/2}-\gamma^{i-1/2}\mathbf{v}^{i-1/2}}{\Delta t}= & \frac{q}{m}\left(\mathbf{E}^{i}+\mathbf{\bar{v}}^{i}\times\mathbf{B}^{i}\right).\label{Eq:leapfrog_v}\end{aligned}
+   \frac{\mathbf{x}^{i+1}-\mathbf{x}^{i}}{\Delta t} & = \mathbf{v}^{i+1/2},\label{Eq:leapfrog_x}
+   \\
+   \frac{\gamma^{i+1/2}\mathbf{v}^{i+1/2}-\gamma^{i-1/2}\mathbf{v}^{i-1/2}}{\Delta t} & = \frac{q}{m}\left(\mathbf{E}^{i}+\mathbf{\bar{v}}^{i}\times\mathbf{B}^{i}\right).\label{Eq:leapfrog_v}
+   \end{aligned}
 
 In order to close the system, :math:`\bar{\mathbf{v}}^{i}` must be
 expressed as a function of the other quantities. The two implementations that have become the most popular are presented below.
@@ -80,7 +88,8 @@ The solution proposed by Boris (Boris 1970) is given by
 .. math::
 
    \begin{aligned}
-   \mathbf{\bar{v}}^{i}= & \frac{\gamma^{i+1/2}\mathbf{v}^{i+1/2}+\gamma^{i-1/2}\mathbf{v}^{i-1/2}}{2\bar{\gamma}^{i}}.\label{Eq:boris_v}\end{aligned}
+   \mathbf{\bar{v}}^{i} & = \frac{\gamma^{i+1/2}\mathbf{v}^{i+1/2}+\gamma^{i-1/2}\mathbf{v}^{i-1/2}}{2\bar{\gamma}^{i}}.\label{Eq:boris_v}
+   \end{aligned}
 
 where :math:`\bar{\gamma}^{i}` is defined by :math:`\bar{\gamma}^{i} \equiv (\gamma^{i+1/2}+\gamma^{i-1/2} )/2`.
 
@@ -92,10 +101,11 @@ velocity is updated using the following sequence:
 .. math::
 
    \begin{aligned}
-   \mathbf{u^{-}}= & \mathbf{u}^{i-1/2}+\left(q\Delta t/2m\right)\mathbf{E}^{i}\\
-   \mathbf{u'}= & \mathbf{u}^{-}+\mathbf{u}^{-}\times\mathbf{t}\\
-   \mathbf{u}^{+}= & \mathbf{u}^{-}+\mathbf{u'}\times2\mathbf{t}/(1+t^{2})\\
-   \mathbf{u}^{i+1/2}= & \mathbf{u}^{+}+\left(q\Delta t/2m\right)\mathbf{E}^{i}\end{aligned}
+   \mathbf{u^{-}}     & = \mathbf{u}^{i-1/2}+\left(q\Delta t/2m\right)\mathbf{E}^{i}\\
+   \mathbf{u'}        & = \mathbf{u}^{-}+\mathbf{u}^{-}\times\mathbf{t}\\
+   \mathbf{u}^{+}     & = \mathbf{u}^{-}+\mathbf{u'}\times2\mathbf{t}/(1+t^{2})\\
+   \mathbf{u}^{i+1/2} & = \mathbf{u}^{+}+\left(q\Delta t/2m\right)\mathbf{E}^{i}
+   \end{aligned}
 
 where :math:`\mathbf{t}=\left(q\Delta t/2m\right)\mathbf{B}^{i}/\bar{\gamma}^{i}` and where
 :math:`\bar{\gamma}^{i}` can be calculated as :math:`\bar{\gamma}^{i}=\sqrt{1+(\mathbf{u}^-/c)^2}`.
@@ -505,14 +515,14 @@ Three variations are considered:
    are first interpolated to the staggered positions on an auxiliary
    grid).
 
-As shown in :raw-latex:`\cite{BirdsallLangdon,HockneyEastwoodBook,LewisJCP1972}`,
+As shown in :cite:p:`BirdsallLangdon,HockneyEastwoodBook,LewisJCP1972`,
 the momentum and energy conserving schemes conserve momentum and energy
 respectively at the limit of infinitesimal time steps and generally
 offer better conservation of the respective quantities for a finite
 time step. The uniform scheme does not conserve momentum nor energy
 in the sense defined for the others but is given for completeness,
 as it has been shown to offer some interesting properties in the modeling
-of relativistically drifting plasmas :raw-latex:`\cite{GodfreyJCP2013}`.
+of relativistically drifting plasmas :cite:p:`GodfreyJCP2013`.
 
 .. _theory-pic-filter:
 
