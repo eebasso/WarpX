@@ -36,10 +36,10 @@ Particles are launched through a plane using a technique that is generic and app
    .. math::
 
       \begin{aligned}
-          t^* &=& \left(z-\bar{z}\right)/v_z \label{Eq:t*}\\
-          x^* &=& x-v_x t^* \label{Eq:x*}\\
-          y^* &=& y-v_y t^* \label{Eq:y*}\\
-          z^* &=& 0 \label{Eq:z*}\end{aligned}
+          t^* &= \left(z-\bar{z}\right)/v_z \label{Eq:t*}\\
+          x^* &= x-v_x t^* \label{Eq:x*}\\
+          y^* &= y-v_y t^* \label{Eq:y*}\\
+          z^* &= 0 \label{Eq:z*}\end{aligned}
 
    the velocity components being left unchanged,
 
@@ -48,13 +48,13 @@ Particles are launched through a plane using a technique that is generic and app
    .. math::
 
       \begin{aligned}
-          t'^* &=& -\gamma t^* \label{Eq:tp*}\\
-          x'^* &=& x^* \label{Eq:xp*}\\
-          y'^* &=& y^* \label{Eq:yp*}\\
-          z'^* &=& \gamma\beta c t^* \label{Eq:zp*}\\
-          v'^*_x&=&\frac{v_x^*}{\gamma\left(1-\beta \beta_b\right)} \label{Eq:vxp*}\\
-          v'^*_y&=&\frac{v_y^*}{\gamma\left(1-\beta \beta_b\right)} \label{Eq:vyp*}\\
-          v'^*_z&=&\frac{v_z^*-\beta c}{1-\beta \beta_b} \label{Eq:vzp*}\end{aligned}
+          t'^* &= -\gamma t^* \label{Eq:tp*}\\
+          x'^* &= x^* \label{Eq:xp*}\\
+          y'^* &= y^* \label{Eq:yp*}\\
+          z'^* &= \gamma\beta c t^* \label{Eq:zp*}\\
+          v'^*_x&=\frac{v_x^*}{\gamma\left(1-\beta \beta_b\right)} \label{Eq:vxp*}\\
+          v'^*_y&=\frac{v_y^*}{\gamma\left(1-\beta \beta_b\right)} \label{Eq:vyp*}\\
+          v'^*_z&=\frac{v_z^*-\beta c}{1-\beta \beta_b} \label{Eq:vzp*}\end{aligned}
 
    where :math:`\gamma=1/\sqrt{1-\beta^2}`. With the knowledge of the time at which each beam macroparticle crosses the plane into consideration, one can inject each beam macroparticle in the simulation at the appropriate location and time.
 
@@ -63,7 +63,7 @@ Particles are launched through a plane using a technique that is generic and app
    .. math::
 
       \begin{aligned}
-          z' &=& z'^*-\bar{v}'^*_z t'^* \label{Eq:zp}\end{aligned}
+          z' &= z'^*-\bar{v}'^*_z t'^* \label{Eq:zp}\end{aligned}
 
    This additional step is needed for setting the electrostatic or electromagnetic fields at the plane of injection. In a Particle-In-Cell code, the three-dimensional fields are calculated by solving the Maxwell equations (or static approximation like Poisson, Darwin or other :cite:p:`io-Vaypop2008`) on a grid on which the source term is obtained from the macroparticles distribution. This requires generation of a three-dimensional representation of the beam distribution of macroparticles at a given time before they cross the injection plane at :math:`z'^*`. This is accomplished by expanding the beam distribution longitudinally such that all macroparticles (so far known at different times of arrival at the injection plane) are synchronized to the same time in the boosted frame. To keep the beam shape constant, the particles are “frozen” until they cross that plane: the three velocity components and the two position components perpendicular to the boosted frame velocity are kept constant, while the remaining position component is advanced at the average beam velocity. As particles cross the plane of injection, they become regular “active” particles with full 6-D dynamics.
 
@@ -89,18 +89,18 @@ If, for convenience, the injection plane is moving at constant velocity :math:`\
 .. math::
 
    \begin{aligned}
-   E_\perp\left(x,y,t\right)&=&\left(1-\beta_s\right)E_0 f\left(x,y,t\right)\nonumber \\
-   &\times& \sin\left[\left(1-\beta_s\right)\omega t+\phi\left(x,y,\omega\right)\right].\end{aligned}
+   E_\perp\left(x,y,t\right)&=\left(1-\beta_s\right)E_0 f\left(x,y,t\right)\sin\left[\left(1-\beta_s\right)\omega t+\phi\left(x,y,\omega\right)\right]
+   \end{aligned}
 
 The injection of a laser of frequency :math:`\omega` is considered for a simulation using a boosted frame moving at :math:`\beta c` with respect to the laboratory. Assuming that the laser is injected at a plane that is fixed in the laboratory, and thus moving at :math:`\beta_s=-\beta` in the boosted frame, the injection in the boosted frame is given by
 
 .. math::
 
    \begin{aligned}
-   E_\perp\left(x',y',t'\right)&=&\left(1-\beta_s\right)E'_0 f\left(x',y',t'\right)\nonumber \\
-   &\times&\sin\left[\left(1-\beta_s\right)\omega' t'+\phi\left(x',y',\omega'\right)\right]\\
-   &=&\left(E_0/\gamma\right) f\left(x',y',t'\right) \nonumber\\
-   &\times&\sin\left[\omega t'/\gamma+\phi\left(x',y',\omega'\right)\right]\end{aligned}
+   E_\perp\left(x',y',t'\right)&=\left(1-\beta_s\right)E'_0 f\left(x',y',t'\right)\sin\left[\left(1-\beta_s\right)\omega' t'+\phi\left(x',y',\omega'\right)\right]
+   \\
+   &=\left(E_0/\gamma\right) f\left(x',y',t'\right)\sin\left[\omega t'/\gamma+\phi\left(x',y',\omega'\right)\right]
+   \end{aligned}
 
 since :math:`E'_0/E_0=\omega'/\omega=1/\left(1+\beta\right)\gamma`.
 

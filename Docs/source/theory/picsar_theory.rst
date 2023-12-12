@@ -23,23 +23,20 @@ the electromagnetic fields are solved on a grid, usually using Maxwell’s
 equations
 
 .. math::
+   \frac{\mathbf{\partial B}}{\partial t} = -\nabla\times\mathbf{E}
+   :label: Faraday-1
 
-   \begin{aligned}
-   \frac{\mathbf{\partial B}}{\partial t} & = -\nabla\times\mathbf{E}\label{Eq:Faraday-1}
-   \\
-   \frac{\mathbf{\partial E}}{\partial t} & = \nabla\times\mathbf{B}-\mathbf{J}\label{Eq:Ampere-1}
-   \\
-   \nabla\cdot\mathbf{E} & = \rho\label{Eq:Gauss-1}
-   \\
-   \nabla\cdot\mathbf{B} & = 0\label{Eq:divb-1}
-   \end{aligned}
+.. math::
+   \frac{\mathbf{\partial E}}{\partial t} = \nabla\times\mathbf{B}-\mathbf{J}
+   :label: Ampere-1
 
-test
+.. math::
+   \nabla\cdot\mathbf{E} = \rho
+   :label: Gauss-1
 
-.. math:: \frac{\mathbf{\partial B}}{\partial t} = -\nabla\times\mathbf{E}
-.. math:: \frac{\mathbf{\partial E}}{\partial t} = \nabla\times\mathbf{B}-\mathbf{J}
-.. math:: \nabla\cdot\mathbf{E} = \rho
-.. math:: \nabla\cdot\mathbf{B} = 0
+.. math::
+   \nabla\cdot\mathbf{B} = 0
+   :label: divb-1
 
 given here in natural units (:math:`\epsilon_0=\mu_0=c=1`), where :math:`t` is time, :math:`\mathbf{E}` and
 :math:`\mathbf{B}` are the electric and magnetic field components, and
@@ -47,8 +44,13 @@ given here in natural units (:math:`\epsilon_0=\mu_0=c=1`), where :math:`t` is t
 charged particles are advanced in time using the Newton-Lorentz equations
 of motion
 
-.. math:: \frac{d\mathbf{x}}{dt} = \mathbf{v},\label{Eq:Lorentz_x-1}
-.. math:: \frac{d\left(\gamma\mathbf{v}\right)}{dt} = \frac{q}{m}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right),\label{Eq:Lorentz_v-1}
+.. math::
+   \frac{d\mathbf{x}}{dt} = \mathbf{v},
+   :label: Lorentz_x-1
+
+.. math::
+   \frac{d\left(\gamma\mathbf{v}\right)}{dt} = \frac{q}{m}\left(\mathbf{E}+\mathbf{v}\times\mathbf{B}\right),
+   :label: Lorentz_v-1
 
 where :math:`m`, :math:`q`, :math:`\mathbf{x}`, :math:`\mathbf{v}` and :math:`\gamma=1/\sqrt{1-v^{2}}`
 are respectively the mass, charge, position, velocity and relativistic
@@ -66,12 +68,12 @@ A centered finite-difference discretization of the Newton-Lorentz
 equations of motion is given by
 
 .. math::
+   \frac{\mathbf{x}^{i+1}-\mathbf{x}^{i}}{\Delta t} = \mathbf{v}^{i+1/2},
+   :label: leapfrog_x
 
-   \begin{aligned}
-   \frac{\mathbf{x}^{i+1}-\mathbf{x}^{i}}{\Delta t} & = \mathbf{v}^{i+1/2},\label{Eq:leapfrog_x}
-   \\
-   \frac{\gamma^{i+1/2}\mathbf{v}^{i+1/2}-\gamma^{i-1/2}\mathbf{v}^{i-1/2}}{\Delta t} & = \frac{q}{m}\left(\mathbf{E}^{i}+\mathbf{\bar{v}}^{i}\times\mathbf{B}^{i}\right).\label{Eq:leapfrog_v}
-   \end{aligned}
+.. math::
+   \frac{\gamma^{i+1/2}\mathbf{v}^{i+1/2}-\gamma^{i-1/2}\mathbf{v}^{i-1/2}}{\Delta t} = \frac{q}{m}\left(\mathbf{E}^{i}+\mathbf{\bar{v}}^{i}\times\mathbf{B}^{i}\right).
+   :label: leapfrog_v
 
 In order to close the system, :math:`\bar{\mathbf{v}}^{i}` must be
 expressed as a function of the other quantities. The two implementations that have become the most popular are presented below.
@@ -83,11 +85,13 @@ Boris relativistic velocity rotation
 
 The solution proposed by Boris :cite:p:`pt-BorisICNSP70` is given by
 
-.. math:: \mathbf{\bar{v}}^{i} = \frac{\gamma^{i+1/2}\mathbf{v}^{i+1/2}+\gamma^{i-1/2}\mathbf{v}^{i-1/2}}{2\bar{\gamma}^{i}}.\label{Eq:boris_v}
+.. math::
+   \mathbf{\bar{v}}^{i} = \frac{\gamma^{i+1/2}\mathbf{v}^{i+1/2}+\gamma^{i-1/2}\mathbf{v}^{i-1/2}}{2\bar{\gamma}^{i}}
+   :label: boris_v
 
 where :math:`\bar{\gamma}^{i}` is defined by :math:`\bar{\gamma}^{i} \equiv (\gamma^{i+1/2}+\gamma^{i-1/2} )/2`.
 
-The system (`[Eq:leapfrog_v] <#Eq:leapfrog_v>`__,\ `[Eq:boris_v] <#Eq:boris_v>`__) is solved very
+The system (:eq:`leapfrog_v`, :eq:`boris_v`) is solved very
 efficiently following Boris’ method, where the electric field push
 is decoupled from the magnetic push. Setting :math:`\mathbf{u}=\gamma\mathbf{v}`, the
 velocity is updated using the following sequence:
@@ -119,16 +123,23 @@ not Lorentz invariant and can lead to significant errors in the treatment
 of relativistic dynamics. A Lorentz invariant formulation is obtained
 by considering the following velocity average
 
-.. math:: \mathbf{\bar{v}}^{i} = \frac{\mathbf{v}^{i+1/2}+\mathbf{v}^{i-1/2}}{2}.\label{Eq:new_v}
+.. math::
+   \mathbf{\bar{v}}^{i} = \frac{\mathbf{v}^{i+1/2}+\mathbf{v}^{i-1/2}}{2}.
+   :label: new_v
 
 This gives a system that is solvable analytically (see :cite:t:`pt-Vaypop2008`
 for a detailed derivation), giving the following velocity update:
 
-.. math:: \mathbf{u}^{i+1/2} = \frac{\mathbf{u^{*}}+\left(\mathbf{u^{*}}\cdot\mathbf{t}\right)\mathbf{t}+\mathbf{u^{*}}\times\mathbf{t}}{1+\mathbf{t}^{2}},\label{pusher_upr}
+.. math::
+   \mathbf{u^{*}} = \mathbf{u}^{i-1/2}+\frac{q\Delta t}{m}\left(\mathbf{E}^{i}+\frac{\mathbf{v}^{i-1/2}}{2}\times\mathbf{B}^{i}\right),
+   :label: pusher_gamma
+
+.. math::
+   \mathbf{u}^{i+1/2} = \frac{\mathbf{u^{*}}+\left(\mathbf{u^{*}}\cdot\mathbf{t}\right)\mathbf{t}+\mathbf{u^{*}}\times\mathbf{t}}{1+\mathbf{t}^{2}},
+   :label: pusher_upr
 
 where
 
-.. math:: \mathbf{u^{*}} = \mathbf{u}^{i-1/2}+\frac{q\Delta t}{m}\left(\mathbf{E}^{i}+\frac{\mathbf{v}^{i-1/2}}{2}\times\mathbf{B}^{i}\right),\label{pusher_gamma}
 .. math:: \mathbf{t}=\boldsymbol{\tau}/\gamma^{i+1/2},
 .. math:: \boldsymbol{\tau}=\left(q\Delta t/2m\right)\mathbf{B}^{i},
 .. math:: \gamma^{i+1/2}=\sqrt{\sigma+\sqrt{\sigma^{2}+\left(\boldsymbol{\tau}^{2}+w^{2}\right)}},
@@ -171,13 +182,21 @@ Finite-Difference Time-Domain (FDTD)
 The most popular algorithm for electromagnetic PIC codes is the Finite-Difference
 Time-Domain (or FDTD) solver
 
-.. math:: D_{t}\mathbf{B} & = -\nabla\times\mathbf{E}\label{Eq:Faraday-2}
+.. math::
+   D_{t}\mathbf{B} = -\nabla\times\mathbf{E}
+   :label: Faraday-2
 
-.. math:: D_{t}\mathbf{E} & = \nabla\times\mathbf{B}-\mathbf{J}\label{Eq:Ampere-2}
+.. math::
+   D_{t}\mathbf{E} = \nabla\times\mathbf{B}-\mathbf{J}
+   :label: Ampere-2
 
-.. math:: \left[\nabla\cdot\mathbf{E} = \rho\right]\label{Eq:Gauss-2}
+.. math::
+   \left[\nabla\cdot\mathbf{E} = \rho\right]
+   :label: Gauss-2
 
-.. math:: \left[\nabla\cdot\mathbf{B} = 0\right].\label{Eq:divb-2}
+.. math::
+   \left[\nabla\cdot\mathbf{B} = 0\right].
+   :label: divb-2
 
 The differential operator is defined as :math:`\nabla=D_{x}\mathbf{\hat{x}}+D_{y}\mathbf{\hat{y}}+D_{z}\mathbf{\hat{z}}`
 and the finite-difference operators in time and space are defined
@@ -221,23 +240,33 @@ along each dimension (i.e. cubic cells in 3D). The “Cole-Karkkainnen”
 (based on extended stencils) of the Maxwell-Ampere equation and can be
 implemented as follows :cite:p:`pt-Vayjcp2011`:
 
-.. math:: D_{t}\mathbf{B} = -\nabla^{*}\times\mathbf{E}\label{Eq:Faraday}
+.. math::
+   D_{t}\mathbf{B} = -\nabla^{*}\times\mathbf{E}
+   :label: Faraday
 
-.. math:: D_{t}\mathbf{E} = \nabla\times\mathbf{B}-\mathbf{J}\label{Eq:Ampere}
+.. math::
+   D_{t}\mathbf{E} = \nabla\times\mathbf{B}-\mathbf{J}
+   :label: Ampere
 
-.. math:: \left[\nabla\cdot\mathbf{E} = \rho\right]\label{Eq:Gauss}
+.. math::
+   \left[\nabla\cdot\mathbf{E} = \rho\right]
+   :label: Gauss
 
-.. math:: \left[\nabla^{*}\cdot\mathbf{B}= 0\right]\label{Eq:divb}
+.. math::
+   \left[\nabla^{*}\cdot\mathbf{B}= 0\right]
+   :label: divb
 
-Eq. `[Eq:Gauss] <#Eq:Gauss>`__ and `[Eq:divb] <#Eq:divb>`__ are not being solved explicitly
+Eqs. :eq:`Gauss` and:eq:`divb` are not being solved explicitly
 but verified via appropriate initial conditions and current deposition
 procedure. The NSFD differential operator is given by
 
-.. math:: \nabla^{*}=D_{x}^{*}\mathbf{\hat{x}}+D_{y}^{*}\mathbf{\hat{y}}+D_{z}^{*}\mathbf{\hat{z}}
+.. math::
+   \nabla^{*}=D_{x}^{*}\mathbf{\hat{x}}+D_{y}^{*}\mathbf{\hat{y}}+D_{z}^{*}\mathbf{\hat{z}}
 
 where
 
-.. math:: D_{x}^{*}=\left(\alpha+\beta S_{x}^{1}+\xi S_{x}^{2}\right)D_{x}
+.. math::
+   D_{x}^{*}=\left(\alpha+\beta S_{x}^{1}+\xi S_{x}^{2}\right)D_{x}
 
 with
 
@@ -323,35 +352,39 @@ the system of equations is solvable analytically and is given by (see
 (Haber et al. 1973) for the original formulation and (Jean-Luc Vay, Haber, and Godfrey 2013)
 for a more detailed derivation):
 
-[Eq:PSATD]
+.. math::
+   \mathbf{\tilde{E}}_{T}^{n+1} & = C\mathbf{\tilde{E}}_{T}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}_{T}^{n+1/2}
+   :label: PSATD_transverse_1
 
 .. math::
-
-   \begin{aligned}
-   \mathbf{\tilde{E}}_{T}^{n+1} & = C\mathbf{\tilde{E}}_{T}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}_{T}^{n+1/2}\label{Eq:PSATD_transverse_1}
-   \\
    \mathbf{\tilde{E}}_{L}^{n+1} & = \mathbf{\tilde{E}}_{L}^{n}-\Delta t\mathbf{\tilde{J}}_{L}^{n+1/2}
-   \\
-   \mathbf{\tilde{B}}^{n+1} & = C\mathbf{\tilde{B}}^{n}-iS\mathbf{\hat{k}}\times\mathbf{\tilde{E}}^{n} + i\frac{1-C}{k}\mathbf{\hat{k}}\times\mathbf{\tilde{J}}^{n+1/2}\label{Eq:PSATD_transverse_2}
-   \end{aligned}
+   :label: PSATD_longitudinal
+
+.. math::
+   \mathbf{\tilde{B}}^{n+1} & = C\mathbf{\tilde{B}}^{n}-iS\mathbf{\hat{k}}\times\mathbf{\tilde{E}}^{n} + i\frac{1-C}{k}\mathbf{\hat{k}}\times\mathbf{\tilde{J}}^{n+1/2}
+   :label: PSATD_transverse_2
 
 with :math:`C=\cos\left(k\Delta t\right)` and :math:`S=\sin\left(k\Delta t\right)`.
 
 Combining the transverse and longitudinal components, gives
 
 .. math::
-
    \begin{aligned}
-   \mathbf{\tilde{E}}^{n+1} = \: & C\mathbf{\tilde{E}}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}^{n+1/2}
+   \mathbf{\tilde{E}}^{n+1} & = C\mathbf{\tilde{E}}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}^{n+1/2}
    \\
-   & + (1-C)\mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{E}}^{n})\nonumber
+                            & + (1-C)\mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{E}}^{n})\nonumber
    \\
-   & + \mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{J}}^{n+1/2})\left(\frac{S}{k}-\Delta t\right),\label{Eq_PSATD_1}
-   \\
-   \mathbf{\tilde{B}}^{n+1} = & \: C\mathbf{\tilde{B}}^{n}-iS\mathbf{\hat{k}}\times\mathbf{\tilde{E}}^{n}
-   \\
-   & + i\frac{1-C}{k}\mathbf{\hat{k}}\times\mathbf{\tilde{J}}^{n+1/2}.\label{Eq_PSATD_2}
+                            & + \mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{J}}^{n+1/2})\left(\frac{S}{k}-\Delta t\right),
    \end{aligned}
+   :label: Eq_PSATD_1
+
+.. math::
+   \begin{aligned}
+   \mathbf{\tilde{B}}^{n+1} & = C\mathbf{\tilde{B}}^{n}-iS\mathbf{\hat{k}}\times\mathbf{\tilde{E}}^{n}
+   \\
+                            & + i\frac{1-C}{k}\mathbf{\hat{k}}\times\mathbf{\tilde{J}}^{n+1/2}.
+   \end{aligned}
+   :label: Eq_PSATD_2
 
 For fields generated by the source terms without the self-consistent
 dynamics of the charged particles, this algorithm is free of numerical
@@ -375,9 +408,7 @@ formulation reduces to the perhaps better known pseudo-spectral time-domain
 The dispersion relation of the PSTD solver is given by :math:`\sin(\frac{\omega\Delta t}{2})=\frac{k\Delta t}{2}.`
 In contrast to the PSATD solver, the PSTD solver is subject to numerical
 dispersion for a finite time step and to a Courant condition that
-is given by
-
-.. math:: \Delta t\leq \frac{2}{\pi}\left(\frac{1}{\Delta x^{2}}+\frac{1}{\Delta y^{2}}+\frac{1}{\Delta x^{2}}\right)^{-1/2}.
+is given by :math:`\Delta t\leq \frac{2}{\pi}\left(\frac{1}{\Delta x^{2}}+\frac{1}{\Delta y^{2}}+\frac{1}{\Delta z^{2}}\right)^{-1/2}`.
 
 The PSATD and PSTD formulations that were just given apply to the
 field components located at the nodes of the grid. As noted in :cite:t:`pt-Ohmurapiers2010`,
