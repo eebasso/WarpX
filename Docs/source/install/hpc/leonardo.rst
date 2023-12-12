@@ -138,7 +138,7 @@ And, if needed,
 As a last step, clean the build directories ``rm -rf $HOME/src/warpx/build_gpu*`` and rebuild WarpX.
 
 
-.. _running-leonardo:
+.. _running-cpp-leonardo:
 
 Running
 -------
