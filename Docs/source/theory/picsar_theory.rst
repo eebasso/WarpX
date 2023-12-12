@@ -18,7 +18,7 @@ Particle-in-Cell Method
 
    The Particle-In-Cell (PIC) method follows the evolution of a collection of charged macro-particles (positively charged in blue on the left plot, negatively charged in red) that evolve self-consistently with their electromagnetic (or electrostatic) fields. The core PIC algorithm involves four operations at each time step: 1) evolve the velocity and position of the particles using the Newton-Lorentz equations, 2) deposit the charge and/or current densities through interpolation from the particles distributions onto the grid, 3) evolve Maxwell’s wave equations (for electromagnetic) or solve Poisson’s equation (for electrostatic) on the grid, 4) interpolate the fields from the grid onto the particles for the next particle push. Additional “add-ons” operations are inserted between these core operations to account for additional physics (e.g. absorption/emission of particles, addition of external forces to account for accelerator focusing or accelerating component) or numerical effects (e.g. smoothing/filtering of the charge/current densities and/or fields on the grid).
 
-In the *electromagnetic particle-in-cell method* (Birdsall and Langdon 1991),
+In the *electromagnetic particle-in-cell method* :cite:p:`Birdsalllangdon`,
 the electromagnetic fields are solved on a grid, usually using Maxwell’s
 equations
 
@@ -81,7 +81,7 @@ expressed as a function of the other quantities. The two implementations that ha
 Boris relativistic velocity rotation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The solution proposed by Boris (Boris 1970) is given by
+The solution proposed by Boris :cite:p:`BorisICNSP70` is given by
 
 .. math:: \mathbf{\bar{v}}^{i} = \frac{\gamma^{i+1/2}\mathbf{v}^{i+1/2}+\gamma^{i-1/2}\mathbf{v}^{i-1/2}}{2\bar{\gamma}^{i}}.\label{Eq:boris_v}
 
@@ -114,14 +114,14 @@ The Boris implementation is second-order accurate, time-reversible and fast. Its
 Vay Lorentz-invariant formulation
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-It was shown in (Vay 2008) that the Boris formulation is
+It was shown in :cite:t:`Vaypop2008` that the Boris formulation is
 not Lorentz invariant and can lead to significant errors in the treatment
 of relativistic dynamics. A Lorentz invariant formulation is obtained
 by considering the following velocity average
 
 .. math:: \mathbf{\bar{v}}^{i} = \frac{\mathbf{v}^{i+1/2}+\mathbf{v}^{i-1/2}}{2}.\label{Eq:new_v}
 
-This gives a system that is solvable analytically (see (Vay 2008)
+This gives a system that is solvable analytically (see :cite:t:`Vaypop2008`
 for a detailed derivation), giving the following velocity update:
 
 .. math:: \mathbf{u}^{i+1/2} = \frac{\mathbf{u^{*}}+\left(\mathbf{u^{*}}\cdot\mathbf{t}\right)\mathbf{t}+\mathbf{u^{*}}\times\mathbf{t}}{1+\mathbf{t}^{2}},\label{pusher_upr}
@@ -140,7 +140,7 @@ This Lorentz invariant formulation
 is particularly well suited for the modeling of ultra-relativistic
 charged particle beams, where the accurate account of the cancellation
 of the self-generated electric and magnetic fields is essential, as
-shown in (Vay 2008).
+shown in :cite:t:`Vaypop2008`.
 
 .. _theory-pic-mwsolve:
 
@@ -156,7 +156,7 @@ second order finite-difference time-domain (FDTD) algorithm, its extension
 to non-standard finite-differences as well as the pseudo-spectral
 analytical time-domain (PSATD) and pseudo-spectral time-domain (PSTD)
 algorithms. Extension to multiresolution (or mesh refinement) PIC
-is described in, e.g. (Vay et al. 2012; Vay, Adam, and Heron 2004).
+is described in, e.g., :cite:t:`VayCSD12,Vaycpc04`.
 
 .. figure:: Yee_grid.png
    :alt: [fig:yee_grid](left) Layout of field components on the staggered “Yee” grid. Current densities and electric fields are defined on the edges of the cells and magnetic fields on the faces. (right) Time integration using a second-order finite-difference "leapfrog" integrator.
@@ -198,7 +198,7 @@ permutation. The equations in brackets are given for completeness,
 as they are often not actually solved, thanks to the usage of a so-called
 charge conserving algorithm, as explained below. As shown in Figure
 `[fig:yee_grid] <#fig:yee_grid>`__, the quantities are given on a staggered (or “Yee”)
-grid (Yee 1966), where the electric field components are located
+grid :cite:p:`Yee`, where the electric field components are located
 between nodes and the magnetic field components are located in the
 center of the cell faces. Knowing the current densities at half-integer steps,
 the electric field components are updated alternately with the magnetic
@@ -209,17 +209,17 @@ field components at integer and half-integer steps respectively.
 Non-Standard Finite-Difference Time-Domain (NSFDTD)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In (Cole 1997, 2002), Cole introduced an implementation
+In :cite:t:`Coleieee1997,Coleieee2002`, Cole introduced an implementation
 of the source-free Maxwell’s wave equations for narrow-band applications
-based on non-standard finite-differences (NSFD). In (Karkkainen et al. 2006),
+based on non-standard finite-differences (NSFD). In :cite:t:`Karkicap06`,
 Karkkainen *et al.* adapted it for wideband applications. At
 the Courant limit for the time step and for a given set of parameters,
-the stencil proposed in (Karkkainen et al. 2006) has no numerical dispersion
+the stencil proposed in :cite:t:`Karkicap06` has no numerical dispersion
 along the principal axes, provided that the cell size is the same
 along each dimension (i.e. cubic cells in 3D). The “Cole-Karkkainnen”
 (or CK) solver uses the non-standard finite difference formulation
 (based on extended stencils) of the Maxwell-Ampere equation and can be
-implemented as follows (Vay et al. 2011):
+implemented as follows :cite:p:`Vayjcp2011`:
 
 .. math:: D_{t}\mathbf{B} = -\nabla^{*}\times\mathbf{E}\label{Eq:Faraday}
 
@@ -258,19 +258,18 @@ i.e. :math:`D_{y}`, :math:`D_{z}`, :math:`D_{y}^{*}`, :math:`D_{z}^{*}`, :math:`
 permutation of the indices.
 
 Assuming cubic cells (:math:`\Delta x=\Delta y=\Delta z`), the coefficients
-given in (Karkkainen et al. 2006) (:math:`\alpha=7/12`, :math:`\beta=1/12` and :math:`\xi=1/48`)
+given in :cite:t:`Karkicap06` (:math:`\alpha=7/12`, :math:`\beta=1/12` and :math:`\xi=1/48`)
 allow for the Courant condition to be at :math:`\Delta t=\Delta x`, which
 equates to having no numerical dispersion along the principal axes.
 The algorithm reduces to the FDTD algorithm with :math:`\alpha=1` and :math:`\beta=\xi=0`.
-An extension to non-cubic cells is provided by Cowan, *et al.*
-in 3-D in (Cowan et al. 2013) and was given by Pukhov in 2-D in
-(Pukhov 1999). An alternative NSFDTD implementation that enables superluminous waves is also
-given by Lehe et al. in (Lehe et al. 2013).
+An extension to non-cubic cells is provided in 3-D by :cite:t:`CowanPRSTAB13` and in 2-D by
+:cite:t:`PukhovJPP99`. An alternative NSFDTD implementation that enables superluminous waves is also
+given in :cite:t:`LehePRSTAB13`.
 
 As mentioned above, a key feature of the algorithms based on NSFDTD
-is that some implementations (Karkkainen et al. 2006; Cowan et al. 2013) enable the time step :math:`\Delta t=\Delta x` along one or
+is that some implementations :cite:p:`Karkicap06,CowanPRSTAB13` enable the time step :math:`\Delta t=\Delta x` along one or
 more axes and no numerical dispersion along those axes. However, as
-shown in (Vay et al. 2011), an instability develops at the Nyquist
+shown in :cite:t:`Vayjcp2011`, an instability develops at the Nyquist
 wavelength at (or very near) such a timestep. It is also shown in
 the same paper that removing the Nyquist component in all the source
 terms using a bilinear filter (see description of the filter below)
@@ -343,7 +342,7 @@ Combining the transverse and longitudinal components, gives
 .. math::
 
    \begin{aligned}
-   \mathbf{\tilde{E}}^{n+1} = & \: C\mathbf{\tilde{E}}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}^{n+1/2}
+   \mathbf{\tilde{E}}^{n+1} = \: & C\mathbf{\tilde{E}}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}^{n+1/2}
    \\
    & + (1-C)\mathbf{\hat{k}}(\mathbf{\hat{k}}\cdot\mathbf{\tilde{E}}^{n})\nonumber
    \\
@@ -360,10 +359,10 @@ dispersion and is not subject to a Courant condition. Furthermore,
 this solution is exact for any time step size subject to the assumption
 that the current source is constant over that time step.
 
-As shown in (Jean-Luc Vay, Haber, and Godfrey 2013), by expanding the coefficients :math:`S_{h}`
+As shown in :cite:t:`VayJCP13`, by expanding the coefficients :math:`S_{h}`
 and :math:`C_{h}` in Taylor series and keeping the leading terms, the PSATD
 formulation reduces to the perhaps better known pseudo-spectral time-domain
-(PSTD) formulation (Dawson 1983; Liu 1997):
+(PSTD) formulation :cite:p:`DawsonRMP83,Liumotl1997`:
 
 .. math::
 
@@ -381,13 +380,13 @@ is given by
 .. math:: \Delta t\leq \frac{2}{\pi}\left(\frac{1}{\Delta x^{2}}+\frac{1}{\Delta y^{2}}+\frac{1}{\Delta x^{2}}\right)^{-1/2}.
 
 The PSATD and PSTD formulations that were just given apply to the
-field components located at the nodes of the grid. As noted in (Ohmura and Okamura 2010),
+field components located at the nodes of the grid. As noted in :cite:t:`Ohmurapiers2010`,
 they can also be easily recast on a staggered Yee grid by multiplication
 of the field components by the appropriate phase factors to shift
 them from the collocated to the staggered locations. The choice between
 a collocated and a staggered formulation is application-dependent.
 
-Spectral solvers used to be very popular in the years 1970s to early 1990s, before being replaced by finite-difference methods with the advent of parallel supercomputers that favored local methods. However, it was shown recently that standard domain decomposition with Fast Fourier Transforms that are local to each subdomain could be used effectively with PIC spectral methods (Jean-Luc Vay, Haber, and Godfrey 2013), at the cost of truncation errors in the guard cells that could be neglected. A detailed analysis of the effectiveness of the method with exact evaluation of the magnitude of the effect of the truncation error is given in (Vincenti and Vay 2016) for stencils of arbitrary order (up-to the infinite “spectral” order).
+Spectral solvers used to be very popular in the years 1970s to early 1990s, before being replaced by finite-difference methods with the advent of parallel supercomputers that favored local methods. However, it was shown recently that standard domain decomposition with Fast Fourier Transforms that are local to each subdomain could be used effectively with PIC spectral methods :cite:p:`VayJCP13`, at the cost of truncation errors in the guard cells that could be neglected. A detailed analysis of the effectiveness of the method with exact evaluation of the magnitude of the effect of the truncation error is given in :cite:t:`Vincenti2016a` for stencils of arbitrary order (up-to the infinite “spectral” order).
 
 WarpX also includes a kinetic-fluid hybrid model in which the electric field is
 calculated using Ohm's law instead of directly evolving Maxwell's equations. This
@@ -403,7 +402,7 @@ Current deposition
 
 The current densities are deposited on the computational grid from
 the particle position and velocities, employing splines of various
-orders (Abe et al. 1986).
+orders :cite:p:`Abejcp86`.
 
 .. math::
 
@@ -417,20 +416,20 @@ In most applications, it is essential to prevent the accumulation
 of errors resulting from the violation of the discretized Gauss’ Law.
 This is accomplished by providing a method for depositing the current
 from the particles to the grid that preserves the discretized Gauss’
-Law, or by providing a mechanism for “divergence cleaning” (Birdsall and Langdon 1991; Langdon 1992; Marder 1987; Vay and Deutsch 1998; Munz et al. 2000).
+Law, or by providing a mechanism for “divergence cleaning” :cite:p:`Birdsalllangdon,Langdoncpc92,Marderjcp87,Vaypop98,Munzjcp2000`.
 For the former, schemes that allow a deposition of the current that
-is exact when combined with the Yee solver is given in (Villasenor and Buneman 1992)
-for linear splines and in (Esirkepov 2001) for splines of arbitrary order.
+is exact when combined with the Yee solver is given in :cite:t:`Villasenorcpc92`
+for linear splines and in :cite:t:`Esirkepovcpc01` for splines of arbitrary order.
 
-The NSFDTD formulations given above and in (Pukhov 1999; Vay et al. 2011; Cowan et al. 2013; Lehe et al. 2013)
+The NSFDTD formulations given above and in :cite:t:`PukhovJPP99,Vayjcp2011,CowanPRSTAB13,LehePRSTAB13`
 apply to the Maxwell-Faraday
 equation, while the discretized Maxwell-Ampere equation uses the FDTD
 formulation. Consequently, the charge conserving algorithms developed
-for current deposition (Villasenor and Buneman 1992; Esirkepov 2001) apply
+for current deposition :cite:p:`Villasenorcpc92,Esirkepovcpc01` apply
 readily to those NSFDTD-based formulations. More details concerning
 those implementations, including the expressions for the numerical
 dispersion and Courant condition are given
-in (Pukhov 1999; Vay et al. 2011; Cowan et al. 2013; Lehe et al. 2013).
+in :cite:t:`PukhovJPP99,Vayjcp2011,CowanPRSTAB13,LehePRSTAB13`.
 
 Current correction
 ~~~~~~~~~~~~~~~~~~
@@ -441,7 +440,7 @@ in Fourier space:
 
 .. math:: \tilde{\rho}^{n+1}=\tilde{\rho}^{n}-i\Delta t\mathbf{k}\cdot\mathbf{\tilde{J}}^{n+1/2}.
 
-In this case, a Boris correction (Birdsall and Langdon 1991) can be applied
+In this case, a Boris correction :cite:p:`Birdsalllangdon` can be applied
 in :math:`k` space in the form
 
 .. math:: \mathbf{\tilde{E}}_{c}^{n+1}=\mathbf{\tilde{E}}^{n+1}-\frac{\mathbf{k}\cdot\mathbf{\tilde{E}}^{n+1}+i\tilde{\rho}^{n+1}}{k}\mathbf{\hat{k}},
@@ -449,7 +448,7 @@ in :math:`k` space in the form
 where :math:`\mathbf{\tilde{E}}_{c}` is the corrected field. Alternatively, a correction
 to the current can be applied (with some similarity to the current
 deposition presented by Morse and Nielson in their potential-based
-model in (Morse and Nielson 1971)) using
+model in :cite:t:`Morsenielson1971`) using
 
 .. math:: \mathbf{\tilde{J}}_{c}^{n+1/2}=\mathbf{\tilde{J}}^{n+1/2}-\left[\mathbf{k}\cdot\mathbf{\tilde{J}}^{n+1/2}-i\left(\tilde{\rho}^{n+1}-\tilde{\rho}^{n}\right)/\Delta t\right]\mathbf{\hat{k}}/k,
 
@@ -459,14 +458,14 @@ component is effectively replaced by the one obtained from integration
 of the continuity equation, ensuring that the corrected current satisfies
 the continuity equation. The advantage of correcting the current rather than
 the electric field is that it is more local and thus more compatible with
-domain decomposition of the fields for parallel computation (Jean Luc Vay, Haber, and Godfrey 2013).
+domain decomposition of the fields for parallel computation :cite:p:`VayJCP2013`.
 
 Vay deposition
 ~~~~~~~~~~~~~~
 
-Alternatively, an exact current deposition can be written for the pseudo-spectral solvers, following the geometrical interpretation of existing methods in real space (`Morse and Nielson, 1971 <https://doi.org/10.1063/1.1693518>`_; `Villasenor and Buneman, 1992 <https://doi.org/10.1016/0010-4655(92)90169-Y>`_; `Esirkepov, 2001 <https://doi.org/10.1016/S0010-4655(00)00228-9>`_).
+Alternatively, an exact current deposition can be written for the pseudo-spectral solvers, following the geometrical interpretation of existing methods in real space :cite:p:`Morsenielson1971,Villasenorcpc92,Esirkepovcpc01`.
 
-The Vay deposition scheme is the generalization of the Esirkepov deposition scheme for the spectral case with arbitrary-order stencils `(Vay et al, 2013) <https://doi.org/10.1016/j.jcp.2013.03.010>`_.
+The Vay deposition scheme is the generalization of the Esirkepov deposition scheme for the spectral case with arbitrary-order stencils `(Vay et al, 2013) <https://doi.org/10.1016/j.jcp.2013.03.010>`_. TODO: turn this into a bibtex citation.
 The current density :math:`\widehat{\boldsymbol{J}}^{\,n+1/2}` in Fourier space is computed as :math:`\widehat{\boldsymbol{J}}^{\,n+1/2} = i \, \widehat{\boldsymbol{D}} / \boldsymbol{k}` when :math:`\boldsymbol{k} \neq 0` and set to zero otherwise.
 The quantity :math:`\boldsymbol{D}` is deposited in real space by averaging the currents over all possible grid paths between the initial position :math:`\boldsymbol{x}^{\,n}` and the final position :math:`\boldsymbol{x}^{\,n+1}` and is defined as
 
@@ -559,7 +558,7 @@ Three variations are considered:
    are first interpolated to the staggered positions on an auxiliary
    grid).
 
-As shown in :cite:p:`pic-Birdsalllangdon,pic-HockneyEastwoodBook,pic-LewisJCP1972`,
+As shown in :cite:t:`pic-Birdsalllangdon,pic-HockneyEastwoodBook,pic-LewisJCP1972`,
 the momentum and energy conserving schemes conserve momentum and energy
 respectively at the limit of infinitesimal time steps and generally
 offer better conservation of the respective quantities for a finite
@@ -575,7 +574,7 @@ Filtering
 
 It is common practice to apply digital filtering to the charge or
 current density in Particle-In-Cell simulations as a complement or
-an alternative to using higher order splines (Birdsall and Langdon 1991).
+an alternative to using higher order splines :cite:p:`Birdsalllangdon`.
 A commonly used filter in PIC simulations is the three points filter
 
 .. math:: \phi_{j}^{f}=\alpha\phi_{j}+\left(1-\alpha\right)\left(\phi_{j-1}+\phi_{j+1}\right)/2
@@ -595,7 +594,7 @@ of coefficients :math:`\alpha_{1}`...\ :math:`\alpha_{n}` is given by
 
 A sharper cutoff in :math:`k` space is provided by using :math:`\alpha_{n}=n-\sum_{i=1}^{n-1}\alpha_{i}`,
 so that :math:`G\approx1+O\left(k^{4}\right)`. Such step is called a “compensation”
-step (Birdsall and Langdon 1991). For the bilinear filter (:math:`\alpha=1/2`),
+step :cite:p:`Birdsalllangdon`. For the bilinear filter (:math:`\alpha=1/2`),
 the compensation factor is :math:`\alpha_{c}=2-1/2=3/2`. For a succession
 of :math:`n` applications of the bilinear factor, it is :math:`\alpha_{c}=n/2+1`.
 
@@ -607,7 +606,7 @@ for parallel computations using domain decomposition, as the footprint
 of the filter may eventually surpass the size of subdomains. A workaround
 is to use a combination of filters of limited footprint. A solution
 based on the combination of three point filters with various strides
-was proposed in (Vay et al. 2011) and operates as follows.
+was proposed in :cite:t:`Vayjcp2011` and operates as follows.
 
 The bilinear filter provides complete suppression of the signal at
 the grid Nyquist wavelength (twice the grid cell size). Suppression
@@ -627,7 +626,7 @@ as given by :math:`sk\Delta x=\arccos\left(\frac{\alpha}{\alpha-1}\right)\pmod{2
 The resulting filter is pass band between the poles, but since the
 poles are spread at different integer values in k space, a wide band
 low pass filter can be constructed by combining filters using different
-strides. As shown in (Vay et al. 2011), the successive application
+strides. As shown in :cite:t:`Vayjcp2011`, the successive application
 of 4-passes + compensation of filters with strides 1, 2 and 4 has
 a nearly equivalent fall-off in gain as 80 passes + compensation of
 a bilinear filter. Yet, the strided filter solution needs only 15
