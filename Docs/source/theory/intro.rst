@@ -16,9 +16,9 @@ the most popular algorithm is the Particle-In-Cell (or PIC) technique,
 which represents electromagnetic fields on a grid and particles by
 a sample of macroparticles.
 However, these simulations are extremely computationally intensive, due to the need to resolve the evolution of a driver (laser or particle beam) and an accelerated beam into a structure that is orders of magnitude longer and wider than the accelerated beam.
-Various techniques or reduced models have been developed to allow multidimensional simulations at manageable computational costs: quasistatic approximation :cite:p:`in-Sprangle1990,in-Antonsenprl1992,in-Krallpre1993,in-Morapop1997,in-Quickpic`,
-ponderomotive guiding center (PGC) models :cite:p:`in-Antonsenprl1992,in-Krallpre1993,in-Quickpic,in-Benedettiaac2010,in-Cowanjcp11`, simulation in an optimal Lorentz boosted frame :cite:p:`in-Vayprl07,in-Bruhwileraac08,in-Vayscidac09,in-Vaypac09,in-VayAAC2010,in-Martinscpc10,in-Martinsnaturephysics10,in-Martinspop10,in-Vayjcp2011,in-VayPOPL2011,in-Vaypop2011,in-Yu2016`,
-expanding the fields into a truncated series of azimuthal modes :cite:p:`in-godfrey1985iprop,in-LifschitzJCP2009,in-DavidsonJCP2015,in-Lehe2016,in-AndriyashPoP2016`, fluid approximation :cite:p:`in-Krallpre1993,in-Shadwickpop09,in-Benedettiaac2010` and scaled parameters :cite:p:`in-Cormieraac08`.
+Various techniques or reduced models have been developed to allow multidimensional simulations at manageable computational costs: quasistatic approximation :cite:p:`in-Sprangleprl90,in-Antonsenprl1992,in-Krallpre1993,in-Morapop1997,in-Quickpic`,
+ponderomotive guiding center (PGC) models :cite:p:`in-Antonsenprl1992,in-Krallpre1993,in-Quickpic,in-Benedettiaac2010,in-Cowanjcp11`, simulation in an optimal Lorentz boosted frame :cite:p:`in-Vayprl07,in-Bruhwileraac08,in-Vayscidac09,in-Vaypac09,in-Martinspac09,in-VayAAC2010,in-Martinsnaturephysics10,in-Martinspop10,in-Martinscpc10,in-Vayjcp2011,in-VayPOPL2011,in-Vaypop2011,in-Yu2016`,
+expanding the fields into a truncated series of azimuthal modes :cite:p:`in-godfrey1985iprop,in-LifschitzJCP2009,in-DavidsonJCP2015,in-Lehe2016,in-AndriyashPoP2016`, fluid approximation :cite:p:`in-Krallpre1993,in-Shadwickpop09,in-Benedettiaac2010` and scaled parameters :cite:p:`in-Cormieraac08,in-Geddespac09`.
 
 .. bibliography::
    :keyprefix: in-
