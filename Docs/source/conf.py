@@ -71,7 +71,7 @@ bibtex_bibfiles = ['latex_theory/allbibs.bib', 'refs.bib']
 # UnsrtStyle class in pybtex/style/formating/unsrt.py
 class WarpXBibStyle(UnsrtStyle):
     # We want the family name, i.e, "last" name, of an author to appear first.
-    default_name_style = 'lastfirst'
+    # default_name_style = 'lastfirst'
 
     def __init__(self, *args, **kwargs):
         # We want the given names of an author to be abbreviated to just initials.
