@@ -196,7 +196,7 @@ for sc in [0,1]:
                 for ir in range( num_ii_pts ): # interpolation points and weights
                     jj = ii_start+ir
                     if ( jj==ii ): # interpolation point matches point on fine grid
-                       ws += weights[ir]
+                        ws += weights[ir]
             if (abs(ws - 1.0/cr) > 1E-9):
                 print( '\n ERROR: sum of weights ws={} should be 1/cr={} for ii={}'.format( ws, 1.0/cr, ii ) )
 
