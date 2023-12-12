@@ -10,11 +10,11 @@ The simulations of plasma accelerators from first principles are extremely compu
 
    [fig:PIC] A first principle simulation of a short driver beam (laser or charged particles) propagating through a plasma that is orders of magnitude longer necessitates a very large number of time steps. Recasting the simulation in a frame of reference that is moving close to the speed of light in the direction of the driver beam leads to simulating a driver beam that appears longer propagating through a plasma that appears shorter than in the laboratory. Thus, this relativistic transformation of space and time reduces the disparity of scales, and thereby the number of time steps to complete the simulation, by orders of magnitude.
 
-Even using a moving window, however, a full PIC simulation of a plasma accelerator can be extraordinarily demanding computationally, as many time steps are needed to resolve the crossing of the short driver beam with the plasma column. As it turns out, choosing an optimal frame of reference that travels close to the speed of light in the direction of the laser or particle beam (as opposed to the usual choice of the laboratory frame) enables speedups by orders of magnitude \cite{Vayprl07,Vaypop2011}. This is a result of the properties of Lorentz contraction and dilation of space and time. In the frame of the laboratory, a very short driver (laser or particle) beam propagates through a much longer plasma column, necessitating millions to tens of millions of time steps for parameters in the range of the BELLA or FACET-II experiments. As sketched in Fig. `[fig:PIC] <#fig:PIC>`__, in a frame moving with the driver beam in the plasma at velocity :math:`v=\beta c` (where :math:`c` is the speed of light in vacuum), the beam length is now elongated by :math:`\approx(1+\beta)\gamma` while the plasma contracts by :math:`\gamma` (where :math:`\gamma=1/\sqrt{1-\beta^2}` is the relativistic factor associated with the frame velocity). The number of time steps that is needed to simulate a “longer” beam through a “shorter” plasma is now reduced by up to :math:`\approx(1+\beta) \gamma^2` (a detailed derivation of the speedup is given below).
+Even using a moving window, however, a full PIC simulation of a plasma accelerator can be extraordinarily demanding computationally, as many time steps are needed to resolve the crossing of the short driver beam with the plasma column. As it turns out, choosing an optimal frame of reference that travels close to the speed of light in the direction of the laser or particle beam (as opposed to the usual choice of the laboratory frame) enables speedups by orders of magnitude :cite:p:`Vayprl07,Vaypop2011`. This is a result of the properties of Lorentz contraction and dilation of space and time. In the frame of the laboratory, a very short driver (laser or particle) beam propagates through a much longer plasma column, necessitating millions to tens of millions of time steps for parameters in the range of the BELLA or FACET-II experiments. As sketched in Fig. `[fig:PIC] <#fig:PIC>`__, in a frame moving with the driver beam in the plasma at velocity :math:`v=\beta c` (where :math:`c` is the speed of light in vacuum), the beam length is now elongated by :math:`\approx(1+\beta)\gamma` while the plasma contracts by :math:`\gamma` (where :math:`\gamma=1/\sqrt{1-\beta^2}` is the relativistic factor associated with the frame velocity). The number of time steps that is needed to simulate a “longer” beam through a “shorter” plasma is now reduced by up to :math:`\approx(1+\beta) \gamma^2` (a detailed derivation of the speedup is given below).
 
 The modeling of a plasma acceleration stage in a boosted frame
 involves the fully electromagnetic modeling of a plasma propagating at near the speed of light, for which Numerical Cerenkov
-\cite{Borisjcp73,Habericnsp73} is a potential issue, as explained in more details below.
+:cite:p:`Borisjcp73,Habericnsp73` is a potential issue, as explained in more details below.
 In addition, for a frame of reference moving in the direction of the accelerated beam (or equivalently the wake of the laser),
 waves emitted by the plasma in the forward direction expand
 while the ones emitted in the backward direction contract, following the properties of the Lorentz transformation.
@@ -25,15 +25,15 @@ Backscatter is weak in the short-pulse regime, and does not
 interact as strongly with the beam as do the forward propagating waves
 which stay in phase for a long period. It is thus often assumed that the backward propagating waves
 can be neglected in the modeling of plasma accelerator stages. The accuracy of this assumption has been demonstrated by
-comparison between explicit codes which include both forward and backward waves and envelope or quasistatic codes which neglect backward waves \cite{Geddesjp08,Geddespac09,Cowanaac08}.
+comparison between explicit codes which include both forward and backward waves and envelope or quasistatic codes which neglect backward waves :cite:p:`Geddesjp08,Geddespac09,Cowanaac08`.
 
 Theoretical speedup dependency with the frame boost
 ---------------------------------------------------
 
-The derivation that is given here reproduces the one given in \cite{Vaypop2011}, where the obtainable speedup is derived as an extension of the formula that was derived earlier\cite{Vayprl07}, taking in addition into account the group velocity of the laser as it traverses the plasma.
+The derivation that is given here reproduces the one given in :cite:t:`Vaypop2011`, where the obtainable speedup is derived as an extension of the formula that was derived earlier :cite:p:`Vayprl07`, taking in addition into account the group velocity of the laser as it traverses the plasma.
 
 Assuming that the simulation box is a fixed number of plasma periods long, which implies the use (which is standard) of a moving window following
-the wake and accelerated beam, the speedup is given by the ratio of the time taken by the laser pulse and the plasma to cross each other, divided by the shortest time scale of interest, that is the laser period. To first order, the wake velocity :math:`v_w` is set by the 1D group velocity of the laser driver, which in the linear (low intensity) limit, is given by \cite{Esareyrmp09}:
+the wake and accelerated beam, the speedup is given by the ratio of the time taken by the laser pulse and the plasma to cross each other, divided by the shortest time scale of interest, that is the laser period. To first order, the wake velocity :math:`v_w` is set by the 1D group velocity of the laser driver, which in the linear (low intensity) limit, is given by :cite:p:`Esareyrmp09`:
 
 .. math:: v_w/c=\beta_w=\left(1-\frac{\omega_p^2}{\omega^2}\right)^{1/2}
 
@@ -81,9 +81,9 @@ The expected speedup from performing the simulation in a boosted frame is given 
    S=\frac{R_{lab}}{R_t^*}=\frac{\left(1+\beta\right)\left(L+\eta \lambda_p\right)}{\left(1-\beta\beta_w\right)L+\eta \lambda_p}
    \label{Eq_scaling1d0}
 
-We note that assuming that :math:`\beta_w\approx1` (which is a valid approximation for most practical cases of interest) and that :math:`\gamma<<\gamma_w`, this expression is consistent with the expression derived earlier \cite{Vayprl07} for the laser-plasma acceleration case, which states that :math:`R_t^*=\alpha R_t/\left(1+\beta\right)` with :math:`\alpha=\left(1-\beta+l/L\right)/\left(1+l/L\right)`, where :math:`l` is the laser length which is generally proportional to :math:`\eta \lambda_p`, and :math:`S=R_t/R_T^*`. However, higher values of :math:`\gamma` are of interest for maximum speedup, as shown below.
+We note that assuming that :math:`\beta_w\approx1` (which is a valid approximation for most practical cases of interest) and that :math:`\gamma<<\gamma_w`, this expression is consistent with the expression derived earlier :cite:p:`Vayprl07` for the laser-plasma acceleration case, which states that :math:`R_t^*=\alpha R_t/\left(1+\beta\right)` with :math:`\alpha=\left(1-\beta+l/L\right)/\left(1+l/L\right)`, where :math:`l` is the laser length which is generally proportional to :math:`\eta \lambda_p`, and :math:`S=R_t/R_T^*`. However, higher values of :math:`\gamma` are of interest for maximum speedup, as shown below.
 
-For intense lasers (:math:`a\sim 1`) typically used for acceleration, the energy gain is limited by dephasing \cite{Schroederprl2011}, which occurs over a scale length :math:`L_d \sim \lambda_p^3/2\lambda^2`.
+For intense lasers (:math:`a\sim 1`) typically used for acceleration, the energy gain is limited by dephasing :cite:p:`Schroederprl2011`, which occurs over a scale length :math:`L_d \sim \lambda_p^3/2\lambda^2`.
 Acceleration is compromised beyond :math:`L_d` and in practice, the plasma length is proportional to the dephasing length, i.e. :math:`L= \xi L_d`. In most cases, :math:`\gamma_w^2>>1`, which allows the approximations :math:`\beta_w\approx1-\lambda^2/2\lambda_p^2`, and :math:`L=\xi \lambda_p^3/2\lambda^2\approx \xi \gamma_w^2 \lambda_p/2>>\eta \lambda_p`, so that Eq.(\ `[Eq_scaling1d0] <#Eq_scaling1d0>`__) becomes
 
 .. math::
@@ -114,26 +114,26 @@ Finally, in the frame of the wake, i.e. when :math:`\gamma=\gamma_w`, assuming t
 
 Since :math:`\eta` and :math:`\xi` are of order unity, and the practical regimes of most interest satisfy :math:`\gamma_w^2>>1`, the speedup that is obtained by using the frame of the wake will be near the maximum obtainable value given by Eq.(\ `[Eq_scaling_gamma_inf] <#Eq_scaling_gamma_inf>`__).
 
-Note that without the use of a moving window, the relativistic effects that are at play in the time domain would also be at play in the spatial domain \cite{Vayprl07}, and the :math:`\gamma^2` scaling would transform to :math:`\gamma^4`. Hence, it is important to use a moving window even in simulations in a Lorentz boosted frame. For very high values of the boosted frame, the optimal velocity of the moving window may vanish (i.e. no moving window) or even reverse.
+Note that without the use of a moving window, the relativistic effects that are at play in the time domain would also be at play in the spatial domain :cite:p:`Vayprl07`, and the :math:`\gamma^2` scaling would transform to :math:`\gamma^4`. Hence, it is important to use a moving window even in simulations in a Lorentz boosted frame. For very high values of the boosted frame, the optimal velocity of the moving window may vanish (i.e. no moving window) or even reverse.
 
 .. _theory-boostedframe-galilean:
 
 Numerical Stability and alternate formulation in a Galilean frame
 -----------------------------------------------------------------
 
-The numerical Cherenkov instability (NCI) \cite{Godfreyjcp74}
+The numerical Cherenkov instability (NCI) :cite:p:`Godfreyjcp74`
 is the most serious numerical instability affecting multidimensional
 PIC simulations of relativistic particle beams and streaming plasmas
-\cite{Martinscpc10,VayAAC2010,Vayjcp2011,Spitkovsky:Icnsp2011,GodfreyJCP2013,XuJCP2013}.
+:cite:p:`Martinscpc10,VayAAC2010,Vayjcp2011,Spitkovsky:Icnsp2011,GodfreyJCP2013,XuJCP2013`.
 It arises from coupling between possibly numerically distorted electromagnetic modes and spurious
 beam modes, the latter due to the mismatch between the Lagrangian
-treatment of particles and the Eulerian treatment of fields \cite{Godfreyjcp75}.
+treatment of particles and the Eulerian treatment of fields :cite:p:`Godfreyjcp75`.
 
 In recent papers the electromagnetic dispersion
-relations for the numerical Cherenkov instability were derived and solved for both FDTD \cite{GodfreyJCP2013,GodfreyJCP2014_FDTD}
-and PSATD \cite{GodfreyJCP2014_PSATD,GodfreyIEEE2014} algorithms.
+relations for the numerical Cherenkov instability were derived and solved for both FDTD :cite:p:`GodfreyJCP2013,GodfreyJCP2014_FDTD`
+and PSATD :cite:p:`GodfreyJCP2014_PSATD,GodfreyIEEE2014` algorithms.
 
-Several solutions have been proposed to mitigate the NCI \cite{GodfreyJCP2014,GodfreyIEEE2014,GodfreyJCP2014_PSATD,GodfreyCPC2015,YuCPC2015,YuCPC2015-Circ}. Although
+Several solutions have been proposed to mitigate the NCI :cite:p:`GodfreyJCP2014,GodfreyIEEE2014,GodfreyJCP2014_PSATD,GodfreyCPC2015,YuCPC2015,YuCPC2015-Circ`. Although
 these solutions efficiently reduce the numerical instability,
 they typically introduce either strong smoothing of the currents and
 fields, or arbitrary numerical corrections, which are
@@ -143,39 +143,39 @@ it is sometimes unclear to what extent these added corrections could impact the
 physics at stake for a given resolution.
 
 For instance, NCI-specific corrections include periodically smoothing
-the electromagnetic field components \cite{Martinscpc10},
-using a special time step \cite{VayAAC2010,Vayjcp2011} or
-applying a wide-band smoothing of the current components \cite{VayAAC2010,Vayjcp2011,VayPOPL2011}. Another set of mitigation methods
+the electromagnetic field components :cite:p:`Martinscpc10`,
+using a special time step :cite:p:`VayAAC2010,Vayjcp2011` or
+applying a wide-band smoothing of the current components :cite:p:`VayAAC2010,Vayjcp2011,VayPOPL2011`. Another set of mitigation methods
 involve scaling the deposited
 currents by a carefully-designed wavenumber-dependent factor
-\cite{GodfreyJCP2014_FDTD,GodfreyIEEE2014} or slightly modifying the
+:cite:p:`GodfreyJCP2014_FDTD,GodfreyIEEE2014` or slightly modifying the
 ratio of electric and magnetic fields (:math:`E/B`) before gathering their
 value onto the macroparticles
-\cite{GodfreyJCP2014_PSATD,GodfreyCPC2015}.
+:cite:p:`GodfreyJCP2014_PSATD,GodfreyCPC2015`.
 Yet another set of NCI-specific corrections
-\cite{YuCPC2015,YuCPC2015-Circ} consists
+:cite:p:`YuCPC2015,YuCPC2015-Circ` consists
 in combining a small timestep :math:`\Delta t`, a sharp low-pass spatial filter,
 and a spectral or high-order scheme that is tuned so as to
 create a small, artificial “bump” in the dispersion relation
-\cite{YuCPC2015}. While most mitigation methods have only been applied
+:cite:p:`YuCPC2015`. While most mitigation methods have only been applied
 to Cartesian geometry, this last
-set of methods \cite{YuCPC2015,YuCPC2015-Circ}
+set of methods :cite:p:`YuCPC2015,YuCPC2015-Circ`
 has the remarkable property that it can be applied
-\cite{YuCPC2015-Circ} to both Cartesian geometry and
+:cite:p:`YuCPC2015-Circ` to both Cartesian geometry and
 quasi-cylindrical geometry (i.e. cylindrical geometry with
-azimuthal Fourier decomposition \cite{LifschitzJCP2009,DavidsonJCP2015,Lehe2016}). However,
+azimuthal Fourier decomposition :cite:p:`LifschitzJCP2009,DavidsonJCP2015,Lehe2016`). However,
 the use of a small timestep proportionally slows down the progress of
 the simulation, and the artificial “bump” is again an arbitrary correction
 that departs from the underlying physics.
 
-A new scheme was recently proposed, in \cite{KirchenARXIV2016,LeheARXIV2016}, which
+A new scheme was recently proposed, in :cite:t:`KirchenARXIV2016,LeheARXIV2016`, which
 completely eliminates the NCI for a plasma drifting at a uniform relativistic velocity
 – with no arbitrary correction – by simply integrating
 the PIC equations in *Galilean coordinates* (also known as
 *comoving coordinates*). More precisely, in the new
 method, the Maxwell equations *in Galilean coordinates* are integrated
 analytically, using only natural hypotheses, within the PSATD
-framework (Pseudo-Spectral-Analytical-Time-Domain \cite{Habericnsp73,VayJCP2013}).
+framework (Pseudo-Spectral-Analytical-Time-Domain :cite:p:`Habericnsp73,VayJCP2013`).
 
 The idea of the proposed scheme is to perform a Galilean change of
 coordinates, and to carry out the simulation in the new coordinates:
@@ -196,7 +196,7 @@ plasma, the plasma does not move with respect to the grid in the Galilean
 coordinates :math:`\boldsymbol{x}'` – or, equivalently, in the standard
 coordinates :math:`\boldsymbol{x}`, the grid moves along with the plasma. The heuristic intuition behind this scheme
 is that these coordinates should prevent the discrepancy between the Lagrangian and
-Eulerian point of view, which gives rise to the NCI \cite{Godfreyjcp75}.
+Eulerian point of view, which gives rise to the NCI :cite:p:`Godfreyjcp75`.
 
 An important remark is that the Galilean change of
 coordinates (`[eq:change-var] <#eq:change-var>`__) is a simple translation. Thus, when used in
@@ -212,7 +212,7 @@ translate the boundaries, in the Galilean scheme the gridpoints
 *themselves* are not only translated but in this case, the physical equations
 are modified accordingly. Most importantly, the assumed time evolution of
 the current :math:`\boldsymbol{J}` within one timestep is different in a standard PSATD scheme with moving
-window and in a Galilean PSATD scheme \cite{LeheARXIV2016}.
+window and in a Galilean PSATD scheme :cite:p:`LeheARXIV2016`.
 
 In the Galilean coordinates :math:`\boldsymbol{x}'`, the equations of particle
 motion and the Maxwell equations take the form
@@ -234,7 +234,7 @@ Galilean coordinates :math:`\boldsymbol{x}'`.
 
 Integrating these equations from :math:`t=n\Delta
 t` to :math:`t=(n+1)\Delta t` results in the following update equations (see
-\cite{LeheARXIV2016} for the details of the derivation):
+:cite:p:`LeheARXIV2016` for the details of the derivation):
 
 .. math::
 
@@ -250,10 +250,9 @@ t` to :math:`t=(n+1)\Delta t` results in the following update equations (see
    & - \frac{1}{\epsilon_0k^2}\left(\; \chi_2\;\hat{\mathcal{\rho}}^{n+1} - \theta^2\chi_3\;\hat{\mathcal{\rho}}^{n} \;\right) i\boldsymbol{k} \label{eq:disc-maxwell2}
    \end{aligned}
 
-where we used the short-hand notations :math:`\mathbf{\tilde{E}}^n \equiv
-%
-\mathbf{\tilde{E}}(\boldsymbol{k}, n\Delta t)`, :math:`\mathbf{\tilde{B}}^n \equiv
-\mathbf{\tilde{B}}(\boldsymbol{k}, n\Delta t)` as well as:
+where we used the short-hand notations
+:math:`\mathbf{\tilde{E}}^n \equiv \mathbf{\tilde{E}}(\boldsymbol{k}, n\Delta t)`,
+:math:`\mathbf{\tilde{B}}^n \equiv \mathbf{\tilde{B}}(\boldsymbol{k}, n\Delta t)` as well as:
 
 .. math:: C = \cos(ck\Delta t), \quad S = \sin(ck\Delta t), \quad k = |\boldsymbol{k}|, \label{eq:def-C-S}
 
@@ -265,8 +264,8 @@ where we used the short-hand notations :math:`\mathbf{\tilde{E}}^n \equiv
 
 Note that, in the limit :math:`\boldsymbol{v}_{gal}=\boldsymbol{0}`,
 (`[eq:disc-maxwell1] <#eq:disc-maxwell1>`__) and (`[eq:disc-maxwell2] <#eq:disc-maxwell2>`__) reduce to the standard PSATD
-equations \cite{Habericnsp73}, as expected.
-As shown in \cite{KirchenARXIV2016,LeheARXIV2016},
+equations :cite:p:`Habericnsp73`, as expected.
+As shown in :cite:t:`KirchenARXIV2016,LeheARXIV2016`,
 the elimination of the NCI with the new Galilean integration is verified empirically via PIC simulations of uniform drifting plasmas and laser-driven plasma acceleration stages, and confirmed by a theoretical analysis of the instability.
 
 .. raw:: html
