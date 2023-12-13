@@ -6,6 +6,10 @@
 
    \maketitle
 
+.. raw:: latex
+
+   \linenumbers
+
 .. _theory-pic:
 
 Particle-in-Cell Method
