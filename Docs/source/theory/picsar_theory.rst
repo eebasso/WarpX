@@ -1,15 +1,3 @@
-.. raw:: latex
-
-   \markboth{J.-L. Vay, R. Lehe}{Simulations for plasma and laser acceleration.}
-
-.. raw:: latex
-
-   \maketitle
-
-.. raw:: latex
-
-   \linenumbers
-
 .. _theory-pic:
 
 Particle-in-Cell Method
@@ -144,12 +132,21 @@ for a detailed derivation), giving the following velocity update:
 
 where
 
-.. math:: \mathbf{t}=\boldsymbol{\tau}/\gamma^{i+1/2},
-.. math:: \boldsymbol{\tau}=\left(q\Delta t/2m\right)\mathbf{B}^{i},
-.. math:: \gamma^{i+1/2}=\sqrt{\sigma+\sqrt{\sigma^{2}+\left(\boldsymbol{\tau}^{2}+w^{2}\right)}},
-.. math:: w=\mathbf{u^{*}}\cdot\boldsymbol{\tau},
-.. math:: \sigma=\left(\gamma'^{2}-\boldsymbol{\tau}^{2}\right)/2,
-.. math:: \gamma'=\sqrt{1+(\mathbf{u}^{*}/c)^{2}}.
+.. math::
+
+   \begin{align}
+   \mathbf{t} & = \boldsymbol{\tau}/\gamma^{i+1/2},
+   \\
+   \boldsymbol{\tau} & = \left(q\Delta t/2m\right)\mathbf{B}^{i},
+   \\
+   \gamma^{i+1/2} & = \sqrt{\sigma+\sqrt{\sigma^{2}+\left(\boldsymbol{\tau}^{2}+w^{2}\right)}},
+   \\
+   w & = \mathbf{u^{*}}\cdot\boldsymbol{\tau},
+   \\
+   \sigma & = \left(\gamma'^{2}-\boldsymbol{\tau}^{2}\right)/2,
+   \\
+   \gamma' & = \sqrt{1+(\mathbf{u}^{*}/c)^{2}}.
+   \end{align}
 
 This Lorentz invariant formulation
 is particularly well suited for the modeling of ultra-relativistic
@@ -173,10 +170,12 @@ analytical time-domain (PSATD) and pseudo-spectral time-domain (PSTD)
 algorithms. Extension to multiresolution (or mesh refinement) PIC
 is described in, e.g., :cite:t:`pt-VayCSD12,pt-Vaycpc04`.
 
+.. _fig_yee_grid:
+
 .. figure:: Yee_grid.png
    :alt: [fig:yee_grid](left) Layout of field components on the staggered “Yee” grid. Current densities and electric fields are defined on the edges of the cells and magnetic fields on the faces. (right) Time integration using a second-order finite-difference "leapfrog" integrator.
 
-   [fig:yee_grid](left) Layout of field components on the staggered “Yee” grid. Current densities and electric fields are defined on the edges of the cells and magnetic fields on the faces. (right) Time integration using a second-order finite-difference "leapfrog" integrator.
+   (left) Layout of field components on the staggered “Yee” grid. Current densities and electric fields are defined on the edges of the cells and magnetic fields on the faces. (right) Time integration using a second-order finite-difference "leapfrog" integrator.
 
 .. _theory-pic-mwsolve-fdtd:
 
@@ -207,6 +206,7 @@ and the finite-difference operators in time and space are defined
 respectively as
 
 .. math::
+
    \begin{align}
    D_{t}G|_{i,j,k}^{n} & = \frac{(G|_{i,j,k}^{n+1/2}-G|_{i,j,k}^{n-1/2})}{\Delta t}\quad\mathrm{and}
    \\
@@ -219,8 +219,8 @@ and :math:`k` are the spatial indices along :math:`x`, :math:`y` and :math:`z` r
 The difference operators along :math:`y` and :math:`z` are obtained by circular
 permutation. The equations in brackets are given for completeness,
 as they are often not actually solved, thanks to the usage of a so-called
-charge conserving algorithm, as explained below. As shown in Figure
-`[fig:yee_grid] <#fig:yee_grid>`__, the quantities are given on a staggered (or “Yee”)
+charge conserving algorithm, as explained below. As shown in :numref:`fig_yee_grid`,
+the quantities are given on a staggered (or “Yee”)
 grid :cite:p:`pt-Yee`, where the electric field components are located
 between nodes and the magnetic field components are located in the
 center of the cell faces. Knowing the current densities at half-integer steps,
@@ -232,14 +232,14 @@ field components at integer and half-integer steps respectively.
 Non-Standard Finite-Difference Time-Domain (NSFDTD)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-In :cite:t:`pt-Coleieee1997,pt-Coleieee2002`, Cole introduced an implementation
-of the source-free Maxwell’s wave equations for narrow-band applications
-based on non-standard finite-differences (NSFD). In :cite:t:`pt-Karkicap06`,
-Karkkainen *et al.* adapted it for wideband applications. At
+An implementation of the source-free Maxwell’s wave equations for narrow-band
+applications based on non-standard finite-differences (NSFD)
+was introduced in :cite:t:`pt-Coleieee1997,pt-Coleieee2002`, and
+was adapted for wideband applications in :cite:t:`pt-Karkicap06`. At
 the Courant limit for the time step and for a given set of parameters,
 the stencil proposed in :cite:t:`pt-Karkicap06` has no numerical dispersion
 along the principal axes, provided that the cell size is the same
-along each dimension (i.e. cubic cells in 3D). The “Cole-Karkkainnen”
+along each dimension (i.e. cubic cells in 3D). The “Cole-Karkkainen”
 (or CK) solver uses the non-standard finite difference formulation
 (based on extended stencils) of the Maxwell-Ampere equation and can be
 implemented as follows :cite:p:`pt-Vayjcp2011`:
@@ -260,21 +260,24 @@ implemented as follows :cite:p:`pt-Vayjcp2011`:
    \left[\nabla^{*}\cdot\mathbf{B}= 0\right]
    :label: divb
 
-Eqs. :eq:`Gauss` and:eq:`divb` are not being solved explicitly
+Eqs. :eq:`Gauss` and :eq:`divb` are not being solved explicitly
 but verified via appropriate initial conditions and current deposition
 procedure. The NSFD differential operator is given by
 
 .. math::
+
    \nabla^{*}=D_{x}^{*}\mathbf{\hat{x}}+D_{y}^{*}\mathbf{\hat{y}}+D_{z}^{*}\mathbf{\hat{z}}
 
 where
 
 .. math::
+
    D_{x}^{*}=\left(\alpha+\beta S_{x}^{1}+\xi S_{x}^{2}\right)D_{x}
 
 with
 
 .. math::
+
    \begin{align}
    S_{x}^{1}G|_{i,j,k}^{n} & = G|_{i,j+1,k}^{n}+G|_{i,j-1,k}^{n}+G|_{i,j,k+1}^{n}+G|_{i,j,k-1}^{n},
    \\
@@ -357,15 +360,15 @@ the system of equations is solvable analytically and is given by (see
 for a more detailed derivation):
 
 .. math::
-   \mathbf{\tilde{E}}_{T}^{n+1} & = C\mathbf{\tilde{E}}_{T}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}_{T}^{n+1/2}
+   \mathbf{\tilde{E}}_{T}^{n+1} = C\mathbf{\tilde{E}}_{T}^{n}+iS\mathbf{\hat{k}}\times\mathbf{\tilde{B}}^{n}-\frac{S}{k}\mathbf{\tilde{J}}_{T}^{n+1/2}
    :label: PSATD_transverse_1
 
 .. math::
-   \mathbf{\tilde{E}}_{L}^{n+1} & = \mathbf{\tilde{E}}_{L}^{n}-\Delta t\mathbf{\tilde{J}}_{L}^{n+1/2}
+   \mathbf{\tilde{E}}_{L}^{n+1} = \mathbf{\tilde{E}}_{L}^{n}-\Delta t\mathbf{\tilde{J}}_{L}^{n+1/2}
    :label: PSATD_longitudinal
 
 .. math::
-   \mathbf{\tilde{B}}^{n+1} & = C\mathbf{\tilde{B}}^{n}-iS\mathbf{\hat{k}}\times\mathbf{\tilde{E}}^{n} + i\frac{1-C}{k}\mathbf{\hat{k}}\times\mathbf{\tilde{J}}^{n+1/2}
+   \mathbf{\tilde{B}}^{n+1} = C\mathbf{\tilde{B}}^{n}-iS\mathbf{\hat{k}}\times\mathbf{\tilde{E}}^{n} + i\frac{1-C}{k}\mathbf{\hat{k}}\times\mathbf{\tilde{J}}^{n+1/2}
    :label: PSATD_transverse_2
 
 with :math:`C=\cos\left(k\Delta t\right)` and :math:`S=\sin\left(k\Delta t\right)`.
@@ -396,7 +399,7 @@ dispersion and is not subject to a Courant condition. Furthermore,
 this solution is exact for any time step size subject to the assumption
 that the current source is constant over that time step.
 
-As shown in :cite:t:`pt-VayJCP13`, by expanding the coefficients :math:`S_{h}`
+As shown in :cite:t:`pt-VayJCP2013`, by expanding the coefficients :math:`S_{h}`
 and :math:`C_{h}` in Taylor series and keeping the leading terms, the PSATD
 formulation reduces to the perhaps better known pseudo-spectral time-domain
 (PSTD) formulation :cite:p:`pt-DawsonRMP83,pt-Liumotl1997`:
@@ -421,7 +424,7 @@ of the field components by the appropriate phase factors to shift
 them from the collocated to the staggered locations. The choice between
 a collocated and a staggered formulation is application-dependent.
 
-Spectral solvers used to be very popular in the years 1970s to early 1990s, before being replaced by finite-difference methods with the advent of parallel supercomputers that favored local methods. However, it was shown recently that standard domain decomposition with Fast Fourier Transforms that are local to each subdomain could be used effectively with PIC spectral methods :cite:p:`pt-VayJCP13`, at the cost of truncation errors in the guard cells that could be neglected. A detailed analysis of the effectiveness of the method with exact evaluation of the magnitude of the effect of the truncation error is given in :cite:t:`pt-Vincenti2016a` for stencils of arbitrary order (up-to the infinite “spectral” order).
+Spectral solvers used to be very popular in the years 1970s to early 1990s, before being replaced by finite-difference methods with the advent of parallel supercomputers that favored local methods. However, it was shown recently that standard domain decomposition with Fast Fourier Transforms that are local to each subdomain could be used effectively with PIC spectral methods :cite:p:`pt-VayJCP2013`, at the cost of truncation errors in the guard cells that could be neglected. A detailed analysis of the effectiveness of the method with exact evaluation of the magnitude of the effect of the truncation error is given in :cite:t:`pt-Vincenti2016a` for stencils of arbitrary order (up-to the infinite “spectral” order).
 
 WarpX also includes a kinetic-fluid hybrid model in which the electric field is
 calculated using Ohm's law instead of directly evolving Maxwell's equations. This
@@ -473,12 +476,14 @@ In the case of the pseudospectral solvers, the current deposition
 algorithm generally does not satisfy the discretized continuity equation
 in Fourier space:
 
-.. math:: \tilde{\rho}^{n+1}=\tilde{\rho}^{n}-i\Delta t\mathbf{k}\cdot\mathbf{\tilde{J}}^{n+1/2}.
+.. math::
+   \tilde{\rho}^{n+1}=\tilde{\rho}^{n}-i\Delta t\mathbf{k}\cdot\mathbf{\tilde{J}}^{n+1/2}.
 
 In this case, a Boris correction :cite:p:`pt-Birdsalllangdon` can be applied
 in :math:`k` space in the form
 
-.. math:: \mathbf{\tilde{E}}_{c}^{n+1}=\mathbf{\tilde{E}}^{n+1}-\frac{\mathbf{k}\cdot\mathbf{\tilde{E}}^{n+1}+i\tilde{\rho}^{n+1}}{k}\mathbf{\hat{k}},
+.. math::
+   \mathbf{\tilde{E}}_{c}^{n+1}=\mathbf{\tilde{E}}^{n+1}-\frac{\mathbf{k}\cdot\mathbf{\tilde{E}}^{n+1}+i\tilde{\rho}^{n+1}}{k}\mathbf{\hat{k}},
 
 where :math:`\mathbf{\tilde{E}}_{c}` is the corrected field. Alternatively, a correction
 to the current can be applied (with some similarity to the current
@@ -500,7 +505,7 @@ Vay deposition
 
 Alternatively, an exact current deposition can be written for the pseudo-spectral solvers, following the geometrical interpretation of existing methods in real space :cite:p:`pt-Morsenielson1971,pt-Villasenorcpc92,pt-Esirkepovcpc01`.
 
-The Vay deposition scheme is the generalization of the Esirkepov deposition scheme for the spectral case with arbitrary-order stencils `(Vay et al, 2013) <https://doi.org/10.1016/j.jcp.2013.03.010>`_. TODO: turn this into a bibtex citation.
+The Vay deposition scheme is the generalization of the Esirkepov deposition scheme for the spectral case with arbitrary-order stencils :cite:p:`pt-VayJCP2013`.
 The current density :math:`\widehat{\boldsymbol{J}}^{\,n+1/2}` in Fourier space is computed as :math:`\widehat{\boldsymbol{J}}^{\,n+1/2} = i \, \widehat{\boldsymbol{D}} / \boldsymbol{k}` when :math:`\boldsymbol{k} \neq 0` and set to zero otherwise.
 The quantity :math:`\boldsymbol{D}` is deposited in real space by averaging the currents over all possible grid paths between the initial position :math:`\boldsymbol{x}^{\,n}` and the final position :math:`\boldsymbol{x}^{\,n+1}` and is defined as
 
@@ -532,32 +537,40 @@ The quantity :math:`\boldsymbol{D}` is deposited in real space by averaging the 
 .. math::
    \begin{align}
    \begin{split}
-   D_x = & \: \sum_i \frac{1}{\Delta x\Delta y\Delta z} \frac{q_i w_i}{6\Delta t}
+   D_x & = \sum_i \frac{1}{\Delta x\Delta y\Delta z} \frac{q_i w_i}{6\Delta t}
    \bigg[
-   2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n+1}) - 2 \Gamma(x_i^{n},y_i^{n+1},z_i^{n+1}) \\[4pt]
-   & + \Gamma(x_i^{n+1},y_i^{n},z_i^{n+1}) - \Gamma(x_i^{n},y_i^{n},z_i^{n+1})
-   + \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n}) \\[4pt]
-   & - \Gamma(x_i^{n},y_i^{n+1},z_i^{n}) + 2 \Gamma(x_i^{n+1},y_i^{n},z_i^{n})
+   2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n+1}) - 2 \Gamma(x_i^{n},y_i^{n+1},z_i^{n+1})
+   \\[4pt]
+       & \phantom{=} \: + \Gamma(x_i^{n+1},y_i^{n},z_i^{n+1}) - \Gamma(x_i^{n},y_i^{n},z_i^{n+1})
+   + \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n})
+   \\[4pt]
+       & \phantom{=} \: - \Gamma(x_i^{n},y_i^{n+1},z_i^{n}) + 2 \Gamma(x_i^{n+1},y_i^{n},z_i^{n})
    - 2 \Gamma(x_i^{n},y_i^{n},z_i^{n})
    \bigg]
-   \end{split} \\[8pt]
+   \end{split}
+   \\[8pt]
    \begin{split}
-   D_y = & \: \sum_i \frac{1}{\Delta x\Delta y\Delta z} \frac{q_i w_i}{6\Delta t}
+   D_y & = \sum_i \frac{1}{\Delta x\Delta y\Delta z} \frac{q_i w_i}{6\Delta t}
    \bigg[
-   2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n+1}) - 2 \Gamma(x_i^{n+1},y_i^{n},z_i^{n+1}) \\[4pt]
-   & + \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n}) - \Gamma(x_i^{n+1},y_i^{n},z_i^{n})
-   + \Gamma(x_i^{n},y_i^{n+1},z_i^{n+1}) \\[4pt]
-   & - \Gamma(x_i^{n},y_i^{n},z_i^{n+1}) + 2 \Gamma(x_i^{n},y_i^{n+1},z_i^{n})
+   2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n+1}) - 2 \Gamma(x_i^{n+1},y_i^{n},z_i^{n+1})
+   \\[4pt]
+       & \phantom{=} \: + \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n}) - \Gamma(x_i^{n+1},y_i^{n},z_i^{n})
+   + \Gamma(x_i^{n},y_i^{n+1},z_i^{n+1})
+   \\[4pt]
+      & \phantom{=} \: - \Gamma(x_i^{n},y_i^{n},z_i^{n+1}) + 2 \Gamma(x_i^{n},y_i^{n+1},z_i^{n})
    - 2 \Gamma(x_i^{n},y_i^{n},z_i^{n})
    \bigg]
-   \end{split} \\[8pt]
+   \end{split}
+   \\[8pt]
    \begin{split}
-   D_z = & \sum_i \frac{1}{\Delta x\Delta y\Delta z} \frac{q_i w_i}{6\Delta t}
+   D_z & = \sum_i \frac{1}{\Delta x\Delta y\Delta z} \frac{q_i w_i}{6\Delta t}
    \bigg[
-   2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n+1}) - 2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n}) \\[4pt]
-   & + \Gamma(x_i^{n},y_i^{n+1},z_i^{n+1}) - \Gamma(x_i^{n},y_i^{n+1},z_i^{n})
-   + \Gamma(x_i^{n+1},y_i^{n},z_i^{n+1}) \\[4pt]
-   & - \Gamma(x_i^{n+1},y_i^{n},z_i^{n}) + 2 \Gamma(x_i^{n},y_i^{n},z_i^{n+1})
+   2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n+1}) - 2 \Gamma(x_i^{n+1},y_i^{n+1},z_i^{n})
+   \\[4pt]
+       & \phantom{=} \: + \Gamma(x_i^{n},y_i^{n+1},z_i^{n+1}) - \Gamma(x_i^{n},y_i^{n+1},z_i^{n})
+   + \Gamma(x_i^{n+1},y_i^{n},z_i^{n+1})
+   \\[4pt]
+       & \phantom{=} \: - \Gamma(x_i^{n+1},y_i^{n},z_i^{n}) + 2 \Gamma(x_i^{n},y_i^{n},z_i^{n+1})
    - 2 \Gamma(x_i^{n},y_i^{n},z_i^{n})
    \bigg]
    \end{split}
@@ -612,7 +625,8 @@ current density in Particle-In-Cell simulations as a complement or
 an alternative to using higher order splines :cite:p:`pt-Birdsalllangdon`.
 A commonly used filter in PIC simulations is the three points filter
 
-.. math:: \phi_{j}^{f}=\alpha\phi_{j}+\left(1-\alpha\right)\left(\phi_{j-1}+\phi_{j+1}\right)/2
+.. math::
+   \phi_{j}^{f}=\alpha\phi_{j}+\left(1-\alpha\right)\left(\phi_{j-1}+\phi_{j+1}\right)/2
 
 where :math:`\phi^{f}` is the filtered quantity. This filter is called
 a bilinear filter when :math:`\alpha=0.5`. Assuming :math:`\phi=e^{jkx}` and
@@ -620,12 +634,14 @@ a bilinear filter when :math:`\alpha=0.5`. Assuming :math:`\phi=e^{jkx}` and
 given as a function of the filtering coefficient :math:`\alpha` and
 the wavenumber :math:`k` by
 
-.. math:: g\left(\alpha,k\right)=\alpha+\left(1-\alpha\right)\cos\left(k\Delta x\right)\approx1-\left(1-\alpha\right)\frac{\left(k\Delta x\right)^{2}}{2}+O\left(k^{4}\right)`.
+.. math::
+   g\left(\alpha,k\right)=\alpha+\left(1-\alpha\right)\cos\left(k\Delta x\right)\approx1-\left(1-\alpha\right)\frac{\left(k\Delta x\right)^{2}}{2}+O\left(k^{4}\right)`.
 
 The total attenuation :math:`G` for :math:`n` successive applications of filters
 of coefficients :math:`\alpha_{1}`...\ :math:`\alpha_{n}` is given by
 
-.. math:: G=\prod_{i=1}^{n}g\left(\alpha_{i},k\right)\approx1-\left(n-\sum_{i=1}^{n}\alpha_{i}\right)\frac{\left(k\Delta x\right)^{2}}{2}+O\left(k^{4}\right)`.
+.. math::
+   G=\prod_{i=1}^{n}g\left(\alpha_{i},k\right)\approx1-\left(n-\sum_{i=1}^{n}\alpha_{i}\right)\frac{\left(k\Delta x\right)^{2}}{2}+O\left(k^{4}\right)`.
 
 A sharper cutoff in :math:`k` space is provided by using :math:`\alpha_{n}=n-\sum_{i=1}^{n-1}\alpha_{i}`,
 so that :math:`G\approx1+O\left(k^{4}\right)`. Such step is called a “compensation”
@@ -648,11 +664,13 @@ the grid Nyquist wavelength (twice the grid cell size). Suppression
 of the signal at integer multiples of the Nyquist wavelength can be
 obtained by using a stride :math:`s` in the filter
 
-.. math:: \phi_{j}^{f}=\alpha\phi_{j}+\left(1-\alpha\right)\left(\phi_{j-s}+\phi_{j+s}\right)/2
+.. math::
+   \phi_{j}^{f}=\alpha\phi_{j}+\left(1-\alpha\right)\left(\phi_{j-s}+\phi_{j+s}\right)/2
 
 for which the gain is given by
 
-.. math:: g\left(\alpha,k\right)=\alpha+\left(1-\alpha\right)\cos\left(sk\Delta x\right)\approx1-\left(1-\alpha\right)\frac{\left(sk\Delta x\right)^{2}}{2}+O\left(k^{4}\right).
+.. math::
+   g\left(\alpha,k\right)=\alpha+\left(1-\alpha\right)\cos\left(sk\Delta x\right)\approx1-\left(1-\alpha\right)\frac{\left(sk\Delta x\right)^{2}}{2}+O\left(k^{4}\right).
 
 For a given stride, the gain is given by the gain of the bilinear
 filter shifted in k space, with the pole :math:`g=0` shifted from the wavelength

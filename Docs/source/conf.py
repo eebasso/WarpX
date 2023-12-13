@@ -137,6 +137,10 @@ numfig = True
 # math_numfig = True
 # numfig_secnum_depth = 2
 math_eqref_format = "{number}"
+numfig_format = {'figure': 'Fig. %s',
+                 'table': 'Table %s',
+                 'code-block': 'Listing %s',
+                 'section': 'Section %s'}
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
