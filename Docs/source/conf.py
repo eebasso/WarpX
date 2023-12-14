@@ -135,7 +135,8 @@ html_theme = 'sphinx_rtd_theme'
 
 numfig = True
 # math_numfig = True
-# numfig_secnum_depth = 2
+
+# math_number_all = True
 math_eqref_format = "{number}"
 numfig_format = {'figure': 'Fig. %s',
                  'table': 'Table %s',

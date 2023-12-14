@@ -12,10 +12,11 @@ Simulations in a Lorentz boosted frame require additional considerations, as des
 Inputs and outputs in a boosted frame simulation
 ------------------------------------------------
 
-.. _Fig_inputoutput:
+.. _fig_inputoutput:
+
 .. figure:: Input_output.png
    :alt: (top) Snapshot of a particle beam showing “frozen" (grey spheres) and “active" (colored spheres) macroparticles traversing the injection plane (red rectangle). (bottom) Snapshot of the beam macroparticles (colored spheres) passing through the background of electrons (dark brown streamlines) and the diagnostic stations (red rectangles). The electrons, the injection plane and the diagnostic stations are fixed in the laboratory plane, and are thus counter-propagating to the beam in a boosted frame.
-   :width: 120mm
+   :width: 100%
 
    (top) Snapshot of a particle beam showing “frozen" (grey spheres) and “active" (colored spheres) macroparticles traversing the injection plane (red rectangle). (bottom) Snapshot of the beam macroparticles (colored spheres) passing through the background of electrons (dark brown streamlines) and the diagnostic stations (red rectangles). The electrons, the injection plane and the diagnostic stations are fixed in the laboratory plane, and are thus counter-propagating to the beam in a boosted frame.
 

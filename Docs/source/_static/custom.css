@@ -4,3 +4,8 @@
     /* Copied from https://github.com/readthedocs/sphinx_rtd_theme/issues/301#issuecomment-1205755904 */
     float: right;
 }
+
+/* .figure {
+    align-items: center !important;
+    text-align: center !important;
+} */

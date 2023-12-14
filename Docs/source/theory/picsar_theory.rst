@@ -260,7 +260,7 @@ implemented as follows :cite:p:`pt-Vayjcp2011`:
    \left[\nabla^{*}\cdot\mathbf{B}= 0\right]
    :label: divb
 
-Eqs. :eq:`Gauss` and :eq:`divb` are not being solved explicitly
+Eqs. (:eq:`Gauss`) and (:eq:`divb`) are not being solved explicitly
 but verified via appropriate initial conditions and current deposition
 procedure. The NSFD differential operator is given by
 
