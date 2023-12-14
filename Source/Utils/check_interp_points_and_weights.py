@@ -33,11 +33,11 @@ import numpy as np
 # Fine grid limits (without ghost cells)
 def fine_grid_limits( sf ):
     if   ( sf == 0 ): # cell-centered
-       iimin = 0
-       iimax = 7
+        iimin = 0
+        iimax = 7
     elif ( sf == 1 ): # nodal
-       iimin = 0
-       iimax = 8
+        iimin = 0
+        iimax = 8
     return [ iimin, iimax ]
 
 # Coarse grid limits (without ghost cells)
@@ -67,17 +67,17 @@ def refinement_points_and_weights( ii, sc, sf, cr ):
         idxmin = ii
     elif ( cr>=2 ):
         if   ( ii%cr==0 ):
-           numpts = (1-sf)*(1-sc)+sf*sc
+            numpts = (1-sf)*(1-sc)+sf*sc
         elif ( ii%cr!=0 ):
-           numpts = (1-sf)*(1-sc)+2*sf*sc
+            numpts = (1-sf)*(1-sc)+2*sf*sc
         idxmin = (ii//cr)*(1-sf)*(1-sc)+(ii//cr)*sf*sc
     weights = np.zeros( numpts )
     for ir in range( numpts ):
         i = idxmin+ir
         if   ( ii==iimin or ii==iimax ):
-           weights[ir] = (1-sf)*(1-sc)+((abs(cr-abs(ii-i*cr)))/(cr)+(cr/2-0.5))*sf*sc
+            weights[ir] = (1-sf)*(1-sc)+((abs(cr-abs(ii-i*cr)))/(cr)+(cr/2-0.5))*sf*sc
         else:
-           weights[ir] = (1-sf)*(1-sc)+((abs(cr-abs(ii-i*cr)))/(cr))*sf*sc
+            weights[ir] = (1-sf)*(1-sc)+((abs(cr-abs(ii-i*cr)))/(cr))*sf*sc
     return [ numpts, idxmin, weights ]
 
 ## TODO Coarsening for IO: interpolation points and weights
@@ -110,14 +110,14 @@ for sc in [0,1]:
         print( '\n **************************************************' )
         print( ' * Staggering of coarse grid: sc={}'.format( sc ), end='' )
         if ( sc == 0 ):
-           print( ' cell-centered  *' )
+            print( ' cell-centered  *' )
         elif ( sc == 1 ):
-           print( ' nodal          *' )
+            print( ' nodal          *' )
         print( ' * Staggering of fine   grid: sf={}'.format( sf ), end='' )
         if ( sf == 0 ):
-           print( ' cell-centered  *' )
+            print( ' cell-centered  *' )
         elif ( sf == 1 ):
-           print( ' nodal          *' )
+            print( ' nodal          *' )
         print( ' **************************************************' )
 
         iimin,iimax = fine_grid_limits( sf )
@@ -148,7 +148,7 @@ for sc in [0,1]:
                 ii = idxmin+ir
                 print( ' ({},{})'.format( ii, weights[ir] ), end='' )
                 if not ( ir == numpts-1 ):
-                       print( ' ', end='' )
+                    print( ' ', end='' )
             print()
 
         # Coarsening for MR: check conservation properties
@@ -159,9 +159,9 @@ for sc in [0,1]:
                 for ir in range( numpts ): # interpolation points and weights
                     jj = idxmin+ir
                     if ( jj==ii ): # interpolation point matches point on fine grid
-                       ws += weights[ir]
+                        ws += weights[ir]
             if ( ws!=1.0/cr ):
-               print( '\n ERROR: sum of weights ws={} should be 1/cr'.format( ws ) )
+                print( '\n ERROR: sum of weights ws={} should be 1/cr'.format( ws ) )
 
         print( '\n Refinement for MR: check interpolation points and weights' )
         print( ' ---------------------------------------------------------' )
@@ -174,7 +174,7 @@ for sc in [0,1]:
                 i = idxmin+ir
                 print( ' ({},{})'.format( i, weights[ir] ), end='' )
                 if not ( ir == numpts-1 ):
-                       print( ' ', end='' )
+                    print( ' ', end='' )
             print()
 
         # Refinement for MR: check conservation properties
@@ -185,6 +185,6 @@ for sc in [0,1]:
                 for ir in range( numpts ): # interpolation points and weights
                     jj = idxmin+ir
                     if ( jj==i ): # interpolation point matches point on coarse grid
-                       ws += weights[ir]
+                        ws += weights[ir]
             if ( ws!=cr ):
-               print( '\n ERROR: sum of weights ws={} should be cr'.format( ws ) )
+                print( '\n ERROR: sum of weights ws={} should be cr'.format( ws ) )
