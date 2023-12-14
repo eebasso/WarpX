@@ -275,8 +275,8 @@ namespace ablastr::utils::msg_logger
         */
         void
         swap_with_io_rank (
-        std::vector<MsgWithCounterAndRanks>& msgs_with_counter_and_ranks,
-        int gather_rank) const;
+            std::vector<MsgWithCounterAndRanks>& msgs_with_counter_and_ranks,
+            int gather_rank) const;
 
 #endif
 

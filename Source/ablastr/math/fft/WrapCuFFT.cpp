@@ -72,7 +72,8 @@ namespace ablastr::math::anyfft
         cufftDestroy( fft_plan.m_plan );
     }
 
-    void Execute (FFTplan& fft_plan){
+    void Execute (FFTplan& fft_pla)
+    {
         // make sure that this is done on the same GPU stream as the above copy
         cudaStream_t stream = amrex::Gpu::Device::cudaStream();
         cufftSetStream ( fft_plan.m_plan, stream);

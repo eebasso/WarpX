@@ -12,7 +12,8 @@
 
 std::vector<std::string>
 ablastr::utils::text::automatic_text_wrap (
-    const std::string& text, const int max_line_length){
+    const std::string& text, const int max_line_length)
+{
 
     auto ss_text = std::stringstream{text};
     auto wrapped_text_lines = std::vector<std::string>{};
