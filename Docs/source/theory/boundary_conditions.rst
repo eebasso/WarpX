@@ -183,7 +183,7 @@ In the following we set :math:`\varepsilon_0 = \mu_0 = 1`. We discretize Eqs. (:
 .. math::
    \frac{H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l}-H_{zy}|^{n+1/2}_{j+1/2,k+1/2,l}}{\Delta t} + \sigma^*_y \frac{H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l}+H_{zy}|^{n+1/2}_{j+1/2,k+1/2,l}}{2} = \frac{E_x|^{n+1}_{j+1/2,k+1,l}-E_x|^{n+1}_{j+1/2,k,l}}{\Delta y}
 
-and this implies the update equations can be written as
+and this can be solved to obtain the following leapfrog integration equations
 
 .. math::
 
@@ -192,12 +192,12 @@ and this implies the update equations can be written as
    \\
    E_y|^{n+1}_{j,k+1/2,l} & = \left(\frac{1-\sigma_x \Delta t/2}{1+\sigma_x \Delta t/2}\right) E_y|^{n}_{j,k+1/2,l} - \frac{\Delta t/\Delta x}{1+\sigma_x \Delta t/2} \left(H_z|^{n+1/2}_{j+1/2,k+1/2,l}-H_z|^{n+1/2}_{j-1/2,k+1/2,l}\right)
    \\
-   H_{zx}|^{n+3/2}_{j+1/2,k+1/2,l} & = \left(\frac{1-\sigma^*_x \Delta t/2}{1+\sigma^*_x \Delta t/2}\right) H_{zx}|^{n}_{j+1/2,k+1/2,l} - \frac{\Delta t/\Delta x}{1+\sigma^*_x \Delta t/2} \left(E_y|^{n+1}_{j+1,k+1/2,l}-E_y|^{n+1}_{j,k+1/2,l}\right)
+   H_{zx}|^{n+3/2}_{j+1/2,k+1/2,l} & = \left(\frac{1-\sigma^*_x \Delta t/2}{1+\sigma^*_x \Delta t/2}\right) H_{zx}|^{n+1/2}_{j+1/2,k+1/2,l} - \frac{\Delta t/\Delta x}{1+\sigma^*_x \Delta t/2} \left(E_y|^{n+1}_{j+1,k+1/2,l}-E_y|^{n+1}_{j,k+1/2,l}\right)
    \\
-   H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l} & = \left(\frac{1-\sigma^*_y \Delta t/2}{1+\sigma^*_y \Delta t/2}\right) H_{zy}|^{n}_{j+1/2,k+1/2,l} + \frac{\Delta t/\Delta y}{1+\sigma^*_y \Delta t/2} \left(E_x|^{n+1}_{j+1/2,k+1,l}-E_x|^{n+1}_{j+1/2,k,l}\right)
+   H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l} & = \left(\frac{1-\sigma^*_y \Delta t/2}{1+\sigma^*_y \Delta t/2}\right) H_{zy}|^{n+1/2}_{j+1/2,k+1/2,l} + \frac{\Delta t/\Delta y}{1+\sigma^*_y \Delta t/2} \left(E_x|^{n+1}_{j+1/2,k+1,l}-E_x|^{n+1}_{j+1/2,k,l}\right)
    \end{aligned}
 
-In the small :math:`\Delta t` limit, this becomes
+If we account for higher order :math:`\Delta t` terms, a better approximation is given by
 
 .. math::
 
@@ -206,9 +206,9 @@ In the small :math:`\Delta t` limit, this becomes
    \\
    E_y|^{n+1}_{j,k+1/2,l} & = e^{-\sigma_x\Delta t} E_y|^{n}_{j,k+1/2,l} - \frac{1-e^{-\sigma_x\Delta t}}{\sigma_x \Delta x} \left(H_z|^{n+1/2}_{j+1/2,k+1/2,l}-H_z|^{n+1/2}_{j-1/2,k+1/2,l}\right)
    \\
-   H_{zx}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_x\Delta t} H_{zx}|^{n}_{j+1/2,k+1/2,l} - \frac{1-e^{-\sigma^*_x\Delta t}}{\sigma^*_x \Delta x} \left(E_y|^{n+1}_{j+1,k+1/2,l}-E_y|^{n+1}_{j,k+1/2,l}\right)
+   H_{zx}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_x\Delta t} H_{zx}|^{n+1/2}_{j+1/2,k+1/2,l} - \frac{1-e^{-\sigma^*_x\Delta t}}{\sigma^*_x \Delta x} \left(E_y|^{n+1}_{j+1,k+1/2,l}-E_y|^{n+1}_{j,k+1/2,l}\right)
    \\
-   H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_y\Delta t} H_{zy}|^{n}_{j+1/2,k+1/2,l} + \frac{1-e^{-\sigma^*_y\Delta t}}{\sigma^*_y \Delta y} \left(E_x|^{n+1}_{j+1/2,k+1,l}-E_x|^{n+1}_{j+1/2,k,l}\right)
+   H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_y\Delta t} H_{zy}|^{n+1/2}_{j+1/2,k+1/2,l} + \frac{1-e^{-\sigma^*_y\Delta t}}{\sigma^*_y \Delta y} \left(E_x|^{n+1}_{j+1/2,k+1,l}-E_x|^{n+1}_{j+1/2,k,l}\right)
    \end{aligned}
 
 More generally, this becomes
@@ -220,12 +220,12 @@ More generally, this becomes
    \\
    E_y|^{n+1}_{j,k+1/2,l} & = e^{-\sigma_x\Delta t} E_y|^{n}_{j,k+1/2,l} - \frac{1-e^{-\sigma_x\Delta t}}{\sigma_x \Delta x}\frac{c_x}{c} \left(H_z|^{n+1/2}_{j+1/2,k+1/2,l}-H_z|^{n+1/2}_{j-1/2,k+1/2,l}\right)
    \\
-   H_{zx}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_x\Delta t} H_{zx}|^{n}_{j+1/2,k+1/2,l} - \frac{1-e^{-\sigma^*_x\Delta t}}{\sigma^*_x \Delta x}\frac{c^*_x}{c} \left(E_y|^{n+1}_{j+1,k+1/2,l}-E_y|^{n+1}_{j,k+1/2,l}\right)
+   H_{zx}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_x\Delta t} H_{zx}|^{n+1/2}_{j+1/2,k+1/2,l} - \frac{1-e^{-\sigma^*_x\Delta t}}{\sigma^*_x \Delta x}\frac{c^*_x}{c} \left(E_y|^{n+1}_{j+1,k+1/2,l}-E_y|^{n+1}_{j,k+1/2,l}\right)
    \\
-   H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_y\Delta t} H_{zy}|^{n}_{j+1/2,k+1/2,l} + \frac{1-e^{-\sigma^*_y\Delta t}}{\sigma^*_y \Delta y}\frac{c^*_y}{c} \left(E_x|^{n+1}_{j+1/2,k+1,l}-E_x|^{n+1}_{j+1/2,k,l}\right)
+   H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_y\Delta t} H_{zy}|^{n+1/2}_{j+1/2,k+1/2,l} + \frac{1-e^{-\sigma^*_y\Delta t}}{\sigma^*_y \Delta y}\frac{c^*_y}{c} \left(E_x|^{n+1}_{j+1/2,k+1,l}-E_x|^{n+1}_{j+1/2,k,l}\right)
    \end{aligned}
 
-where
+If we set
 
 .. math::
 
@@ -235,6 +235,8 @@ where
    c^*_x & = c \: e^{-\sigma^*_x\Delta t} \frac{\sigma^*_x \Delta t}{1-e^{-\sigma^*_x\Delta t}} \\
    c^*_y & = c \: e^{-\sigma^*_y\Delta t} \frac{\sigma^*_y \Delta t}{1-e^{-\sigma^*_y\Delta t}}\end{aligned}
 
+then this becomes
+
 .. math::
 
    \begin{aligned}
@@ -242,10 +244,12 @@ where
    \\
    E_y|^{n+1}_{j,k+1/2,l} & = e^{-\sigma_x\Delta t} \left[ E_y|^{n}_{j,k+1/2,l} - \frac{\Delta t}{\Delta x}  \left(H_z|^{n+1/2}_{j+1/2,k+1/2,l}-H_z|^{n+1/2}_{j-1/2,k+1/2,l}\right) \right]
    \\
-   H_{zx}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_x\Delta t} \left[ H_{zx}|^{n}_{j+1/2,k+1/2,l} - \frac{\Delta t}{\Delta x}  \left(E_y|^{n+1}_{j+1,k+1/2,l}-E_y|^{n+1}_{j,k+1/2,l}\right) \right]
+   H_{zx}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_x\Delta t} \left[ H_{zx}|^{n+1/2}_{j+1/2,k+1/2,l} - \frac{\Delta t}{\Delta x}  \left(E_y|^{n+1}_{j+1,k+1/2,l}-E_y|^{n+1}_{j,k+1/2,l}\right) \right]
    \\
-   H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_y\Delta t} \left[ H_{zy}|^{n}_{j+1/2,k+1/2,l} + \frac{\Delta t}{\Delta y}  \left(E_x|^{n+1}_{j+1/2,k+1,l}-E_x|^{n+1}_{j+1/2,k,l}\right) \right]
+   H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l} & = e^{-\sigma^*_y\Delta t} \left[ H_{zy}|^{n+1/2}_{j+1/2,k+1/2,l} + \frac{\Delta t}{\Delta y}  \left(E_x|^{n+1}_{j+1/2,k+1,l}-E_x|^{n+1}_{j+1/2,k,l}\right) \right]
    \end{aligned}
+
+When the generalized conductivities are zero, the update equations are
 
 .. math::
 
@@ -254,10 +258,12 @@ where
    \\
    E_y|^{n+1}_{j,k+1/2,l} & = E_y|^{n}_{j,k+1/2,l} - \frac{\Delta t}{\Delta x} \left(H_z|^{n+1/2}_{j+1/2,k+1/2,l}-H_z|^{n+1/2}_{j-1/2,k+1/2,l}\right)
    \\
-   H_{zx}|^{n+3/2}_{j+1/2,k+1/2,l} & = H_{zx}|^{n}_{j+1/2,k+1/2,l} - \frac{\Delta t}{\Delta x} \left(E_y|^{n+1}_{j+1,k+1/2,l}-E_y|^{n+1}_{j,k+1/2,l}\right)
+   H_{zx}|^{n+3/2}_{j+1/2,k+1/2,l} & = H_{zx}|^{n+1/2}_{j+1/2,k+1/2,l} - \frac{\Delta t}{\Delta x} \left(E_y|^{n+1}_{j+1,k+1/2,l}-E_y|^{n+1}_{j,k+1/2,l}\right)
    \\
-   H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l} & = H_{zy}|^{n}_{j+1/2,k+1/2,l} + \frac{\Delta t}{\Delta y} \left(E_x|^{n+1}_{j+1/2,k+1,l}-E_x|^{n+1}_{j+1/2,k,l}\right)
+   H_{zy}|^{n+3/2}_{j+1/2,k+1/2,l} & = H_{zy}|^{n+1/2}_{j+1/2,k+1/2,l} + \frac{\Delta t}{\Delta y} \left(E_x|^{n+1}_{j+1/2,k+1,l}-E_x|^{n+1}_{j+1/2,k,l}\right)
    \end{aligned}
+
+as expected.
 
 .. _theory-bc-pec:
 
