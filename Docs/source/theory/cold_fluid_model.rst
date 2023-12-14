@@ -63,14 +63,14 @@ Step 0: **Preparation**
     on a nodal grid and at half-integer timestep.
 
 Step 1: **Higuera and Cary Push**
-    The time staggering of the fields is used by the momentum source term, which is solved with a the
-    Higuera and Cary push :cite:p:`HigueraCary2017`. We do not adopt spatial
+    The time staggering of the fields is used by the momentum source term, which is solved with a
+    Higuera and Cary push :cite:p:`cfm-HigueraCary2017`. We do not adopt spatial
     grid staggering, all discretized fluid quantities exist on the nodal grid. External fields
     can be included at this step.
 
 Step 2: **Non-inertial Terms**
     In RZ, the divergence of the flux terms has additional non-zero elements outside of the
-    derivatives. These terms are Strang split and are time integrated via equation 2.18 from :cite:t:`ShuOsher1988`,
+    derivatives. These terms are Strang split and are time integrated via equation 2.18 from :cite:t:`cfm-ShuOsher1988`,
     which is the SSP-RK3 integrator.
 
 Step 3: **Boundary Conditions and Communications**
@@ -83,7 +83,7 @@ Step 4: **Advective Push**
     limiting is used. We further simplify the conservative equations in terms of primitive
     variables, :math:`\{ N, U_x, U_y, U_z \}`. Which we found to be
     more stable than conservative variables for the MUSCL reconstruction. Details of
-    the scheme can be found in :cite:t:`VanLeerBookChapter1997`.
+    the scheme can be found in :cite:t:`cfm-VanLeerBookChapter1997`.
 
 Step 5: **Current and Charge Deposition**
     Once this series of steps is complete and the fluids have been evolved by an entire
