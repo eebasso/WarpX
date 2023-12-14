@@ -163,4 +163,68 @@ struct BackwardEulerAlgo {
 
 };
 
+struct BerengerAlgo {
+
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    static amrex::Real alpha (amrex::Real const sigma,
+                              amrex::Real const epsilon,
+                              amrex::Real dt)
+    {
+        using namespace amrex::literals;
+        if (epsilon == 0._rt) {
+            return 0._rt;
+        }
+        if (sigma == 0._rt) {
+            return 1._rt;
+        }
+        const amrex::Real sigdt_over_eps = sigma * dt / epsilon;
+        return std::exp(-sigdt_over_eps);
+
+    }
+
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    static amrex::Real beta (amrex::Real const sigma,
+                             amrex::Real const epsilon,
+                             amrex::Real dt)
+    {
+        using namespace amrex::literals;
+        if (epsilon == 0._rt) {
+            return 1._rt;
+        }
+        const amrex::Real dt_over_eps = dt / epsilon;
+        const amrex::Real sigdt_over_eps = sigma * dt_over_eps;
+        if (std::abs(sigdt_over_eps) < 1.E-6_rt ) {
+            return dt_over_eps / (1._rt + 0.5_rt * sigdt_over_eps);
+        } else {
+            return (1._rt - std::exp(-sigdt_over_eps)) / sigma;
+        }
+    }
+
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    static void calc_alpha_and_beta (amrex::Real& alpha,
+                                     amrex::Real& beta,
+                                     amrex::Real sigma,
+                                     amrex::Real epsilon,
+                                     amrex::Real dt)
+    {
+        using namespace amrex::literals;
+        if (epsilon == 0._rt) {
+            alpha = 0._rt;
+            beta = 1._rt;
+            return;
+        }
+        const amrex::Real dt_over_eps = dt / epsilon;
+        const amrex::Real sigdt_over_eps = sigma * dt_over_eps;
+
+        alpha = std::exp(-sigdt_over_eps);
+
+        if (std::abs(sigdt_over_eps) < 1.E-6_rt ) {
+            beta = dt_over_eps / (1._rt + 0.5_rt * sigdt_over_eps);
+        } else {
+            beta = (1._rt - alpha) / sigma;
+        }
+    }
+
+}
+
 #endif // WARPX_MACROSCOPIC_PROPERTIES_H_
