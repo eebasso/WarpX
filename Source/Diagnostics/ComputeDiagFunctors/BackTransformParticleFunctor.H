@@ -154,7 +154,7 @@ struct LorentzTransformParticles
         dst.m_aos[i_dst].pos(0) = xp;
         dst.m_aos[i_dst].pos(1) = zp;
         amrex::ignore_unused(yp);
-#elif defined (WARPX_DIM_1D)
+#elif defined (WARPX_DIM_1D_Z)
         dst.m_aos[i_dst].pos(0) = zp;
         amrex::ignore_unused(xp, yp);
 #else
@@ -202,7 +202,7 @@ public:
     /** Computes the Lorentz transform of source particles to obtain lab-frame data in pc_dst*/
     void operator() (PinnedMemoryParticleContainer& pc_dst, int &TotalParticleCounter, int i_buffer) const override;
     void InitData () override;
-    /** \brief Prepare data required to back-transform particle attribtutes for lab-frame snapshot, i_buffer
+    /** \brief Prepare data required to back-transform particle attributes for lab-frame snapshot, i_buffer
      *
      * \param[in] i_buffer           index of the snapshot
      * \param[in] z_slice_in_domain  if the z-slice at current_z_boost is within the bounds of

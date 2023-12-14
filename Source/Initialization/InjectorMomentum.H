@@ -131,7 +131,7 @@ namespace {
                 u = approx_u_th * std::sqrt(2._rt*std::log(1._rt/xrand));
                 // Rejection method
                 xrand = amrex::Random(engine);
-                if (xrand < std::exp(-reject_prefactor*(u - umsign*u_th)*(u - umsign*u_th))) reject = false;
+                if (xrand < std::exp(-reject_prefactor*(u - umsign*u_th)*(u - umsign*u_th))) { reject = false; }
             }
         } else {
             // Mean velocity magnitude is greater than thermal velocity
@@ -152,7 +152,7 @@ namespace {
                 }
                 // Rejection method
                 const amrex::Real xrand = amrex::Random(engine);
-                if (xrand < u*inv_um* std::exp(1._rt - u*inv_um)) reject = false;
+                if (xrand < u*inv_um* std::exp(1._rt - u*inv_um)) { reject = false; }
             }
         }
 
@@ -198,7 +198,7 @@ struct InjectorMomentumGaussianFlux
             u_th = m_uz_th;
         }
         amrex::Real u = generateGaussianFluxDist(u_m, u_th, engine);
-        if (m_flux_direction < 0) u = -u;
+        if (m_flux_direction < 0) { u = -u; }
 
         // Note: Here, in RZ geometry, the variables `ux` and `uy` actually
         // correspond to the radial and azimuthal component of the momentum
@@ -310,7 +310,7 @@ struct InjectorMomentumBoltzmann
 
         // The following condition is equation 32 in Zenitani 2015
         // (Phys. Plasmas 22, 042116) , called the flipping method. It
-        // transforms the intergral: d3x' -> d3x  where d3x' is the volume
+        // transforms the integral: d3x' -> d3x  where d3x' is the volume
         // element for positions in the boosted frame. The particle positions
         // and densities can be initialized in the simulation frame.
         // The flipping method can transform any symmetric distribution from one
@@ -339,10 +339,10 @@ struct InjectorMomentumBoltzmann
     {
         using namespace amrex::literals;
         amrex::Real u[3];
-        for (auto& el : u) el = 0.0_rt;
+        for (auto& el : u) { el = 0.0_rt; }
         const amrex::Real beta = velocity(x,y,z);
         int const dir = velocity.direction();
-        const auto gamma = static_cast<amrex::Real>(1._rt/sqrt(1._rt-beta*beta));
+        const auto gamma = 1._rt/std::sqrt(1._rt-beta*beta);
         u[dir] = gamma*beta;
         return amrex::XDim3 {u[0],u[1],u[2]};
     }
@@ -352,7 +352,7 @@ private:
     GetTemperature temperature;
 };
 
-// struct whose getMomentum returns momentum for 1 particle with relativistc
+// struct whose getMomentum returns momentum for 1 particle with relativistic
 // drift velocity beta, from the Maxwell-Juttner distribution. Method is from
 // Zenitani 2015 (Phys. Plasmas 22, 042116).
 struct InjectorMomentumJuttner
@@ -410,8 +410,8 @@ struct InjectorMomentumJuttner
         // The value of dir is the boost direction to be transformed.
         u[dir] = u[dir]*(2._rt*x1-1._rt);
         x1 = amrex::Random(engine);
-        // The following condition is equtaion 32 in Zenitani, called
-        // The flipping method. It transforms the intergral: d3x' -> d3x
+        // The following condition is equation 32 in Zenitani, called
+        // The flipping method. It transforms the integral: d3x' -> d3x
         // where d3x' is the volume element for positions in the boosted frame.
         // The particle positions and densities can be initialized in the
         // simulation frame with this method.
@@ -442,10 +442,10 @@ struct InjectorMomentumJuttner
     {
         using namespace amrex::literals;
         amrex::Real u[3];
-        for (auto& el : u) el = 0.0_rt;
+        for (auto& el : u) { el = 0.0_rt; }
         amrex::Real const beta = velocity(x,y,z);
         int const dir = velocity.direction();
-        auto const gamma = static_cast<amrex::Real>(1._rt/sqrt(1._rt-beta*beta));
+        auto const gamma = 1._rt/std::sqrt(1._rt-beta*beta);
         u[dir] = gamma*beta;
         return amrex::XDim3 {u[0],u[1],u[2]};
     }
@@ -489,7 +489,7 @@ private:
     amrex::Real u_over_r;
 };
 
-// struct whose getMomentumm returns local momentum computed from parser.
+// struct whose getMomentum returns local momentum computed from parser.
 struct InjectorMomentumParser
 {
     InjectorMomentumParser (amrex::ParserExecutor<3> const& a_ux_parser,
@@ -518,7 +518,7 @@ struct InjectorMomentumParser
     amrex::ParserExecutor<3> m_ux_parser, m_uy_parser, m_uz_parser;
 };
 
-// struct whose getMomentumm returns local momentum and thermal spread computed from parser.
+// struct whose getMomentum returns local momentum and thermal spread computed from parser.
 struct InjectorMomentumGaussianParser
 {
     InjectorMomentumGaussianParser (amrex::ParserExecutor<3> const& a_ux_m_parser,

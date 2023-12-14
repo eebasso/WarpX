@@ -44,12 +44,13 @@ AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real minmod (amrex::Real a, amrex::Real b)
 {
     using namespace amrex::literals;
-    if (a > 0.0_rt && b > 0.0_rt)
+    if (a > 0.0_rt && b > 0.0_rt) {
         return std::min(a, b);
-    else if (a < 0.0_rt && b < 0.0_rt)
+    } else if (a < 0.0_rt && b < 0.0_rt) {
         return std::max(a, b);
-    else
+    } else {
         return 0.0_rt;
+    }
 }
 // Min of 3 inputs
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
@@ -68,24 +69,26 @@ AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real minmod3 (amrex::Real a, amrex::Real b, amrex::Real c)
 {
     using namespace amrex::literals;
-    if (a > 0.0_rt && b > 0.0_rt && c > 0.0_rt)
+    if (a > 0.0_rt && b > 0.0_rt && c > 0.0_rt) {
         return min3(a,b,c);
-    else if (a < 0.0_rt && b < 0.0_rt && c < 0.0_rt)
+    } else if (a < 0.0_rt && b < 0.0_rt && c < 0.0_rt) {
         return max3(a,b,c);
-    else
+    } else {
         return 0.0;
+    }
 }
 //maxmod
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real maxmod (amrex::Real a, amrex::Real b)
 {
     using namespace amrex::literals;
-    if (a > 0.0_rt && b > 0.0_rt)
+    if (a > 0.0_rt && b > 0.0_rt) {
         return std::max(a, b);
-    else if (a < 0.0_rt && b < 0.0_rt)
+    } else if (a < 0.0_rt && b < 0.0_rt) {
         return std::min(a, b);
-    else
+    } else {
         return 0.0_rt;
+    }
 }
 // Rusanov Flux (density)
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
@@ -132,30 +135,33 @@ amrex::Real ave_adjustable_diff (amrex::Real a, amrex::Real b)
 {
     using namespace amrex::literals;
     constexpr auto sigma = static_cast<amrex::Real>(2.0*0.732050807568877);
-    if (a*b > 0.0_rt)
+    if (a*b > 0.0_rt) {
         return minmod3( (a+b)/2.0_rt, sigma*a, sigma*b );
-    else
+    } else {
         return 0.0_rt;
+    }
 }
 // ave_minmod Low diffusivity
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real ave (amrex::Real a, amrex::Real b)
 {
     using namespace amrex::literals;
-    if (a*b > 0.0_rt)
+    if (a*b > 0.0_rt) {
         return minmod3( (a+b)/2.0_rt, 2.0_rt*a, 2.0_rt*b );
-    else
+    } else {
         return 0.0_rt;
+    }
 }
 // ave_superbee
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
 amrex::Real ave_superbee (amrex::Real a, amrex::Real b)
 {
     using namespace amrex::literals;
-    if (a*b > 0.0_rt)
+    if (a*b > 0.0_rt) {
         return minmod( maxmod(a,b), minmod(2.0_rt*a,2.0_rt*b));
-    else
+    } else {
         return 0.0_rt;
+    }
 }
 // stage2 slope limiting
 AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
@@ -384,7 +390,7 @@ amrex::Real DownDx_U (const amrex::Array4<amrex::Real>& N,
 #if defined(WARPX_DIM_3D) || defined(WARPX_DIM_RZ) || defined(WARPX_DIM_XZ)
     // U is zero if N is zero, Check positivity before dividing
     amrex::Real U_m = 0;
-    if (N(i-1,j,k) > 0) U_m = NU(i-1,j,k)/N(i-1,j,k);
+    if (N(i-1,j,k) > 0) { U_m = NU(i-1,j,k)/N(i-1,j,k); }
     return U - U_m;
 #else
     amrex::ignore_unused(N, NU, U, i, j, k);
@@ -402,7 +408,7 @@ amrex::Real UpDx_U (const amrex::Array4<amrex::Real>& N,
 #if defined(WARPX_DIM_3D) || defined(WARPX_DIM_RZ) || defined(WARPX_DIM_XZ)
     // U is zero if N is zero, Check positivity before dividing
     amrex::Real U_p = 0;
-    if (N(i+1,j,k) > 0) U_p = NU(i+1,j,k)/N(i+1,j,k);
+    if (N(i+1,j,k) > 0) { U_p = NU(i+1,j,k)/N(i+1,j,k); }
     return U_p - U;
 #else
     amrex::ignore_unused(N, NU, U, i, j, k);
@@ -421,7 +427,7 @@ amrex::Real DownDy_U (const amrex::Array4<amrex::Real>& N,
 #if defined(WARPX_DIM_3D)
     // U is zero if N is zero, Check positivity before dividing
     amrex::Real U_m = 0;
-    if (N(i,j-1,k) > 0) U_m = NU(i,j-1,k)/N(i,j-1,k);
+    if (N(i,j-1,k) > 0) { U_m = NU(i,j-1,k)/N(i,j-1,k); }
     return U - U_m;
 #else
     amrex::ignore_unused(N, NU, U, i, j, k);
@@ -439,7 +445,7 @@ amrex::Real UpDy_U (const amrex::Array4<amrex::Real>& N,
 #if defined(WARPX_DIM_3D)
     // U is zero if N is zero, Check positivity before dividing
     amrex::Real U_p = 0;
-    if (N(i,j+1,k) > 0) U_p = NU(i,j+1,k)/N(i,j+1,k);
+    if (N(i,j+1,k) > 0) { U_p = NU(i,j+1,k)/N(i,j+1,k); }
     return U_p - U;
 #else
     amrex::ignore_unused(N, NU, U, i, j, k);
@@ -459,11 +465,11 @@ amrex::Real DownDz_U (const amrex::Array4<amrex::Real>& N,
 
     // U is zero if N is zero, Check positivity before dividing
 #if defined(WARPX_DIM_3D)
-    if (N(i,j,k-1) > 0) U_m = NU(i,j,k-1)/N(i,j,k-1);
+    if (N(i,j,k-1) > 0) { U_m = NU(i,j,k-1)/N(i,j,k-1); }
 #elif defined(WARPX_DIM_RZ) || defined(WARPX_DIM_XZ)
-    if (N(i,j-1,k) > 0) U_m = NU(i,j-1,k)/N(i,j-1,k);
+    if (N(i,j-1,k) > 0) { U_m = NU(i,j-1,k)/N(i,j-1,k); }
 #else
-    if (N(i-1,j,k) > 0) U_m = NU(i-1,j,k)/N(i-1,j,k);
+    if (N(i-1,j,k) > 0) { U_m = NU(i-1,j,k)/N(i-1,j,k); }
 #endif
 
     // Return the difference
@@ -481,11 +487,11 @@ amrex::Real UpDz_U (const amrex::Array4<amrex::Real>& N,
 
     // U is zero if N is zero, Check positivity before dividing
 #if defined(WARPX_DIM_3D)
-    if (N(i,j,k+1) > 0) U_p = NU(i,j,k+1)/N(i,j,k+1);
+    if (N(i,j,k+1) > 0) { U_p = NU(i,j,k+1)/N(i,j,k+1); }
 #elif defined(WARPX_DIM_RZ) || defined(WARPX_DIM_XZ)
-    if (N(i,j+1,k) > 0) U_p = NU(i,j+1,k)/N(i,j+1,k);
+    if (N(i,j+1,k) > 0) { U_p = NU(i,j+1,k)/N(i,j+1,k); }
 #else
-    if (N(i+1,j,k) > 0) U_p = NU(i+1,j,k)/N(i+1,j,k);
+    if (N(i+1,j,k) > 0) { U_p = NU(i+1,j,k)/N(i+1,j,k); }
 #endif
 
     // Return the difference
