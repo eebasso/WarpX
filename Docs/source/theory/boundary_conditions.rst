@@ -137,7 +137,7 @@ If :math:`c_{x}=c^{*}_{x}`, :math:`c_{y}=c^{*}_{y}`, :math:`\overline{\sigma }_{
 which is the impedance of vacuum. Hence, like the PML, given some
 restrictions on the parameters, the APML does not generate any reflection
 at any angle and any frequency. As for the PML, this property is not
-retained after discretization, as shown subsequently in this paper.
+retained after discretization, as shown subsequently.
 
 Calling :math:`\psi` any component of the field and :math:`\psi _{0}`
 its magnitude, we get from Eqs. (:eq:`Plane_wave_APML_def_1`), (:eq:`Plane_wave_APML_beta_of_g`),
@@ -292,10 +292,10 @@ the right boundary is reflecting.
 .. _fig_PEC_boundary_deposition:
 
 .. figure:: https://user-images.githubusercontent.com/40245517/221491318-b0a2bcbc-b04f-4b8c-8ec5-e9c92e55ee53.png
-   :alt: Plot of PEC boundary current deposition showing current vs position
+   :alt: Plot of PEC boundary current deposition showing current vs position along the ``x``-axis.
    :width: 100%
 
-   Current deposition with PEC boundaries along the ``x``-axis. The left boundary is absorbing while the right boundary is reflecting.
+   PEC boundary current deposition along the ``x``-axis. The left boundary is absorbing while the right boundary is reflecting.
 
 .. bibliography::
    :keyprefix: bc-
