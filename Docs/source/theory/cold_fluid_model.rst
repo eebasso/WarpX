@@ -64,13 +64,13 @@ Step 0: **Preparation**
 
 Step 1: **Higuera and Cary Push**
     The time staggering of the fields is used by the momentum source term, which is solved with a
-    Higuera and Cary push :cite:p:`cfm-HigueraCary2017`. We do not adopt spatial
+    Higuera and Cary push :cite:p:`cfm-HigueraPOP2017`. We do not adopt spatial
     grid staggering, all discretized fluid quantities exist on the nodal grid. External fields
     can be included at this step.
 
 Step 2: **Non-inertial Terms**
     In RZ, the divergence of the flux terms has additional non-zero elements outside of the
-    derivatives. These terms are Strang split and are time integrated via equation 2.18 from :cite:t:`cfm-ShuOsher1988`,
+    derivatives. These terms are Strang split and are time integrated via equation 2.18 from :cite:t:`cfm-ShuJCP1988`,
     which is the SSP-RK3 integrator.
 
 Step 3: **Boundary Conditions and Communications**
