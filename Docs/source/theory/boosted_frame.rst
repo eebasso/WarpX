@@ -165,7 +165,7 @@ the use of a small timestep proportionally slows down the progress of
 the simulation, and the artificial “bump” is again an arbitrary correction
 that departs from the underlying physics.
 
-A new scheme was recently proposed, in :cite:t:`bf-KirchenARXIV2016,bf-LeheARXIV2016`, which
+A new scheme was recently proposed, in :cite:t:`bf-KirchenPOP2016,bf-LehePRE2016`, which
 completely eliminates the NCI for a plasma drifting at a uniform relativistic velocity
 – with no arbitrary correction – by simply integrating
 the PIC equations in *Galilean coordinates* (also known as
@@ -208,7 +208,7 @@ translate the boundaries, in the Galilean scheme the gridpoints
 *themselves* are not only translated but in this case, the physical equations
 are modified accordingly. Most importantly, the assumed time evolution of
 the current :math:`\boldsymbol{J}` within one timestep is different in a standard PSATD scheme with moving
-window and in a Galilean PSATD scheme :cite:p:`bf-LeheARXIV2016`.
+window and in a Galilean PSATD scheme :cite:p:`bf-LehePRE2016`.
 
 In the Galilean coordinates :math:`\boldsymbol{x}'`, the equations of particle
 motion and the Maxwell equations take the form
@@ -234,7 +234,7 @@ Galilean coordinates :math:`\boldsymbol{x}'`.
 
 Integrating these equations from :math:`t=n\Delta
 t` to :math:`t=(n+1)\Delta t` results in the following update equations (see
-:cite:t:`bf-LeheARXIV2016` for the details of the derivation):
+:cite:t:`bf-LehePRE2016` for the details of the derivation):
 
 .. math::
    \begin{aligned}
@@ -281,7 +281,7 @@ where we used the short-hand notations
 Note that, in the limit :math:`\boldsymbol{v}_{gal}=\boldsymbol{0}`,
 Eqs. (:eq:`disc-maxwell1`) and (:eq:`disc-maxwell2`) reduce to the standard PSATD
 equations :cite:p:`bf-Habericnsp73`, as expected.
-As shown in :cite:t:`bf-KirchenARXIV2016,bf-LeheARXIV2016`,
+As shown in :cite:t:`bf-KirchenPOP2016,bf-LehePRE2016`,
 the elimination of the NCI with the new Galilean integration is verified empirically via PIC simulations of uniform drifting plasmas and laser-driven plasma acceleration stages, and confirmed by a theoretical analysis of the instability.
 
 .. bibliography::
