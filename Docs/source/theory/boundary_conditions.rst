@@ -3,7 +3,9 @@
 Boundary conditions
 ===================
 
-Open boundary condition for electromagnetic waves
+.. _theory-bc-PML:
+
+Perfectly Matched Layer: open boundary condition for electromagnetic waves
 -------------------------------------------------
 
 For the transverse electric (TE) case, the original Berenger’s Perfectly Matched Layer (PML) paper :cite:p:`bc-Berengerjcp94` writes
