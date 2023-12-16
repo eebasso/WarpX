@@ -110,4 +110,3 @@ Step 5: **Current and Charge Deposition**
 
 .. bibliography::
    :keyprefix: cfm-
-

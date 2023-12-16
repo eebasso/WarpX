@@ -134,9 +134,6 @@ todo_include_todos = False
 html_theme = 'sphinx_rtd_theme'
 
 numfig = True
-# math_numfig = True
-
-# math_number_all = True
 math_eqref_format = "{number}"
 numfig_format = {'figure': 'Fig. %s',
                  'table': 'Table %s',
@@ -157,7 +154,6 @@ html_static_path = ['_static']
 html_css_files = [
     'custom.css',
 ]
-
 
 # -- Options for HTMLHelp output ------------------------------------------
 
