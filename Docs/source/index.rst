@@ -107,7 +107,7 @@ Theory
    :hidden:
 
    theory/intro
-   theory/picsar_theory
+   theory/pic
    theory/amr
    theory/boundary_conditions
    theory/boosted_frame
