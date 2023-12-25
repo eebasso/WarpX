@@ -340,8 +340,8 @@ bool FieldProbe::ProbeInDomain () const
     auto & warpx = WarpX::GetInstance();
     int const lev = 0;
     const amrex::Geometry& gm = warpx.Geom(lev);
-    const auto prob_lo = gm.ProbLo();
-    const auto prob_hi = gm.ProbHi();
+    const auto *const prob_lo = gm.ProbLo();
+    const auto *const prob_hi = gm.ProbHi();
 
     /*
      * Determine if probe exists within simulation boundaries. During 2D simulations,
@@ -600,7 +600,7 @@ void FieldProbe::ComputeDiags (int step)
 
             // IO processor sums values from length_array to get size of total output array.
             /* displs records the size of each m_data as well as previous displs. This array
-             * tells Gatherv where in the m_data_out array allocation to write incomming data. */
+             * tells Gatherv where in the m_data_out array allocation to write incoming data. */
             long total_data_size = 0;
             amrex::Vector<int> displs_vector;
             if (amrex::ParallelDescriptor::IOProcessor()) {
@@ -634,8 +634,9 @@ void FieldProbe::WriteToFile (int step) const
     auto first_id = static_cast<long int>(m_data_out[0]);
     for (long int i = 0; i < m_valid_particles; i++)
     {
-        if (m_data_out[i*noutputs] < first_id)
+        if (m_data_out[i*noutputs] < first_id) {
             first_id = static_cast<long int>(m_data_out[i*noutputs]);
+        }
     }
 
     // Create a new array to store probe data ordered by id, which will be printed to file.

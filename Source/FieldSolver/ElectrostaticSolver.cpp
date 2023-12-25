@@ -105,8 +105,9 @@ WarpX::AddBoundaryField ()
 
     // Store the boundary conditions for the field solver if they haven't been
     // stored yet
-    if (!m_poisson_boundary_handler.bcs_set)
+    if (!m_poisson_boundary_handler.bcs_set) {
         m_poisson_boundary_handler.definePhiBCs(Geom(0));
+    }
 
     // Allocate fields for charge and potential
     const int num_levels = max_level + 1;
@@ -146,8 +147,9 @@ WarpX::AddSpaceChargeField (WarpXParticleContainer& pc)
 
     // Store the boundary conditions for the field solver if they haven't been
     // stored yet
-    if (!m_poisson_boundary_handler.bcs_set)
+    if (!m_poisson_boundary_handler.bcs_set) {
         m_poisson_boundary_handler.definePhiBCs(Geom(0));
+    }
 
 #ifdef WARPX_DIM_RZ
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(n_rz_azimuthal_modes == 1,
@@ -181,7 +183,9 @@ WarpX::AddSpaceChargeField (WarpXParticleContainer& pc)
     bool const local_average = false; // Average across all MPI ranks
     std::array<ParticleReal, 3> beta_pr = pc.meanParticleVelocity(local_average);
     std::array<Real, 3> beta;
-    for (int i=0 ; i < static_cast<int>(beta.size()) ; i++) beta[i] = beta_pr[i]/PhysConst::c; // Normalize
+    for (int i=0 ; i < static_cast<int>(beta.size()) ; i++) {
+        beta[i] = beta_pr[i]/PhysConst::c; // Normalize
+    }
 
     // Compute the potential phi, by solving the Poisson equation
     computePhi( rho, phi, beta, pc.self_fields_required_precision,
@@ -201,8 +205,9 @@ WarpX::AddSpaceChargeFieldLabFrame ()
 
     // Store the boundary conditions for the field solver if they haven't been
     // stored yet
-    if (!m_poisson_boundary_handler.bcs_set)
+    if (!m_poisson_boundary_handler.bcs_set) {
         m_poisson_boundary_handler.definePhiBCs(Geom(0));
+    }
 
 #ifdef WARPX_DIM_RZ
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(n_rz_azimuthal_modes == 1,
@@ -973,7 +978,7 @@ void ElectrostaticSolver::PoissonBoundaryHandler::definePhiBCs (const amrex::Geo
         lobc[0] = LinOpBCType::Neumann;
         dirichlet_flag[0] = false;
 
-        // handle the r_max boundary explicity
+        // handle the r_max boundary explicitly
         if (WarpX::field_boundary_hi[0] == FieldBoundaryType::PEC) {
             hibc[0] = LinOpBCType::Dirichlet;
             dirichlet_flag[1] = true;

@@ -266,8 +266,8 @@ BTDMultiFabHeaderImpl::WriteMultiFabHeader ()
     }
     std::ofstream FabHeaderFile;
     FabHeaderFile.open(m_Header_path.c_str(), std::ofstream::out |
-                                           std::ofstream::trunc |
-                                           std::ofstream::binary);
+                                              std::ofstream::trunc |
+                                              std::ofstream::binary);
     if ( !FabHeaderFile.good()) { amrex::FileOpenFailed(m_Header_path); }
 
     FabHeaderFile.precision(17);

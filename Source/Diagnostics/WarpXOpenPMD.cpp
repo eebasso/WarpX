@@ -100,8 +100,9 @@ namespace detail
                       std::string const & engine_type,
                       std::map< std::string, std::string > const & engine_parameters)
     {
-        if (operator_type.empty() && engine_type.empty())
+        if (operator_type.empty() && engine_type.empty()) {
             return "{}";
+        }
 
         std::string options;
         std::string top_block;
@@ -308,31 +309,25 @@ namespace detail
 
         if( (record_name == "position") || (record_name == "positionOffset") ) {
             return {{openPMD::UnitDimension::L,  1.}};
-        }
-        else if( record_name == "momentum" ) {
+        } else if( record_name == "momentum" ) {
             return {{openPMD::UnitDimension::L,  1.},
                     {openPMD::UnitDimension::M,  1.},
                     {openPMD::UnitDimension::T, -1.}};
-        }
-        else if( record_name == "charge" )  {
+        } else if( record_name == "charge" ) {
             return {{openPMD::UnitDimension::T,  1.},
                     {openPMD::UnitDimension::I,  1.}};
-        }
-        else if( record_name == "mass" ) {
+        } else if( record_name == "mass" ) {
             return {{openPMD::UnitDimension::M,  1.}};
-        }
-        else if( record_name == "E" ) {
+        } else if( record_name == "E" ) {
             return {{openPMD::UnitDimension::L,  1.},
                     {openPMD::UnitDimension::M,  1.},
                     {openPMD::UnitDimension::T, -3.},
                     {openPMD::UnitDimension::I, -1.}};
-        }
-        else if( record_name == "B" ) {
+        } else if( record_name == "B" ) {
             return {{openPMD::UnitDimension::M,  1.},
                     {openPMD::UnitDimension::I, -1.},
                     {openPMD::UnitDimension::T, -2.}};
-        }
-        else {
+        } else {
             return {};
         }
     }
@@ -453,7 +448,7 @@ void WarpXOpenPMDPlot::CloseStep (bool isBTD, bool isLastBTDFlush)
     // default close is true
     bool callClose = true;
     // close BTD file only when isLastBTDFlush is true
-    if (isBTD and !isLastBTDFlush) callClose = false;
+    if (isBTD and !isLastBTDFlush) { callClose = false; }
     if (callClose) {
         if (m_Series) {
             GetIteration(m_CurrentStep, isBTD).close();
@@ -476,8 +471,9 @@ void WarpXOpenPMDPlot::CloseStep (bool isBTD, bool isLastBTDFlush)
 void
 WarpXOpenPMDPlot::Init (openPMD::Access access, bool isBTD)
 {
-    if( isBTD && m_Series != nullptr )
+    if( isBTD && m_Series != nullptr ) {
         return; // already open for this snapshot (aka timestep in lab frame)
+    }
 
     // either for the next ts file,
     // or init a single file for all ts
@@ -486,10 +482,11 @@ WarpXOpenPMDPlot::Init (openPMD::Access access, bool isBTD)
 
     // close a previously open series before creating a new one
     // see ADIOS1 limitation: https://github.com/openPMD/openPMD-api/pull/686
-    if ( m_Encoding == openPMD::IterationEncoding::fileBased )
+    if ( m_Encoding == openPMD::IterationEncoding::fileBased ) {
         m_Series = nullptr;
-    else if ( m_Series != nullptr )
+    } else if ( m_Series != nullptr ) {
         return;
+    }
 
     if (amrex::ParallelDescriptor::NProcs() > 1) {
 #if defined(AMREX_USE_MPI)
@@ -508,8 +505,9 @@ WarpXOpenPMDPlot::Init (openPMD::Access access, bool isBTD)
     m_Series->setIterationEncoding( m_Encoding );
 
     // input file / simulation setup author
-    if( !m_authors.empty())
+    if( !m_authors.empty()) {
         m_Series->setAuthor( m_authors );
+    }
     // more natural naming for PIC
     m_Series->setMeshesPath( "fields" );
     // conform to ED-PIC extension of openPMD
@@ -531,9 +529,11 @@ for (unsigned i = 0, n = particle_diags.size(); i < n; ++i) {
 
     WarpXParticleContainer* pc = particle_diags[i].getParticleContainer();
     PinnedMemoryParticleContainer* pinned_pc = particle_diags[i].getPinnedParticleContainer();
-    if (isBTD || use_pinned_pc)
-        if (!pinned_pc->isDefined())
+    if (isBTD || use_pinned_pc) {
+        if (!pinned_pc->isDefined()) {
             continue;  // Skip to the next particle container
+        }
+    }
 
     PinnedMemoryParticleContainer tmp = (isBTD || use_pinned_pc) ?
         pinned_pc->make_alike<amrex::PinnedArenaAllocator>() :
@@ -686,8 +686,9 @@ WarpXOpenPMDPlot::DumpToFile (ParticleContainer* pc,
     // we will set up empty particles unless it's BTD, where we might add some in a following buffer dump
     //   during this setup, we mark some particle properties as constant and potentially zero-sized
     bool doParticleSetup = true;
-    if (isBTD)
+    if (isBTD) {
         doParticleSetup = is_first_flush_with_particles || is_last_flush_and_never_particles;
+    }
 
     // this setup stage also implicitly calls "makeEmpty" if needed (i.e., is_last_flush_and_never_particles)
     //   for BTD, we call this multiple times as we may resize in subsequent dumps if number of particles in the buffer > 0
@@ -709,7 +710,7 @@ WarpXOpenPMDPlot::DumpToFile (ParticleContainer* pc,
     for (auto currentLevel = 0; currentLevel <= pc->finestLevel(); currentLevel++) {
         auto offset = static_cast<uint64_t>( counter.m_ParticleOffsetAtRank[currentLevel] );
         // For BTD, the offset include the number of particles already flushed
-        if (isBTD) offset += ParticleFlushOffset;
+        if (isBTD) { offset += ParticleFlushOffset; }
         for (ParticleIter pti(*pc, currentLevel); pti.isValid(); ++pti) {
             auto const numParticleOnTile = pti.numParticles();
             auto const numParticleOnTile64 = static_cast<uint64_t>( numParticleOnTile );
@@ -733,8 +734,9 @@ WarpXOpenPMDPlot::DumpToFile (ParticleContainer* pc,
                            new amrex::ParticleReal[numParticleOnTile],
                            [](amrex::ParticleReal const *p) { delete[] p; }
                    );
-                   for (auto i = 0; i < numParticleOnTile; i++)
+                   for (auto i = 0; i < numParticleOnTile; i++) {
                        z.get()[i] = aos[i].pos(1);  // {0: "r", 1: "z"}
+                   }
                    std::string const positionComponent = "z";
                    currSpecies["position"]["z"].storeChunk(z, {offset}, {numParticleOnTile64});
                 }
@@ -786,7 +788,7 @@ WarpXOpenPMDPlot::DumpToFile (ParticleContainer* pc,
                 for (auto i = 0; i < numParticleOnTile; i++) {
                     ids.get()[i] = ablastr::particles::localIDtoGlobal(static_cast<int>(aos[i].id()), static_cast<int>(aos[i].cpu()));
                 }
-                auto const scalar = openPMD::RecordComponent::SCALAR;
+                const auto *const scalar = openPMD::RecordComponent::SCALAR;
                 currSpecies["id"][scalar].storeChunk(ids, {offset}, {numParticleOnTile64});
 
             }
@@ -908,8 +910,7 @@ WarpXOpenPMDPlot::SetupRealProperties (ParticleContainer const * pc,
                 }
                 if( record_name == "momentum" || record_name == "weighting" ) {
                     currRecord.setAttribute( "weightingPower", 1.0 );
-                }
-                else {
+                } else {
                     currRecord.setAttribute( "weightingPower", 0.0 );
                 }
             }
@@ -951,7 +952,7 @@ WarpXOpenPMDPlot::SaveRealProperty (ParticleIter& pti,
   auto const numParticleOnTile64 = static_cast<uint64_t>( numParticleOnTile );
   auto const& aos = pti.GetArrayOfStructs();  // size =  numParticlesOnTile
   auto const& soa = pti.GetStructOfArrays();
-  // first we concatinate the AoS into contiguous arrays
+  // first we concatenate the AoS into contiguous arrays
   {
     // note: WarpX does not yet use extra AoS Real attributes
     for( auto idx=0; idx<ParticleIter::ContainerType::NStructReal; idx++ ) {  // lgtm [cpp/constant-comparison]
@@ -966,8 +967,9 @@ WarpXOpenPMDPlot::SaveRealProperty (ParticleIter& pti,
                 [](amrex::ParticleReal const *p){ delete[] p; }
             );
 
-            for( auto kk=0; kk<numParticleOnTile; kk++ )
+            for( auto kk=0; kk<numParticleOnTile; kk++ ) {
                 d.get()[kk] = aos[kk].rdata(idx);
+            }
 
             currRecordComp.storeChunk(d,
                 {offset}, {numParticleOnTile64});
@@ -1022,7 +1024,7 @@ WarpXOpenPMDPlot::SetupPos (
         currSpecies["position"][comp].resetDataset( realType );
     }
 
-    auto const scalar = openPMD::RecordComponent::SCALAR;
+    const auto *const scalar = openPMD::RecordComponent::SCALAR;
     currSpecies["id"][scalar].resetDataset( idType );
 }
 
@@ -1034,7 +1036,7 @@ WarpXOpenPMDPlot::SetConstParticleRecordsEDPIC (
         amrex::ParticleReal const mass)
 {
     auto realType = openPMD::Dataset(openPMD::determineDatatype<amrex::ParticleReal>(), {np});
-    auto const scalar = openPMD::RecordComponent::SCALAR;
+    const auto *const scalar = openPMD::RecordComponent::SCALAR;
 
     // define record shape to be number of particles
     auto const positionComponents = detail::getParticlePositionComponentLabels(true);
@@ -1160,6 +1162,7 @@ WarpXOpenPMDPlot::SetupFields ( openPMD::Container< openPMD::Mesh >& meshes,
             fieldBoundary.at(i) = "open";
         }
     }
+
     for (int i = 0; i < HalfFieldBoundarySize; ++i) {
         if (period.isPeriodic(i)) {
             fieldBoundary.at(2u * i) = "periodic";
@@ -1168,6 +1171,7 @@ WarpXOpenPMDPlot::SetupFields ( openPMD::Container< openPMD::Mesh >& meshes,
             particleBoundary.at(2u * i + 1u) = "periodic";
         }
     }
+
     meshes.setAttribute("fieldSolver", []() {
         switch (WarpX::electromagnetic_solver_id) {
             case ElectromagneticSolverAlgo::Yee :
@@ -1179,7 +1183,7 @@ WarpXOpenPMDPlot::SetupFields ( openPMD::Container< openPMD::Mesh >& meshes,
             default:
                 return "other";
         }
-      }());
+    }());
     meshes.setAttribute("fieldBoundary", fieldBoundary);
     meshes.setAttribute("particleBoundary", particleBoundary);
     meshes.setAttribute("currentSmoothing", []() {
@@ -1293,6 +1297,7 @@ WarpXOpenPMDPlot::GetMeshCompNames (int meshLevel,
     if ( 0 == meshLevel ) {
         return;
     }
+
     field_name += std::string("_lvl").append(std::to_string(meshLevel));
 }
 
@@ -1523,6 +1528,7 @@ WarpXParticleCounter::WarpXParticleCounter (ParticleContainer* pc):
         for (auto lv=0; lv<currentLevel; lv++) {
             m_ParticleOffsetAtRank[currentLevel] += m_ParticleCounterByLevel[lv];
         }
+
         m_Total += sum;
     }
 }

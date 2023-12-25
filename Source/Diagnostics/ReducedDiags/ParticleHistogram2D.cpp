@@ -61,8 +61,9 @@ ParticleHistogram2D::ParticleHistogram2D (std::string rd_name)
 
     pp_rd_name.query("openpmd_backend", m_openpmd_backend);
     // pick first available backend if default is chosen
-    if( m_openpmd_backend == "default" )
+    if( m_openpmd_backend == "default" ) {
         m_openpmd_backend = WarpXOpenPMDFileType();
+    }
     pp_rd_name.add("openpmd_backend", m_openpmd_backend);
 
     // read species
@@ -215,9 +216,11 @@ void ParticleHistogram2D::ComputeDiags (int step)
                                        auto const uz = d_uz[i] / PhysConst::c;
 
                                        // don't count a particle if it is filtered out
-                                       if (do_parser_filter)
-                                           if(!static_cast<bool>(fun_filterparser(t, x, y, z, ux, uy, uz, w)))
+                                       if (do_parser_filter) {
+                                           if(!static_cast<bool>(fun_filterparser(t, x, y, z, ux, uy, uz, w))) {
                                                return;
+                                           }
+                                       }
 
                                        // continue function if particle is not filtered out
                                        auto const f_abs = fun_partparser_abs(t, x, y, z, ux, uy, uz, w);

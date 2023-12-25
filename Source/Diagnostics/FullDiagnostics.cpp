@@ -507,11 +507,13 @@ FullDiagnostics::InitializeBufferData (int i_buffer, int lev, bool restart ) {
         diag_dom.setLo(idim, std::max(m_lo[idim],warpx.Geom(lev).ProbLo(idim)) );
         diag_dom.setHi(idim, std::min(m_hi[idim],warpx.Geom(lev).ProbHi(idim)) );
         if ( std::fabs(warpx.Geom(lev).ProbLo(idim) - diag_dom.lo(idim))
-                               >  warpx.Geom(lev).CellSize(idim) )
+                               >  warpx.Geom(lev).CellSize(idim) ) {
              use_warpxba = false;
+        }
         if ( std::fabs(warpx.Geom(lev).ProbHi(idim) - diag_dom.hi(idim))
-                               > warpx.Geom(lev).CellSize(idim) )
+                               > warpx.Geom(lev).CellSize(idim) ) {
              use_warpxba = false;
+        }
 
         // User-defined value for coarsening should be an integer divisor of
         // blocking factor at level, lev. This assert is not relevant and thus

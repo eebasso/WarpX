@@ -140,7 +140,7 @@ SpectralFieldData::SpectralFieldData( const int lev,
     tmpSpectralField = SpectralField(spectralspace_ba, dm, 1, 0);
 
     // By default, we assume the FFT is done from/to a nodal grid in real space
-    // It the FFT is performed from/to a cell-centered grid in real space,
+    // If the FFT is performed from/to a cell-centered grid in real space,
     // a correcting "shift" factor must be applied in spectral space.
     xshift_FFTfromCell = k_space.getSpectralShiftFactor(dm, 0,
                                     ShiftType::TransformFromCellCentered);
@@ -447,10 +447,7 @@ SpectralFieldData::BackwardTransform (const int lev,
             {
                 for (int dir = 0; dir < AMREX_SPACEDIM; dir++)
                 {
-                    if ((fill_guards[dir]) == 0)
-                    {
-                        mf_box.grow(dir, -mf_ng[dir]);
-                    }
+                    if ((fill_guards[dir]) == 0) { mf_box.grow(dir, -mf_ng[dir]); }
                 }
             }
 

@@ -40,7 +40,7 @@ LorentzTransformParticles::LorentzTransformParticles ( const WarpXParIter& a_pti
     if (tmp_particle_data.empty()) { return; }
     m_get_position = GetParticlePosition<PIdx>(a_pti, a_offset);
 
-    auto& attribs = a_pti.GetAttribs();
+    const auto& attribs = a_pti.GetAttribs();
     m_wpnew = attribs[PIdx::w].dataPtr();
     m_uxpnew = attribs[PIdx::ux].dataPtr();
     m_uypnew = attribs[PIdx::uy].dataPtr();
@@ -172,5 +172,5 @@ BackTransformParticleFunctor::PrepareFunctorData ( int i_buffer, bool z_slice_in
     m_current_z_boost.at(i_buffer) = current_z_boost;
     m_t_lab.at(i_buffer) = t_lab;
     m_perform_backtransform.at(i_buffer) = 0;
-    if (z_slice_in_domain && (snapshot_full == 0)) m_perform_backtransform.at(i_buffer) = 1;
+    if (z_slice_in_domain && (snapshot_full == 0)) { m_perform_backtransform.at(i_buffer) = 1; }
 }

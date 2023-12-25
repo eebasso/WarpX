@@ -142,7 +142,7 @@ void GetBesselRoots(int n, int nk, amrex::Vector<amrex::Real>& roots, amrex::Vec
         const auto errj = static_cast<amrex::Real>(std::abs(jn(n, zeroj)));
 
         // improve solution using procedure SecantRootFinder
-        if (errj > tol) ::SecantRootFinder(n, nitmx, tol, &zeroj, &ierror);
+        if (errj > tol) { ::SecantRootFinder(n, nitmx, tol, &zeroj, &ierror); }
 
         roots[ik] = zeroj;
         ier[ik] = ierror;

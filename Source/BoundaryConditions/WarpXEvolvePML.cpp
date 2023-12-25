@@ -51,7 +51,7 @@ void
 WarpX::DampPML (const int lev)
 {
     DampPML(lev, PatchType::fine);
-    if (lev > 0) DampPML(lev, PatchType::coarse);
+    if (lev > 0) { DampPML(lev, PatchType::coarse); }
 }
 
 void
@@ -228,7 +228,7 @@ void
 WarpX::DampJPML (int lev)
 {
     DampJPML(lev, PatchType::fine);
-    if (lev > 0) DampJPML(lev, PatchType::coarse);
+    if (lev > 0) { DampJPML(lev, PatchType::coarse); }
 }
 
 void

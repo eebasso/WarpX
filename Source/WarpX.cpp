@@ -29,6 +29,7 @@
 #endif // use PSATD ifdef
 #include "FieldSolver/WarpX_FDTD.H"
 #include "Filter/NCIGodfreyFilter.H"
+#include "Initialization/ExternalField.H"
 #include "Particles/MultiParticleContainer.H"
 #include "Fluids/MultiFluidContainer.H"
 #include "Fluids/WarpXFluidContainer.H"
@@ -85,14 +86,6 @@
 
 using namespace amrex;
 
-Vector<Real> WarpX::E_external_grid(3, 0.0);
-Vector<Real> WarpX::B_external_grid(3, 0.0);
-
-std::string WarpX::B_ext_grid_s;
-std::string WarpX::E_ext_grid_s;
-bool WarpX::add_external_E_field = false;
-bool WarpX::add_external_B_field = false;
-
 int WarpX::do_moving_window = 0;
 int WarpX::start_moving_window_step = 0;
 int WarpX::end_moving_window_step = -1;
@@ -118,6 +111,10 @@ short WarpX::charge_deposition_algo;
 short WarpX::field_gathering_algo;
 short WarpX::particle_pusher_algo;
 short WarpX::electromagnetic_solver_id;
+short WarpX::evolve_scheme;
+int WarpX::max_picard_iterations = 10;
+Real WarpX::picard_iteration_tolerance = 1.e-7;
+bool WarpX::require_picard_convergence = true;
 short WarpX::psatd_solution_type;
 short WarpX::J_in_time;
 short WarpX::rho_in_time;
@@ -724,20 +721,11 @@ WarpX::ReadParameters ()
             moving_window_v *= PhysConst::c;
         }
 
-        pp_warpx.query("B_ext_grid_init_style", WarpX::B_ext_grid_s);
-        pp_warpx.query("E_ext_grid_init_style", WarpX::E_ext_grid_s);
-
-        if (WarpX::B_ext_grid_s == "read_from_file")
-        {
+        m_p_ext_field_params = std::make_unique<ExternalFieldParams>(pp_warpx);
+        if (m_p_ext_field_params->B_ext_grid_type == ExternalFieldType::read_from_file ||
+            m_p_ext_field_params->E_ext_grid_type == ExternalFieldType::read_from_file){
             WARPX_ALWAYS_ASSERT_WITH_MESSAGE(max_level == 0,
-                                             "External field reading is not implemented for more than one level");
-            add_external_B_field = true;
-        }
-        if (WarpX::E_ext_grid_s == "read_from_file")
-        {
-            WARPX_ALWAYS_ASSERT_WITH_MESSAGE(max_level == 0,
-                                             "External field reading is not implemented for more than one level");
-            add_external_E_field = true;
+                "External field reading is not implemented for more than one level");
         }
 
         maxlevel_extEMfield_init = maxLevel();
@@ -787,7 +775,7 @@ WarpX::ReadParameters ()
         // Filter currently not working with FDTD solver in RZ geometry: turn OFF by default
         // (see https://github.com/ECP-WarpX/WarpX/issues/1943)
 #ifdef WARPX_DIM_RZ
-        if (WarpX::electromagnetic_solver_id != ElectromagneticSolverAlgo::PSATD) WarpX::use_filter = false;
+        if (WarpX::electromagnetic_solver_id != ElectromagneticSolverAlgo::PSATD) { WarpX::use_filter = false; }
 #endif
 
         // Read filter and fill IntVect filter_npass_each_dir with
@@ -933,16 +921,12 @@ WarpX::ReadParameters ()
 
         // If WarpX::do_dive_cleaning = true, set also WarpX::do_pml_dive_cleaning = true
         // (possibly overwritten by users in the input file, see query below)
-        if (do_dive_cleaning) {
-            do_pml_dive_cleaning = true;
-        }
+        if (do_dive_cleaning) { do_pml_dive_cleaning = true; }
 
         // If WarpX::do_divb_cleaning = true, set also WarpX::do_pml_divb_cleaning = true
         // (possibly overwritten by users in the input file, see query below)
         // TODO Implement div(B) cleaning in PML with FDTD and remove second if condition
-        if (do_divb_cleaning && electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD) {
-            do_pml_divb_cleaning = true;
-        }
+        if (do_divb_cleaning && electromagnetic_solver_id == ElectromagneticSolverAlgo::PSATD) { do_pml_divb_cleaning = true; }
 #endif
 
         // Query input parameters to use div(E) and div(B) cleaning in PMLs
@@ -1162,6 +1146,7 @@ WarpX::ReadParameters ()
         current_deposition_algo = static_cast<short>(GetAlgorithmInteger(pp_algo, "current_deposition"));
         charge_deposition_algo = static_cast<short>(GetAlgorithmInteger(pp_algo, "charge_deposition"));
         particle_pusher_algo = static_cast<short>(GetAlgorithmInteger(pp_algo, "particle_pusher"));
+        evolve_scheme = static_cast<short>(GetAlgorithmInteger(pp_algo, "evolve_scheme"));
 
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
             current_deposition_algo != CurrentDepositionAlgo::Esirkepov ||
@@ -1240,6 +1225,44 @@ WarpX::ReadParameters ()
         em_solver_medium = GetAlgorithmInteger(pp_algo, "em_solver_medium");
         if (em_solver_medium == MediumForEM::Macroscopic ) {
             macroscopic_solver_algo = GetAlgorithmInteger(pp_algo,"macroscopic_sigma_method");
+        }
+
+        if (evolve_scheme == EvolveScheme::ImplicitPicard ||
+            evolve_scheme == EvolveScheme::SemiImplicitPicard) {
+            utils::parser::queryWithParser(pp_algo, "max_picard_iterations", max_picard_iterations);
+            utils::parser::queryWithParser(pp_algo, "picard_iteration_tolerance", picard_iteration_tolerance);
+            utils::parser::queryWithParser(pp_algo, "require_picard_convergence", require_picard_convergence);
+
+            WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
+                current_deposition_algo == CurrentDepositionAlgo::Esirkepov ||
+                current_deposition_algo == CurrentDepositionAlgo::Direct,
+                "Only Esirkepov or Direct current deposition supported with the implicit and semi-implicit schemes");
+
+            WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
+                electromagnetic_solver_id == ElectromagneticSolverAlgo::Yee ||
+                electromagnetic_solver_id == ElectromagneticSolverAlgo::CKC,
+                "Only the Yee EM solver is supported with the implicit and semi-implicit schemes");
+
+            WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
+                particle_pusher_algo == ParticlePusherAlgo::Boris ||
+                particle_pusher_algo == ParticlePusherAlgo::HigueraCary,
+                "Only the Boris and Higuera particle pushers are supported with the implicit and semi-implicit schemes");
+
+            WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
+                field_gathering_algo != GatheringAlgo::MomentumConserving,
+                    "With implicit and semi-implicit schemes, the momentum conserving field gather is not supported as it would not conserve energy");
+
+            if (current_deposition_algo == CurrentDepositionAlgo::Direct) {
+                WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
+                    !galerkin_interpolation,
+                    "With implicit and semi-implicit schemes and direct deposition, the Galerkin field gathering must be turned off in order to conserve energy");
+            }
+
+            if (current_deposition_algo == CurrentDepositionAlgo::Esirkepov) {
+                WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
+                    galerkin_interpolation,
+                    "With implicit and semi-implicit schemes and Esirkepov deposition, the Galerkin field gathering must be turned on in order to conserve energy");
+            }
         }
 
         // Load balancing parameters
@@ -1464,7 +1487,7 @@ WarpX::ReadParameters ()
 
         // TODO Remove this default when current correction will
         // be implemented for the multi-J algorithm as well.
-        if (do_multi_J) current_correction = false;
+        if (do_multi_J) { current_correction = false; }
 
         pp_psatd.query("current_correction", current_correction);
 
@@ -1541,8 +1564,8 @@ WarpX::ReadParameters ()
         }
 
         // Scale the Galilean/comoving velocity by the speed of light
-        for (auto& vv : m_v_galilean) vv*= PhysConst::c;
-        for (auto& vv : m_v_comoving) vv*= PhysConst::c;
+        for (auto& vv : m_v_galilean) { vv*= PhysConst::c; }
+        for (auto& vv : m_v_comoving) { vv*= PhysConst::c; }
 
         const auto v_galilean_is_zero =
             std::all_of(m_v_galilean.begin(), m_v_galilean.end(),
@@ -2107,6 +2130,11 @@ WarpX::AllocLevelData (int lev, const BoxArray& ba, const DistributionMapping& d
     AllocLevelMFs(lev, ba, dm, guard_cells.ng_alloc_EB, guard_cells.ng_alloc_J,
                   guard_cells.ng_alloc_Rho, guard_cells.ng_alloc_F, guard_cells.ng_alloc_G, aux_is_nodal);
 
+    if (evolve_scheme == EvolveScheme::ImplicitPicard ||
+        evolve_scheme == EvolveScheme::SemiImplicitPicard) {
+        EvolveImplicitPicardInit(lev);
+    }
+
     m_accelerator_lattice[lev] = std::make_unique<AcceleratorLattice>();
     m_accelerator_lattice[lev]->InitElementFinder(lev, ba, dm);
 
@@ -2231,12 +2259,12 @@ WarpX::AllocLevelMFs (int lev, const BoxArray& ba, const DistributionMapping& dm
     AllocInitMultiFab(current_fp[lev][2], amrex::convert(ba, jz_nodal_flag), dm, ncomps, ngJ, lev, "current_fp[z]", 0.0_rt);
 
     // Match external field MultiFabs to fine patch
-    if (add_external_B_field) {
+    if (m_p_ext_field_params->B_ext_grid_type == ExternalFieldType::read_from_file) {
         AllocInitMultiFab(Bfield_fp_external[lev][0], amrex::convert(ba, Bx_nodal_flag), dm, ncomps, ngEB, lev, "Bfield_fp_external[x]", 0.0_rt);
         AllocInitMultiFab(Bfield_fp_external[lev][1], amrex::convert(ba, By_nodal_flag), dm, ncomps, ngEB, lev, "Bfield_fp_external[y]", 0.0_rt);
         AllocInitMultiFab(Bfield_fp_external[lev][2], amrex::convert(ba, Bz_nodal_flag), dm, ncomps, ngEB, lev, "Bfield_fp_external[z]", 0.0_rt);
     }
-    if (add_external_E_field) {
+    if (m_p_ext_field_params->E_ext_grid_type == ExternalFieldType::read_from_file) {
         AllocInitMultiFab(Efield_fp_external[lev][0], amrex::convert(ba, Ex_nodal_flag), dm, ncomps, ngEB, lev, "Efield_fp_external[x]", 0.0_rt);
         AllocInitMultiFab(Efield_fp_external[lev][1], amrex::convert(ba, Ey_nodal_flag), dm, ncomps, ngEB, lev, "Efield_fp_external[y]", 0.0_rt);
         AllocInitMultiFab(Efield_fp_external[lev][2], amrex::convert(ba, Ez_nodal_flag), dm, ncomps, ngEB, lev, "Efield_fp_external[z]", 0.0_rt);
@@ -3281,6 +3309,24 @@ WarpX::AliasInitMultiFab (
 {
     const auto name_with_suffix = TagWithLevelSuffix(name, level);
     mf = std::make_unique<amrex::MultiFab>(mf_to_alias, amrex::make_alias, scomp, ncomp);
+    if (initial_value) {
+        mf->setVal(*initial_value);
+    }
+    multifab_map[name_with_suffix] = mf.get();
+}
+
+void
+WarpX::AllocInitMultiFabFromModel (
+    std::unique_ptr<amrex::MultiFab>& mf,
+    amrex::MultiFab& mf_model,
+    const int level,
+    const std::string& name,
+    std::optional<const amrex::Real> initial_value)
+{
+    const auto name_with_suffix = TagWithLevelSuffix(name, level);
+    const auto tag = amrex::MFInfo().SetTag(name_with_suffix);
+    mf = std::make_unique<amrex::MultiFab>(mf_model.boxArray(), mf_model.DistributionMap(),
+                                           mf_model.nComp(), mf_model.nGrowVect(), tag);
     if (initial_value) {
         mf->setVal(*initial_value);
     }

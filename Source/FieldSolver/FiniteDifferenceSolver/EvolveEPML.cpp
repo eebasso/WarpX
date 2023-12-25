@@ -133,7 +133,7 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
 
             [=] AMREX_GPU_DEVICE (int i, int j, int k){
 #ifdef AMREX_USE_EB
-                if(lx(i, j, k) <= 0) { return; }
+                if (lx(i, j, k) <= 0) { return; }
 #endif
 
                 Ex(i, j, k, PMLComp::xz) -= c2 * dt * (
@@ -165,7 +165,7 @@ void FiniteDifferenceSolver::EvolveEPMLCartesian (
 
             [=] AMREX_GPU_DEVICE (int i, int j, int k){
 #ifdef AMREX_USE_EB
-                if(lz(i, j, k) <= 0) { return; }
+                if (lz(i, j, k) <= 0) { return; }
 #endif
 
                 Ez(i, j, k, PMLComp::zy) -= c2 * dt * (

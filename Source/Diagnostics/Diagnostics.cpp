@@ -577,6 +577,4 @@ Diagnostics::FilterComputePackFlush (int step, bool force_flush)
         if ( !DoDump (step, i_buffer, force_flush) ) { continue; }
         Flush(i_buffer, force_flush);
     }
-
-
 }
