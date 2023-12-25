@@ -125,7 +125,7 @@ WarpX::ComputeEdgeLengths (std::array< std::unique_ptr<amrex::MultiFab>, 3 >& ed
     for (amrex::MFIter mfi(flags); mfi.isValid(); ++mfi){
 #ifdef WARPX_DIM_XZ
         for (int idim = 0; idim < 3; ++idim){
-            if(idim == 1) { continue; }
+            if (idim == 1) { continue; }
 #elif defined(WARPX_DIM_3D)
         for (int idim = 0; idim < AMREX_SPACEDIM; ++idim){
 #else
@@ -150,7 +150,7 @@ WarpX::ComputeEdgeLengths (std::array< std::unique_ptr<amrex::MultiFab>, 3 >& ed
             } else {
 #ifdef WARPX_DIM_XZ
                 int idim_amrex = idim;
-                if(idim == 2) { idim_amrex = 1; }
+                if (idim == 2) { idim_amrex = 1; }
                 auto const &edge_cent = edge_centroid[idim_amrex]->const_array(mfi);
 #elif defined(WARPX_DIM_3D)
                 auto const &edge_cent = edge_centroid[idim]->const_array(mfi);
@@ -245,16 +245,17 @@ WarpX::ComputeFaceAreas (std::array< std::unique_ptr<amrex::MultiFab>, 3 >& face
 
 void
 WarpX::ScaleEdges (std::array< std::unique_ptr<amrex::MultiFab>, 3 >& edge_lengths,
-                   const std::array<amrex::Real,3>& cell_size) {
+                   const std::array<amrex::Real,3>& cell_size)
+{
 #ifndef WARPX_DIM_RZ
     BL_PROFILE("ScaleEdges");
 
     for (amrex::MFIter mfi(*edge_lengths[0]); mfi.isValid(); ++mfi) {
 #ifdef WARPX_DIM_XZ
-        for (int idim = 0; idim < 3; ++idim){
-            if(idim == 1) { continue; }
+        for (int idim = 0; idim < 3; ++idim) {
+            if (idim == 1) { continue; }
 #elif defined(WARPX_DIM_3D)
-        for (int idim = 0; idim < AMREX_SPACEDIM; ++idim){
+        for (int idim = 0; idim < AMREX_SPACEDIM; ++idim) {
 #else
         WARPX_ABORT_WITH_MESSAGE(
             "ScaleEdges: Only implemented in 2D3V and 3D3V");

@@ -302,7 +302,7 @@ WarpX::DampJPML (int lev, PatchType patch_type)
             amrex::ParallelFor( tjx, tjy, tjz,
                 [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
-                    if(pml_lxfab(i, j, k) <= 0) { return; }
+                    if (pml_lxfab(i, j, k) <= 0) { return; }
 #endif
 
                     damp_jx_pml(i, j, k, pml_jxfab, sigma_star_cumsum_fac_j_x,
@@ -311,7 +311,7 @@ WarpX::DampJPML (int lev, PatchType patch_type)
                 },
                 [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
-                    if(pml_lyfab(i, j, k) <= 0) { return; }
+                    if (pml_lyfab(i, j, k) <= 0) { return; }
 #endif
 
                     damp_jy_pml(i, j, k, pml_jyfab, sigma_cumsum_fac_j_x,
@@ -320,7 +320,7 @@ WarpX::DampJPML (int lev, PatchType patch_type)
                 },
                 [=] AMREX_GPU_DEVICE (int i, int j, int k) {
 #ifdef AMREX_USE_EB
-                    if(pml_lzfab(i, j, k)<=0) { return; }
+                    if (pml_lzfab(i, j, k)<=0) { return; }
 #endif
 
                     damp_jz_pml(i, j, k, pml_jzfab, sigma_cumsum_fac_j_x,

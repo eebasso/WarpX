@@ -1210,8 +1210,11 @@ WarpXOpenPMDPlot::SetupFields ( openPMD::Container< openPMD::Mesh >& meshes,
         }());
     }
     meshes.setAttribute("chargeCorrection", []() {
-        if (WarpX::do_dive_cleaning) { return "hyperbolic"; } // TODO or "spectral" or something? double-check
-        else { return "none"; }
+        if (WarpX::do_dive_cleaning) {
+            return "hyperbolic"; // TODO or "spectral" or something? double-check
+        } else {
+            return "none";
+        }
     }());
     if (WarpX::do_dive_cleaning) {
         meshes.setAttribute("chargeCorrectionParameters", "period=1");
