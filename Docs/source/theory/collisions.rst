@@ -19,7 +19,7 @@ charge exchange, excitation collisions and impact ionization.
 
 The so-called null collision strategy is used in order to minimize the
 computational burden of the MCC module. This strategy is standard in PIC-MCC and
-a detailed description can be found elsewhere, for example in :cite:t:`b-Birdsall1991`.
+a detailed description can be found elsewhere, for example in :cite:t:`col-Birdsall1991`.
 In short the maximum collision probability is found over a sensible range of
 energies and is used to pre-select the appropriate number of macroparticles for
 collision consideration. Only these pre-selected particles are then individually
@@ -131,14 +131,14 @@ The process is also the same as for elastic scattering except the excitation ene
 Benchmarks
 ----------
 
-See the :ref:`MCC example <examples-mcc-turner>` for a benchmark of the MCC
+See the :ref:`MCC example <examples-capacitive-discharge>` for a benchmark of the MCC
 implementation against literature results.
 
 Particle cooling due to elastic collisions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 It is straight forward to determine the energy a projectile loses during an elastic collision with another body, as a function of scattering angle, through energy and momentum conservation.
-See for example :cite:t:`b-Lim2007` for a derivation. The result is that given a projectile with mass :math:`m`, a target with mass :math:`M`, a scattering angle :math:`\theta`, and collision energy :math:`E`, the post collision energy of the projectile is given by
+See for example :cite:t:`col-Lim2007` for a derivation. The result is that given a projectile with mass :math:`m`, a target with mass :math:`M`, a scattering angle :math:`\theta`, and collision energy :math:`E`, the post collision energy of the projectile is given by
 
     .. math::
 
@@ -154,4 +154,4 @@ The impact of incorporating relativistic effects in the MCC routine can be seen 
    :width: 96%
 
 .. bibliography::
-    :keyprefix: b-
+    :keyprefix: col-

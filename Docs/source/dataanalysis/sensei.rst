@@ -12,8 +12,9 @@ Catalyst, another Libsim, yet another Python with no changes to the code.
 System Architecture
 -------------------
 
-.. _sensei_arch:
+.. _fig_sensei_arch:
 .. figure:: https://data.kitware.com/api/v1/item/5c06cd538d777f2179d4aaca/download
+   :alt: SENSEI's in situ architecture enables use of a diverse of back ends which can be selected at run time via an XML configuration file
 
    SENSEI's in situ architecture enables use of a diverse of back ends which
    can be selected at run time via an XML configuration file
@@ -31,7 +32,7 @@ SENSEI provides a *configurable analysis adaptor* which uses an XML file to
 select and configure one or more back ends at run time. Run time selection of
 the back end via XML means one user can access Catalyst, another Libsim, yet
 another Python with no changes to the code.  This is depicted in
-:numref:`sensei_arch`. On the left side of the figure AMReX produces data, the
+:numref:`fig_sensei_arch`. On the left side of the figure AMReX produces data, the
 bridge code pushes the data through the configurable analysis adaptor to the
 back end that was selected at run time.
 
@@ -99,7 +100,7 @@ The back end is selected and configured at run time using the SENSEI XML file.
 The XML sets parameters specific to SENSEI and to the chosen back end. Many of
 the back ends have sophisticated configuration mechanisms which SENSEI makes
 use of.  For example the following XML configuration was used on NERSC's Cori
-with WarpX to render 10 iso surfaces, shown in :numref:`lpa_visit`, using
+with WarpX to render 10 iso surfaces, shown in :numref:`fig_lpa_visit`, using
 VisIt Libsim.
 
 .. code-block:: xml
@@ -116,14 +117,15 @@ runtime configuration. The session file is generated using VisIt GUI on a
 representative dataset. Usually this data set is generated in a low resolution
 run of the desired simulation.
 
-.. _lpa_visit:
+.. _fig_lpa_visit:
 .. figure:: https://data.kitware.com/api/v1/item/5c06b4b18d777f2179d4784c/download
+   :alt: Rendering of 10 3D iso-surfaces of j using VisIt libsim. The upper left quadrant has been clipped away to reveal inner structure.
 
    Rendering of 10 3D iso-surfaces of j using VisIt libsim. The upper left
-   quadrant has been clipped away to reveal innner structure.
+   quadrant has been clipped away to reveal inner structure.
 
 The same run and visualization was repeated using ParaView Catalyst, shown in
-:numref:`lpa_pv`, by providing the following XML configuration.
+:numref:`fig_lpa_pv`, by providing the following XML configuration.
 
 .. code-block:: xml
 
@@ -136,11 +138,12 @@ Here the *filename* attribute is used to pass Catalyst a Catalyst specific
 configuration that was generated using the ParaView GUI on a representative
 dataset.
 
-.. _lpa_pv:
+.. _fig_lpa_pv:
 .. figure:: https://data.kitware.com/api/v1/item/5c05b6388d777f2179d207ae/download
+   :alt: Rendering of 10 3D iso-surfaces of j using ParaView Catalyst. The upper left quadrant has been clipped away to reveal inner structure.
 
    Rendering of 10 3D iso-surfaces of j using ParaView Catalyst. The upper left
-   quadrant has been clipped away to reveal innner structure.
+   quadrant has been clipped away to reveal inner structure.
 
 The renderings in these runs were configured using a representative dataset
 which was obtained by running the simulation for a few time steps at a lower
