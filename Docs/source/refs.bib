@@ -205,14 +205,19 @@ volume = {103},
 year = {2010}
 }
 
-@misc{SandbergPASC24,
-address = {Zuerich, Switzerland},
-author = {Ryan Sandberg and Remi Lehe and Chad E Mitchell and Marco Garten and Ji Qiang and Jean-Luc Vay and Axel Huebl},
-booktitle = {Proc. of PASC24},
-note = {submitted},
-series = {PASC'24 - Platform for Advanced Scientific Computing},
-title = {{Synthesizing Particle-in-Cell Simulations Through Learning and GPU Computing for Hybrid Particle Accelerator Beamlines}},
-venue = {Zuerich, Switzerland},
+@inproceedings{SandbergPASC24,
+author = {Sandberg, Ryan and Lehe, Remi and Mitchell, Chad and Garten, Marco and Myers, Andrew and Qiang, Ji and Vay, Jean-Luc and Huebl, Axel},
+title = {{Synthesizing Particle-In-Cell Simulations through Learning and GPU Computing for Hybrid Particle Accelerator Beamlines}},
+series = {PASC '24},
+booktitle = {Proceedings of the Platform for Advanced Scientific Computing Conference},
+location = {Zuerich, Switzerland},
+publisher = {Association for Computing Machinery},
+address = {New York, NY, USA},
+articleno = {23},
+numpages = {11},
+isbn = {9798400706394},
+doi = {10.1145/3659914.3659937},
+note = {{PASC24 Best Paper Award}},
 year = {2024}
 }
 
@@ -390,4 +395,102 @@ publisher = {IOP Publishing},
 title = {{Quantum Electrodynamics vacuum polarization solver}},
 volume = {23},
 year = {2021}
+}
+
+@article{QiangPhysRevSTAB2006,
+  title = {Three-dimensional quasistatic model for high brightness beam dynamics simulation},
+  author = {Qiang, Ji and Lidia, Steve and Ryne, Robert D. and Limborg-Deprey, Cecile},
+  journal = {Phys. Rev. ST Accel. Beams},
+  volume = {9},
+  issue = {4},
+  pages = {044204},
+  numpages = {10},
+  year = {2006},
+  month = {Apr},
+  publisher = {American Physical Society},
+  doi = {10.1103/PhysRevSTAB.9.044204}
+}
+
+@article{QiangPhysRevSTAB2006err,
+  title = {Erratum: Three-dimensional quasistatic model for high brightness beam dynamics simulation [Phys. Rev. ST Accel. Beams 9, 044204 (2006)]},
+  author = {Qiang, Ji and Lidia, Steve and Ryne, Robert D. and Limborg-Deprey, Cecile},
+  journal = {Phys. Rev. ST Accel. Beams},
+  volume = {10},
+  issue = {12},
+  pages = {129901},
+  numpages = {2},
+  year = {2007},
+  month = {Dec},
+  publisher = {American Physical Society},
+  doi = {10.1103/PhysRevSTAB.10.129901}
+}
+
+@book{Wiedemann2015,
+  author = {Wiedemann, H.},
+  isbn = {978-3-319-18317-6},
+  publisher = {Springer Cham},
+  title = {{Particle Accelerator Physics}},
+  doi = {10.1007/978-3-319-18317-6},
+  year = {2015}
+}
+
+@article{Vranic2015,
+  title = {Particle merging algorithm for PIC codes},
+  author = {M. Vranic and T. Grismayer and J.L. Martins and R.A. Fonseca and L.O. Silva},
+  journal = {Computer Physics Communications},
+  volume = {191},
+  pages = {65-73},
+  year = {2015},
+  issn = {0010-4655},
+  doi = {https://doi.org/10.1016/j.cpc.2015.01.020},
+}
+
+@misc{Fallahi2020,
+      title={MITHRA 2.0: A Full-Wave Simulation Tool for Free Electron Lasers},
+      author={Arya Fallahi},
+      year={2020},
+      eprint={2009.13645},
+      archivePrefix={arXiv},
+      primaryClass={physics.acc-ph},
+      url={https://arxiv.org/abs/2009.13645},
+}
+
+@article{VayFELA2009,
+  title = {FULL ELECTROMAGNETIC SIMULATION OF FREE-ELECTRON LASER AMPLIFIER PHYSICS VIA THE LORENTZ-BOOSTED FRAME APPROACH},
+  author = {Fawley, William M and Vay, Jean-Luc},
+  abstractNote = {Numerical simulation of some systems containing charged particles with highly relativistic directed motion can by speeded up by orders of magnitude by choice of the proper Lorentz-boosted frame[1]. A particularly good example is that of short wavelength free-electron lasers (FELs) in which a high energy electron beam interacts with a static magnetic undulator. In the optimal boost frame with Lorentz factor gamma_F , the red-shifted FEL radiation and blue shifted undulator have identical wavelengths and the number of required time-steps (presuming the Courant condition applies) decreases by a factor of 2(gamma_F)**2 for fully electromagnetic simulation. We have adapted the WARP code [2]to apply this method to several FEL problems involving coherent spontaneous emission (CSE) from pre-bunched ebeams, including that in a biharmonic undulator.},
+  url = {https://www.osti.gov/biblio/964405},
+  place = {United States},
+  year = {2009},
+  month = {4},
+}
+
+@article{VayFELB2009,
+  author = {Fawley, W. M. and Vay, J.‐L.},
+  title = "{Use of the Lorentz‐Boosted Frame Transformation to Simulate Free‐Electron Laser Amplifier Physics}",
+  journal = {AIP Conference Proceedings},
+  volume = {1086},
+  number = {1},
+  pages = {346-350},
+  year = {2009},
+  month = {01},
+  abstract = "{Recently [1] it has been pointed out that numerical simulation of some systems containing charged particles with highly relativistic directed motion can by speeded up by orders of magnitude by choice of the proper Lorentz boosted frame. A particularly good example is that of short wavelength free‐electron lasers (FELs) in which a high energy (E0⩾250 MeV) electron beam interacts with a static magnetic undulator. In the optimal boost frame with Lorentz factor γF, the red‐shifted FEL radiation and blue shifted undulator have identical wavelengths and the number of required time‐steps (presuming the Courant condition applies) decreases by a factor of γF2 for fully electromagnetic simulation.We have adapted the WARP code [2] to apply this method to several FEL problems including coherent spontaneous emission (CSE) from pre‐bunched e‐beams, and strong exponential gain in a single pass amplifier configuration. We discuss our results and compare with those from the “standard” FEL simulation approach which adopts the eikonal approximation for propagation of the radiation field.}",
+  issn = {0094-243X},
+  doi = {10.1063/1.3080930},
+  url = {https://doi.org/10.1063/1.3080930},
+}
+
+@article{Rhee1987,
+    author = {Rhee, M. J. and Schneider, R. F. and Weidman, D. J.},
+    title = "{Simple time‐resolving Thomson spectrometer}",
+    journal = {Review of Scientific Instruments},
+    volume = {58},
+    number = {2},
+    pages = {240-244},
+    year = {1987},
+    month = {02},
+    issn = {0034-6748},
+    doi = {10.1063/1.1139314},
+    url = {https://doi.org/10.1063/1.1139314},
+    eprint = {https://pubs.aip.org/aip/rsi/article-pdf/58/2/240/19154912/240\_1\_online.pdf},
 }
