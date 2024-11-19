@@ -25,6 +25,8 @@
 #include "MultiParticleContainer_fwd.H"
 #include "NamedComponentParticleContainer.H"
 
+#include <ablastr/fields/MultiFabRegister.H>
+
 #include <AMReX_Array.H>
 #include <AMReX_FArrayBox.H>
 #include <AMReX_GpuAllocators.H>
@@ -49,10 +51,10 @@
 
 
 class WarpXParIter
-    : public amrex::ParIter<0,0,PIdx::nattribs>
+    : public amrex::ParIterSoA<PIdx::nattribs, 0>
 {
 public:
-    using amrex::ParIter<0,0,PIdx::nattribs>::ParIter;
+    using amrex::ParIterSoA<PIdx::nattribs, 0>::ParIterSoA;
 
     WarpXParIter (ContainerType& pc, int level);
 
@@ -89,13 +91,14 @@ public:
  * particle container classes (that store a collection of particles) derive. Derived
  * classes can be used for plasma particles, photon particles, or non-physical
  * particles (e.g., for the laser antenna).
- * It derives from amrex::ParticleContainer<0,0,PIdx::nattribs>, where the
- * template arguments stand for the number of int and amrex::Real SoA and AoS
- * data in amrex::Particle.
- *  - AoS amrex::Real: x, y, z (default), 0 additional (first template
- *    parameter)
- *  - AoS int: id, cpu (default), 0 additional (second template parameter)
- *  - SoA amrex::Real: PIdx::nattribs (third template parameter), see PIdx for
+ * It derives from amrex::ParticleContainerPureSoA<PIdx::nattribs>, where the
+ * template arguments stand for the number of int and amrex::Real SoA
+ * data in amrex::SoAParticle.
+ *  - SoA amrex::Real: positions x, y, z, momentum ux, uy, uz, ... see PIdx for details;
+ *                     more can be added at runtime
+ *  - SoA int: 0 attributes by default, but can be added at runtime
+ *  - SoA uint64_t: idcpu, a global 64bit index, with a 40bit local id and a 24bit cpu id
+ *    (both set at creation)
  * the list.
  *
  * WarpXParticleContainer contains the main functions for initialization,
@@ -144,14 +147,9 @@ public:
      * particles for a time dt (typically one timestep). It is a pure virtual
      * function for flexibility.
      */
-    virtual void Evolve (int lev,
-                         const amrex::MultiFab& Ex, const amrex::MultiFab& Ey, const amrex::MultiFab& Ez,
-                         const amrex::MultiFab& Bx, const amrex::MultiFab& By, const amrex::MultiFab& Bz,
-                         amrex::MultiFab& jx, amrex::MultiFab& jy, amrex::MultiFab& jz,
-                         amrex::MultiFab* cjx, amrex::MultiFab* cjy, amrex::MultiFab* cjz,
-                         amrex::MultiFab* rho, amrex::MultiFab* crho,
-                         const amrex::MultiFab* cEx, const amrex::MultiFab* cEy, const amrex::MultiFab* cEz,
-                         const amrex::MultiFab* cBx, const amrex::MultiFab* cBy, const amrex::MultiFab* cBz,
+    virtual void Evolve (ablastr::fields::MultiFabRegister& fields,
+                         int lev,
+                         const std::string& current_fp_string,
                          amrex::Real t, amrex::Real dt, DtType a_dt_type=DtType::Full, bool skip_deposition=false,
                          PushType push_type=PushType::Explicit) = 0;
 
@@ -164,11 +162,9 @@ public:
      * class.
      */
     virtual void DefaultInitializeRuntimeAttributes (
-                        amrex::ParticleTile<amrex::Particle<NStructReal, NStructInt>,
-                                            NArrayReal, NArrayInt,
-                                            amrex::PinnedArenaAllocator>& pinned_tile,
-                        int n_external_attr_real,
-                        int n_external_attr_int) = 0;
+        typename ContainerLike<amrex::PinnedArenaAllocator>::ParticleTileType& pinned_tile,
+        int n_external_attr_real,
+        int n_external_attr_int) = 0;
 
     ///
     /// This pushes the particle positions by one half time step.
@@ -200,7 +196,7 @@ public:
      *                          the particle position will be temporarily modified to match
      *                          the time of the deposition.
      */
-    void DepositCurrent (amrex::Vector<std::array< std::unique_ptr<amrex::MultiFab>, 3 > >& J,
+    void DepositCurrent (ablastr::fields::MultiLevelVectorField const & J,
                          amrex::Real dt, amrex::Real relative_time);
 
     /**
@@ -213,12 +209,12 @@ public:
      * \param[in] interpolate_across_levels whether to average down from the fine patch to the coarse patch
      * \param[in] icomp component of the MultiFab where rho is deposited (old, new)
      */
-    void DepositCharge (amrex::Vector<std::unique_ptr<amrex::MultiFab> >& rho,
+    void DepositCharge (const ablastr::fields::MultiLevelScalarField& rho,
                         bool local = false, bool reset = false,
                         bool apply_boundary_and_scale_volume = false,
                         bool interpolate_across_levels = true,
                         int icomp = 0);
-    void DepositCharge (std::unique_ptr<amrex::MultiFab>& rho, int lev,
+    void DepositCharge (amrex::MultiFab* rho, int lev,
                         bool local = false, bool reset = false,
                         bool apply_boundary_and_scale_volume = false,
                         int icomp = 0);
@@ -281,6 +277,7 @@ public:
     /// This is needed when solving Poisson's equation with periodic boundary conditions.
     ///
     amrex::ParticleReal sumParticleCharge(bool local = false);
+    amrex::ParticleReal sumParticleWeight(bool local = false);
 
     std::array<amrex::ParticleReal, 3> meanParticleVelocity(bool local = false);
 
@@ -322,6 +319,13 @@ public:
                         int nattr_int, amrex::Vector<amrex::Vector<int>> const & attr_int,
                         int uniqueparticles, amrex::Long id=-1);
 
+    /** Remove particles with invalid ID
+    *
+    * This is a local operation (no MPI communication) and is thus preferable over `ReDistribute`
+    * (which also removes invalid particles, but involves MPI communications at the same time)
+    */
+    void deleteInvalidParticles ();
+
     virtual void ReadHeader (std::istream& is) = 0;
 
     virtual void WriteHeader (std::ostream& os) const = 0;
@@ -347,7 +351,7 @@ public:
     amrex::Vector<amrex::ParticleReal> m_E_external_particle;
 
     //! Current injection position
-    amrex::Real m_current_injection_position;
+    amrex::Real m_current_injection_position = 0.;
 
     // split along diagonals (0) or axes (1)
     int split_type = 0;
@@ -419,12 +423,14 @@ public:
     virtual QuantumSynchrotronEngine* get_quantum_sync_engine_ptr () const {return nullptr;}
 #endif
 
+    void setDoNotPush (bool flag) { do_not_push = flag; }
+
 protected:
     int species_id;
 
     amrex::ParticleReal charge;
     amrex::ParticleReal mass;
-    PhysicalSpecies physical_species;
+    PhysicalSpecies physical_species = PhysicalSpecies::unspecified;
 
     // Controls boundaries for particles exiting the domain
     ParticleBoundaries m_boundary_conditions;
@@ -435,7 +441,7 @@ protected:
     //! instead of gathering fields from the finest patch level, gather from the coarsest
     bool m_gather_from_main_grid = false;
 
-    int do_not_push = 0;
+    bool do_not_push = false;
     int do_not_gather = 0;
 
     // Whether to allow particles outside of the simulation domain to be
@@ -445,6 +451,7 @@ protected:
     int do_continuous_injection = 0;
 
     int do_field_ionization = 0;
+    int do_adk_correction = 0;
     int ionization_product;
     std::string ionization_product_name;
     int ion_atomic_number;
@@ -453,6 +460,8 @@ protected:
     amrex::Gpu::DeviceVector<amrex::Real> adk_power;
     amrex::Gpu::DeviceVector<amrex::Real> adk_prefactor;
     amrex::Gpu::DeviceVector<amrex::Real> adk_exp_prefactor;
+    /** for correction in Zhang et al., PRA 90, 043410 (2014). a1, a2, a3, Ecrit. */
+    amrex::Gpu::DeviceVector<amrex::Real> adk_correction_factors;
     std::string physical_element;
 
     int do_resampling = 0;
@@ -464,9 +473,9 @@ protected:
     //Species can receive a shared pointer to a QED engine (species for
     //which this is relevant should override these functions)
     virtual void
-    set_breit_wheeler_engine_ptr(std::shared_ptr<BreitWheelerEngine>){}
+    set_breit_wheeler_engine_ptr(const std::shared_ptr<BreitWheelerEngine>&){}
     virtual void
-    set_quantum_sync_engine_ptr(std::shared_ptr<QuantumSynchrotronEngine>){}
+    set_quantum_sync_engine_ptr(const std::shared_ptr<QuantumSynchrotronEngine>&){}
 
     int m_qed_breit_wheeler_ele_product;
     std::string m_qed_breit_wheeler_ele_product_name;
