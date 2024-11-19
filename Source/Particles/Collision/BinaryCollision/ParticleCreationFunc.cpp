@@ -17,12 +17,11 @@
 
 #include <string>
 
-ParticleCreationFunc::ParticleCreationFunc (const std::string collision_name,
-                                            MultiParticleContainer const * const mypc)
+ParticleCreationFunc::ParticleCreationFunc (const std::string& collision_name,
+                                            MultiParticleContainer const * const mypc):
+    m_collision_type{BinaryCollisionUtils::get_collision_type(collision_name, mypc)}
 {
     const amrex::ParmParse pp_collision_name(collision_name);
-
-    m_collision_type = BinaryCollisionUtils::get_collision_type(collision_name, mypc);
 
     if (m_collision_type == CollisionType::ProtonBoronToAlphasFusion)
     {
@@ -36,8 +35,8 @@ ParticleCreationFunc::ParticleCreationFunc (const std::string collision_name,
 #endif
     }
     else if ((m_collision_type == CollisionType::DeuteriumTritiumToNeutronHeliumFusion)
-            || (m_collision_type == CollisionType::DeuteriumDeuteriumToProtonTritiumFusion)
-            || (m_collision_type == CollisionType::DeuteriumDeuteriumToNeutronHeliumFusion))
+             || (m_collision_type == CollisionType::DeuteriumDeuteriumToProtonTritiumFusion)
+             || (m_collision_type == CollisionType::DeuteriumDeuteriumToNeutronHeliumFusion))
     {
         m_num_product_species = 2;
         m_num_products_host.push_back(1);
@@ -54,10 +53,10 @@ ParticleCreationFunc::ParticleCreationFunc (const std::string collision_name,
     }
 
 #ifdef AMREX_USE_GPU
-    m_num_products_device.resize(m_num_product_species);
-    amrex::Gpu::copyAsync(amrex::Gpu::hostToDevice, m_num_products_host.begin(),
-                            m_num_products_host.end(),
-                            m_num_products_device.begin());
-    amrex::Gpu::streamSynchronize();
+     m_num_products_device.resize(m_num_product_species);
+     amrex::Gpu::copyAsync(amrex::Gpu::hostToDevice, m_num_products_host.begin(),
+                           m_num_products_host.end(),
+                           m_num_products_device.begin());
+     amrex::Gpu::streamSynchronize();
 #endif
 }
