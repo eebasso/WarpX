@@ -30,7 +30,7 @@ void init_WarpXParticleContainer (py::module& m)
     > wpc (m, "WarpXParticleContainer");
     wpc
         .def("add_real_comp",
-            [](WarpXParticleContainer& pc, const std::string& name, bool comm) { pc.AddRealComp(name, comm); },
+            [](WarpXParticleContainer& pc, const std::string& name, bool comm) { pc.NewRealComp(name, comm); },
             py::arg("name"), py::arg("comm")
         )
         .def("add_n_particles",
@@ -109,6 +109,10 @@ void init_WarpXParticleContainer (py::module& m)
             &WarpXParticleContainer::TotalNumberOfParticles,
             py::arg("valid_particles_only"), py::arg("local")
         )
+        .def("sum_particle_weight",
+            &WarpXParticleContainer::sumParticleWeight,
+            py::arg("local")
+        )
         .def("sum_particle_charge",
             &WarpXParticleContainer::sumParticleCharge,
             py::arg("local")
@@ -132,6 +136,10 @@ void init_WarpXParticleContainer (py::module& m)
                 return pc.GetChargeDensity(lev, local);
             },
             py::arg("lev"), py::arg("local")
+        )
+        .def("set_do_not_push",
+            [](WarpXParticleContainer& pc, bool flag) { pc.setDoNotPush(flag); },
+            py::arg("flag")
         )
     ;
 }

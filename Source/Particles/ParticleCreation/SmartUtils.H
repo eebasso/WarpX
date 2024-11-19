@@ -6,8 +6,8 @@
  * License: BSD-3-Clause-LBNL
  */
 
-#ifndef SMART_UTILS_H_
-#define SMART_UTILS_H_
+#ifndef WARPX_SMART_UTILS_H_
+#define WARPX_SMART_UTILS_H_
 
 #include "DefaultInitialization.H"
 
@@ -49,7 +49,7 @@ SmartCopyTag getSmartCopyTag (const NameMap& src, const NameMap& dst) noexcept;
  * \param num_added the number of particles to set the ids for.
  */
 template <typename PTile>
-void setNewParticleIDs (PTile& ptile, int old_size, int num_added)
+void setNewParticleIDs (PTile& ptile, amrex::Long old_size, amrex::Long num_added)
 {
     amrex::Long pid;
 #ifdef AMREX_USE_OMP
@@ -64,9 +64,10 @@ void setNewParticleIDs (PTile& ptile, int old_size, int num_added)
     auto ptd = ptile.getParticleTileData();
     amrex::ParallelFor(num_added, [=] AMREX_GPU_DEVICE (int ip) noexcept
     {
-        auto const new_id = ip + old_size;
-        ptd.m_idcpu[new_id] = amrex::SetParticleIDandCPU(pid+ip, cpuid);
+        auto const lip = static_cast<amrex::Long>(ip);
+        auto const new_id = lip + old_size;
+        ptd.m_idcpu[new_id] = amrex::SetParticleIDandCPU(pid+lip, cpuid);
     });
 }
 
-#endif //SMART_UTILS_H_
+#endif //WARPX_SMART_UTILS_H_

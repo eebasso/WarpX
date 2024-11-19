@@ -4,8 +4,8 @@
  *
  * License: BSD-3-Clause-LBNL
  */
-#ifndef NamedComponentParticleContainer_H_
-#define NamedComponentParticleContainer_H_
+#ifndef WARPX_NamedComponentParticleContainer_H_
+#define WARPX_NamedComponentParticleContainer_H_
 
 #include "Utils/TextMsg.H"
 
@@ -159,7 +159,7 @@ public:
      * @param name Name of the new component
      * @param comm Whether to communicate this component, in the particle Redistribute
      */
-    void AddRealComp (const std::string& name, bool comm=true)
+    void NewRealComp (const std::string& name, bool comm=true)
     {
         auto search = particle_comps.find(name);
         if (search == particle_comps.end()) {
@@ -177,7 +177,7 @@ public:
      * @param name Name of the new component
      * @param comm Whether to communicate this component, in the particle Redistribute
      */
-    void AddIntComp (const std::string& name, bool comm=true)
+    void NewIntComp (const std::string& name, bool comm=true)
     {
         auto search = particle_icomps.find(name);
         if (search == particle_icomps.end()) {
@@ -187,6 +187,19 @@ public:
         } else {
             amrex::Print() << Utils::TextMsg::Info(
                 name + " already exists in particle_icomps, not adding.");
+        }
+    }
+
+    void defineAllParticleTiles () noexcept
+    {
+        for (int lev = 0; lev <= amrex::ParticleContainerPureSoA<PIdx::nattribs,0,T_Allocator>::finestLevel(); ++lev)
+        {
+            for (auto mfi = amrex::ParticleContainerPureSoA<PIdx::nattribs,0,T_Allocator>::MakeMFIter(lev); mfi.isValid(); ++mfi)
+            {
+                const int grid_id = mfi.index();
+                const int tile_id = mfi.LocalTileIndex();
+                amrex::ParticleContainerPureSoA<PIdx::nattribs,0,T_Allocator>::DefineAndReturnParticleTile(lev, grid_id, tile_id);
+            }
         }
     }
 
@@ -206,4 +219,4 @@ protected:
     std::map<std::string, int> particle_runtime_icomps;
 };
 
-#endif
+#endif //WARPX_NamedComponentParticleContainer_H_
