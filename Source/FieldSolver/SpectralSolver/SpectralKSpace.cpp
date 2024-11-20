@@ -137,7 +137,7 @@ SpectralKSpace::getKComponent( const DistributionMapping& dm,
  * specified by `i_dim`.
  *
  * (By default, we assume the FFT is done from/to a collocated grid in real space
- * It the FFT is performed from/to a cell-centered grid in real space,
+ * If the FFT is performed from/to a cell-centered grid in real space,
  * a correcting "shift" factor must be applied in spectral space.)
  */
 SpectralShiftFactor
@@ -188,10 +188,10 @@ SpectralKSpace::getSpectralShiftFactor( const DistributionMapping& dm,
  * \param grid_type type of grid (collocated or not)
  */
 KVectorComponent
-SpectralKSpace::getModifiedKComponent( const DistributionMapping& dm,
+SpectralKSpace::getModifiedKComponent (const DistributionMapping& dm,
                                        const int i_dim,
                                        const int n_order,
-                                       const short grid_type ) const
+                                       ablastr::utils::enums::GridType grid_type) const
 {
     // Initialize an empty DeviceVector in each box
     KVectorComponent modified_k_comp(spectralspace_ba, dm);

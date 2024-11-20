@@ -10,10 +10,7 @@ Git workflow
 ------------
 
 The WarpX project uses `git <https://git-scm.com>`_ for version control.
-If you are new to git, you can follow one of these tutorials:
-
-- `Learn git with bitbucket <https://www.atlassian.com/git/tutorials/learn-git-with-bitbucket-cloud>`_
-- `git - the simple guide <http://rogerdudler.github.io/git-guide/>`_
+If you are new to git, you can follow `this tutorial <https://swcarpentry.github.io/git-novice/>`__.
 
 Configure your GitHub Account & Development Machine
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -117,7 +114,7 @@ A typical format is:
 
    This is a short, 40-character title
 
-   After a newline, you can write arbitray paragraphs. You
+   After a newline, you can write arbitrary paragraphs. You
    usually limit the lines to 70 characters, but if you don't, then
    nothing bad will happen.
 
