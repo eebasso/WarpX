@@ -155,13 +155,13 @@ CreateSlice( const MultiFab& mf, const Vector<Geometry> &dom_geom,
 
     // interpolate if required on refined slice //
     if (interpolate) {
-       InterpolateSliceValues( *smf, interp_lo, slice_cc_nd_box, dom_geom,
-                               ncomp, nghost, slice_lo, slice_hi, SliceType, real_box);
+        InterpolateSliceValues( *smf, interp_lo, slice_cc_nd_box, dom_geom,
+                                ncomp, nghost, slice_lo, slice_hi, SliceType, real_box);
     }
 
 
     if (!coarsen) {
-       return smf;
+        return smf;
     }
     else {
         Vector<BoxArray> crse_ba(1);

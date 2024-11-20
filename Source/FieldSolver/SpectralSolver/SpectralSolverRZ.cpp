@@ -60,7 +60,7 @@ SpectralSolverRZ::SpectralSolverRZ (const int lev,
                 k_space, dm, m_spectral_index, n_rz_azimuthal_modes, norder_z, grid_type, dt);
     }
     if (v_galilean[2] == 0) {
-         // v_galilean is 0: use standard PSATD algorithm
+        // v_galilean is 0: use standard PSATD algorithm
         algorithm = std::make_unique<PsatdAlgorithmRZ>(
             k_space, dm, m_spectral_index, n_rz_azimuthal_modes, norder_z, grid_type, dt,
             update_with_rho, fft_do_time_averaging, J_in_time, rho_in_time, dive_cleaning, divb_cleaning);

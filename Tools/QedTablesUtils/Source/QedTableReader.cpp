@@ -215,8 +215,8 @@ bw_pair_production_table_wrapper<RealType>::write_table_data(
             const auto xcoord = this->m_table.get_x_coord(i);
             const auto ycoord = this->m_table.get_y_coord(j);
             const auto val = this->m_table.get_val(i,j);
-             of << std::exp(xcoord) << " " << ycoord*std::exp(xcoord)
-                << " " << val << "\n";
+            of << std::exp(xcoord) << " " << ycoord*std::exp(xcoord)
+               << " " << val << "\n";
         }
     }
 }

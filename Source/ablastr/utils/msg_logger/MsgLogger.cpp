@@ -386,7 +386,7 @@ Logger::compute_msgs_with_counter_and_ranks(
         auto it = all_data.begin() + displacements[rr];
         const auto counters_rr = abl_ser::get_out_vec<std::int64_t>(it);
 
-         //for each counter from rank rr
+        //for each counter from rank rr
         std::int64_t c = 0;
         for (const auto& counter : counters_rr){
 #ifdef AMREX_USE_OMP

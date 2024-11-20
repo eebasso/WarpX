@@ -794,7 +794,7 @@ BTDiagnostics::UpdateBufferData ()
                 }
             }
         }
-   }
+    }
 }
 
 void

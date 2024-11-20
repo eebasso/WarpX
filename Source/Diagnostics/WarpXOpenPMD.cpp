@@ -824,9 +824,9 @@ WarpXOpenPMDPlot::SetupRealProperties (ParticleContainer const * pc,
     };
     auto const real_counter = std::min(write_real_comp.size(), real_comp_names.size());
     for (int i = 0; i < real_counter; ++i) {
-      if (write_real_comp[i]) {
-          getComponentRecord(real_comp_names[i]).resetDataset(dtype_real);
-      }
+        if (write_real_comp[i]) {
+            getComponentRecord(real_comp_names[i]).resetDataset(dtype_real);
+        }
     }
     auto const int_counter = std::min(write_int_comp.size(), int_comp_names.size());
     for (int i = 0; i < int_counter; ++i) {

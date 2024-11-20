@@ -155,7 +155,7 @@ void PsatdAlgorithmPmlRZ::InitializeSpectralCoefficients (SpectralFieldDataRZ co
                 S_ck(i,j,k,mode) = dt;
             }
         });
-     }
+    }
 }
 
 void

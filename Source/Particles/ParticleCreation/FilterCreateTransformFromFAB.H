@@ -201,7 +201,7 @@ Index filterCreateTransformFromFAB (DstPC& pc1, DstPC& pc2,
  */
 template <int N, typename DstPC, typename DstTile, typename FABs, typename Index,
           typename FilterFunc, typename CreateFunc1, typename CreateFunc2,
-           typename TransFunc>
+          typename TransFunc>
 Index filterCreateTransformFromFAB (DstPC& pc1, DstPC& pc2, DstTile& dst1, DstTile& dst2, const amrex::Box box,
                                 const FABs& src_FABs, const Index dst1_index,
                                 const Index dst2_index, FilterFunc&& filter,

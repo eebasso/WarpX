@@ -172,7 +172,7 @@ void DefaultInitializeRuntimeAttributes (PTile& ptile,
                 }
             }
 
-             // Current runtime comp is Breit-Wheeler optical depth
+            // Current runtime comp is Breit-Wheeler optical depth
             if (particle_comps.find("opticalDepthBW") != particle_comps.end() &&
                 particle_comps.at("opticalDepthBW") == j)
             {

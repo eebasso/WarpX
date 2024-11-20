@@ -248,7 +248,7 @@ WarpX::MoveWindow (const int step, bool move_j)
                 shiftMF(*Bfield_avg_fp[lev][dim], geom[lev], num_shift, dir, lev, do_update_cost,
                     m_p_ext_field_params->B_external_grid[dim], use_Bparser, Bfield_parser);
                 shiftMF(*Efield_avg_fp[lev][dim], geom[lev], num_shift, dir, lev, do_update_cost,
-                   m_p_ext_field_params-> E_external_grid[dim], use_Eparser, Efield_parser);
+                    m_p_ext_field_params-> E_external_grid[dim], use_Eparser, Efield_parser);
             }
             if (move_j) {
                 shiftMF(*m_fields.get(FieldType::current_fp, Direction{dim}, lev), geom[lev], num_shift, dir, lev, do_update_cost);

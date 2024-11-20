@@ -104,12 +104,12 @@ WarpX::InitEB ()
         auto eb_if_parser = utils::parser::makeParser(impf, {"x", "y", "z"});
         ParserIF const pif(eb_if_parser.compile<3>());
         auto gshop = amrex::EB2::makeShop(pif, eb_if_parser);
-         // The last argument of amrex::EB2::Build is the maximum coarsening level
-         // to which amrex should try to coarsen the EB.  It will stop after coarsening
-         // as much as it can, if it cannot coarsen to that level.  Here we use a big
-         // number (e.g., maxLevel()+20) for multigrid solvers.  Because the coarse
-         // level has only 1/8 of the cells on the fine level, the memory usage should
-         // not be an issue.
+        // The last argument of amrex::EB2::Build is the maximum coarsening level
+        // to which amrex should try to coarsen the EB.  It will stop after coarsening
+        // as much as it can, if it cannot coarsen to that level.  Here we use a big
+        // number (e.g., maxLevel()+20) for multigrid solvers.  Because the coarse
+        // level has only 1/8 of the cells on the fine level, the memory usage should
+        // not be an issue.
         amrex::EB2::Build(gshop, Geom(maxLevel()), maxLevel(), maxLevel()+20);
     } else {
         amrex::ParmParse pp_eb2("eb2");

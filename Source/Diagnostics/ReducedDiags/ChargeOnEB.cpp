@@ -139,7 +139,7 @@ void ChargeOnEB::ComputeDiags (const int step)
 #endif
     for (amrex::MFIter mfi(Ex, TilingIfNotGPU()); mfi.isValid(); ++mfi)
     {
-      const amrex::Box & box = mfi.tilebox( amrex::IntVect::TheCellVector() );
+        const amrex::Box & box = mfi.tilebox( amrex::IntVect::TheCellVector() );
 
         // Skip boxes that do not intersect with the embedded boundary
         // (i.e. either fully covered or fully regular)

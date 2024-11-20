@@ -283,7 +283,7 @@ void PsatdAlgorithmGalileanRZ::InitializeSpectralCoefficients (SpectralFieldData
                 Theta2(i,j,k,mode) = 1._rt;
             }
         });
-     }
+    }
 }
 
 void

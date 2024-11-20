@@ -34,10 +34,10 @@ SplitAndScatterFunc::SplitAndScatterFunc (const std::string& collision_name,
     }
 
 #ifdef AMREX_USE_GPU
-     m_num_products_device.resize(m_num_product_species);
-     amrex::Gpu::copyAsync(amrex::Gpu::hostToDevice, m_num_products_host.begin(),
-                           m_num_products_host.end(),
-                           m_num_products_device.begin());
-     amrex::Gpu::streamSynchronize();
+    m_num_products_device.resize(m_num_product_species);
+    amrex::Gpu::copyAsync(amrex::Gpu::hostToDevice, m_num_products_host.begin(),
+                          m_num_products_host.end(),
+                          m_num_products_device.begin());
+    amrex::Gpu::streamSynchronize();
 #endif
 }

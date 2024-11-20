@@ -417,7 +417,7 @@ void PsatdAlgorithmRZ::InitializeSpectralCoefficients (SpectralFieldDataRZ const
                 }
             }
         });
-     }
+    }
 }
 
 void

@@ -206,27 +206,27 @@ Diagnostics::BaseReadParameters ()
         pp_diag_name, "diag_lo", m_lo, 0, AMREX_SPACEDIM);
 
     if (!lo_specified) {
-       for (int idim=0; idim < AMREX_SPACEDIM; ++idim) {
+        for (int idim=0; idim < AMREX_SPACEDIM; ++idim) {
             m_lo[idim] = warpx.Geom(0).ProbLo(idim);
-       }
+        }
     }
     const bool hi_specified = utils::parser::queryArrWithParser(
         pp_diag_name, "diag_hi", m_hi, 0, AMREX_SPACEDIM);
     if (!hi_specified) {
-       for (int idim =0; idim < AMREX_SPACEDIM; ++idim) {
+        for (int idim =0; idim < AMREX_SPACEDIM; ++idim) {
             m_hi[idim] = warpx.Geom(0).ProbHi(idim);
-       }
+        }
     }
     // For a moving window simulation, the user-defined m_lo and m_hi must be converted.
     if (WarpX::do_moving_window) {
 #if defined(WARPX_DIM_3D)
-    amrex::Vector<int> dim_map {0, 1, 2};
+        amrex::Vector<int> dim_map {0, 1, 2};
 #elif defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
-    amrex::Vector<int> dim_map {0, 2};
+        amrex::Vector<int> dim_map {0, 2};
 #else
-    amrex::Vector<int> dim_map {2};
+        amrex::Vector<int> dim_map {2};
 #endif
-       if (WarpX::boost_direction[ dim_map[WarpX::moving_window_dir] ] == 1) {
+        if (WarpX::boost_direction[ dim_map[WarpX::moving_window_dir] ] == 1) {
            // Convert user-defined lo and hi for diagnostics to account for boosted-frame
            // simulations with moving window
            const amrex::Real beta_window = WarpX::moving_window_v / PhysConst::c;
@@ -234,7 +234,7 @@ Diagnostics::BaseReadParameters ()
                WarpX::gamma_boost * (1._rt - WarpX::beta_boost * beta_window) );
            m_lo[WarpX::moving_window_dir] *= convert_factor;
            m_hi[WarpX::moving_window_dir] *= convert_factor;
-       }
+        }
     }
 
     // Initialize cr_ratio with default value of 1 for each dimension.
@@ -244,9 +244,9 @@ Diagnostics::BaseReadParameters ()
         utils::parser::queryArrWithParser(
             pp_diag_name, "coarsening_ratio", cr_ratio, 0, AMREX_SPACEDIM);
     if (cr_specified) {
-       for (int idim =0; idim < AMREX_SPACEDIM; ++idim) {
+        for (int idim =0; idim < AMREX_SPACEDIM; ++idim) {
            m_crse_ratio[idim] = cr_ratio[idim];
-       }
+        }
     }
 
     // Names of species to write to output

@@ -174,7 +174,7 @@ WarpX::Evolve (int numsteps)
             m_implicit_solver->OneStep(cur_time, dt[0], step);
         }
         else if ( electromagnetic_solver_id == ElectromagneticSolverAlgo::None ||
-             electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC )
+            electromagnetic_solver_id == ElectromagneticSolverAlgo::HybridPIC )
         {
             // Electrostatic or hybrid-PIC case: only gather fields and push
             // particles, deposition and calculation of fields done further below

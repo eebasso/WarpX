@@ -397,7 +397,7 @@ PhysicalParticleContainer::PhysicalParticleContainer (AmrCore* amr_core, int isp
 #endif
         NewRealComp("prev_z");
 #ifdef WARPX_DIM_RZ
-      amrex::Abort("Saving previous particle positions not yet implemented in RZ");
+        amrex::Abort("Saving previous particle positions not yet implemented in RZ");
 #endif
     }
 
@@ -3095,7 +3095,7 @@ PhysicalParticleContainer::ImplicitPushXP (WarpXParIter& pti,
             std::to_string(num_unconverged_particles) +
             " particles failed to converge after " +
             std::to_string(max_iterations) + " iterations."
-         );
+        );
     }
 }
 

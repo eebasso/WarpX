@@ -187,7 +187,7 @@ void plus_index_offsets (int i, int j, int k, int& ip, int& jp, int& kp, int com
     } else if (comp == 2){ //z
         ip =  i; jp =  j; kp = k - 1;
     }
- #elif defined(WARPX_DIM_RZ) || defined(WARPX_DIM_XZ)
+#elif defined(WARPX_DIM_RZ) || defined(WARPX_DIM_XZ)
     if (comp == 0) { //x
         ip =  i - 1; jp =  j; kp = k;
     } else if (comp == 2){ //z

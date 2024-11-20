@@ -262,7 +262,7 @@ void warpx_damp_pml_bx (int i, int j, int k, amrex::Array4<amrex::Real> const& B
 
 #if defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
 
-   amrex::ignore_unused(sigma_fac_y, sigma_star_fac_y, ylo);
+    amrex::ignore_unused(sigma_fac_y, sigma_star_fac_y, ylo);
 
     // sx = 0 means that Bx is staggered in x, while sx = 1 means that Bx is nodal in x (same for z)
     const int sx = Bx_stag[0];
@@ -413,7 +413,7 @@ void warpx_damp_pml_bz (int i, int j, int k, amrex::Array4<amrex::Real> const& B
 
 #if defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
 
-   amrex::ignore_unused(sigma_fac_y, sigma_star_fac_y, ylo);
+    amrex::ignore_unused(sigma_fac_y, sigma_star_fac_y, ylo);
 
     // sx = 0 means that Bz is staggered in x, while sx = 1 means that Bz is nodal in x (same for z)
     const int sx = Bz_stag[0];
@@ -489,7 +489,7 @@ void warpx_damp_pml_scalar (int i, int j, int k, amrex::Array4<amrex::Real> cons
 
 #if defined(WARPX_DIM_XZ) || defined(WARPX_DIM_RZ)
 
-   amrex::ignore_unused(sigma_fac_y, sigma_star_fac_y, ylo);
+    amrex::ignore_unused(sigma_fac_y, sigma_star_fac_y, ylo);
 
     // sx = 0 means that arr is staggered in x, while sx = 1 means that arr is nodal in x (same for z)
     const int sx = arr_stag[0];

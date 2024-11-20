@@ -187,7 +187,7 @@ struct CartesianYeeAlgorithm {
 
     /**
      * Perform derivative along z on a cell-centered grid, from a nodal field `F`*/
-   AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
+    AMREX_GPU_HOST_DEVICE AMREX_FORCE_INLINE
     static amrex::Real UpwardDz (
         amrex::Array4<amrex::Real const> const& F,
         amrex::Real const * const coefs_z, int const /*n_coefs_z*/,
