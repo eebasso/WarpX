@@ -291,7 +291,7 @@ WarpX::PrintMainPICparameters ()
         amrex::Print() << "                      | - macroscopic" << "\n";
     }
     if ( (em_solver_medium == MediumForEM::Macroscopic) &&
-       (WarpX::macroscopic_solver_algo == MacroscopicSolverAlgo::LaxWendroff)){
+        (WarpX::macroscopic_solver_algo == MacroscopicSolverAlgo::LaxWendroff)){
         amrex::Print() << "                      |  - Lax-Wendroff algorithm\n";
     }
     else if ((em_solver_medium == MediumForEM::Macroscopic) &&
@@ -319,7 +319,7 @@ WarpX::PrintMainPICparameters ()
         amrex::Print() << "Current Deposition:   | Esirkepov \n";
     }
     else if (current_deposition_algo == CurrentDepositionAlgo::Villasenor){
-      amrex::Print() << "Current Deposition:   | Villasenor \n";
+        amrex::Print() << "Current Deposition:   | Villasenor \n";
     }
     // Print type of particle pusher
     if (particle_pusher_algo == ParticlePusherAlgo::Vay){
@@ -389,18 +389,18 @@ WarpX::PrintMainPICparameters ()
         amrex::Print() << "                      | - multi-J deposition is ON \n";
         amrex::Print() << "                      |   - do_multi_J_n_depositions = "
                                           << WarpX::do_multi_J_n_depositions << "\n";
-      if (J_in_time == JInTime::Linear){
-        amrex::Print() << "                      |   - J_in_time = linear \n";
-      }
-      if (J_in_time == JInTime::Constant){
-        amrex::Print() << "                      |   - J_in_time = constant \n";
-      }
-      if (rho_in_time == RhoInTime::Linear){
-        amrex::Print() << "                      |   - rho_in_time = linear \n";
-      }
-      if (rho_in_time == RhoInTime::Constant){
-        amrex::Print() << "                      |   - rho_in_time = constant \n";
-      }
+        if (J_in_time == JInTime::Linear){
+            amrex::Print() << "                      |   - J_in_time = linear \n";
+        }
+        if (J_in_time == JInTime::Constant){
+            amrex::Print() << "                      |   - J_in_time = constant \n";
+        }
+        if (rho_in_time == RhoInTime::Linear){
+            amrex::Print() << "                      |   - rho_in_time = linear \n";
+        }
+        if (rho_in_time == RhoInTime::Constant){
+            amrex::Print() << "                      |   - rho_in_time = constant \n";
+        }
     }
     if (fft_do_time_averaging){
         amrex::Print()<<"                      | - time-averaged is ON \n";
@@ -934,13 +934,13 @@ WarpX::InitLevelData (int lev, Real /*time*/)
                 m_fields.get(FieldType::Bfield_avg_fp, Direction{i}, lev)->setVal(m_p_ext_field_params->B_external_grid[i]);
             }
 
-           if (lev > 0) {
+            if (lev > 0) {
                 m_fields.get(FieldType::Bfield_aux, Direction{i}, lev)->setVal(m_p_ext_field_params->B_external_grid[i]);
                 m_fields.get(FieldType::Bfield_cp, Direction{i}, lev)->setVal(m_p_ext_field_params->B_external_grid[i]);
                 if (fft_do_time_averaging) {
                     m_fields.get(FieldType::Bfield_avg_cp, Direction{i}, lev)->setVal(m_p_ext_field_params->B_external_grid[i]);
                 }
-           }
+            }
         }
 
         // Externally imposed fields are only initialized until the user-defined maxlevel_extEMfield_init.
@@ -974,7 +974,7 @@ WarpX::InitLevelData (int lev, Real /*time*/)
     // Externally imposed fields are only initialized until the user-defined maxlevel_extEMfield_init.
     // The default maxlevel_extEMfield_init value is the total number of levels in the simulation
     if ((m_p_ext_field_params->B_ext_grid_type == ExternalFieldType::parse_ext_grid_function)
-         && (lev > 0) && (lev <= maxlevel_extEMfield_init)) {
+        && (lev > 0) && (lev <= maxlevel_extEMfield_init)) {
         ComputeExternalFieldOnGridUsingParser(
             FieldType::Bfield_aux,
             m_p_ext_field_params->Bxfield_parser->compile<4>(),
@@ -1047,7 +1047,7 @@ WarpX::InitLevelData (int lev, Real /*time*/)
                 }
             }
 #endif
-       }
+        }
     }
 
     // load external grid fields into E/Bfield_fp_external multifabs
