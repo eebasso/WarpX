@@ -47,11 +47,12 @@
 
 void
 WarpX::ImplicitPreRHSOp ( amrex::Real  a_cur_time,
+                          amrex::Real  a_theta,
                           amrex::Real  a_full_dt,
                           int          a_nl_iter,
-                          bool         a_from_jacobian )
+                          bool         a_from_jacobian,
+                          bool         a_use_mass_matrices )
 {
-    using namespace amrex::literals;
     using warpx::fields::FieldType;
     amrex::ignore_unused( a_full_dt, a_nl_iter, a_from_jacobian );
 
@@ -61,16 +62,74 @@ WarpX::ImplicitPreRHSOp ( amrex::Real  a_cur_time,
     // particle velocities by dt, then take average of old and new v,
     // deposit currents, giving J at n+1/2
     // This uses Efield_fp and Bfield_fp, the field at n+1/2 from the previous iteration.
-    const bool skip_current = false;
     const PushType push_type = PushType::Implicit;
-    PushParticlesandDeposit(a_cur_time, skip_current, push_type);
+    const bool skip_current = false;
+    bool deposit_mass_matrices = false;
+    if (a_use_mass_matrices && !a_from_jacobian) { deposit_mass_matrices = true; }
+    PushParticlesandDeposit(a_cur_time, skip_current, deposit_mass_matrices, push_type);
 
     SyncCurrentAndRho();
+    if (deposit_mass_matrices) {
+        SyncMassMatricesAndApplyBCs();
+        const amrex::Real theta_dt = a_theta*a_full_dt;
+        SetMassMatricesForPC( theta_dt );
+    }
 
 }
 
 void
-WarpX::SetElectricFieldAndApplyBCs ( const WarpXSolverVec&  a_E )
+WarpX::SyncMassMatricesAndApplyBCs ()
+{
+    using ablastr::fields::Direction;
+    using warpx::fields::FieldType;
+
+    // Copy mass matrices elements used for the preconditioner
+    for (int lev = 0; lev <= finest_level; ++lev) {
+        ablastr::fields::VectorField MM = m_fields.get_alldirs(FieldType::MassMatrices, lev);
+        ablastr::fields::VectorField MM_PC = m_fields.get_alldirs(FieldType::MassMatrices_PC, lev);
+        amrex::MultiFab::Copy(*MM_PC[0], *MM[0], 0, 0, MM[0]->nComp(), MM[0]->nGrowVect());
+        amrex::MultiFab::Copy(*MM_PC[1], *MM[1], 0, 0, MM[1]->nComp(), MM[1]->nGrowVect());
+        amrex::MultiFab::Copy(*MM_PC[2], *MM[2], 0, 0, MM[2]->nComp(), MM[2]->nGrowVect());
+    }
+
+    // Do addOp Exchange on MassMatrices_PC
+    SyncMassMatrices();
+
+    // Apply BCs to MassMatrices_PC
+    for (int lev = 0; lev <= finest_level; ++lev) {
+        ApplyJfieldBoundary(lev,
+            m_fields.get(FieldType::MassMatrices_PC, Direction{0}, lev),
+            m_fields.get(FieldType::MassMatrices_PC, Direction{1}, lev),
+            m_fields.get(FieldType::MassMatrices_PC, Direction{2}, lev),
+            PatchType::fine);
+    }
+}
+
+void
+WarpX::SetMassMatricesForPC ( amrex::Real a_theta_dt )
+{
+
+    using namespace amrex::literals;
+    using ablastr::fields::Direction;
+    using warpx::fields::FieldType;
+
+    // Scale mass matrices used by preconditioner by c^2*mu0*theta*dt and add 1 to diagonal terms
+    // Note: This should be done after Sync/communication has been called
+
+    const amrex::Real pc_factor = PhysConst::c * PhysConst::c * PhysConst::mu0 * a_theta_dt;
+    const int diag_comp = 0;
+    for (int lev = 0; lev <= finest_level; ++lev) {
+        for (int idir = 0 ; idir < 3 ; idir++) {
+            amrex::MultiFab* mass_matrix = m_fields.get(FieldType::MassMatrices_PC, Direction{idir}, lev);
+            mass_matrix->mult(pc_factor, 0, mass_matrix->nComp());
+            mass_matrix->plus(1.0_rt, diag_comp, 1, 0);
+        }
+    }
+
+}
+
+void
+WarpX::SetElectricFieldAndApplyBCs ( const WarpXSolverVec& a_E, amrex::Real a_time )
 {
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
         a_E.getArrayVecType()==warpx::fields::FieldType::Efield_fp,
@@ -84,12 +143,12 @@ WarpX::SetElectricFieldAndApplyBCs ( const WarpXSolverVec&  a_E )
     amrex::MultiFab::Copy(*Efield_fp[0][1], *Evec[0][1], 0, 0, ncomps, Evec[0][1]->nGrowVect());
     amrex::MultiFab::Copy(*Efield_fp[0][2], *Evec[0][2], 0, 0, ncomps, Evec[0][2]->nGrowVect());
     FillBoundaryE(guard_cells.ng_alloc_EB, WarpX::sync_nodal_points);
-    ApplyEfieldBoundary(0, PatchType::fine);
+    ApplyEfieldBoundary(0, PatchType::fine, a_time);
 }
 
 void
-WarpX::UpdateMagneticFieldAndApplyBCs( ablastr::fields::MultiLevelVectorField const&  a_Bn,
-                                       amrex::Real                                    a_thetadt )
+WarpX::UpdateMagneticFieldAndApplyBCs( ablastr::fields::MultiLevelVectorField const& a_Bn,
+                                       amrex::Real a_thetadt, amrex::Real start_time )
 {
     using ablastr::fields::Direction;
     using warpx::fields::FieldType;
@@ -100,29 +159,23 @@ WarpX::UpdateMagneticFieldAndApplyBCs( ablastr::fields::MultiLevelVectorField co
         amrex::MultiFab::Copy(*Bfp[1], *a_Bn[lev][1], 0, 0, ncomps, a_Bn[lev][1]->nGrowVect());
         amrex::MultiFab::Copy(*Bfp[2], *a_Bn[lev][2], 0, 0, ncomps, a_Bn[lev][2]->nGrowVect());
     }
-    EvolveB(a_thetadt, DtType::Full);
-    ApplyMagneticFieldBCs();
+    EvolveB(a_thetadt, DtType::Full, start_time);
+    FillBoundaryB(guard_cells.ng_alloc_EB, WarpX::sync_nodal_points);
 }
 
 void
-WarpX::FinishMagneticFieldAndApplyBCs( ablastr::fields::MultiLevelVectorField const&  a_Bn,
-                                       amrex::Real                                    a_theta )
+WarpX::FinishMagneticFieldAndApplyBCs( ablastr::fields::MultiLevelVectorField const& a_Bn,
+                                       amrex::Real a_theta, amrex::Real a_time )
 {
     using warpx::fields::FieldType;
 
     FinishImplicitField(m_fields.get_mr_levels_alldirs(FieldType::Bfield_fp, 0), a_Bn, a_theta);
-    ApplyMagneticFieldBCs();
-}
-
-void
-WarpX::ApplyMagneticFieldBCs()
-{
+    ApplyBfieldBoundary(0, PatchType::fine, DtType::Full, a_time);
     FillBoundaryB(guard_cells.ng_alloc_EB, WarpX::sync_nodal_points);
-    ApplyBfieldBoundary(0, PatchType::fine, DtType::Full);
 }
 
 void
-WarpX::SpectralSourceFreeFieldAdvance ()
+WarpX::SpectralSourceFreeFieldAdvance (amrex::Real start_time)
 {
     using namespace amrex::literals;
     using warpx::fields::FieldType;
@@ -148,7 +201,7 @@ WarpX::SpectralSourceFreeFieldAdvance ()
     current_fp[1]->setVal(0._rt);
     current_fp[2]->setVal(0._rt);
     if (rho_fp) { rho_fp->setVal(0._rt); }
-    PushPSATD(); // Note that this does dt/2
+    PushPSATD(start_time); // Note that this does dt/2
     FillBoundaryE(guard_cells.ng_alloc_EB, WarpX::sync_nodal_points);
     FillBoundaryB(guard_cells.ng_alloc_EB, WarpX::sync_nodal_points);
 
@@ -175,7 +228,7 @@ WarpX::SaveParticlesAtImplicitStepStart ( )
 #endif
             {
 
-            auto particle_comps = pc->getParticleComps();
+            auto particle_comps = pc->GetRealSoANames();
 
             for (WarpXParIter pti(*pc, lev); pti.isValid(); ++pti) {
 
@@ -187,15 +240,15 @@ WarpX::SaveParticlesAtImplicitStepStart ( )
                 amrex::ParticleReal* const AMREX_RESTRICT uz = attribs[PIdx::uz].dataPtr();
 
 #if (AMREX_SPACEDIM >= 2)
-                amrex::ParticleReal* x_n = pti.GetAttribs(particle_comps["x_n"]).dataPtr();
+                amrex::ParticleReal* x_n = pti.GetAttribs("x_n").dataPtr();
 #endif
 #if defined(WARPX_DIM_3D) || defined(WARPX_DIM_RZ)
-                amrex::ParticleReal* y_n = pti.GetAttribs(particle_comps["y_n"]).dataPtr();
+                amrex::ParticleReal* y_n = pti.GetAttribs("y_n").dataPtr();
 #endif
-                amrex::ParticleReal* z_n = pti.GetAttribs(particle_comps["z_n"]).dataPtr();
-                amrex::ParticleReal* ux_n = pti.GetAttribs(particle_comps["ux_n"]).dataPtr();
-                amrex::ParticleReal* uy_n = pti.GetAttribs(particle_comps["uy_n"]).dataPtr();
-                amrex::ParticleReal* uz_n = pti.GetAttribs(particle_comps["uz_n"]).dataPtr();
+                amrex::ParticleReal* z_n = pti.GetAttribs("z_n").dataPtr();
+                amrex::ParticleReal* ux_n = pti.GetAttribs("ux_n").dataPtr();
+                amrex::ParticleReal* uy_n = pti.GetAttribs("uy_n").dataPtr();
+                amrex::ParticleReal* uz_n = pti.GetAttribs("uz_n").dataPtr();
 
                 const long np = pti.numParticles();
 
@@ -245,7 +298,7 @@ WarpX::FinishImplicitParticleUpdate ()
 #endif
             {
 
-            auto particle_comps = pc->getParticleComps();
+            auto particle_comps = pc->GetRealSoANames();
 
             for (WarpXParIter pti(*pc, lev); pti.isValid(); ++pti) {
 
@@ -258,15 +311,15 @@ WarpX::FinishImplicitParticleUpdate ()
                 amrex::ParticleReal* const AMREX_RESTRICT uz = attribs[PIdx::uz].dataPtr();
 
 #if (AMREX_SPACEDIM >= 2)
-                amrex::ParticleReal* x_n = pti.GetAttribs(particle_comps["x_n"]).dataPtr();
+                amrex::ParticleReal* x_n = pti.GetAttribs("x_n").dataPtr();
 #endif
 #if defined(WARPX_DIM_3D) || defined(WARPX_DIM_RZ)
-                amrex::ParticleReal* y_n = pti.GetAttribs(particle_comps["y_n"]).dataPtr();
+                amrex::ParticleReal* y_n = pti.GetAttribs("y_n").dataPtr();
 #endif
-                amrex::ParticleReal* z_n = pti.GetAttribs(particle_comps["z_n"]).dataPtr();
-                amrex::ParticleReal* ux_n = pti.GetAttribs(particle_comps["ux_n"]).dataPtr();
-                amrex::ParticleReal* uy_n = pti.GetAttribs(particle_comps["uy_n"]).dataPtr();
-                amrex::ParticleReal* uz_n = pti.GetAttribs(particle_comps["uz_n"]).dataPtr();
+                amrex::ParticleReal* z_n = pti.GetAttribs("z_n").dataPtr();
+                amrex::ParticleReal* ux_n = pti.GetAttribs("ux_n").dataPtr();
+                amrex::ParticleReal* uy_n = pti.GetAttribs("uy_n").dataPtr();
+                amrex::ParticleReal* uz_n = pti.GetAttribs("uz_n").dataPtr();
 
                 const long np = pti.numParticles();
 
@@ -300,8 +353,8 @@ WarpX::FinishImplicitParticleUpdate ()
 }
 
 void
-WarpX::FinishImplicitField( ablastr::fields::MultiLevelVectorField const&  Field_fp,
-                            ablastr::fields::MultiLevelVectorField const&  Field_n,
+WarpX::FinishImplicitField( ablastr::fields::MultiLevelVectorField const& Field_fp,
+                            ablastr::fields::MultiLevelVectorField const& Field_n,
                             amrex::Real  theta )
 {
     using namespace amrex::literals;
@@ -351,7 +404,7 @@ WarpX::FinishImplicitField( ablastr::fields::MultiLevelVectorField const&  Field
 }
 
 void
-WarpX::ImplicitComputeRHSE (amrex::Real a_dt, WarpXSolverVec&  a_Erhs_vec)
+WarpX::ImplicitComputeRHSE (amrex::Real a_dt, WarpXSolverVec& a_Erhs_vec)
 {
     for (int lev = 0; lev <= finest_level; ++lev)
     {
@@ -360,7 +413,7 @@ WarpX::ImplicitComputeRHSE (amrex::Real a_dt, WarpXSolverVec&  a_Erhs_vec)
 }
 
 void
-WarpX::ImplicitComputeRHSE (int lev, amrex::Real a_dt, WarpXSolverVec&  a_Erhs_vec)
+WarpX::ImplicitComputeRHSE (int lev, amrex::Real a_dt, WarpXSolverVec& a_Erhs_vec)
 {
     WARPX_PROFILE("WarpX::ImplicitComputeRHSE()");
     ImplicitComputeRHSE(lev, PatchType::fine, a_dt, a_Erhs_vec);
@@ -371,7 +424,7 @@ WarpX::ImplicitComputeRHSE (int lev, amrex::Real a_dt, WarpXSolverVec&  a_Erhs_v
 }
 
 void
-WarpX::ImplicitComputeRHSE (int lev, PatchType patch_type, amrex::Real a_dt, WarpXSolverVec&  a_Erhs_vec)
+WarpX::ImplicitComputeRHSE (int lev, PatchType patch_type, amrex::Real a_dt, WarpXSolverVec& a_Erhs_vec)
 {
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
         a_Erhs_vec.getArrayVecType()==warpx::fields::FieldType::Efield_fp,
@@ -391,12 +444,14 @@ WarpX::ImplicitComputeRHSE (int lev, PatchType patch_type, amrex::Real a_dt, War
                                         lev,
                                         patch_type,
                                         a_Erhs_vec.getArrayVec()[lev],
+                                        m_eb_update_E[lev],
                                         a_dt );
     } else {
         m_fdtd_solver_cp[lev]->EvolveE( m_fields,
                                         lev,
                                         patch_type,
                                         a_Erhs_vec.getArrayVec()[lev],
+                                        m_eb_update_E[lev],
                                         a_dt );
     }
 
