@@ -39,11 +39,11 @@ void ElectrostaticSolver::ReadParameters () {
         pp_warpx, "self_fields_absolute_tolerance", self_fields_absolute_tolerance);
     utils::parser::queryWithParser(
         pp_warpx, "self_fields_max_iters", self_fields_max_iters);
-   utils::parser::queryWithParser(
+    utils::parser::queryWithParser(
         pp_warpx, "self_fields_verbosity", self_fields_verbosity);
 
     // FFT solver flags
-   utils::parser::queryWithParser(
+    utils::parser::queryWithParser(
         pp_warpx, "use_2d_slices_fft_solver", is_igf_2d_slices);
 }
 

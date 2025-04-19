@@ -865,7 +865,7 @@ public:
         int lev, PatchType patch_type,
         amrex::Vector<std::array< std::unique_ptr<amrex::iMultiFab>,3 > > const& eb_update_field);
 
-     /**
+    /**
      * \brief
      * This function computes the E, B, and J fields on each level
      * using the parser and the user-defined function for the external fields.
@@ -914,8 +914,8 @@ public:
      * for a specific field (specified by `F_name`)
      */
     void ReadExternalFieldFromFile (
-         const std::string& read_fields_from_path, amrex::MultiFab* mf,
-         const std::string& F_name, const std::string& F_component);
+        const std::string& read_fields_from_path, amrex::MultiFab* mf,
+        const std::string& F_name, const std::string& F_component);
 
     /**
      * \brief
