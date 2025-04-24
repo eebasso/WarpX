@@ -90,7 +90,7 @@ namespace warpx::embedded_boundary
         ablastr::fields::VectorField const& face_areas,
         ablastr::fields::VectorField const& edge_lengths );
 
-   /**
+    /**
     * \brief Initialize information for cell extensions.
     *        The flags convention for m_flag_info_face is as follows
     *          - 0 for unstable cells

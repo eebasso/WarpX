@@ -490,7 +490,7 @@ void WarpXFluidContainer::AdvectivePush_Muscl (ablastr::fields::MultiFabRegister
             tt.growLo(idir, n_cell);
             tt.growHi(idir, n_cell);
 #endif
-           return tt;
+            return tt;
         }();
 
         amrex::Array4<Real> const &N_arr = fields.get(name_mf_N, lev)->array(mfi);

@@ -346,18 +346,18 @@ void NewtonSolver<Vec,Ops>::Solve ( Vec&         a_U,
     }
 
     if (m_rtol > 0. && iter == m_maxits) {
-       std::stringstream convergenceMsg;
-       convergenceMsg << "Newton solver failed to converge after " << iter <<
-                         " iterations. Relative norm is " << norm_rel <<
-                         " and the relative tolerance is " << m_rtol <<
-                         ". Absolute norm is " << norm_abs <<
-                         " and the absolute tolerance is " << m_atol;
-       if (this->m_verbose) { amrex::Print() << convergenceMsg.str() << "\n"; }
-       if (m_require_convergence) {
-           WARPX_ABORT_WITH_MESSAGE(convergenceMsg.str());
-       } else {
-           ablastr::warn_manager::WMRecordWarning("NewtonSolver", convergenceMsg.str());
-       }
+        std::stringstream convergenceMsg;
+        convergenceMsg << "Newton solver failed to converge after " << iter <<
+                          " iterations. Relative norm is " << norm_rel <<
+                          " and the relative tolerance is " << m_rtol <<
+                          ". Absolute norm is " << norm_abs <<
+                          " and the absolute tolerance is " << m_atol;
+        if (this->m_verbose) { amrex::Print() << convergenceMsg.str() << "\n"; }
+        if (m_require_convergence) {
+            WARPX_ABORT_WITH_MESSAGE(convergenceMsg.str());
+        } else {
+            ablastr::warn_manager::WMRecordWarning("NewtonSolver", convergenceMsg.str());
+        }
     }
 
     if (!this->m_diagnostic_file.empty() && amrex::ParallelDescriptor::IOProcessor() &&

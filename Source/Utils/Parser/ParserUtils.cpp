@@ -123,7 +123,7 @@ namespace {
         }
         WARPX_ALWAYS_ASSERT_WITH_MESSAGE(!error_detected, assert_msg);
         return result;
-   }
+    }
 }
 
 

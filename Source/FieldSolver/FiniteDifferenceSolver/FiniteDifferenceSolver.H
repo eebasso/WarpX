@@ -126,7 +126,7 @@ class FiniteDifferenceSolver
             bool dive_cleaning
         );
 
-       void EvolveEPML (
+        void EvolveEPML (
             ablastr::fields::MultiFabRegister& fields,
             PatchType patch_type,
             int level,
@@ -135,9 +135,9 @@ class FiniteDifferenceSolver
             bool pml_has_particles
         );
 
-       void EvolveFPML ( amrex::MultiFab* Ffield,
-                         ablastr::fields::VectorField Efield,
-                         amrex::Real dt );
+        void EvolveFPML ( amrex::MultiFab* Ffield,
+                          ablastr::fields::VectorField Efield,
+                          amrex::Real dt );
 
         /**
           * \brief E-update in the hybrid PIC algorithm as described in
