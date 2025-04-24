@@ -12,11 +12,11 @@
  * The correspondence between the component index (0,1) and its meaning
  * (yx, yz, etc.) is defined in the present file */
 
- struct PMLComp {
-   enum { xy=0, xz=1, xx=2,
-          yz=0, yx=1, yy=2,
-          zx=0, zy=1, zz=2,
-          x=0, y=1, z=2 }; // Used for the PML components of F
- };
+struct PMLComp {
+    enum { xy=0, xz=1, xx=2,
+           yz=0, yx=1, yy=2,
+           zx=0, zy=1, zz=2,
+           x=0, y=1, z=2 }; // Used for the PML components of F
+};
 
 #endif

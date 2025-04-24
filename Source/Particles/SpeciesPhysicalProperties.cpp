@@ -47,7 +47,7 @@ namespace {
         {"lithium6"   , PhysicalSpecies::lithium6},
         {"lithium7"   , PhysicalSpecies::lithium7},
         {"beryllium"  , PhysicalSpecies::beryllium},
-        {"beryllium9"  , PhysicalSpecies::beryllium9},
+        {"beryllium9" , PhysicalSpecies::beryllium9},
         {"boron"      , PhysicalSpecies::boron},
         {"boron10"    , PhysicalSpecies::boron10},
         {"boron11"    , PhysicalSpecies::boron11},
