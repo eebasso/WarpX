@@ -1,3 +1,12 @@
+.. role:: cpp(code)
+   :language: cpp
+
+.. role:: python(code)
+   :language: python
+
+.. role:: in(code)
+    :language: cpp
+
 .. _running-cpp-parameters:
 
 Inputs: Parameter List
@@ -9,11 +18,11 @@ Examples of inputs files can be found in the :ref:`Examples <usage-examples>` se
 
 .. note::
 
-   WarpX's input paramters are read via AMReX's `ParmParse <https://amrex-codes.github.io/amrex/docs_html/Basics.html#parmparse>`__.
+   WarpX's input parameters are read via AMReX's `ParmParse <https://amrex-codes.github.io/amrex/docs_html/Basics.html#parmparse>`__.
 
 .. note::
 
-   The AMReX parser (see :ref:`running-cpp-parameters-parser`) is used for the right-hand side of all input parameters that consist of one or more integers or floats. Expressions like ``<species_name>.density_max = "0.1+2.3"`` and expressions that include user-defined constants are accepted.
+   The AMReX parser (see :ref:`running-cpp-parameters-parser`) is used for the right-hand side of all input parameters that consist of one or more integers or floats. Expressions like :in:`<species_name>.density_max = "0.1+2.3"` and expressions that include user-defined constants are accepted.
 
 .. _running-cpp-parameters-parser:
 
@@ -70,7 +79,7 @@ For profiles that depend on spatial coordinates (e.g., the plasma momentum distr
 These are specified in the input parameter, i.e., ``density_function(x,y,z)`` and ``field_function(X,Y,t)``.
 
 The parser reads Python-style expressions between double quotes.
-For example, ``"a0*x**2 * (1-y*1e2) * (x>0)"`` is a valid expression, where ``a0`` is a user-defined constant (see above) and ``x`` and ``y`` are spatial coordinates.
+For example, :in:`"a0*x**2 * (1-y*1e2) * (x>0)"` is a valid expression, where ``a0`` is a user-defined constant (see above) and ``x`` and ``y`` are spatial coordinates.
 The names are case sensitive.
 The factor ``(x>0)`` equals ``1`` where ``x>0`` and ``0`` where ``x<=0``.
 It allows the user to define functions by intervals.
@@ -120,17 +129,17 @@ For example, ``something_intervals = -1`` deactivates ``something`` and ``someth
 Simulation Time
 ---------------
 
-* ``max_step`` (`integer`)
+``max_step`` (`integer`)
     The number of PIC cycles to perform.
 
-* ``stop_time`` (`float`; in seconds)
+``stop_time`` (`float`; in seconds)
     The maximum physical time of the simulation. Can be provided instead of ``max_step``. If both
     ``max_step`` and ``stop_time`` are provided, both criteria are used and the simulation stops
     when the first criterion is hit.
 
     Note: in boosted-frame simulations, ``stop_time`` refers to the time in the boosted frame.
 
-* ``warpx.zmax_plasma_to_compute_max_step`` (`float`) optional
+``warpx.zmax_plasma_to_compute_max_step`` (`float`) optional
     Can be useful when running in a boosted frame. If specified, automatically
     calculates the number of iterations required in the boosted frame for the
     lower `z` end of the simulation domain to reach
@@ -139,7 +148,7 @@ Simulation Time
     printed to standard output. Currently only works if the Lorentz boost and
     the moving window are along the z direction.
 
-* ``warpx.compute_max_step_from_btd`` (`integer`; 0 by default) optional
+``warpx.compute_max_step_from_btd`` (`integer`; 0 by default) optional
     Can be useful when computing back-transformed diagnostics.  If specified,
     automatically calculates the number of iterations required in the boosted
     frame for all back-transformed diagnostics to be completed. If ``max_step``,
@@ -154,11 +163,11 @@ Simulation Time
 Overall simulation parameters
 -----------------------------
 
-* ``authors`` (`string`: e.g. ``"Jane Doe <jane@example.com>, Jimmy Joe <jimmy@example.com>"``)
+* ``authors`` (`string`: e.g. :cpp:`"Jane Doe <jane@example.com>, Jimmy Joe <jimmy@example.com>"`)
     Authors of an input file / simulation setup.
     When provided, this information is added as metadata to (openPMD) output files.
 
-* ``warpx.used_inputs_file`` (`string`; default: ``warpx_used_inputs``)
+* ``warpx.used_inputs_file`` (`string`; default: :cpp:`"warpx_used_inputs"`)
     Name of a file that WarpX writes to archive the used inputs.
     The context of this file will contain an exact copy of all explicitly and implicitly used inputs parameters, including those :ref:`extended and overwritten from the command line <usage_run>`.
 
@@ -189,134 +198,76 @@ Overall simulation parameters
 
 * ``algo.evolve_scheme`` (`string`, default: `explicit`)
     Specifies the evolve scheme used by WarpX.
+    Supported values: :cpp:`"explicit"`, :cpp:`"theta_implicit_em"`, :cpp:`"semi_implicit_em"`, :cpp:`"strang_implicit_spectral_em"`
 
-    * ``explicit``: Use an explicit solver, such as the standard FDTD or PSATD
+    * :cpp:`"explicit"`: Use an explicit solver, such as the standard FDTD or PSATD
 
-    * ``theta_implicit_em``: Use a :math:`\theta`-implicit electromagnetic solver.
+    * :cpp:`"theta_implicit_em"`: Use a :math:`\theta`-implicit electromagnetic solver.
 
-      - **Time-biasing parameter:**
-        The fields (:math:`\textbf{E}` & :math:`\textbf{B}`) used to advance the system are computed at time :math:`t^{n+\theta}`: :math:`\mathbf{E}^{n+\theta}=\left(1-\theta\right)\mathbf{E}^n + \theta\mathbf{E}^{n+1}`, where :math:`\theta\in[0.5,1.0]`.
+        Related parameters: ``implicit_evolve.theta``, ``algo.current_deposition``, ``implicit_evolve.nonlinear_solver``
 
-        - ``implicit_evolve.theta`` (`float`, default: 0.5)
-        - :math:`\theta = 0.5`: Exact energy conservation.
-        - :math:`\theta = 1.0`: Maximal damping of high-k modes.
-
-      - **Field gather and current depositions:**
+        **Field gather and current depositions:**
         Exact energy conservation requires matching gather and deposition.
         The following depositions support this:
 
-        - ``algo.current_deposition = direct``
-        - ``algo.current_deposition = villasenor``
-        - ``algo.current_deposition = esirkepov`` (Not compatible with ``implicit_evolve.use_mass_matrices_jacobian = true``.)
+        - :cpp:`algo.current_deposition = "direct"`
+        - :cpp:`algo.current_deposition = "villasenor"`
+        - :cpp:`algo.current_deposition = "esirkepov"` (Not compatible with :cpp:`implicit_evolve.use_mass_matrices_jacobian = true`.) :cpp:`implicit_evolve.use_mass_matrices_jacobian = True`
 
-      - **Numerical stability:**
+        **Numerical stability:**
 
         - Rhobust to finite-grid instability (does not require cells that resolve the plasma Debye length).
         - Numerically stable for large :math:`\Delta t` (does not require resolving the plasma period or satisfying the CFL condition for light waves).
         - Practical limits on :math:`\Delta t` set by solver efficiency, number of particle cell crossings, and physics resolution.
 
-      - **Nonlinear solvers:**
-        Advancing the implicit system in time requires solving a nonlinear system. The nonlinear solver options are `picard` and `newton`.
+        **Nonlinear solvers:**
 
-        - ``implicit_evolve.nonlinear_solver`` (`string`, default: None)
+        Advancing the implicit system in time requires solving a nonlinear system. The nonlinear solver options for ``implicit_evolve.nonlinear_solver`` are `"picard"` and `"newton"`.
 
-        - ``implicit_evolve.nonlinear_solver = picard``: Use a Picard iteration method. Requires small time steps; often non-convergent for large time steps.
+        The PS-JFNK solver uses GMRES to solve the linear system at each nonlinear iteration:
 
-          - ``picard.verbose`` (`bool`, default: true)
-          - ``picard.require_convergence`` (`bool`, default: true)
-          - ``picard.maximum_iterations`` (`int`, default: 100)
-          - ``picard.relative_tolerance`` (`float`, default: 1.0e-6)
-          - ``picard.absolute_tolerance`` (`float`, default: 0.0)
-          - ``picard.diagnostic_file`` (`string`, default: None)
-          - ``picard.diagnostic_interval`` (`int`, default: 1)
-
-        - ``implicit_evolve.nonlinear_solver = newton``: Use a PS-JFNK method. Required for large time steps, but efficiency often relies on preconditioning and/or using ``implicit_evolve.use_mass_matrices_jacobian = true``.
-
-          - ``newton.verbose`` (`bool`, default: true)
-          - ``newton.require_convergence`` (`bool`, default: true)
-          - ``newton.maximum_iterations`` (`int`, default: 100)
-          - ``newton.relative_tolerance`` (`float`, default: 1.0e-6)
-          - ``newton.absolute_tolerance`` (`float`, default: 0.0)
-          - ``newton.diagnostic_file`` (`string`, default: None)
-          - ``newton.diagnostic_interval`` (`int`, default: 1)
-
-          - The PS-JFNK solver uses GMRES to solve the linear system at each nonlinear iteration:
-
-          - ``gmres.verbose_int`` (`int`, default: 2)
-          - ``gmres.restart_length`` (`int`, default: 30)
-          - ``gmres.maximum_iterations`` (`int`, default: 1000)
-          - ``gmres.relative_tolerance`` (`float`, default: 1.0e-4)
-          - ``gmres.absolute_tolerance`` (`float`, default: 0.0)
+        - ``gmres.verbose_int`` (`int`, default: 2)
+        - ``gmres.restart_length`` (`int`, default: 30)
+        - ``gmres.maximum_iterations`` (`int`, default: 1000)
+        - ``gmres.relative_tolerance`` (`float`, default: 1.0e-4)
+        - ``gmres.absolute_tolerance`` (`float`, default: 0.0)
 
       - **PS-JFNK solver specific options:**
         The PS-JFNK solver (``implicit_evolve.nonlinear_solver = newton``) has a variety of additional parameters and options.
 
         - At each iteration in the PS-JFNK process, each particle is self-consistently updated for fixed :math:`\textbf{E}` and :math:`\textbf{B}` on the grid using a Picard method. The options for this Picard solve are set by:
 
-          - ``implicit_evolve.max_particle_iterations`` (`integer`, default: 21)
-          - ``implicit_evolve.particle_tolerance`` (`float`, default: 1.e-10)
-          - ``implicit_evolve.particle_suborbits`` (`bool`, default: false)
-          - ``implicit_evolve.print_unconverged_particle_details`` (`bool`, default: false)
+            - ``implicit_evolve.max_particle_iterations`` (`integer`, default: 21)
+            - ``implicit_evolve.particle_tolerance`` (`float`, default: 1.e-10)
+            - ``implicit_evolve.particle_suborbits`` (`bool`, default: false)
+            - ``implicit_evolve.print_unconverged_particle_details`` (`bool`, default: false)
 
         - ``implicit_evolve.use_mass_matrices_jacobian`` (`bool`, default: false).
-          When `true`, the plasma current density is computed using the mass matrices during the linear stage of PS-JFNK, replacing direct particle calculations. This can enable large speed ups for simulations with many particles.
+            When `true`, the plasma current density is computed using the mass matrices during the linear stage of PS-JFNK, replacing direct particle calculations. This can enable large speed ups for simulations with many particles.
 
-          - ``implicit_evolve.skip_particle_picard_init`` (`bool`, default: false).
+        - ``implicit_evolve.skip_particle_picard_init`` (`bool`, default: false).
             When `true` and ``implicit_evolve.use_mass_matrices_jacobian = true``, the full Picard update of the particles is skipped on the initial Newton step, and only a single iteration is performed.
             This can enhance the overall efficiency of the Newton solver.
             Default is true if ``implicit_evolve.particle_suborbits = true``.
 
         - ``implicit_evolve.use_mass_matrices_pc`` (`bool`, default: false).
-          When `true`, the plasma response is captured in the preconditioner.
-          Requires use of a preconditioner (``jacobian.pc_type = pc_curl_curl_mlmg``, ``pc_petsc``, or ``pc_jacobi``).
+            When `true`, the plasma response is captured in the preconditioner.
+            Requires use of a preconditioner (``jacobian.pc_type = pc_curl_curl_mlmg``, ``pc_petsc``, or ``pc_jacobi``).
 
         - ``implicit_evolve.mass_matrices_pc_width`` (`integer`, default: 0).
-          If using ``jacobian.pc_type = pc_petsc``, this parameter specifies the width of the mass matrices included in the preconditioner.
-          In most cases, a width of 1 is sufficient for good GMRES performance.
+            If using ``jacobian.pc_type = pc_petsc``, this parameter specifies the width of the mass matrices included in the preconditioner.
+            In most cases, a width of 1 is sufficient for good GMRES performance.
 
-        - ``jacobian.pc_type`` (`string`, default: None). A preconditioner can be used to minimize the number of linear GMRES iterations. There are two options:
-
-          - ``jacobian.pc_type = pc_curl_curl_mlmg``: Use the AMReX MLMG solver for the curl curl formulation of Maxwell's equations. This preconditioner solves the following equation:
-
-            .. math::
-
-               \nabla \times \left( \alpha\nabla\times\textbf{E} \right) + \boldsymbol{\beta}\cdot\textbf{E} = \textbf{b},
-
-            where :math:`\alpha=\theta^2\Delta t^2c^2` is a scalar and :math:`\boldsymbol{\beta}` is a diagonal matrix that scales the components of :math:`\textbf{E}`.
-
-              - Default: :math:`\boldsymbol\beta = \mathbb{I}`, giving implicit Maxwell equations, suitable for time steps that under-resolve light waves (:math:`c\Delta t > 1/\sqrt{\left(\sum_i1/\Delta x_i^2\right)}`).
-              - ``implicit_evolve.use_mass_matrices_pc = true``: :math:`\boldsymbol\beta` also includes plasma response via the diagonal mass matrices, enabling time steps that under-resolve the plasma period (:math:`\omega_{pe}\Delta t > 1`).
-
-            - ``pc_curl_curl_mlmg.verbose`` (`bool`, default: true)
-            - ``pc_curl_curl_mlmg.bottom_verbose`` (`bool`, default: false)
-            - ``pc_curl_curl_mlmg.agglomeration`` (`bool`, default: true)
-            - ``pc_curl_curl_mlmg.consolidation`` (`bool`, default: true)
-            - ``pc_curl_curl_mlmg.max_iter`` (`int`, default: 10)
-            - ``pc_curl_curl_mlmg.max_coarsening_level`` (`int`, default: 30)
-            - ``pc_curl_curl_mlmg.relative_tolerance`` (`float`, default: 1.0e-4)
-            - ``pc_curl_curl_mlmg.absolute_tolerance`` (`float`, default: 1.0e-16)
-
-          - ``jacobian.pc_type = pc_jacobi``: Use the Point-Jacobi method. This preconditioner only captures the plasma response via the diagonal mass matrices.
-
-            - ``pc_jacobi.verbose`` (`bool`, default: true)
-            - ``pc_jacobi.max_iter`` (`int`, default: 10)
-            - ``pc_jacobi.relative_tolerance`` (`float`, default: 1.0e-4)
-            - ``pc_jacobi.absolute_tolerance`` (`float`, default: 1.0e-16)
-
-      - **References:** (WarpX includes relativistic extensions not discussed in references.)
-
-        - `Angus et al., On numerical energy conservation for an implicit particle-in-cell method coupled with a binary Monte-Carlo algorithm for Coulomb collisions <https://doi.org/10.1016/j.jcp.2022.111030>`__.
-        - `Angus et al., An implicit particle code with exact energy and charge conservation for electromagnetic studies of dense plasmas <https://doi.org/10.1016/j.jcp.2023.112383>`__.
-        - `Angus et al., An implicit particle code with exact energy and charge conservation for studies of dense plasmas in axisymmetric geometries <https://doi.org/10.1016/j.jcp.2024.113427>`__.
-
-    * ``semi_implicit_em``: Use an approximately energy conserving semi-implicit electromagnetic solver.
+    * :cpp:`"semi_implicit_em"`: Use an approximately energy conserving semi-implicit electromagnetic solver.
 
       - Difference with ``theta_implicit_em`` is that light waves are treated explicit just as in the standard FDTD method. Consequently, this method has the CFL limitation :math:`c\Delta t < 1/\sqrt( \sum_i 1/\Delta x_i^2 )`.
       - Particles are treated implicitly, and all of the comments for ``theta_implicit_em`` above apply here as well (except that :math:`\theta` is fixed to 0.5).
       - The method is described in `Chen et al., A semi-implicit, energy- and charge-conserving particle-in-cell algorithm for the relativistic Vlasov-Maxwell equations <https://doi.org/10.1016/j.jcp.2020.109228>`__.
 
 
-    * ``strang_implicit_spectral_em``: Use a fully implicit electromagnetic solver. All of the comments for ``theta_implicit_em``
+    * :cpp:`"strang_implicit_spectral_em"`: Use a fully implicit electromagnetic solver.
+
+      All of the comments for ``theta_implicit_em``
       above apply here as well (except that :math:`\theta` is fixed to 0.5 and that charge will not be conserved).
       In this version, the advance is Strang split, with a half advance of the source free Maxwell's equation (with a spectral solver), a full advance of the particles plus longitudinal E field, and a second half advance of the source free Maxwell's equations.
       The advantage of this method is that with the Spectral advance of the fields, it is dispersionless.
@@ -338,8 +289,8 @@ Overall simulation parameters
     of each scheme.
 
 * ``warpx.poisson_solver`` (`string`) optional (default `multigrid`)
-
     * ``multigrid``: Poisson's equation is solved using an iterative multigrid (MLMG) solver.
+
         See the `AMReX documentation <https://amrex-codes.github.io/amrex/docs_html/LinearSolvers.html#>`__
         for details of the MLMG solver (the default solver used with electrostatic
         simulations). The default behavior of the code is to check whether there is
@@ -352,6 +303,7 @@ Overall simulation parameters
         ``warpx.self_fields_absolute_tolerance``).
 
     * ``fft``: Poisson's equation is solved using an Integrated Green Function method (which requires FFT calculations).
+
         See these references for more details :cite:t:`param-QiangPhysRevSTAB2006`, :cite:t:`param-QiangPhysRevSTAB2006err`.
         It only works in 3D and it requires the compilation flag ``-DWarpX_FFT=ON``.
         If mesh refinement is enabled, this solver only works on the coarsest level.
@@ -360,7 +312,8 @@ Overall simulation parameters
         In electromagnetic mode, this solver can be used to initialize the species' self fields
         (``<species_name>.initialize_self_fields=1``) provided that the field BCs are PML (``boundary.field_lo,hi = PML``).
 
-          * ``warpx.use_2d_slices_fft_solver`` (`bool`) optional (default: 0): Select the type of Integrated Green Function solver.
+        * ``warpx.use_2d_slices_fft_solver`` (`bool`) optional (default: 0):
+            Select the type of Integrated Green Function solver.
             If 0, solve Poisson equation in full 3D geometry.
             If 1, solve Poisson equation in a quasi 3D geometry, neglecting the :math:`z` derivatives in the Laplacian of the Poisson equation.
             In practice, in this case, the code performes many 2D Poisson solves on all :math:`(x,y)` slices, each slice at a given :math:`z`.
@@ -368,7 +321,7 @@ Overall simulation parameters
             As a consequence, this solver does not need to do an FFT along the :math:`z` direction,
             and instead uses only transverse FFTs (along :math:`x` and :math:`y`) at each :math:`z` position (or :math:`z` "slice").
 
-          * ``ablastr.nprocs_igf_fft`` (`int`) optional (default: number of MPI ranks): Number of MPI ranks used to parallalelize the FFT solver.
+        * ``ablastr.nprocs_igf_fft`` (`int`) optional (default: number of MPI ranks): Number of MPI ranks used to parallalelize the FFT solver.
             This can be less or equal than then number of MPI ranks that are used to run the overall simulation.
             It can be useful if the auxiliary simulation boxes fit within a single process, so to avoid extra communications.
             The auxiliary boxes are extended boxes in real and spectral space that are used to perform the necessary FFTs.
@@ -1011,13 +964,13 @@ Particle initialization
 
     The options are:
 
-    * ``NUniformPerCell``: injection with a fixed number of evenly-spaced particles per cell.
+    * :cpp:`"NUniformPerCell"`: injection with a fixed number of evenly-spaced particles per cell.
       This requires the additional parameter ``<species_name>.num_particles_per_cell_each_dim``.
 
-    * ``NRandomPerCell``: injection with a fixed number of randomly-distributed particles per cell.
+    * :cpp:`"NRandomPerCell"`: injection with a fixed number of randomly-distributed particles per cell.
       This requires the additional parameter ``<species_name>.num_particles_per_cell``.
 
-    * ``SingleParticle``: Inject a single macroparticle.
+    * :cpp:`"SingleParticle"`: Inject a single macroparticle.
       This requires the additional parameters:
 
       * ``<species_name>.single_particle_pos`` (`3 doubles`, particle 3D position [meter])
@@ -1026,7 +979,7 @@ Particle initialization
 
       * ``<species_name>.single_particle_weight`` ( `double`, macroparticle weight, i.e. number of physical particles it represents)
 
-    * ``MultipleParticles``: Inject multiple macroparticles.
+    * :cpp:`"MultipleParticles"`: Inject multiple macroparticles.
       This requires the additional parameters:
 
       * ``<species_name>.multiple_particles_pos_x`` (list of `doubles`, X positions of the particles [meter])
@@ -1043,7 +996,7 @@ Particle initialization
 
       * ``<species_name>.multiple_particles_weight`` (list of `doubles`, macroparticle weights, i.e. number of physical particles each represents)
 
-    * ``gaussian_beam``: Inject particle beam with gaussian distribution in
+    * :cpp:`"gaussian_beam"`: Inject particle beam with gaussian distribution in
       space in all directions. This requires additional parameters:
 
       * ``<species_name>.q_tot`` (beam charge),
@@ -1837,12 +1790,15 @@ Laser initialization
     when ``warpx.num_mirrors`` is >0.
 
 * ``warpx.mirror_z`` (list of `float`) required if ``warpx.num_mirrors>0``
-    ``z`` location of the front of the mirrors.
+
+  ``z`` location of the front of the mirrors.
 
 * ``warpx.mirror_z_width`` (list of `float`) required if ``warpx.num_mirrors>0``
-    ``z`` width of the mirrors.
+
+  ``z`` width of the mirrors.
 
 * ``warpx.mirror_z_npoints`` (list of `int`) required if ``warpx.num_mirrors>0``
+
     In the boosted frame, depending on `gamma_boost`, ``warpx.mirror_z_width``
     can be smaller than the cell size, so that the mirror would not work. This
     parameter is the minimum number of points for the mirror. If
@@ -1862,6 +1818,7 @@ are applied to the grid directly. In particular, these fields can be seen in the
     - When using an **electrostatic** or **magnetostatic** field solver, these fields are added to the fields computed by the Poisson solver, at each timestep.
 
 * ``warpx.B_ext_grid_init_style`` (string) optional
+
     This parameter determines the type of initialization for the external
     magnetic field. By default, the
     external magnetic field (Bx,By,Bz) is initialized to (0.0, 0.0, 0.0).
@@ -1893,6 +1850,7 @@ are applied to the grid directly. In particular, these fields can be seen in the
     the `openPMD-example-datasets <https://github.com/openPMD/openPMD-example-datasets>`__.
 
 * ``warpx.E_ext_grid_init_style`` (string) optional
+
     This parameter determines the type of initialization for the external
     electric field. By default, the
     external electric field (Ex,Ey,Ez) to (0.0, 0.0, 0.0).
@@ -1950,7 +1908,7 @@ Applied to Particles
 The external fields defined with input parameters that start with ``warpx.B_ext_particle_init_`` or ``warpx.E_ext_particle_init_``
 are applied to the particles directly, at each timestep. As a results, these fields **cannot** be seen in the diagnostics that output the fields on the grid.
 
-* ``particles.E_ext_particle_init_style`` & ``particles.B_ext_particle_init_style`` (string) optional (default "none")
+``particles.E_ext_particle_init_style`` & ``particles.B_ext_particle_init_style``: (string) optional (default "none")
     These parameters determine the type of the external electric and
     magnetic fields respectively that are applied directly to the particles at every timestep.
     The field values are specified in the lab frame.
@@ -1966,9 +1924,7 @@ are applied to the particles directly, at each timestep. As a results, these fie
       The E-field is specified by the input parameters:
 
         * ``particles.Ex_external_particle_function(x,y,z,t)``
-
         * ``particles.Ey_external_particle_function(x,y,z,t)``
-
         * ``particles.Ez_external_particle_function(x,y,z,t)``
 
       The B-field is specified by the input parameters:
@@ -2345,7 +2301,7 @@ Details about the collision models can be found in the :ref:`theory section <mul
     The equation is integrated over a time step, giving :math:`W_b(t+dt) = ((W_b(t)^{3/2}) - 3/2\beta{dt})^{2/3}`
     where :math:`\beta` is the term on the r.h.s except :math:`W_b`.
 
-* ``<collision_name>.scattering_processes`` (`strings` separated by spaces)
+``<collision_name>.scattering_processes`` (`strings` separated by spaces)
     Only for ``dsmc`` and ``background_mcc``. The scattering processes that should be
     included. Available options are ``elastic``, ``excitationX``, ``forward``, ``back``, ``twoproduct_reaction`` and ``charge_exchange``
     for ions and ``elastic``, ``excitationX``, ``ionization`` & ``forward`` for electrons.
@@ -2355,23 +2311,23 @@ Details about the collision models can be found in the :ref:`theory section <mul
     a path to a cross-section data file must also be given. We use
     ``<scattering_process>`` as a placeholder going forward.
 
-* ``<collision_name>.<scattering_process>_cross_section`` (`string`)
+``<collision_name>.<scattering_process>_cross_section`` (`string`)
     Only for ``dsmc`` and ``background_mcc``. Path to the file containing cross-section data
     for the given scattering processes. The cross-section file must have exactly
     2 columns of data, the first containing equally spaced energies in eV and the
     second the corresponding cross-section in :math:`m^2`. The energy column should
     represent the kinetic energy of the colliding particles in the center-of-mass frame.
 
-* ``<collision_name>.<scattering_process>_energy`` (`float`)
+``<collision_name>.<scattering_process>_energy`` (`float`)
     Only for ``dsmc`` and ``background_mcc``. If the scattering process is either
     ``excitationX``, ``ionization`` or ``twoproduct_reaction``, the energy cost of that process must be given in eV.
 
-* ``<collision_name>.ionization_species`` (`float`)
+``<collision_name>.ionization_species`` (`float`)
     Only for ``background_mcc``. If the scattering process is ``ionization`` the
     produced species must also be given. For example if argon properties is used
     for the background gas, a species of argon ions should be specified here.
 
-* ``<collision_name>.ionization_target_species`` (`string`)
+``<collision_name>.ionization_target_species`` (`string`)
     Only for ``dsmc`` with impact ionization. This specifies which one of the
     colliding particles is ionized.
 
@@ -2463,7 +2419,7 @@ Time step
 Filtering
 ^^^^^^^^^
 
-* ``warpx.use_filter`` (`0` or `1`)
+``warpx.use_filter`` (`0` or `1`)
     Whether to use filtering in the simulation.
     With the explicit evolve scheme, the filtering is turned on by default, except for RZ FDTD.
     With the implicit evolve schemes, the filtering is turned off by default.
@@ -2476,18 +2432,18 @@ Filtering
 
        Known bug: filter currently not working with FDTD solver in RZ geometry (see https://github.com/BLAST-WarpX/warpx/issues/1943).
 
-* ``warpx.filter_npass_each_dir`` (`3 int`) optional (default `1 1 1`)
+``warpx.filter_npass_each_dir`` (`3 int`) optional (default `1 1 1`)
     Number of passes along each direction for the bilinear filter.
     In 2D simulations, only the first two values are read.
 
-* ``warpx.use_filter_compensation`` (`0` or `1`; default: `0`)
+``warpx.use_filter_compensation`` (`0` or `1`; default: `0`)
     Whether to add compensation when applying filtering.
     This is only supported with the RZ spectral solver.
 
 Particle push, charge and current deposition, field gathering
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-* ``algo.current_deposition`` (`string`, optional)
+:in:`algo.current_deposition` (`string`, optional)
     This parameter selects the algorithm for the deposition of the current density.
     Available options are: ``direct``, ``esirkepov``, ``villasenor``, and ``vay``. The default choice
     is ``esirkepov`` for FDTD maxwell solvers but ``direct`` for standard or
@@ -2497,25 +2453,21 @@ Particle push, charge and current deposition, field gathering
     ``warpx.do_electrostatic = ...``).
     Note that ``vay`` is only available for ``algo.maxwell_solver = psatd``.
 
-    1. ``direct``
-
-       The current density is deposited as described in the section :ref:`current_deposition`.
+    #. ``direct``
+       The current density is deposited as described :ref:`here <current_deposition>`.
        This deposition scheme does not conserve charge.
 
-    2. ``esirkepov``
-
+    #. ``esirkepov``
        The current density is deposited as described in
        :cite:t:`param-Esirkepovcpc01`.
        This deposition scheme guarantees charge conservation for shape factors of arbitrary order.
 
-    3. ``villasenor``
-
+    #. ``villasenor``
        This uses the Villasenor-Buneman algorithm which guarantees charge conservation.
        The algorithm is described in :cite:t:`pt-Villasenorcpc92`.
 
-    4. ``vay``
-
-       The current density is deposited as described in :cite:t:`param-VayJCP2013` (see section :ref:`current_deposition` for more details).
+    #. ``vay``
+       The current density is deposited as described in :cite:t:`param-VayJCP2013` (see :ref:`here <current_deposition>` for more details).
        This option guarantees charge conservation only when used in combination
        with ``psatd.periodic_single_box_fft=1``, that is, only for periodic single-box
        simulations with global FFTs without guard cells. The implementation for domain
@@ -4245,6 +4197,76 @@ When developing, testing and :ref:`debugging WarpX <debugging_warpx>`, the follo
 * ``ablastr.fillboundary_always_sync`` (`0` or `1`) optional (default `0`)
     Run all ``FillBoundary`` operations on ``MultiFab`` to force-synchronize shared nodal points.
     This slightly increases communication cost and can help to spot missing ``nodal_sync`` flags in these operations.
+
+``implicit_evolve.theta`` (`float`, default: 0.5)
+    Time-biasing parameter.
+    The fields (:math:`\textbf{E}` & :math:`\textbf{B}`) used to advance the system are computed at time :math:`t^{n+\theta}`: :math:`\mathbf{E}^{n+\theta}=\left(1-\theta\right)\mathbf{E}^n + \theta\mathbf{E}^{n+1}`, where :math:`\theta\in[0.5,1.0]`.
+
+    - :math:`\theta = 0.5`: Exact energy conservation.
+
+    - :math:`\theta = 1.0`: Maximal damping of high-k modes.
+
+``implicit_evolve.nonlinear_solver`` (`string`, default: None)
+    Options: ``picard``, ``newton``
+
+    * ``picard``: Use a Picard iteration method. Requires small time steps; often non-convergent for large time steps. Related parameters:
+
+        - ``picard.verbose`` (`bool`, default: true)
+        - ``picard.require_convergence`` (`bool`, default: true)
+        - ``picard.maximum_iterations`` (`int`, default: 100)
+        - ``picard.relative_tolerance`` (`float`, default: 1.0e-6)
+        - ``picard.absolute_tolerance`` (`float`, default: 0.0)
+        - ``picard.diagnostic_file`` (`string`, default: None)
+        - ``picard.diagnostic_interval`` (`int`, default: 1)
+    * ``newton``: Use a PS-JFNK method. Required for large time steps, but efficiency often relies on preconditioning and/or using ``implicit_evolve.use_mass_matrices_jacobian = true``. Related parameters:
+
+        - ``newton.verbose`` (`bool`, default: true)
+        - ``newton.require_convergence`` (`bool`, default: true)
+        - ``newton.maximum_iterations`` (`int`, default: 100)
+        - ``newton.relative_tolerance`` (`float`, default: 1.0e-6)
+        - ``newton.absolute_tolerance`` (`float`, default: 0.0)
+        - ``newton.diagnostic_file`` (`string`, default: None)
+        - ``newton.diagnostic_interval`` (`int`, default: 1)
+
+``jacobian.pc_type`` (`string`, default: None).
+    A preconditioner can be used to minimize the number of linear GMRES iterations. There are two options:
+
+    - :cpp:`"pc_curl_curl_mlmg"`: Use the AMReX MLMG solver for the curl curl formulation of Maxwell's equations.
+
+        This preconditioner solves the following equation:
+
+        .. math::
+
+            \nabla \times \left( \alpha\nabla\times\textbf{E} \right) + \boldsymbol{\beta}\cdot\textbf{E} = \textbf{b},
+
+        where :math:`\alpha=\theta^2\Delta t^2c^2` is a scalar and :math:`\boldsymbol{\beta}` is a diagonal matrix that scales the components of :math:`\textbf{E}`.
+
+        Default: :math:`\boldsymbol\beta = \mathbb{I}`, giving implicit Maxwell equations, suitable for time steps that under-resolve light waves (:math:`c\Delta t > 1/\sqrt{\left(\sum_i1/\Delta x_i^2\right)}`).
+        If ``implicit_evolve.use_mass_matrices_pc = true``, :math:`\boldsymbol\beta` also includes plasma response via the diagonal mass matrices, enabling time steps that under-resolve the plasma period (:math:`\omega_{pe}\Delta t > 1`).
+
+        Related parameters:
+
+        - ``pc_curl_curl_mlmg.verbose`` (`bool`, default: true)
+        - ``pc_curl_curl_mlmg.bottom_verbose`` (`bool`, default: false)
+        - ``pc_curl_curl_mlmg.agglomeration`` (`bool`, default: true)
+        - ``pc_curl_curl_mlmg.consolidation`` (`bool`, default: true)
+        - ``pc_curl_curl_mlmg.max_iter`` (`int`, default: 10)
+        - ``pc_curl_curl_mlmg.max_coarsening_level`` (`int`, default: 30)
+        - ``pc_curl_curl_mlmg.relative_tolerance`` (`float`, default: 1.0e-4)
+        - ``pc_curl_curl_mlmg.absolute_tolerance`` (`float`, default: 1.0e-16)
+
+    - :cpp:`"pc_jacobi"`: Use the Point-Jacobi method. This preconditioner only captures the plasma response via the diagonal mass matrices.
+
+        - ``pc_jacobi.verbose`` (`bool`, default: true)
+        - ``pc_jacobi.max_iter`` (`int`, default: 10)
+        - ``pc_jacobi.relative_tolerance`` (`float`, default: 1.0e-4)
+        - ``pc_jacobi.absolute_tolerance`` (`float`, default: 1.0e-16)
+
+- **References:** (WarpX includes relativistic extensions not discussed in references.)
+
+  - `Angus et al., On numerical energy conservation for an implicit particle-in-cell method coupled with a binary Monte-Carlo algorithm for Coulomb collisions <https://doi.org/10.1016/j.jcp.2022.111030>`__.
+  - `Angus et al., An implicit particle code with exact energy and charge conservation for electromagnetic studies of dense plasmas <https://doi.org/10.1016/j.jcp.2023.112383>`__.
+  - `Angus et al., An implicit particle code with exact energy and charge conservation for studies of dense plasmas in axisymmetric geometries <https://doi.org/10.1016/j.jcp.2024.113427>`__.
 
 .. bibliography::
     :keyprefix: param-
