@@ -1,11 +1,8 @@
 .. role:: cpp(code)
-   :language: cpp
+   :language: c++
 
 .. role:: python(code)
    :language: python
-
-.. role:: in(code)
-    :language: cpp
 
 .. _running-cpp-parameters:
 
@@ -22,7 +19,7 @@ Examples of inputs files can be found in the :ref:`Examples <usage-examples>` se
 
 .. note::
 
-   The AMReX parser (see :ref:`running-cpp-parameters-parser`) is used for the right-hand side of all input parameters that consist of one or more integers or floats. Expressions like :in:`<species_name>.density_max = "0.1+2.3"` and expressions that include user-defined constants are accepted.
+   The AMReX parser (see :ref:`running-cpp-parameters-parser`) is used for the right-hand side of all input parameters that consist of one or more integers or floats. Expressions like :cpp:`<species_name>.density_max = "0.1+2.3"` and expressions that include user-defined constants are accepted.
 
 .. _running-cpp-parameters-parser:
 
@@ -79,7 +76,7 @@ For profiles that depend on spatial coordinates (e.g., the plasma momentum distr
 These are specified in the input parameter, i.e., ``density_function(x,y,z)`` and ``field_function(X,Y,t)``.
 
 The parser reads Python-style expressions between double quotes.
-For example, :in:`"a0*x**2 * (1-y*1e2) * (x>0)"` is a valid expression, where ``a0`` is a user-defined constant (see above) and ``x`` and ``y`` are spatial coordinates.
+For example, ``"a0*x**2 * (1-y*1e2) * (x>0)"`` is a valid expression, where ``a0`` is a user-defined constant (see above) and ``x`` and ``y`` are spatial coordinates.
 The names are case sensitive.
 The factor ``(x>0)`` equals ``1`` where ``x>0`` and ``0`` where ``x<=0``.
 It allows the user to define functions by intervals.
@@ -2443,7 +2440,7 @@ Filtering
 Particle push, charge and current deposition, field gathering
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-:in:`algo.current_deposition` (`string`, optional)
+`algo.current_deposition` (`string`, optional)
     This parameter selects the algorithm for the deposition of the current density.
     Available options are: ``direct``, ``esirkepov``, ``villasenor``, and ``vay``. The default choice
     is ``esirkepov`` for FDTD maxwell solvers but ``direct`` for standard or
