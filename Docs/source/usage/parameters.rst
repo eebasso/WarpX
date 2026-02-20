@@ -126,12 +126,14 @@ For example, ``something_intervals = -1`` deactivates ``something`` and ``someth
 Simulation Time
 ---------------
 
-``max_step`` (`integer`)
+.. py:data:: max_step
+    :type: integer
+
     The number of PIC cycles to perform.
 
 ``stop_time`` (`float`; in seconds)
-    The maximum physical time of the simulation. Can be provided instead of ``max_step``. If both
-    ``max_step`` and ``stop_time`` are provided, both criteria are used and the simulation stops
+    The maximum physical time of the simulation. Can be provided instead of :py:data:`max_step`. If both
+    :py:data:`max_step` and ``stop_time`` are provided, both criteria are used and the simulation stops
     when the first criterion is hit.
 
     Note: in boosted-frame simulations, ``stop_time`` refers to the time in the boosted frame.
@@ -163,12 +165,14 @@ Overall simulation parameters
 * ``authors`` (`string`: e.g. :cpp:`"Jane Doe <jane@example.com>, Jimmy Joe <jimmy@example.com>"`)
     Authors of an input file / simulation setup.
     When provided, this information is added as metadata to (openPMD) output files.
+    :py:data:`max_step` :
 
 * ``warpx.used_inputs_file`` (`string`; default: :cpp:`"warpx_used_inputs"`)
     Name of a file that WarpX writes to archive the used inputs.
     The context of this file will contain an exact copy of all explicitly and implicitly used inputs parameters, including those :ref:`extended and overwritten from the command line <usage_run>`.
 
 * ``warpx.gamma_boost`` (`float`)
+
     The Lorentz factor of the boosted frame in which the simulation is run. (The corresponding Lorentz transformation is assumed to be along ``warpx.boost_direction``.)
     For more practical guidance on setting up boosted-frame simulations, refer to the :ref:`FAQ: What do I need to know about using the boosted frame? <faq_boosted_frame>`.
 
@@ -179,6 +183,20 @@ Overall simulation parameters
 * ``warpx.boost_direction`` (string: ``x``, ``y`` or ``z``)
     The direction of the Lorentz-transform for boosted-frame simulations
     (The direction ``y`` cannot be used in 2D simulations.)
+
+.. py:data:: algo.evolve_scheme_test
+    :type: string
+    :value: explicit
+
+    Specifies the evolve scheme used by WarpX.
+    Supported values ``explicit``, ``theta_implicit_em``, ``semi_implicit_em``, ``strang_implicit_spectral_em``
+
+
+    explicit
+        Use an explicit solver, such as the standard FDTD or PSATD
+
+    theta_implicit_em
+        Use a :math:`\theta`-implicit electromagnetic solver.
 
 * ``warpx.random_seed`` (`string` or `int` > 0) optional
     If provided ``warpx.random_seed = random``, the random seed will be determined
@@ -193,23 +211,29 @@ Overall simulation parameters
     one should not expect to obtain the same random numbers,
     even if a fixed ``warpx.random_seed`` is provided.
 
-* ``algo.evolve_scheme`` (`string`, default: `explicit`)
+.. py:data:: algo.evolve_scheme
+    :type: string
+    :value: explicit
+
     Specifies the evolve scheme used by WarpX.
-    Supported values: :cpp:`"explicit"`, :cpp:`"theta_implicit_em"`, :cpp:`"semi_implicit_em"`, :cpp:`"strang_implicit_spectral_em"`
+    Supported values ``explicit``, ``theta_implicit_em``, ``semi_implicit_em``, ``strang_implicit_spectral_em``
 
-    * :cpp:`"explicit"`: Use an explicit solver, such as the standard FDTD or PSATD
 
-    * :cpp:`"theta_implicit_em"`: Use a :math:`\theta`-implicit electromagnetic solver.
+    explicit
+        Use an explicit solver, such as the standard FDTD or PSATD
+
+    theta_implicit_em
+        Use a :math:`\theta`-implicit electromagnetic solver.
 
         Related parameters: ``implicit_evolve.theta``, ``algo.current_deposition``, ``implicit_evolve.nonlinear_solver``
 
-        **Field gather and current depositions:**
-        Exact energy conservation requires matching gather and deposition.
-        The following depositions support this:
+        **Field gather and current depositions**
+        Exact energy conservation requires matching gather and deposition. :py:data:`max_step`
+        The following depositions (:py:data:`algo.current_deposition`) support this
 
         - :cpp:`algo.current_deposition = "direct"`
         - :cpp:`algo.current_deposition = "villasenor"`
-        - :cpp:`algo.current_deposition = "esirkepov"` (Not compatible with :cpp:`implicit_evolve.use_mass_matrices_jacobian = true`.) :cpp:`implicit_evolve.use_mass_matrices_jacobian = True`
+        - :cpp:`algo.current_deposition = "esirkepov"` (Not compatible with :py:data:`implicit_evolve.use_mass_matrices_jacobian` = ``true``.)
 
         **Numerical stability:**
 
@@ -232,14 +256,17 @@ Overall simulation parameters
       - **PS-JFNK solver specific options:**
         The PS-JFNK solver (``implicit_evolve.nonlinear_solver = newton``) has a variety of additional parameters and options.
 
-        - At each iteration in the PS-JFNK process, each particle is self-consistently updated for fixed :math:`\textbf{E}` and :math:`\textbf{B}` on the grid using a Picard method. The options for this Picard solve are set by:
+        - At each iteration in the PS-JFNK process, each particle is self-consistently updated for fixed :math:`\textbf{E}` and :math:`\textbf{B}` on the grid using a Picard method. The options for this Picard solve are set by
 
             - ``implicit_evolve.max_particle_iterations`` (`integer`, default: 21)
             - ``implicit_evolve.particle_tolerance`` (`float`, default: 1.e-10)
             - ``implicit_evolve.particle_suborbits`` (`bool`, default: false)
             - ``implicit_evolve.print_unconverged_particle_details`` (`bool`, default: false)
 
-        - ``implicit_evolve.use_mass_matrices_jacobian`` (`bool`, default: false).
+        .. py:data:: implicit_evolve.use_mass_matrices_jacobian
+            :type: bool
+            :value: false
+
             When `true`, the plasma current density is computed using the mass matrices during the linear stage of PS-JFNK, replacing direct particle calculations. This can enable large speed ups for simulations with many particles.
 
         - ``implicit_evolve.skip_particle_picard_init`` (`bool`, default: false).
@@ -255,14 +282,16 @@ Overall simulation parameters
             If using ``jacobian.pc_type = pc_petsc``, this parameter specifies the width of the mass matrices included in the preconditioner.
             In most cases, a width of 1 is sufficient for good GMRES performance.
 
-    * :cpp:`"semi_implicit_em"`: Use an approximately energy conserving semi-implicit electromagnetic solver.
+    semi_implicit_em
+        Use an approximately energy conserving semi-implicit electromagnetic solver.
 
       - Difference with ``theta_implicit_em`` is that light waves are treated explicit just as in the standard FDTD method. Consequently, this method has the CFL limitation :math:`c\Delta t < 1/\sqrt( \sum_i 1/\Delta x_i^2 )`.
       - Particles are treated implicitly, and all of the comments for ``theta_implicit_em`` above apply here as well (except that :math:`\theta` is fixed to 0.5).
       - The method is described in `Chen et al., A semi-implicit, energy- and charge-conserving particle-in-cell algorithm for the relativistic Vlasov-Maxwell equations <https://doi.org/10.1016/j.jcp.2020.109228>`__.
 
 
-    * :cpp:`"strang_implicit_spectral_em"`: Use a fully implicit electromagnetic solver.
+    strang_implicit_spectral_em"
+        Use a fully implicit electromagnetic solver.
 
       All of the comments for ``theta_implicit_em``
       above apply here as well (except that :math:`\theta` is fixed to 0.5 and that charge will not be conserved).
@@ -2440,7 +2469,9 @@ Filtering
 Particle push, charge and current deposition, field gathering
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-`algo.current_deposition` (`string`, optional)
+.. py:data:: algo.current_deposition
+    :type: string, optional
+
     This parameter selects the algorithm for the deposition of the current density.
     Available options are: ``direct``, ``esirkepov``, ``villasenor``, and ``vay``. The default choice
     is ``esirkepov`` for FDTD maxwell solvers but ``direct`` for standard or
@@ -2450,20 +2481,20 @@ Particle push, charge and current deposition, field gathering
     ``warpx.do_electrostatic = ...``).
     Note that ``vay`` is only available for ``algo.maxwell_solver = psatd``.
 
-    #. ``direct``
+    direct
        The current density is deposited as described :ref:`here <current_deposition>`.
        This deposition scheme does not conserve charge.
 
-    #. ``esirkepov``
+    esirkepov
        The current density is deposited as described in
        :cite:t:`param-Esirkepovcpc01`.
        This deposition scheme guarantees charge conservation for shape factors of arbitrary order.
 
-    #. ``villasenor``
+    villasenor
        This uses the Villasenor-Buneman algorithm which guarantees charge conservation.
        The algorithm is described in :cite:t:`pt-Villasenorcpc92`.
 
-    #. ``vay``
+    vay
        The current density is deposited as described in :cite:t:`param-VayJCP2013` (see :ref:`here <current_deposition>` for more details).
        This option guarantees charge conservation only when used in combination
        with ``psatd.periodic_single_box_fft=1``, that is, only for periodic single-box
