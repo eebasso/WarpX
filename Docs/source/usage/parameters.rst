@@ -9,6 +9,60 @@
 Inputs: Parameter List
 ======================
 
+.. py:data:: species_name.data
+    :type: string or strings
+    :value: unspecified
+
+    Test description for py data
+
+.. option:: <species_name>.option (string) optional (default unspecified)
+
+    :type: ``string`` or ``strings``
+    :default: unspecified
+
+    Test description for option
+
+.. py:data:: <species_name>.data_space
+
+    :type: string or strings
+    :value: unspecified
+
+    Test description for py data space
+
+.. py:attribute:: species_name.py_attribute
+    :type: string or strings
+    :value: unspecified
+
+    Test description
+
+.. py:attribute:: <species_name>.py_attribute
+
+    :type: string
+    :value: unspecified
+
+.. py:class:: species_name
+
+
+Test data with explicit title :py:data:`<species_name>.data <species_name.data>`
+
+Test option :option:`<species_name>.option`
+
+Test data_space :py:data:`<species_name>.data_space`
+
+
+
+.. option:: dest_dir
+
+   Destination directory.
+
+.. option:: -m <module>, --module <module>
+
+   Run a module as a script.
+
+Test option :option:`dest_dir`
+
+Test option :option:`-m`
+
 This section describes the list of parameters that can be set in the WarpX inputs file.
 
 Examples of inputs files can be found in the :ref:`Examples <usage-examples>` section.
@@ -941,7 +995,10 @@ Particle initialization
     Controls whether tiling ('cache blocking') transformation is used for particles.
     Tiling should be on when using OpenMP and off when using GPUs.
 
-* ``<species_name>.species_type`` (`string`) optional (default `unspecified`)
+.. py:data:: <species_name>.species_type
+
+    :type: string
+
     Type of physical species.
     Currently, the accepted species are
     ``"electron"``, ``"positron"``, ``"muon"``, ``"antimuon"``, ``"photon"``, ``"neutron"``, ``"proton"`` , ``"alpha"``,
