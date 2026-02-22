@@ -9,18 +9,94 @@
 Inputs: Parameter List
 ======================
 
+.. option:: <species_name>.option
+
+    :type: ``string``
+    :default: unspecified, optional
+
+    Test description for option
+
+Test option :option:`<species_name>.option`
+
+.. option:: boundary.potential_lo_x/y/z
+
+    Test description
+
+Test option :option:`boundary.potential_lo_x/y/z`
+
+.. option:: boundary.potential_hi_<x/y/z>
+
+    Test description
+
+Test option :option:`boundary.potential_hi_\<x/y/z\>`
+
+Test option :option:`boundary.potential_hi_\<x/y/z\> <boundary.potential_hi_<x/y/z>>`
+
+.. option:: boundary.potential_mid_<x,y,z>
+
+    Test description
+
+Test option :option:`boundary.potential_mid_\<x,y,z\>`
+
+.. option:: <species_name>.x/y/z_rms
+
+    Test description
+
+Test option :option:`<species_name>.x/y/z_rms`
+
+.. option:: <species_name>.<x,y,z>_mean
+
+    Test description
+
+Test option :option:`<species_name>.<x,y,z>_mean`
+
+Test option :option:`\<species_name\>.\<x,y,z\>_mean`
+
+Test option :option:`\<species_name\>.\<x,y,z\>_mean <<species_name>.<x,y,z>_mean>`
+
+.. Test option :option:`<<<species_name>.<x,y,z>_mean>`
+
+.. option:: <species_name>.<x/y/z>_sum
+
+    Test description
+
+Test option :option:`<species_name>.<x/y/z>_sum`
+
+Test option :option:`\<species_name\>.\<x/y/z\>_sum`
+
+.. _xyz_tail:
+
+.. option:: xyz_<tail>
+
+    Test description
+
+.. Test option :option:`xyz_tail <xyz_<tail>>`
+
+Test option :option:`xyz_\<tail\> <xyz_<tail>>`
+
+Test option :option:`xyz_\<tail\>`
+
+Test option with ref :ref:`xyz_\<tail\> <xyz_tail>`
+
 .. py:data:: species_name.data
     :type: string or strings
     :value: unspecified
 
     Test description for py data
 
-.. option:: <species_name>.option (string) optional (default unspecified)
+Test py:data species_name.data with explicit title :py:data:`\<species_name\>.data <species_name.data>`
 
-    :type: ``string`` or ``strings``
-    :default: unspecified
+.. _species-name-data-ref:
 
-    Test description for option
+.. py:data:: species_name.data_ref
+    :type: string or strings
+    :value: unspecified
+
+    Test description for py data with ref
+
+Test py:data species_name.data_ref with explicit title :ref:`\<species_name\>.data_ref <species-name-data-ref>`
+
+.. _test-ref:
 
 .. py:data:: <species_name>.data_space
 
@@ -29,39 +105,34 @@ Inputs: Parameter List
 
     Test description for py data space
 
-.. py:attribute:: species_name.py_attribute
-    :type: string or strings
-    :value: unspecified
+Test py:data <species_name>.data_space with ref and explicit title :ref:`<species_name>.data_space <test-ref>`
 
-    Test description
+.. .. py:attribute:: species_name.py_attribute
+..     :type: string or strings
+..     :value: unspecified
 
-.. py:attribute:: <species_name>.py_attribute
+..     Test description
 
-    :type: string
-    :value: unspecified
+.. .. py:attribute:: <species_name>.py_attribute
 
-.. py:class:: species_name
+..     :type: string
+..     :value: unspecified
 
+.. Test py:attribute <species_name>.py_attribute :py:attribute:`<species_name>.py_attribute`
 
-Test data with explicit title :py:data:`<species_name>.data <species_name.data>`
+.. .. py:object:: species_name.py_obj
 
-Test option :option:`<species_name>.option`
+..     :type: string
+..     :value: unspecified
 
-Test data_space :py:data:`<species_name>.data_space`
+.. Test py:object species_name.py_obj with explicit title :py:object:`<species_name>.py_obj <species_name.py_obj>`
 
+.. .. py:obj:: <species_name>.py_obj
 
+..     :type: string
+..     :value: unspecified
 
-.. option:: dest_dir
-
-   Destination directory.
-
-.. option:: -m <module>, --module <module>
-
-   Run a module as a script.
-
-Test option :option:`dest_dir`
-
-Test option :option:`-m`
+.. Test py:obj <species_name>.py_obj :py:data:`<species_name>.py_obj`
 
 This section describes the list of parameters that can be set in the WarpX inputs file.
 
@@ -181,9 +252,28 @@ Simulation Time
 ---------------
 
 .. py:data:: max_step
-    :type: integer
+    :type: int
+    :value: 123
 
     The number of PIC cycles to perform.
+
+.. py:data:: max_step_2
+    :type: integer
+    :value: 123
+
+    The number of PIC cycles to perform.
+
+.. py:data:: stop_time
+    :type: float
+    :value: 1.0
+
+.. py:data:: stop_time_2
+    :type: (`float`; in seconds)
+    :value: 1.0
+
+.. py:data:: test_str
+    :type: str
+    :value: "abc"
 
 ``stop_time`` (`float`; in seconds)
     The maximum physical time of the simulation. Can be provided instead of :py:data:`max_step`. If both
