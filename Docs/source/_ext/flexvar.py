@@ -30,7 +30,7 @@ Role::
 from __future__ import annotations
 
 import re
-from typing import Any, List, Tuple, cast
+from typing import Any, List, Tuple, cast, TypeAlias
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -43,6 +43,17 @@ from sphinx.roles import XRefRole
 from sphinx.util.docfields import Field, TypedField
 from sphinx.util.nodes import make_refnode
 
+# var_sig_re = re.compile(r'''
+#     ^([\w<>/,\.]*\.)?
+#     ([\w<>/,]+)  \s*
+#     (?:\[\s*(.*)\s*])?
+#     (?:
+#         \(\s*(.*)\s*\)
+#         (?:\s*->\s*(.*))?
+#     )?$
+# ''', re.VERBOSE)
+
+FlexVarSigT: TypeAlias = str
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -58,7 +69,7 @@ def _make_id(name: str) -> str:
 # Directive
 # ---------------------------------------------------------------------------
 
-class FlexVarDirective(ObjectDescription):
+class FlexVarDirective(ObjectDescription[FlexVarSigT]):
     """
     Directive: .. fv:var:: <name>
 
@@ -83,7 +94,7 @@ class FlexVarDirective(ObjectDescription):
     # Signature parsing / rendering
     # ------------------------------------------------------------------
 
-    def handle_signature(self, sig: str, signode: addnodes.desc_signature) -> str:
+    def handle_signature(self, sig: str, signode: addnodes.desc_signature) -> FlexVarSigT:
         """Build the rendered signature node and return the canonical name."""
         name = sig.strip()
 
@@ -115,7 +126,7 @@ class FlexVarDirective(ObjectDescription):
     # ------------------------------------------------------------------
 
     def add_target_and_index(
-        self, name: str, sig: str, signode: addnodes.desc_signature
+        self, name: FlexVarSigT, sig: str, signode: addnodes.desc_signature
     ) -> None:
         node_id = "fv.var." + _make_id(name)
 
@@ -162,7 +173,7 @@ class FlexVarRole(XRefRole):
     does — so we don't need to touch ``__call__`` at all.
 
     The only thing we override is ``process_link``, to redo the title/target
-    split with a stricter heuristic: an explicit title is only recognised when
+    split with a stricter heuristic: an explicit title is only recognized when
     there is **whitespace before the separating** ``<``, so bare generic-style
     names like ``filter<T>`` are never mis-split.
     """
