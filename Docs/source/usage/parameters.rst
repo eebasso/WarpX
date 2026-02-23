@@ -93,54 +93,6 @@ Test py:data :py:data:`\<species_name\>.data <species_name.data>`
 
 Test py:data :py:data:`species_name.data = abc`
 
-.. _species-name-data-ref:
-
-.. py:data:: species_name.data_ref
-    :type: string or strings
-    :value: unspecified
-
-    Test description for py data with ref
-
-Test py:data species_name.data_ref with explicit title :ref:`\<species_name\>.data_ref <species-name-data-ref>`
-
-.. _test-ref:
-
-.. py:data:: <species_name>.data_space
-
-    :type: string or strings
-    :value: unspecified
-
-    Test description for py data space
-
-Test py:data <species_name>.data_space with ref and explicit title :ref:`<species_name>.data_space <test-ref>`
-
-.. .. py:attribute:: species_name.py_attribute
-..     :type: string or strings
-..     :value: unspecified
-
-..     Test description
-
-.. .. py:attribute:: <species_name>.py_attribute
-
-..     :type: string
-..     :value: unspecified
-
-.. Test py:attribute <species_name>.py_attribute :py:attribute:`<species_name>.py_attribute`
-
-.. .. py:object:: species_name.py_obj
-
-..     :type: string
-..     :value: unspecified
-
-.. Test py:object species_name.py_obj with explicit title :py:object:`<species_name>.py_obj <species_name.py_obj>`
-
-.. .. py:obj:: <species_name>.py_obj
-
-..     :type: string
-..     :value: unspecified
-
-.. Test py:obj <species_name>.py_obj :py:data:`<species_name>.py_obj`
-
 This section describes the list of parameters that can be set in the WarpX inputs file.
 
 Examples of inputs files can be found in the :ref:`Examples <usage-examples>` section.
