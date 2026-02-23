@@ -105,9 +105,6 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
         signode["fullname"] = name
         signode["ids"] = []  # filled in add_target_and_index
 
-        # "var " prefix, styled like py:data
-        signode += addnodes.desc_annotation("var ", "var ")
-
         # The variable name itself
         signode += addnodes.desc_name(name, name)
 
