@@ -25,12 +25,15 @@ Role::
 
     # With backslash-escaped angle brackets (same as the option role):
     See :fv:var:`my/variable\<T\>` for details.
+
+    # With inline value (value shown in link text, stripped for lookup):
+    See :fv:var:`my/variable<T> = []` for details.
 """
 
 from __future__ import annotations
 
 import re
-from typing import Any, List, Tuple, cast, TypeAlias, Iterator
+from typing import Any, Iterator, List, cast
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -38,22 +41,18 @@ from sphinx import addnodes
 from sphinx.application import Sphinx
 from sphinx.directives import ObjectDescription
 from sphinx.domains import Domain, ObjType
-from sphinx.domains import python as sphinx_python
+from sphinx.domains.python import _parse_annotation
 from sphinx.environment import BuildEnvironment
 from sphinx.roles import XRefRole, ws_re
-from sphinx.util.docfields import Field, TypedField
-from sphinx.util.nodes import (
-    make_refnode,
-    make_id,
-)
+from sphinx.util.docfields import Field
+from sphinx.util.nodes import make_id, make_refnode
 
-FlexVarSigT: TypeAlias = str
 
 # ---------------------------------------------------------------------------
 # Directive
 # ---------------------------------------------------------------------------
 
-class FlexVarDirective(ObjectDescription[FlexVarSigT]):
+class FlexVarDirective(ObjectDescription[str]):
     """
     Directive: .. fv:var:: <name>
 
@@ -78,7 +77,7 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
     # Signature parsing / rendering
     # ------------------------------------------------------------------
 
-    def handle_signature(self, sig: str, signode: addnodes.desc_signature) -> FlexVarSigT:
+    def handle_signature(self, sig: str, signode: addnodes.desc_signature) -> str:
         """Build the rendered signature node and return the canonical name."""
         name = sig.strip()
 
@@ -91,9 +90,7 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
         # Optional type annotation  `: <type>`
         typ = self.options.get("type", "")
         if typ:
-            # signode += addnodes.desc_sig_punctuation("", ":")
-            # signode += addnodes.desc_sig_space()
-            annotations = sphinx_python._parse_annotation(typ, self.env)
+            annotations = _parse_annotation(typ, self.env)
             signode += addnodes.desc_annotation(
                 typ, '',
                 addnodes.desc_sig_punctuation('', ':'),
@@ -104,8 +101,6 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
         # Optional default value  ` = <value>`
         value = self.options.get("default", "").strip()
         if value:
-            # signode += addnodes.desc_sig_punctuation("", " = ")
-            # signode += nodes.literal("", value)
             signode += addnodes.desc_annotation(
                 value, '',
                 addnodes.desc_sig_space(),
@@ -121,10 +116,9 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
     # ------------------------------------------------------------------
 
     def add_target_and_index(
-        self, name: FlexVarSigT, sig: str, signode: addnodes.desc_signature
+        self, name: str, sig: str, signode: addnodes.desc_signature
     ) -> None:
-        fullname = name
-        node_id = make_id(self.env, self.state.document, '', fullname)
+        node_id = make_id(self.env, self.state.document, '', name)
         signode["ids"].append(node_id)
         self.state.document.note_explicit_target(signode)
 
@@ -141,14 +135,6 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
             self.indexnode["entries"].append(
                 ("single", name + " (variable)", node_id, "", None)
             )
-
-    # ------------------------------------------------------------------
-    # doc-field-types exposed to the body (kept minimal)
-    # ------------------------------------------------------------------
-    doc_field_types = [
-        Field("type", label="Type", has_arg=False, names=("type",)),
-        Field("default", label="Default", has_arg=False, names=("default",)),
-    ]
 
 
 # ---------------------------------------------------------------------------
@@ -199,6 +185,11 @@ class FlexVarRole(XRefRole):
                 target = m.group(1).strip()
         return title, ws_re.sub(' ', target)
 
+
+# ---------------------------------------------------------------------------
+# Domain
+# ---------------------------------------------------------------------------
+
 class FlexVarDomain(Domain):
     """The ``fv`` domain for flexible variable documentation."""
 
@@ -217,7 +208,6 @@ class FlexVarDomain(Domain):
         "var": FlexVarRole(),
     }
 
-    # Stored per-document: name -> (docname, node_id, type, default)
     initial_data: dict = {
         "vars": {},  # name -> {"docname": str, "node_id": str, "type": str, "default": str}
     }
@@ -276,12 +266,12 @@ class FlexVarDomain(Domain):
     def get_objects(self) -> Iterator[tuple[str, str, str, str, str, int]]:
         for name, info in self.vars.items():
             yield (
-                name,                # name
-                name,                # dispname
-                "var",               # type
-                info["docname"],     # docname
-                info["node_id"],     # anchor
-                1,                   # priority
+                name,             # name
+                name,             # dispname
+                "var",            # type
+                info["docname"],  # docname
+                info["node_id"],  # anchor
+                1,                # priority
             )
 
 
