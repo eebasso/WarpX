@@ -69,66 +69,6 @@ Test option :option:`<species_name>.option=abc`
 
 Test option :option:`<species_name>.option = abc`
 
-.. option:: boundary.potential_lo_x/y/z
-
-    Test description
-
-Test option :option:`boundary.potential_lo_x/y/z`
-
-.. option:: boundary.potential_hi_<x/y/z>
-
-    Test description
-
-Test option :option:`boundary.potential_hi_\<x/y/z\>`
-
-Test option :option:`boundary.potential_hi_\<x/y/z\> <boundary.potential_hi_<x/y/z>>`
-
-.. option:: boundary.potential_mid_<x,y,z>
-
-    Test description
-
-Test option :option:`boundary.potential_mid_\<x,y,z\>`
-
-.. option:: <species_name>.x/y/z_rms
-
-    Test description
-
-Test option :option:`<species_name>.x/y/z_rms`
-
-.. option:: <species_name>.<x,y,z>_mean
-
-    Test description
-
-Test option :option:`<species_name>.<x,y,z>_mean`
-
-Test option :option:`\<species_name\>.\<x,y,z\>_mean`
-
-Test option :option:`\<species_name\>.\<x,y,z\>_mean <<species_name>.<x,y,z>_mean>`
-
-.. Test option :option:`<<<species_name>.<x,y,z>_mean>`
-
-.. option:: <species_name>.<x/y/z>_sum
-
-    Test description
-
-Test option :option:`<species_name>.<x/y/z>_sum`
-
-Test option :option:`\<species_name\>.\<x/y/z\>_sum`
-
-.. _xyz_tail:
-
-.. option:: xyz_<tail>
-
-    Test description
-
-.. Test option :option:`xyz_tail <xyz_<tail>>`
-
-Test option :option:`xyz_\<tail\> <xyz_<tail>>`
-
-Test option :option:`xyz_\<tail\>`
-
-Test option with ref :ref:`xyz_\<tail\> <xyz_tail>`
-
 .. py:data:: species_name.data
     :type: string or strings
     :value: unspecified
