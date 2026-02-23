@@ -9,6 +9,22 @@
 Inputs: Parameter List
 ======================
 
+.. fv:var:: flex_var_basic_test
+    :type: string
+    :default: unspecified
+
+Test FlexVar :fv:var:`flex_var_basic_test`
+
+Text FlexVar explicit title :fv:var:`Explicit title <flex_var_basic_test>`
+
+.. fv:var:: <species_name>.flex_var
+    :type: string
+    :default: unspecified
+
+Test FlexVar :fv:var:`<species_name>.flex_var`
+
+Text FlexVar explicit title :fv:var:`Explicit title <<species_name>.flex_var>`
+
 .. option:: <species_name>.option
 
     :type: ``string``

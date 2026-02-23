@@ -30,7 +30,7 @@ Role::
 from __future__ import annotations
 
 import re
-from typing import Any, List, Tuple, cast, TypeAlias
+from typing import Any, List, Tuple, cast, TypeAlias, Iterator
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -38,10 +38,14 @@ from sphinx import addnodes
 from sphinx.application import Sphinx
 from sphinx.directives import ObjectDescription
 from sphinx.domains import Domain, ObjType
+from sphinx.domains import python as sphinx_python
 from sphinx.environment import BuildEnvironment
 from sphinx.roles import XRefRole
 from sphinx.util.docfields import Field, TypedField
-from sphinx.util.nodes import make_refnode
+from sphinx.util.nodes import (
+    make_refnode,
+    make_id,
+)
 
 # var_sig_re = re.compile(r'''
 #     ^([\w<>/,\.]*\.)?
@@ -59,10 +63,10 @@ FlexVarSigT: TypeAlias = str
 # Helpers
 # ---------------------------------------------------------------------------
 
-def _make_id(name: str) -> str:
-    """Turn an arbitrary variable name into a valid HTML id."""
-    # Replace chars that are awkward in IDs with underscores
-    return re.sub(r"[^\w.\-]", "_", name)
+# def _make_id(name: str) -> str:
+#     """Turn an arbitrary variable name into a valid HTML id."""
+#     # Replace chars that are awkward in IDs with underscores
+#     return re.sub(r"[^\w.\-]", "_", name)
 
 
 # ---------------------------------------------------------------------------
@@ -107,6 +111,20 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
         # The variable name itself
         signode += addnodes.desc_name(name, name)
 
+        # typ = self.options.get('type')
+        # if typ:
+        #     annotations = sphinx_python._parse_annotation(typ, self.env)
+
+        #     signode += addnodes.desc_sig_punctuation("", ":")
+        #     signode += addnodes.desc_sig_space()
+
+        #     signode += addnodes.desc_annotation(
+        #         typ, '',
+        #         addnodes.desc_sig_punctuation('', ':'),
+        #         addnodes.desc_sig_space(),
+        #         *annotations
+        #     )
+
         # Optional type annotation  `: <type>`
         type_str = self.options.get("type", "").strip()
         if type_str:
@@ -128,12 +146,10 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
     def add_target_and_index(
         self, name: FlexVarSigT, sig: str, signode: addnodes.desc_signature
     ) -> None:
-        node_id = "fv.var." + _make_id(name)
-
-        # Avoid duplicate IDs
-        if node_id not in self.state.document.ids:
-            signode["ids"].append(node_id)
-            self.state.document.note_explicit_target(signode)
+        fullname = name
+        node_id = make_id(self.env, self.state.document, '', fullname)
+        signode["ids"].append(node_id)
+        self.state.document.note_explicit_target(signode)
 
         domain = cast(FlexVarDomain, self.env.get_domain("fv"))
         domain.note_var(
@@ -163,7 +179,7 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
 # ---------------------------------------------------------------------------
 
 class FlexVarRole(XRefRole):
-    """
+    r"""
     Role: :fv:var:`name` or :fv:var:`Title <n>`
 
     Variable names may contain ``<`` and ``>`` (e.g. ``filter<T>``).
@@ -178,40 +194,43 @@ class FlexVarRole(XRefRole):
     names like ``filter<T>`` are never mis-split.
     """
 
+    # \x00 means the "<" was backslash-escaped
+    explicit_title_re = re.compile(r'^(.+?)\s+(?<!\x00)<(.*?)>$', re.DOTALL)
+
     # Matches an explicit-title reference: `Some Title <actual/target<T>>`
     # Requires whitespace before the opening `<` so that bare names like
     # `filter<T>` are never treated as title + target.
-    _explicit_title_re = re.compile(r"^(.+?)\s+<(.+)>\s*$", re.DOTALL)
+    # _explicit_title_re = re.compile(r"^(.+?)\s+<(.+)>\s*$", re.DOTALL)
 
-    def process_link(
-        self,
-        env: BuildEnvironment,
-        refnode: nodes.Element,
-        has_explicit_title: bool,
-        title: str,
-        target: str,
-    ) -> tuple[str, str]:
-        """
-        Re-split title and target using our stricter heuristic.
+    # def process_link(
+    #     self,
+    #     env: BuildEnvironment,
+    #     refnode: nodes.Element,
+    #     has_explicit_title: bool,
+    #     title: str,
+    #     target: str,
+    # ) -> tuple[str, str]:
+    #     r"""
+    #     Re-split title and target using our stricter heuristic.
 
-        By the time this is called, ``XRefRole.__call__`` has already run
-        ``utils.unescape()`` on both ``title`` and ``target``, so escaped
-        characters like ``\<`` have been resolved to literal ``<``.  We
-        just need to re-apply our own splitting logic on the full unescaped
-        string (which is ``title`` when no explicit title was detected by
-        Sphinx, or the concatenation when one was).
-        """
-        # Reconstruct the full unescaped content string.  When Sphinx's own
-        # split_explicit_title found an explicit title, title and target are
-        # already separate; when it didn't, title == target == the whole text.
-        # Either way, re-running our regex on title (which equals the full
-        # string in the no-explicit-title case) is correct.
-        full = title if not has_explicit_title else f"{title} <{target}>"
-        m = self._explicit_title_re.match(full)
-        if m:
-            return m.group(1), m.group(2)
-        # No explicit title — the whole string is both title and target.
-        return title, title
+    #     By the time this is called, ``XRefRole.__call__`` has already run
+    #     ``utils.unescape()`` on both ``title`` and ``target``, so escaped
+    #     characters like ``\<`` have been resolved to literal ``<``.  We
+    #     just need to re-apply our own splitting logic on the full unescaped
+    #     string (which is ``title`` when no explicit title was detected by
+    #     Sphinx, or the concatenation when one was).
+    #     """
+    #     # Reconstruct the full unescaped content string.  When Sphinx's own
+    #     # split_explicit_title found an explicit title, title and target are
+    #     # already separate; when it didn't, title == target == the whole text.
+    #     # Either way, re-running our regex on title (which equals the full
+    #     # string in the no-explicit-title case) is correct.
+    #     full = title if not has_explicit_title else f"{title} <{target}>"
+    #     m = self._explicit_title_re.match(full)
+    #     if m:
+    #         return m.group(1), m.group(2)
+    #     # No explicit title — the whole string is both title and target.
+    #     return title, title
 
 
 class FlexVarDomain(Domain):
@@ -288,7 +307,7 @@ class FlexVarDomain(Domain):
             target,
         )
 
-    def get_objects(self):
+    def get_objects(self) -> Iterator[tuple[str, str, str, str, str, int]]:
         for name, info in self.vars.items():
             yield (
                 name,                # name
