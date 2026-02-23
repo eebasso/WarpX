@@ -18,6 +18,28 @@ Test literal ``double backticks``
 
 Test code :code:`code`
 
+.. fv:var:: <species_name>.flex_var_<tail>
+    :type: string
+    :default: abc
+
+    Test description for flex var
+
+    ``Value1``
+        Description of value 1
+
+    ``Value2``
+        Description of value 2
+
+Test FlexVar :fv:var:`<species_name>.flex_var_<tail>`
+
+Text FlexVar :fv:var:`Explicit title <<species_name>.flex_var_<tail>>`
+
+Test FlexVar :fv:var:`<species_name>.flex_var_<tail>=abc`
+
+Test FlexVar :fv:var:`<species_name>.flex_var_<tail> = abc`
+
+Test any        :any:`<species_name>.flex_var_<tail> = abc`
+
 .. fv:var:: flex_var_basic_test_2
     :type: string
     :default: unspecified
@@ -53,28 +75,6 @@ Test FlexVar :fv:var:`flex_var_literal_tests`
 Text FlexVar :fv:var:`Explicit title <flex_var_literal_tests>`
 
 Test FlexVar :fv:var:`flex_var_literal_tests = abc`
-
-.. fv:var:: <species_name>.flex_var_<tail>
-    :type: string
-    :default: abc
-
-    Test description for flex var
-
-    ``Value1``
-        Description of value 1
-
-    ``Value2``
-        Description of value 2
-
-Test FlexVar :fv:var:`<species_name>.flex_var_<tail>`
-
-Text FlexVar :fv:var:`Explicit title <<species_name>.flex_var_<tail>>`
-
-Test FlexVar :fv:var:`<species_name>.flex_var_<tail>=abc`
-
-Test FlexVar :fv:var:`<species_name>.flex_var_<tail> = abc`
-
-Test any        :any:`<species_name>.flex_var_<tail> = abc`
 
 .. option:: <species_name>.option
 
