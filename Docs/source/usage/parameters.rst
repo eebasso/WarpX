@@ -24,15 +24,15 @@ Test code :code:`code`
 
     Test description for flex var
 
-    Option 1
-        Description of option 1
+    ``Value1``
+        Description of value 1
 
-    ``Option 2``
-        Description of option 2
+    ``Value2``
+        Description of value 2
 
 Test FlexVar :fv:var:`flex_var_basic_test_2`
 
-Text FlexVar explicit title :fv:var:`Explicit title <flex_var_basic_test_2>`
+Text FlexVar :fv:var:`Explicit title <flex_var_basic_test_2>`
 
 Test FlexVar :fv:var:`flex_var_basic_test_2 = abc`
 
@@ -40,21 +40,41 @@ Test FlexVar :fv:var:`flex_var_basic_test_2 = abc`
     :type: ``string``
     :default: ``unspecified``
 
+    Test description for flex var
+
+    ``Value1``
+        Description of value 1
+
+    ``Value2``
+        Description of value 2
+
 Test FlexVar :fv:var:`flex_var_literal_tests`
 
 Text FlexVar :fv:var:`Explicit title <flex_var_literal_tests>`
 
 Test FlexVar :fv:var:`flex_var_literal_tests = abc`
 
-.. fv:var:: <species_name>.flex_var
+.. fv:var:: <species_name>.flex_var_<tail>
     :type: string
-    :default: unspecified
+    :default: abc
 
-Test FlexVar :fv:var:`<species_name>.flex_var`
+    Test description for flex var
 
-Text FlexVar :fv:var:`Explicit title <<species_name>.flex_var>`
+    ``Value1``
+        Description of value 1
 
-Test FlexVar :fv:var:`<species_name>.flex_var = abc`
+    ``Value2``
+        Description of value 2
+
+Test FlexVar :fv:var:`<species_name>.flex_var_<tail>`
+
+Text FlexVar :fv:var:`Explicit title <<species_name>.flex_var_<tail>>`
+
+Test FlexVar :fv:var:`<species_name>.flex_var_<tail>=abc`
+
+Test FlexVar :fv:var:`<species_name>.flex_var_<tail> = abc`
+
+Test any        :any:`<species_name>.flex_var_<tail> = abc`
 
 .. option:: <species_name>.option
 
@@ -64,10 +84,10 @@ Test FlexVar :fv:var:`<species_name>.flex_var = abc`
     Test description for option
 
     Option 1
-        Description of option 1
+        Description of value 1
 
     Option 2
-        Description of option 2
+        Description of value 2
 
 Test option :option:`<species_name>.option`
 
@@ -81,17 +101,27 @@ Test option :option:`<species_name>.option = abc`
 
     Test description for py data
 
-    Option 1
-        Description of option 1
+    Value 1
+        Description of value 1
 
-    Option 2
-        Description of option 2
+    Value 2
+        Description of value 2
 
 Test py:data :py:data:`species_name.data`
 
 Test py:data :py:data:`\<species_name\>.data <species_name.data>`
 
 Test py:data :py:data:`species_name.data = abc`
+
+.. py:data:: species_name.data_2
+    :type: string or strings
+    :value: unspecified
+
+    Test description for py data
+
+    .. Args:
+    ..     Option 1: Description of option 1
+    ..     Option 2: Description of option 2
 
 This section describes the list of parameters that can be set in the WarpX inputs file.
 
