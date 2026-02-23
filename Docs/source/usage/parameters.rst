@@ -22,12 +22,12 @@ Test code :code:`code`
     :type: string
     :default: unspecified
 
-    Test description
+    Test description for flex var
 
     Option 1
         Description of option 1
 
-    Option 2
+    ``Option 2``
         Description of option 2
 
 Test FlexVar :fv:var:`flex_var_basic_test_2`
@@ -62,6 +62,12 @@ Test FlexVar :fv:var:`<species_name>.flex_var = abc`
     :default: unspecified, optional
 
     Test description for option
+
+    Option 1
+        Description of option 1
+
+    Option 2
+        Description of option 2
 
 Test option :option:`<species_name>.option`
 
