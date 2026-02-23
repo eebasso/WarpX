@@ -107,32 +107,31 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
 
         # The variable name itself
         signode += addnodes.desc_name(name, name)
-
-        # typ = self.options.get('type')
-        # if typ:
-        #     annotations = sphinx_python._parse_annotation(typ, self.env)
-
-        #     signode += addnodes.desc_sig_punctuation("", ":")
-        #     signode += addnodes.desc_sig_space()
-
-        #     signode += addnodes.desc_annotation(
-        #         typ, '',
-        #         addnodes.desc_sig_punctuation('', ':'),
-        #         addnodes.desc_sig_space(),
-        #         *annotations
-        #     )
-
         # Optional type annotation  `: <type>`
-        type_str = self.options.get("type", "").strip()
-        if type_str:
-            signode += addnodes.desc_sig_punctuation("", " : ")
-            signode += addnodes.desc_sig_name("", type_str)
+        typ = self.options.get("type", "")
+        if typ:
+            # signode += addnodes.desc_sig_punctuation("", ":")
+            # signode += addnodes.desc_sig_space()
+            annotations = sphinx_python._parse_annotation(typ, self.env)
+            signode += addnodes.desc_annotation(
+                typ, '',
+                addnodes.desc_sig_punctuation('', ':'),
+                addnodes.desc_sig_space(),
+                *annotations,
+            )
 
         # Optional default value  ` = <value>`
-        default_str = self.options.get("default", "").strip()
-        if default_str:
-            signode += addnodes.desc_sig_punctuation("", " = ")
-            signode += nodes.literal("", default_str)
+        value = self.options.get("default", "").strip()
+        if value:
+            # signode += addnodes.desc_sig_punctuation("", " = ")
+            # signode += nodes.literal("", value)
+            signode += addnodes.desc_annotation(
+                value, '',
+                addnodes.desc_sig_space(),
+                addnodes.desc_sig_punctuation('', '='),
+                addnodes.desc_sig_space(),
+                nodes.Text(value),
+            )
 
         return name
 

@@ -9,13 +9,25 @@
 Inputs: Parameter List
 ======================
 
-.. fv:var:: flex_var_basic_test
+.. fv:var:: flex_var_basic_test_2
     :type: string
     :default: unspecified
 
-Test FlexVar :fv:var:`flex_var_basic_test`
+Test FlexVar :fv:var:`flex_var_basic_test_2`
 
-Text FlexVar explicit title :fv:var:`Explicit title <flex_var_basic_test>`
+Text FlexVar explicit title :fv:var:`Explicit title <flex_var_basic_test_2>`
+
+Test FlexVar :fv:var:`flex_var_basic_test_2 = abc`
+
+.. fv:var:: flex_var_literal_tests
+    :type: ``string``
+    :default: ``unspecified``
+
+Test FlexVar :fv:var:`flex_var_literal_tests`
+
+Text FlexVar :fv:var:`Explicit title <flex_var_literal_tests>`
+
+Test FlexVar :fv:var:`flex_var_literal_tests = abc`
 
 .. fv:var:: <species_name>.flex_var
     :type: string
@@ -23,7 +35,9 @@ Text FlexVar explicit title :fv:var:`Explicit title <flex_var_basic_test>`
 
 Test FlexVar :fv:var:`<species_name>.flex_var`
 
-Text FlexVar explicit title :fv:var:`Explicit title <<species_name>.flex_var>`
+Text FlexVar :fv:var:`Explicit title <<species_name>.flex_var>`
+
+Test FlexVar :fv:var:`<species_name>.flex_var = abc`
 
 .. option:: <species_name>.option
 
@@ -33,6 +47,10 @@ Text FlexVar explicit title :fv:var:`Explicit title <<species_name>.flex_var>`
     Test description for option
 
 Test option :option:`<species_name>.option`
+
+Test option :option:`<species_name>.option=abc`
+
+Test option :option:`<species_name>.option = abc`
 
 .. option:: boundary.potential_lo_x/y/z
 
@@ -100,7 +118,11 @@ Test option with ref :ref:`xyz_\<tail\> <xyz_tail>`
 
     Test description for py data
 
-Test py:data species_name.data with explicit title :py:data:`\<species_name\>.data <species_name.data>`
+Test py:data :py:data:`species_name.data`
+
+Test py:data :py:data:`\<species_name\>.data <species_name.data>`
+
+Test py:data :py:data:`species_name.data = abc`
 
 .. _species-name-data-ref:
 
