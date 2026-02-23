@@ -106,8 +106,13 @@ class FlexVarDirective(ObjectDescription[str]):
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation('', '='),
                 addnodes.desc_sig_space(),
-                nodes.Text(value),
+                # nodes.Text(", Text: "+value),
+                nodes.strong("", ", strong: "+value),
+                nodes.literal("", ", literal: "+value),
             )
+            # signode += nodes.Text(",  Text: "+value)
+            signode += nodes.strong("", ", strong: "+value)
+            signode += nodes.literal("", ", literal: "+value)
 
         return name
 
