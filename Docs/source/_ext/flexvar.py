@@ -40,34 +40,14 @@ from sphinx.directives import ObjectDescription
 from sphinx.domains import Domain, ObjType
 from sphinx.domains import python as sphinx_python
 from sphinx.environment import BuildEnvironment
-from sphinx.roles import XRefRole
+from sphinx.roles import XRefRole, ws_re
 from sphinx.util.docfields import Field, TypedField
 from sphinx.util.nodes import (
     make_refnode,
     make_id,
 )
 
-# var_sig_re = re.compile(r'''
-#     ^([\w<>/,\.]*\.)?
-#     ([\w<>/,]+)  \s*
-#     (?:\[\s*(.*)\s*])?
-#     (?:
-#         \(\s*(.*)\s*\)
-#         (?:\s*->\s*(.*))?
-#     )?$
-# ''', re.VERBOSE)
-
 FlexVarSigT: TypeAlias = str
-
-# ---------------------------------------------------------------------------
-# Helpers
-# ---------------------------------------------------------------------------
-
-# def _make_id(name: str) -> str:
-#     """Turn an arbitrary variable name into a valid HTML id."""
-#     # Replace chars that are awkward in IDs with underscores
-#     return re.sub(r"[^\w.\-]", "_", name)
-
 
 # ---------------------------------------------------------------------------
 # Directive
@@ -107,6 +87,7 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
 
         # The variable name itself
         signode += addnodes.desc_name(name, name)
+
         # Optional type annotation  `: <type>`
         typ = self.options.get("type", "")
         if typ:
@@ -175,59 +156,48 @@ class FlexVarDirective(ObjectDescription[FlexVarSigT]):
 # ---------------------------------------------------------------------------
 
 class FlexVarRole(XRefRole):
-    r"""
-    Role: :fv:var:`name` or :fv:var:`Title <n>`
+    """
+    Role: :fv:var:`name` or :fv:var:`Title <name>`
 
-    Variable names may contain ``<`` and ``>`` (e.g. ``filter<T>``).
-    Sphinx's ``split_explicit_title`` and ``utils.unescape()`` in the base
-    ``XRefRole.__call__`` already handle backslash-escaped angle brackets
-    (``\<``, ``\>``) correctly — the same way the built-in ``option`` role
-    does — so we don't need to touch ``__call__`` at all.
+    Two customisations over the base ``XRefRole``:
 
-    The only thing we override is ``process_link``, to redo the title/target
-    split with a stricter heuristic: an explicit title is only recognized when
-    there is **whitespace before the separating** ``<``, so bare generic-style
-    names like ``filter<T>`` are never mis-split.
+    1. **Generic-style names** — variable names may contain ``<`` and ``>``
+       (e.g. ``filter<T>``).  We require whitespace before the ``<`` that
+       separates an explicit title from its target, so bare names like
+       ``filter<T>`` are never mis-split.  This is done by overriding
+       ``explicit_title_re``, which ``ReferenceRole.__call__`` uses directly.
+
+    2. **Inline value syntax** — a cross-reference may include a value
+       expression after `` = `` (e.g. ``:fv:var:`timeout = 30```).  The value
+       is kept in the displayed title but stripped from the lookup target so
+       that it still resolves to the ``.. fv:var:: timeout`` entry.
+       Backslash-escape support (``\<``, ``\>``) comes for free from the
+       base class.
     """
 
-    # \x00 means the "<" was backslash-escaped
+    # Same as ReferenceRole.explicit_title_re but with \s+ instead of \s*,
+    # so whitespace before the `<` is required for explicit-title syntax.
+    # \x00 means the "<" was backslash-escaped — preserve that lookbehind.
     explicit_title_re = re.compile(r'^(.+?)\s+(?<!\x00)<(.*?)>$', re.DOTALL)
 
-    # Matches an explicit-title reference: `Some Title <actual/target<T>>`
-    # Requires whitespace before the opening `<` so that bare names like
-    # `filter<T>` are never treated as title + target.
-    # _explicit_title_re = re.compile(r"^(.+?)\s+<(.+)>\s*$", re.DOTALL)
+    # Matches an inline value expression: "varname = value" or "varname[=value]"
+    # The name portion (before = or [=) is captured as group 1.
+    _value_re = re.compile(r'^(.+?)(?:\s*=\s*.*|\[=.*\])$', re.DOTALL)
 
-    # def process_link(
-    #     self,
-    #     env: BuildEnvironment,
-    #     refnode: nodes.Element,
-    #     has_explicit_title: bool,
-    #     title: str,
-    #     target: str,
-    # ) -> tuple[str, str]:
-    #     r"""
-    #     Re-split title and target using our stricter heuristic.
-
-    #     By the time this is called, ``XRefRole.__call__`` has already run
-    #     ``utils.unescape()`` on both ``title`` and ``target``, so escaped
-    #     characters like ``\<`` have been resolved to literal ``<``.  We
-    #     just need to re-apply our own splitting logic on the full unescaped
-    #     string (which is ``title`` when no explicit title was detected by
-    #     Sphinx, or the concatenation when one was).
-    #     """
-    #     # Reconstruct the full unescaped content string.  When Sphinx's own
-    #     # split_explicit_title found an explicit title, title and target are
-    #     # already separate; when it didn't, title == target == the whole text.
-    #     # Either way, re-running our regex on title (which equals the full
-    #     # string in the no-explicit-title case) is correct.
-    #     full = title if not has_explicit_title else f"{title} <{target}>"
-    #     m = self._explicit_title_re.match(full)
-    #     if m:
-    #         return m.group(1), m.group(2)
-    #     # No explicit title — the whole string is both title and target.
-    #     return title, title
-
+    def process_link(
+        self,
+        env: BuildEnvironment,
+        refnode: nodes.Element,
+        has_explicit_title: bool,
+        title: str,
+        target: str,
+    ) -> tuple[str, str]:
+        """Strip any inline value expression from the target, keeping it in the title."""
+        if not has_explicit_title:
+            m = self._value_re.match(target)
+            if m:
+                target = m.group(1).strip()
+        return title, ws_re.sub(' ', target)
 
 class FlexVarDomain(Domain):
     """The ``fv`` domain for flexible variable documentation."""
