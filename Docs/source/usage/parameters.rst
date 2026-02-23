@@ -4,14 +4,31 @@
 .. role:: python(code)
    :language: python
 
+.. role:: flexvarcpp(fv:var)
+   :language: c++
+
 .. _running-cpp-parameters:
 
 Inputs: Parameter List
 ======================
 
+Test default role (single backticks) `single backtick`
+
+Test literal ``double backticks``
+
+Test code :code:`code`
+
 .. fv:var:: flex_var_basic_test_2
     :type: string
     :default: unspecified
+
+    Test description
+
+    Option 1
+        Description of option 1
+
+    Option 2
+        Description of option 2
 
 Test FlexVar :fv:var:`flex_var_basic_test_2`
 
@@ -118,6 +135,12 @@ Test option with ref :ref:`xyz_\<tail\> <xyz_tail>`
 
     Test description for py data
 
+    Option 1
+        Description of option 1
+
+    Option 2
+        Description of option 2
+
 Test py:data :py:data:`species_name.data`
 
 Test py:data :py:data:`\<species_name\>.data <species_name.data>`
@@ -183,6 +206,10 @@ Examples of inputs files can be found in the :ref:`Examples <usage-examples>` se
 .. note::
 
    The AMReX parser (see :ref:`running-cpp-parameters-parser`) is used for the right-hand side of all input parameters that consist of one or more integers or floats. Expressions like :cpp:`<species_name>.density_max = "0.1+2.3"` and expressions that include user-defined constants are accepted.
+
+C++ :cpp:`<species_name>.density_max = "0.1+2.3"`
+
+Python :python:`<species_name>.density_max = "0.1+2.3"`
 
 .. _running-cpp-parameters-parser:
 
