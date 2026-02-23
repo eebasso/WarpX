@@ -41,7 +41,6 @@ from sphinx import addnodes
 from sphinx.application import Sphinx
 from sphinx.directives import ObjectDescription
 from sphinx.domains import Domain, ObjType
-from sphinx.domains.python import _parse_annotation
 from sphinx.environment import BuildEnvironment
 from sphinx.roles import XRefRole, ws_re
 from sphinx.util.docfields import Field
@@ -77,6 +76,11 @@ class FlexVarDirective(ObjectDescription[str]):
     # Signature parsing / rendering
     # ------------------------------------------------------------------
 
+    def _parse_inline(self, text: str) -> list[nodes.Node]:
+        """Parse *text* as RST inline content and return the resulting nodes."""
+        nodes_, _ = self.state.inline_text(text, self.lineno)
+        return nodes_
+
     def handle_signature(self, sig: str, signode: addnodes.desc_signature) -> str:
         """Build the rendered signature node and return the canonical name."""
         name = sig.strip()
@@ -90,12 +94,11 @@ class FlexVarDirective(ObjectDescription[str]):
         # Optional type annotation  `: <type>`
         typ = self.options.get("type", "")
         if typ:
-            annotations = _parse_annotation(typ, self.env)
             signode += addnodes.desc_annotation(
                 typ, '',
                 addnodes.desc_sig_punctuation('', ':'),
                 addnodes.desc_sig_space(),
-                *annotations,
+                *self._parse_inline(typ),
             )
 
         # Optional default value  ` = <value>`
@@ -106,13 +109,8 @@ class FlexVarDirective(ObjectDescription[str]):
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation('', '='),
                 addnodes.desc_sig_space(),
-                # nodes.Text(", Text: "+value),
-                nodes.strong("", ", strong: "+value),
-                nodes.literal("", ", literal: "+value),
+                *self._parse_inline(value),
             )
-            # signode += nodes.Text(",  Text: "+value)
-            signode += nodes.strong("", ", strong: "+value)
-            signode += nodes.literal("", ", literal: "+value)
 
         return name
 
