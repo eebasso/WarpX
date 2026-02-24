@@ -157,6 +157,10 @@ class FlexVarDirective(ObjectDescription[str]):
 
             # signode += testnodelist
 
+        value = self.options.get("comment")
+        if value:
+            signode += self._parse_inline(value)
+
         return name
 
     # ------------------------------------------------------------------
