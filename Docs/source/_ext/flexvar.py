@@ -100,56 +100,63 @@ class FlexVarDirective(ObjectDescription[str]):
         # Optional default value  ` = <value>`
         value = self.options.get("default", "").strip()
         if value:
+
+            test_nodetypelist: list[type[nodes.TextElement]] = [
+                # addnodes.desc,
+                # addnodes.desc_signature,
+                # addnodes.desc_signature_line,
+                # addnodes.desc_content,
+                addnodes.desc_inline,
+
+
+                # Nodes for high-level structure in signatures
+                ##############################################
+                addnodes.desc_name,
+                addnodes.desc_addname,
+                addnodes.desc_type,
+                addnodes.desc_returns,
+                addnodes.desc_parameterlist,
+                addnodes.desc_type_parameter_list,
+                addnodes.desc_parameter,
+                addnodes.desc_type_parameter,
+                addnodes.desc_optional,
+                addnodes.desc_annotation,
+
+                # Leaf nodes for markup of text fragments
+                #########################################
+                addnodes.desc_sig_element,
+                addnodes.desc_sig_space,
+                addnodes.desc_sig_name,
+                addnodes.desc_sig_punctuation,
+                # addnodes.,
+                addnodes.desc_sig_literal_number,
+                addnodes.desc_sig_literal_string,
+                addnodes.desc_sig_literal_char,
+                # addnodes.,
+                # addnodes.,
+
+                # inline nodes
+                addnodes.literal_strong,
+                addnodes.literal_emphasis,
+            ]
+
+            testnodelist: list[nodes.Node] = [
+                nodetype("", f" |{nodetype.__name__}") for nodetype in test_nodetypelist
+            ]
+            # Extra
+            testnodelist.extend(self._parse_inline(" |_parse_inline"))
+            testnodelist.append(nodes.Text(" |Text"))
+
             signode += addnodes.desc_annotation(
                 value, '',
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation('', '='),
                 addnodes.desc_sig_space(),
+                *testnodelist,
                 *self._parse_inline(value),
             )
 
-            # Top-level nodes
-            #################
-            # signode += addnodes.desc("", " desc")
-            # signode += addnodes.desc_signature("", " desc_signature")
-            # signode += addnodes.desc_signature_line("", " desc_signature_line")
-            # signode += addnodes.desc_content("", " desc")
-            signode += addnodes.desc_inline("", " desc_inline")
-
-
-            # Nodes for high-level structure in signatures
-            ##############################################
-            signode += addnodes.desc_name("", " desc_name")
-            signode += addnodes.desc_addname("", " desc_addname")
-            signode += addnodes.desc_type("", " desc_type")
-            signode += addnodes.desc_returns("", " desc_returns")
-            signode += addnodes.desc_parameterlist("", " desc_parameterlist")
-            signode += addnodes.desc_type_parameter_list("", " desc_type_parameter_list")
-            signode += addnodes.desc_parameter("", " desc_parameter")
-            signode += addnodes.desc_type_parameter("", " desc_type_parameter")
-            signode += addnodes.desc_optional("", " desc_optional")
-            signode += addnodes.desc_annotation("", " desc_annotation")
-
-            # Leaf nodes for markup of text fragments
-            #########################################
-            signode += addnodes.desc_sig_element("", " desc_sig_element")
-            signode += addnodes.desc_sig_space("", " desc_sig_space")
-            signode += addnodes.desc_sig_name("", " desc_sig_name")
-            signode += addnodes.desc_sig_punctuation("", " desc_sig_punctuation")
-            # signode += addnodes.("", " ")
-            signode += addnodes.desc_sig_literal_number("", " desc_sig_literal_number")
-            signode += addnodes.desc_sig_literal_string("", " desc_sig_literal_string")
-            signode += addnodes.desc_sig_literal_char("", " desc_sig_literal_char")
-            # signode += addnodes.("", " ")
-            # signode += addnodes.("", " ")
-
-            # inline nodes
-            signode += addnodes.literal_strong("", " literal_strong")
-            signode += addnodes.literal_emphasis("", " literal_emphasis")
-
-            # Extra
-            signode += self._parse_inline(" _parse_inline")
-            signode += nodes.Text(" Text")
+            signode += testnodelist
 
         return name
 
