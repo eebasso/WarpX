@@ -353,29 +353,29 @@ Overall simulation parameters
             :type: `bool`
             :default: false
 
-              When `true`, the plasma current density is computed using the mass matrices during the linear stage of PS-JFNK, replacing direct particle calculations. This can enable large speed ups for simulations with many particles.
+            When `true`, the plasma current density is computed using the mass matrices during the linear stage of PS-JFNK, replacing direct particle calculations. This can enable large speed ups for simulations with many particles.
 
-              .. fv:var:: implicit_evolve.skip_particle_picard_init
-                  :type: `bool`
-                  :default: false
+            .. fv:var:: implicit_evolve.skip_particle_picard_init
+                :type: `bool`
+                :default: false
 
-                    When `true` and ``implicit_evolve.use_mass_matrices_jacobian = true``, the full Picard update of the particles is skipped on the initial Newton step, and only a single iteration is performed.
-                    This can enhance the overall efficiency of the Newton solver.
-                    Default is true if ``implicit_evolve.particle_suborbits = true``.
+                When `true` and ``implicit_evolve.use_mass_matrices_jacobian = true``, the full Picard update of the particles is skipped on the initial Newton step, and only a single iteration is performed.
+                This can enhance the overall efficiency of the Newton solver.
+                Default is true if ``implicit_evolve.particle_suborbits = true``.
 
         .. fv:var:: implicit_evolve.use_mass_matrices_pc
             :type: `bool`
             :default: false
 
-              When `true`, the plasma response is captured in the preconditioner.
-              Requires use of a preconditioner (``jacobian.pc_type = pc_curl_curl_mlmg``, ``pc_petsc``, or ``pc_jacobi``).
+            When `true`, the plasma response is captured in the preconditioner.
+            Requires use of a preconditioner (``jacobian.pc_type = pc_curl_curl_mlmg``, ``pc_petsc``, or ``pc_jacobi``).
 
         .. fv:var:: implicit_evolve.mass_matrices_pc_width
             :type: `int`
             :default: 0
 
-              If using ``jacobian.pc_type = pc_petsc``, this parameter specifies the width of the mass matrices included in the preconditioner.
-              In most cases, a width of 1 is sufficient for good GMRES performance.
+            If using ``jacobian.pc_type = pc_petsc``, this parameter specifies the width of the mass matrices included in the preconditioner.
+            In most cases, a width of 1 is sufficient for good GMRES performance.
 
         .. fv:var:: jacobian.pc_type
             :type: `str`
@@ -1599,8 +1599,8 @@ Particle initialization
           :type: bool
           :default: `0` ; whether to inject from the embedded boundary or from a user-specified plane
 
-            When injecting from the embedded boundary, the momentum distribution specified by the user along ``z`` (see e.g. ``uz_m``, ``uz_th`` below) is interpreted
-            as the momentum distribution along the local normal to the embedded boundary.)
+          When injecting from the embedded boundary, the momentum distribution specified by the user along ``z`` (see e.g. ``uz_m``, ``uz_th`` below) is interpreted
+          as the momentum distribution along the local normal to the embedded boundary.)
 
       .. fv:var:: <species_name>.surface_flux_pos
           :type: only used when injecting from a plane, `float`, location of the injection plane [meter]
@@ -2016,12 +2016,12 @@ Particle initialization
        .. fv:var:: <species_name>.attribute.<real_attrib_name>(x,y,z,ux,uy,uz,t)
        :type: `str`
 
-         ``t`` represents the physical time in seconds during the simulation.
-         ``x``, ``y``, ``z`` represent particle positions in the unit of meter.
-         ``ux``, ``uy``, ``uz`` represent the particle momenta in the unit of
-         :math:`\gamma v/c`, where
-         :math:`\gamma` is the Lorentz factor,
-         :math:`v/c` is the particle velocity normalized by the speed of light.
+           ``t`` represents the physical time in seconds during the simulation.
+           ``x``, ``y``, ``z`` represent particle positions in the unit of meter.
+           ``ux``, ``uy``, ``uz`` represent the particle momenta in the unit of
+           :math:`\gamma v/c`, where
+           :math:`\gamma` is the Lorentz factor,
+           :math:`v/c` is the particle velocity normalized by the speed of light.
 
 .. fv:var:: <species_name>.save_particles_at_xlo/hi_ylo/hi_zlo/hi
     :type: bool; optional
@@ -2141,8 +2141,8 @@ Particle initialization
             :type: `float`
             :default: `1.5`
 
-                This **roughly** corresponds to the ratio between the number of particles before and
-                after resampling.
+            This **roughly** corresponds to the ratio between the number of particles before and
+            after resampling.
 
     * ``velocity_coincidence_thinning``` The particles are sorted into phase space
       cells and merged, similar to the approach described in :cite:t:`param-Vranic2015`.
@@ -2151,19 +2151,19 @@ Particle initialization
         .. fv:var:: <species_name>.resampling_algorithm_delta_ur
             :type: `float`
 
-                The width of momentum cells used in clustering particles, in m/s.
+            The width of momentum cells used in clustering particles, in m/s.
 
         .. fv:var:: <species_name>.resampling_algorithm_n_theta
             :type: `int`
 
-                The number of cell divisions to use in the :math:`\theta` direction
-                when clustering the particle velocities.
+            The number of cell divisions to use in the :math:`\theta` direction
+            when clustering the particle velocities.
 
         .. fv:var:: <species_name>.resampling_algorithm_n_phi
             :type: `int`
 
-                The number of cell divisions to use in the :math:`\phi` direction
-                when clustering the particle velocities.
+            The number of cell divisions to use in the :math:`\phi` direction
+            when clustering the particle velocities.
 
 .. fv:var:: <species_name>.resampling_min_ppc
     :type: `int`
@@ -2915,13 +2915,13 @@ Note that elements of the same type cannot overlap each other.
                 :type: ``list of strings``
                 :default: no elements
 
-                  A list of names (one name per lattice element), in the order that they appear in the lattice.
+                A list of names (one name per lattice element), in the order that they appear in the lattice.
 
             .. fv:var:: <element_name>.reverse
                 :type: ``bool``
                 :default: ``false``
 
-                  Reverse the list of elements in the line before appending to the lattice.
+                Reverse the list of elements in the line before appending to the lattice.
 
 .. _running-cpp-parameters-collision:
 
@@ -3652,26 +3652,26 @@ Maxwell solver: macroscopic media
 .. fv:var:: macroscopic.sigma_function(x,y,z)
     :type: `str`
 
-     To initialize spatially varying conductivity, permittivity, and permeability, respectively,
-     using a mathematical function in the input. Constants required in the
-     mathematical expression can be set using ``my_constants``. These parameters are parsed
-     if ``algo.em_solver_medium=macroscopic``.
+    To initialize spatially varying conductivity, permittivity, and permeability, respectively,
+    using a mathematical function in the input. Constants required in the
+    mathematical expression can be set using ``my_constants``. These parameters are parsed
+    if ``algo.em_solver_medium=macroscopic``.
 
 .. fv:var:: macroscopic.epsilon_function(x,y,z)
     :type: `str`
 
-     To initialize spatially varying conductivity, permittivity, and permeability, respectively,
-     using a mathematical function in the input. Constants required in the
-     mathematical expression can be set using ``my_constants``. These parameters are parsed
-     if ``algo.em_solver_medium=macroscopic``.
+    To initialize spatially varying conductivity, permittivity, and permeability, respectively,
+    using a mathematical function in the input. Constants required in the
+    mathematical expression can be set using ``my_constants``. These parameters are parsed
+    if ``algo.em_solver_medium=macroscopic``.
 
 .. fv:var:: macroscopic.mu_function(x,y,z)
     :type: `str`
 
-     To initialize spatially varying conductivity, permittivity, and permeability, respectively,
-     using a mathematical function in the input. Constants required in the
-     mathematical expression can be set using ``my_constants``. These parameters are parsed
-     if ``algo.em_solver_medium=macroscopic``.
+    To initialize spatially varying conductivity, permittivity, and permeability, respectively,
+    using a mathematical function in the input. Constants required in the
+    mathematical expression can be set using ``my_constants``. These parameters are parsed
+    if ``algo.em_solver_medium=macroscopic``.
 
 .. fv:var:: macroscopic.sigma
     :type: `float`
@@ -3969,19 +3969,19 @@ Additional parameters
     :type: `str`
     :default: s: ``-1`` on CPU; ``4`` on GPU
 
-     Using the `Time intervals`_ syntax, this string defines the timesteps at which particles are
-     sorted.
-     If ``<=0``, do not sort particles.
-     It is turned on on GPUs for performance reasons (to improve memory locality).
+    Using the `Time intervals`_ syntax, this string defines the timesteps at which particles are
+    sorted.
+    If ``<=0``, do not sort particles.
+    It is turned on on GPUs for performance reasons (to improve memory locality).
 
 .. fv:var:: warpx.sort_particles_for_deposition
     :type: `bool`
     :default: ``true`` for the CUDA backend, otherwise ``false``
 
-     This option controls the type of sorting used if particle sorting is turned on, i.e. if ``sort_intervals`` is not ``<=0``.
-     If ``true``, particles will be sorted by cell to optimize deposition with many particles per cell, in the order x -> y -> z -> ppc.
-     If ``false``, particles will be sorted by bin, using the ``sort_bin_size`` parameter below, in the order ppc -> x -> y -> z.
-     ``true`` is recommend for best performance on NVIDIA GPUs, especially if there are many particles per cell.
+    This option controls the type of sorting used if particle sorting is turned on, i.e. if ``sort_intervals`` is not ``<=0``.
+    If ``true``, particles will be sorted by cell to optimize deposition with many particles per cell, in the order x -> y -> z -> ppc.
+    If ``false``, particles will be sorted by bin, using the ``sort_bin_size`` parameter below, in the order ppc -> x -> y -> z.
+    ``true`` is recommend for best performance on NVIDIA GPUs, especially if there are many particles per cell.
 
 .. fv:var:: warpx.sort_idx_type
     :type: list of `int`
@@ -3998,58 +3998,58 @@ Additional parameters
     :type: list of `int`
     :default: ``1 1 1``
 
-     If ``sort_intervals`` is activated and ``sort_particles_for_deposition`` is ``false``, particles are sorted in bins of ``sort_bin_size`` cells.
-     In 2D, only the first two elements are read.
+    If ``sort_intervals`` is activated and ``sort_particles_for_deposition`` is ``false``, particles are sorted in bins of ``sort_bin_size`` cells.
+    In 2D, only the first two elements are read.
 
 .. fv:var:: warpx.do_shared_mem_charge_deposition
     :type: `bool`
     :default: `false`
 
-     If activated, charge deposition will allocate and use small
-     temporary buffers on which to accumulate deposited charge values
-     from particles. On GPUs these buffers will reside in ``__shared__``
-     memory, which is faster than the usual ``__global__``
-     memory. Performance impact will depend on the relative overhead
-     of assigning the particles to bins small enough to fit in the
-     space available for the temporary buffers.
+    If activated, charge deposition will allocate and use small
+    temporary buffers on which to accumulate deposited charge values
+    from particles. On GPUs these buffers will reside in ``__shared__``
+    memory, which is faster than the usual ``__global__``
+    memory. Performance impact will depend on the relative overhead
+    of assigning the particles to bins small enough to fit in the
+    space available for the temporary buffers.
 
 .. fv:var:: warpx.do_shared_mem_current_deposition
     :type: `bool`
     :default: `false`
 
-     If activated, current deposition will allocate and use small
-     temporary buffers on which to accumulate deposited current values
-     from particles. On GPUs these buffers will reside in ``__shared__``
-     memory, which is faster than the usual ``__global__``
-     memory. Performance impact will depend on the relative overhead
-     of assigning the particles to bins small enough to fit in the
-     space available for the temporary buffers. Performance is mostly improved
-     when there is lots of contention between particles writing to the same cell
-     (e.g. for high particles per cell). This feature is only available for CUDA
-     and HIP, and is only recommended for 3D or 2D.
+    If activated, current deposition will allocate and use small
+    temporary buffers on which to accumulate deposited current values
+    from particles. On GPUs these buffers will reside in ``__shared__``
+    memory, which is faster than the usual ``__global__``
+    memory. Performance impact will depend on the relative overhead
+    of assigning the particles to bins small enough to fit in the
+    space available for the temporary buffers. Performance is mostly improved
+    when there is lots of contention between particles writing to the same cell
+    (e.g. for high particles per cell). This feature is only available for CUDA
+    and HIP, and is only recommended for 3D or 2D.
 
 .. fv:var:: warpx.shared_tilesize
     :type: list of `int`
     :default: `6 6 8` in 3D; `14 14` in 2D; `1s` otherwise
 
-     Used to tune performance when ``do_shared_mem_current_deposition`` or
-     ``do_shared_mem_charge_deposition`` is enabled. ``shared_tilesize`` is the
-     size of the temporary buffer allocated in shared memory for a threadblock.
-     A larger tilesize requires more shared memory, but gives more work to each
-     threadblock, which can lead to higher occupancy, and allows for more
-     buffered writes to ``__shared__`` instead of ``__global__``. The defaults
-     in 2D and 3D
-     are chosen from experimentation, but can be improved upon for specific
-     problems. The other defaults are not optimized and should always be fine
-     tuned for the problem.
+    Used to tune performance when ``do_shared_mem_current_deposition`` or
+    ``do_shared_mem_charge_deposition`` is enabled. ``shared_tilesize`` is the
+    size of the temporary buffer allocated in shared memory for a threadblock.
+    A larger tilesize requires more shared memory, but gives more work to each
+    threadblock, which can lead to higher occupancy, and allows for more
+    buffered writes to ``__shared__`` instead of ``__global__``. The defaults
+    in 2D and 3D
+    are chosen from experimentation, but can be improved upon for specific
+    problems. The other defaults are not optimized and should always be fine
+    tuned for the problem.
 
 .. fv:var:: warpx.shared_mem_current_tpb
     :type: `int`
     :default: `128`
 
-     Used to tune performance when ``do_shared_mem_current_deposition`` is
-     enabled. ``shared_mem_current_tpb`` controls the number of threads per
-     block (tpb), i.e. the number of threads operating on a shared buffer.
+    Used to tune performance when ``do_shared_mem_current_deposition`` is
+    enabled. ``shared_mem_current_tpb`` controls the number of threads per
+    block (tpb), i.e. the number of threads operating on a shared buffer.
 
 .. _running-cpp-parameters-diagnostics:
 
@@ -4262,39 +4262,39 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
 .. fv:var:: <diag_name>.particle_fields_to_plot
     :type: list of `strings`, optional
 
-       Names of per-cell diagnostics of particle properties to calculate and output as additional fields.
-       Note that the deposition onto the grid does not respect the particle shape factor, but instead uses nearest-grid point interpolation.
-       Default is none.
-       Parser functions for these field names are specified by ``<diag_name>.particle_fields.<field_name>(x,y,z,ux,uy,uz)``.
-       Also, note that this option is only available for ``<diag_name>.diag_type = Full``
+    Names of per-cell diagnostics of particle properties to calculate and output as additional fields.
+    Note that the deposition onto the grid does not respect the particle shape factor, but instead uses nearest-grid point interpolation.
+    Default is none.
+    Parser functions for these field names are specified by ``<diag_name>.particle_fields.<field_name>(x,y,z,ux,uy,uz)``.
+    Also, note that this option is only available for ``<diag_name>.diag_type = Full``
 
 .. fv:var:: <diag_name>.particle_fields_species
     :type: list of `strings`, optional
 
-         Species for which to calculate ``particle_fields_to_plot``.
-         Fields will be calculated separately for each specified species.
-         The default is a list of all of the available particle species.
+    Species for which to calculate ``particle_fields_to_plot``.
+    Fields will be calculated separately for each specified species.
+    The default is a list of all of the available particle species.
 
 .. fv:var:: <diag_name>.particle_fields.<field_name>.do_average
     :type: bool
     :default: `1`
 
-       Whether the diagnostic is an average or a sum. With an average, the sum over the specified function is divided
-       by the sum of the particle weights in each cell.
+    Whether the diagnostic is an average or a sum. With an average, the sum over the specified function is divided
+    by the sum of the particle weights in each cell.
 
 .. fv:var:: <diag_name>.particle_fields.<field_name>(x,y,z,ux,uy,uz)
     :type: parser `str`
 
-       Parser function to be calculated for each particle per cell. The averaged field written is
+    Parser function to be calculated for each particle per cell. The averaged field written is
 
-       .. math::
+    .. math::
 
-      \texttt{<field_name>_<species_name>} = \frac{\sum_{i=1}^N w_i \, f(x_i,y_i,z_i,u_{x,i},u_{y,i},u_{z,i})}{\sum_{i=1}^N w_i}
+   \texttt{<field_name>_<species_name>} = \frac{\sum_{i=1}^N w_i \, f(x_i,y_i,z_i,u_{x,i},u_{y,i},u_{z,i})}{\sum_{i=1}^N w_i}
 
-       where :math:`w_i` is the particle weight, :math:`f()` is the parser function, and :math:`(x_i,y_i,z_i)` are particle positions in units of a meter. The sums are over all particles of type ``<species_name>`` in a cell (ignoring the particle shape factor) that satisfy ``<diag_name>.particle_fields.<field_name>.filter(x,y,z,ux,uy,uz)``.
-       When ``<diag_name>.particle_fields.<field_name>.do_average`` is `0`, the division by the sum over particle weights is not done.
-       In 1D or 2D, the particle coordinates will follow the WarpX convention. :math:`(u_{x,i},u_{y,i},u_{z,i})` are components of the particle four-momentum. :math:`u = \gamma v/c`, :math:`\gamma` is the Lorentz factor, :math:`v` is the particle velocity and :math:`c` is the speed of light.
-       For photons, we use the standardized momentum :math:`u = p/(m_{e}c)`, where :math:`p` is the momentum of the photon and :math:`m_{e}` the mass of an electron.
+    where :math:`w_i` is the particle weight, :math:`f()` is the parser function, and :math:`(x_i,y_i,z_i)` are particle positions in units of a meter. The sums are over all particles of type ``<species_name>`` in a cell (ignoring the particle shape factor) that satisfy ``<diag_name>.particle_fields.<field_name>.filter(x,y,z,ux,uy,uz)``.
+    When ``<diag_name>.particle_fields.<field_name>.do_average`` is `0`, the division by the sum over particle weights is not done.
+    In 1D or 2D, the particle coordinates will follow the WarpX convention. :math:`(u_{x,i},u_{y,i},u_{z,i})` are components of the particle four-momentum. :math:`u = \gamma v/c`, :math:`\gamma` is the Lorentz factor, :math:`v` is the particle velocity and :math:`c` is the speed of light.
+    For photons, we use the standardized momentum :math:`u = p/(m_{e}c)`, where :math:`p` is the momentum of the photon and :math:`m_{e}` the mass of an electron.
 
 .. fv:var:: <diag_name>.particle_fields.<field_name>.filter(x,y,z,ux,uy,uz)
     :type: parser `str`, optional
@@ -4631,627 +4631,627 @@ This shifts analysis from post-processing to runtime calculation of reduction op
     the time step and the corresponding physical time in seconds, respectively.
 
     .. fv:var:: ParticleEnergy
-            This type computes the total and mean relativistic particle kinetic energy among all species:
+        This type computes the total and mean relativistic particle kinetic energy among all species:
 
-            .. math::
+        .. math::
 
-                E_p = \sum_{i=1}^N w_i \, \left( \sqrt{|\boldsymbol{p}_i|^2 c^2 + m_0^2 c^4} - m_0 c^2 \right)
+            E_p = \sum_{i=1}^N w_i \, \left( \sqrt{|\boldsymbol{p}_i|^2 c^2 + m_0^2 c^4} - m_0 c^2 \right)
 
-            where :math:`\boldsymbol{p}_i` is the relativistic momentum of the :math:`i`-th particle, :math:`c` is the speed of light, :math:`m_0` is the rest mass, :math:`N` is the number of particles, and :math:`w_i` is the weight of the :math:`i`-th particle.
+        where :math:`\boldsymbol{p}_i` is the relativistic momentum of the :math:`i`-th particle, :math:`c` is the speed of light, :math:`m_0` is the rest mass, :math:`N` is the number of particles, and :math:`w_i` is the weight of the :math:`i`-th particle.
 
-            The output columns are the total energy of all species, the total energy per species, the total mean energy :math:`E_p / \sum_i w_i` of all species, and the total mean energy per species.
+        The output columns are the total energy of all species, the total energy per species, the total mean energy :math:`E_p / \sum_i w_i` of all species, and the total mean energy per species.
 
     .. fv:var:: ParticleMomentum
-            This type computes the total and mean relativistic particle momentum among all species:
+        This type computes the total and mean relativistic particle momentum among all species:
 
-            .. math::
+        .. math::
 
-                \boldsymbol{P}_p = \sum_{i=1}^N w_i \, \boldsymbol{p}_i
+            \boldsymbol{P}_p = \sum_{i=1}^N w_i \, \boldsymbol{p}_i
 
-            where :math:`\boldsymbol{p}_i` is the relativistic momentum of the :math:`i`-th particle, :math:`N` is the number of particles, and :math:`w_i` is the weight of the :math:`i`-th particle.
+        where :math:`\boldsymbol{p}_i` is the relativistic momentum of the :math:`i`-th particle, :math:`N` is the number of particles, and :math:`w_i` is the weight of the :math:`i`-th particle.
 
-            The output columns are the components of the total momentum of all species, the total momentum per species, the total mean momentum :math:`\boldsymbol{P}_p / \sum_i w_i` of all species, and the total mean momentum per species.
+        The output columns are the components of the total momentum of all species, the total momentum per species, the total mean momentum :math:`\boldsymbol{P}_p / \sum_i w_i` of all species, and the total mean momentum per species.
 
     .. fv:var:: FieldEnergy
-            This type computes the electromagnetic field energy
+        This type computes the electromagnetic field energy
 
-            .. math::
+        .. math::
 
-                E_f = \frac{1}{2} \sum_{\text{cells}} \left( \varepsilon_0 |\boldsymbol{E}|^2 + \frac{|\boldsymbol{B}|^2}{\mu_0} \right) \Delta V
+            E_f = \frac{1}{2} \sum_{\text{cells}} \left( \varepsilon_0 |\boldsymbol{E}|^2 + \frac{|\boldsymbol{B}|^2}{\mu_0} \right) \Delta V
 
-            where :math:`\boldsymbol{E}` is the electric field, :math:`\boldsymbol{B}` is the magnetic field, :math:`\varepsilon_0` is the vacuum permittivity, :math:`\mu_0` is the vacuum permeability, :math:`\Delta V` is the cell volume (or cell area in 2D), and the sum is over all cells.
+        where :math:`\boldsymbol{E}` is the electric field, :math:`\boldsymbol{B}` is the magnetic field, :math:`\varepsilon_0` is the vacuum permittivity, :math:`\mu_0` is the vacuum permeability, :math:`\Delta V` is the cell volume (or cell area in 2D), and the sum is over all cells.
 
-            The output columns are the total field energy :math:`E_f`, the :math:`\boldsymbol{E}` field energy, and the :math:`\boldsymbol{B}` field energy, at each mesh refinement level.
+        The output columns are the total field energy :math:`E_f`, the :math:`\boldsymbol{E}` field energy, and the :math:`\boldsymbol{B}` field energy, at each mesh refinement level.
 
     .. fv:var:: FieldMomentum
-            This type computes the electromagnetic field momentum
+        This type computes the electromagnetic field momentum
 
-            .. math::
+        .. math::
 
-                \boldsymbol{P}_f = \varepsilon_0 \sum_{\text{cells}} \left( \boldsymbol{E} \times \boldsymbol{B} \right) \Delta V
+            \boldsymbol{P}_f = \varepsilon_0 \sum_{\text{cells}} \left( \boldsymbol{E} \times \boldsymbol{B} \right) \Delta V
 
-            where :math:`\boldsymbol{E}` is the electric field, :math:`\boldsymbol{B}` is the magnetic field, :math:`\varepsilon_0` is the vacuum permittivity, :math:`\Delta V` is the cell volume (or cell area in 2D), and the sum is over all cells.
+        where :math:`\boldsymbol{E}` is the electric field, :math:`\boldsymbol{B}` is the magnetic field, :math:`\varepsilon_0` is the vacuum permittivity, :math:`\Delta V` is the cell volume (or cell area in 2D), and the sum is over all cells.
 
-            The output columns are the components of the total field momentum :math:`\boldsymbol{P}_f` at each mesh refinement level.
+        The output columns are the components of the total field momentum :math:`\boldsymbol{P}_f` at each mesh refinement level.
 
-            Note that the fields are *not* averaged on the cell centers before their energy is
-            computed.
+        Note that the fields are *not* averaged on the cell centers before their energy is
+        computed.
 
     .. fv:var:: FieldMaximum
-            This type computes the maximum value of each component of the electric and magnetic fields
-            and of the norm of the electric and magnetic field vectors.
-            Measuring maximum fields in a plasma might be very noisy in PIC, use this instead
-            for analysis of scenarios such as an electromagnetic wave propagating in vacuum.
+        This type computes the maximum value of each component of the electric and magnetic fields
+        and of the norm of the electric and magnetic field vectors.
+        Measuring maximum fields in a plasma might be very noisy in PIC, use this instead
+        for analysis of scenarios such as an electromagnetic wave propagating in vacuum.
 
-            The output columns are
-            the maximum value of the :math:`E_x` field,
-            the maximum value of the :math:`E_y` field,
-            the maximum value of the :math:`E_z` field,
-            the maximum value of the norm :math:`|E|` of the electric field,
-            the maximum value of the :math:`B_x` field,
-            the maximum value of the :math:`B_y` field,
-            the maximum value of the :math:`B_z` field and
-            the maximum value of the norm :math:`|B|` of the magnetic field,
-            at mesh refinement levels from  0 to :math:`n`.
+        The output columns are
+        the maximum value of the :math:`E_x` field,
+        the maximum value of the :math:`E_y` field,
+        the maximum value of the :math:`E_z` field,
+        the maximum value of the norm :math:`|E|` of the electric field,
+        the maximum value of the :math:`B_x` field,
+        the maximum value of the :math:`B_y` field,
+        the maximum value of the :math:`B_z` field and
+        the maximum value of the norm :math:`|B|` of the magnetic field,
+        at mesh refinement levels from  0 to :math:`n`.
 
-            Note that the fields are averaged on the cell centers before their maximum values are
-            computed.
+        Note that the fields are averaged on the cell centers before their maximum values are
+        computed.
 
     .. fv:var:: FieldPoyntingFlux
-            Integrates the normal Poynting flux over each domain boundary surface and also integrates the flux over time.
-            This provides the power and total energy loss into or out of the simulation domain.
-            The output columns are the flux for each dimension on the lower boundaries, then the higher boundaries,
-            then the integrated energy loss for each dimension on the the lower and higher boundaries.
+        Integrates the normal Poynting flux over each domain boundary surface and also integrates the flux over time.
+        This provides the power and total energy loss into or out of the simulation domain.
+        The output columns are the flux for each dimension on the lower boundaries, then the higher boundaries,
+        then the integrated energy loss for each dimension on the the lower and higher boundaries.
 
     .. fv:var:: FieldProbe
-            This type computes the value of each component of the electric and magnetic fields
-            and of the Poynting vector (a measure of electromagnetic flux) at points in the domain.
+        This type computes the value of each component of the electric and magnetic fields
+        and of the Poynting vector (a measure of electromagnetic flux) at points in the domain.
 
-            Multiple geometries for point probes can be specified via ``<reduced_diags_name>.probe_geometry = ...``:
+        Multiple geometries for point probes can be specified via ``<reduced_diags_name>.probe_geometry = ...``:
 
-            * ``Point`` (default): a single point
-            * ``Line``: a line of points with equal spacing
-            * ``Plane``: a plane of points with equal spacing
+        * ``Point`` (default): a single point
+        * ``Line``: a line of points with equal spacing
+        * ``Plane``: a plane of points with equal spacing
 
-            **Point**: The point where the fields are measured is specified through the input parameters ``<reduced_diags_name>.x_probe``, ``<reduced_diags_name>.y_probe`` and ``<reduced_diags_name>.z_probe``.
+        **Point**: The point where the fields are measured is specified through the input parameters ``<reduced_diags_name>.x_probe``, ``<reduced_diags_name>.y_probe`` and ``<reduced_diags_name>.z_probe``.
 
-            **Line**: probe a 1 dimensional line of points to create a line detector.
-            Initial input parameters ``x_probe``, ``y_probe``, and ``z_probe`` designate one end of the line detector, while the far end is specified via ``<reduced_diags_name>.x1_probe``, ``<reduced_diags_name>.y1_probe``, ``<reduced_diags_name>.z1_probe``.
-            Additionally, ``<reduced_diags_name>.resolution`` must be defined to give the number of detector points along the line (equally spaced) to probe.
+        **Line**: probe a 1 dimensional line of points to create a line detector.
+        Initial input parameters ``x_probe``, ``y_probe``, and ``z_probe`` designate one end of the line detector, while the far end is specified via ``<reduced_diags_name>.x1_probe``, ``<reduced_diags_name>.y1_probe``, ``<reduced_diags_name>.z1_probe``.
+        Additionally, ``<reduced_diags_name>.resolution`` must be defined to give the number of detector points along the line (equally spaced) to probe.
 
-            **Plane**: probe a 2 dimensional plane of points to create a square plane detector.
-            Initial input parameters ``x_probe``, ``y_probe``, and ``z_probe`` designate the center of the detector.
-            The detector plane is normal to a vector specified by ``<reduced_diags_name>.target_normal_x``, ``<reduced_diags_name>.target_normal_y``, and ``<reduced_diags_name>.target_normal_z``.
-            Note that it is not necessary to specify the ``target_normal`` vector in a 2D simulation (the only supported normal is in ``y``).
-            The top of the plane is perpendicular to an "up" vector denoted by ``<reduced_diags_name>.target_up_x``, ``<reduced_diags_name>.target_up_y``, and ``<reduced_diags_name>.target_up_z``.
-            The detector has a square radius to be determined by ``<reduced_diags_name>.detector_radius``.
-            Similarly to the line detector, the plane detector requires a resolution ``<reduced_diags_name>.resolution``, which denotes the number of detector particles along each side of the square detector.
+        **Plane**: probe a 2 dimensional plane of points to create a square plane detector.
+        Initial input parameters ``x_probe``, ``y_probe``, and ``z_probe`` designate the center of the detector.
+        The detector plane is normal to a vector specified by ``<reduced_diags_name>.target_normal_x``, ``<reduced_diags_name>.target_normal_y``, and ``<reduced_diags_name>.target_normal_z``.
+        Note that it is not necessary to specify the ``target_normal`` vector in a 2D simulation (the only supported normal is in ``y``).
+        The top of the plane is perpendicular to an "up" vector denoted by ``<reduced_diags_name>.target_up_x``, ``<reduced_diags_name>.target_up_y``, and ``<reduced_diags_name>.target_up_z``.
+        The detector has a square radius to be determined by ``<reduced_diags_name>.detector_radius``.
+        Similarly to the line detector, the plane detector requires a resolution ``<reduced_diags_name>.resolution``, which denotes the number of detector particles along each side of the square detector.
 
-            The output columns are
-            the value of the :math:`E_x` field,
-            the value of the :math:`E_y` field,
-            the value of the :math:`E_z` field,
-            the value of the :math:`B_x` field,
-            the value of the :math:`B_y` field,
-            the value of the :math:`B_z` field and
-            the value of the Poynting Vector :math:`|S|` of the electromagnetic fields,
-            at mesh refinement levels from  0 to :math:`n`, at point (:math:`x`, :math:`y`, :math:`z`).
+        The output columns are
+        the value of the :math:`E_x` field,
+        the value of the :math:`E_y` field,
+        the value of the :math:`E_z` field,
+        the value of the :math:`B_x` field,
+        the value of the :math:`B_y` field,
+        the value of the :math:`B_z` field and
+        the value of the Poynting Vector :math:`|S|` of the electromagnetic fields,
+        at mesh refinement levels from  0 to :math:`n`, at point (:math:`x`, :math:`y`, :math:`z`).
 
-            The fields are always interpolated to the measurement point.
-            The interpolation order can be set by specifying ``<reduced_diags_name>.interp_order``,
-            defaulting to ``1``.
-            In RZ geometry, this only saves the
-            0'th azimuthal mode component of the fields.
-            Time integrated electric and magnetic field components can instead be obtained by specifying
-            ``<reduced_diags_name>.integrate = true``.
-            The integration is done every time step even when the data is written out less often.
-            In a *moving window* simulation, the FieldProbe can be set to follow the moving frame by specifying ``<reduced_diags_name>.do_moving_window_FP = 1`` (default 0).
+        The fields are always interpolated to the measurement point.
+        The interpolation order can be set by specifying ``<reduced_diags_name>.interp_order``,
+        defaulting to ``1``.
+        In RZ geometry, this only saves the
+        0'th azimuthal mode component of the fields.
+        Time integrated electric and magnetic field components can instead be obtained by specifying
+        ``<reduced_diags_name>.integrate = true``.
+        The integration is done every time step even when the data is written out less often.
+        In a *moving window* simulation, the FieldProbe can be set to follow the moving frame by specifying ``<reduced_diags_name>.do_moving_window_FP = 1`` (default 0).
 
-            .. warning::
+        .. warning::
 
-               The FieldProbe reduced diagnostic does not yet add a Lorentz back transformation for boosted frame simulations.
-               Thus, it records field data in the boosted frame, not (yet) in the lab frame.
+           The FieldProbe reduced diagnostic does not yet add a Lorentz back transformation for boosted frame simulations.
+           Thus, it records field data in the boosted frame, not (yet) in the lab frame.
 
     .. fv:var:: RhoMaximum
-            This type computes the maximum and minimum values of the total charge density as well as
-            the maximum absolute value of the charge density of each charged species.
-            Please be aware that measuring maximum charge densities might be very noisy in PIC simulations.
+        This type computes the maximum and minimum values of the total charge density as well as
+        the maximum absolute value of the charge density of each charged species.
+        Please be aware that measuring maximum charge densities might be very noisy in PIC simulations.
 
-            The output columns are
-            the maximum value of the :math:`rho` field,
-            the minimum value of the :math:`rho` field,
-            the maximum value of the absolute :math:`|rho|` field of each charged species.
+        The output columns are
+        the maximum value of the :math:`rho` field,
+        the minimum value of the :math:`rho` field,
+        the maximum value of the absolute :math:`|rho|` field of each charged species.
 
-            Note that the charge densities are averaged on the cell centers before their maximum values
-            are computed.
+        Note that the charge densities are averaged on the cell centers before their maximum values
+        are computed.
 
     .. fv:var:: FieldReduction
-            This type computes an arbitrary reduction of the positions, the current density, and the electromagnetic fields.
+        This type computes an arbitrary reduction of the positions, the current density, and the electromagnetic fields.
 
-            .. fv:var:: <reduced_diags_name>.reduced_function(x,y,z,Ex,Ey,Ez,Bx,By,Bz,jx,jy,jz)
-                :type: `str`
+        .. fv:var:: <reduced_diags_name>.reduced_function(x,y,z,Ex,Ey,Ez,Bx,By,Bz,jx,jy,jz)
+            :type: `str`
 
-                    An analytic function to be reduced must be provided, using the math parser.
+            An analytic function to be reduced must be provided, using the math parser.
 
-            .. fv:var:: <reduced_diags_name>.reduction_type
-                :type: `str`
+        .. fv:var:: <reduced_diags_name>.reduction_type
+            :type: `str`
 
-                    The type of reduction to be performed. It must be either ``Maximum``, ``Minimum`` or
-                    ``Integral``.
-                    ``Integral`` computes the spatial integral of the function defined in the parser by
-                    summing its value on all grid points and multiplying the result by the volume of a
-                    cell.
-                    Please be also aware that measuring maximum quantities might be very noisy in PIC
-                    simulations.
+            The type of reduction to be performed. It must be either ``Maximum``, ``Minimum`` or
+            ``Integral``.
+            ``Integral`` computes the spatial integral of the function defined in the parser by
+            summing its value on all grid points and multiplying the result by the volume of a
+            cell.
+            Please be also aware that measuring maximum quantities might be very noisy in PIC
+            simulations.
 
-            The only output column is the reduced value.
+        The only output column is the reduced value.
 
-            Note that the fields are averaged on the cell centers before the reduction is performed.
+        Note that the fields are averaged on the cell centers before the reduction is performed.
 
     .. fv:var:: ParticleNumber
-            This type computes the total number of macroparticles and of physical particles (i.e. the
-            sum of their weights) in the whole simulation domain (for each species and summed over all
-            species). It can be useful in particular for simulations with creation (ionization, QED
-            processes) or removal (resampling) of particles.
+        This type computes the total number of macroparticles and of physical particles (i.e. the
+        sum of their weights) in the whole simulation domain (for each species and summed over all
+        species). It can be useful in particular for simulations with creation (ionization, QED
+        processes) or removal (resampling) of particles.
 
-            The output columns are
-            total number of macroparticles summed over all species,
-            total number of macroparticles of each species,
-            sum of the particles' weight summed over all species,
-            sum of the particles' weight of each species.
+        The output columns are
+        total number of macroparticles summed over all species,
+        total number of macroparticles of each species,
+        sum of the particles' weight summed over all species,
+        sum of the particles' weight of each species.
 
     .. fv:var:: BeamRelevant
-            This type computes properties of a particle beam relevant for particle accelerators, like position, momentum, emittance, etc.
+        This type computes properties of a particle beam relevant for particle accelerators, like position, momentum, emittance, etc.
 
-            ``<reduced_diags_name>.species`` must be provided, such that the diagnostics are done for this (beam-like) species only.
+        ``<reduced_diags_name>.species`` must be provided, such that the diagnostics are done for this (beam-like) species only.
 
-            The output columns (for 3D-XYZ) are the following, where the average is done over the whole species (typical usage: the particle beam is in a separate species):
+        The output columns (for 3D-XYZ) are the following, where the average is done over the whole species (typical usage: the particle beam is in a separate species):
 
-            [0]: simulation step (iteration).
+        [0]: simulation step (iteration).
 
-            [1]: time (s).
+        [1]: time (s).
 
-            [2], [3], [4]: The mean values of beam positions (m)
-            :math:`\langle x \rangle`,
-            :math:`\langle y \rangle`,
-            :math:`\langle z \rangle`.
+        [2], [3], [4]: The mean values of beam positions (m)
+        :math:`\langle x \rangle`,
+        :math:`\langle y \rangle`,
+        :math:`\langle z \rangle`.
 
-            [5], [6], [7]: The mean values of beam relativistic momenta (kg m/s)
-            :math:`\langle p_x \rangle`,
-            :math:`\langle p_y \rangle`,
-            :math:`\langle p_z \rangle`.
+        [5], [6], [7]: The mean values of beam relativistic momenta (kg m/s)
+        :math:`\langle p_x \rangle`,
+        :math:`\langle p_y \rangle`,
+        :math:`\langle p_z \rangle`.
 
-            [8]: The mean Lorentz factor :math:`\langle \gamma \rangle`.
+        [8]: The mean Lorentz factor :math:`\langle \gamma \rangle`.
 
-            [9], [10], [11]: The RMS values of beam positions (m)
-            :math:`\delta_x = \sqrt{ \langle (x - \langle x \rangle)^2 \rangle }`,
-            :math:`\delta_y = \sqrt{ \langle (y - \langle y \rangle)^2 \rangle }`,
-            :math:`\delta_z = \sqrt{ \langle (z - \langle z \rangle)^2 \rangle }`.
+        [9], [10], [11]: The RMS values of beam positions (m)
+        :math:`\delta_x = \sqrt{ \langle (x - \langle x \rangle)^2 \rangle }`,
+        :math:`\delta_y = \sqrt{ \langle (y - \langle y \rangle)^2 \rangle }`,
+        :math:`\delta_z = \sqrt{ \langle (z - \langle z \rangle)^2 \rangle }`.
 
-            [12], [13], [14]: The RMS values of beam relativistic momenta (kg m/s)
-            :math:`\delta_{px} = \sqrt{ \langle (p_x - \langle p_x \rangle)^2 \rangle }`,
-            :math:`\delta_{py} = \sqrt{ \langle (p_y - \langle p_y \rangle)^2 \rangle }`,
-            :math:`\delta_{pz} = \sqrt{ \langle (p_z - \langle p_z \rangle)^2 \rangle }`.
+        [12], [13], [14]: The RMS values of beam relativistic momenta (kg m/s)
+        :math:`\delta_{px} = \sqrt{ \langle (p_x - \langle p_x \rangle)^2 \rangle }`,
+        :math:`\delta_{py} = \sqrt{ \langle (p_y - \langle p_y \rangle)^2 \rangle }`,
+        :math:`\delta_{pz} = \sqrt{ \langle (p_z - \langle p_z \rangle)^2 \rangle }`.
 
-            [15]: The RMS value of the Lorentz factor
-            :math:`\sqrt{ \langle (\gamma - \langle \gamma \rangle)^2 \rangle }`.
+        [15]: The RMS value of the Lorentz factor
+        :math:`\sqrt{ \langle (\gamma - \langle \gamma \rangle)^2 \rangle }`.
 
-            [16], [17], [18]: beam projected transverse RMS normalized emittance (m)
-            :math:`\epsilon_x = \dfrac{1}{mc} \sqrt{\delta_x^2 \delta_{px}^2 -
-            \Big\langle (x-\langle x \rangle) (p_x-\langle p_x \rangle) \Big\rangle^2}`,
-            :math:`\epsilon_y = \dfrac{1}{mc} \sqrt{\delta_y^2 \delta_{py}^2 -
-            \Big\langle (y-\langle y \rangle) (p_y-\langle p_y \rangle) \Big\rangle^2}`,
-            :math:`\epsilon_z = \dfrac{1}{mc} \sqrt{\delta_z^2 \delta_{pz}^2 -
-            \Big\langle (z-\langle z \rangle) (p_z-\langle p_z \rangle) \Big\rangle^2}`.
+        [16], [17], [18]: beam projected transverse RMS normalized emittance (m)
+        :math:`\epsilon_x = \dfrac{1}{mc} \sqrt{\delta_x^2 \delta_{px}^2 -
+        \Big\langle (x-\langle x \rangle) (p_x-\langle p_x \rangle) \Big\rangle^2}`,
+        :math:`\epsilon_y = \dfrac{1}{mc} \sqrt{\delta_y^2 \delta_{py}^2 -
+        \Big\langle (y-\langle y \rangle) (p_y-\langle p_y \rangle) \Big\rangle^2}`,
+        :math:`\epsilon_z = \dfrac{1}{mc} \sqrt{\delta_z^2 \delta_{pz}^2 -
+        \Big\langle (z-\langle z \rangle) (p_z-\langle p_z \rangle) \Big\rangle^2}`.
 
-            [19], [20]: Twiss alpha for the transverse directions
-            :math:`\alpha_x = - \Big\langle (x-\langle x \rangle) (p_x-\langle p_x \rangle) \Big\rangle \Big/ \epsilon_x`,
-            :math:`\alpha_y = - \Big\langle (y-\langle y \rangle) (p_y-\langle p_y \rangle) \Big\rangle \Big/ \epsilon_y`.
+        [19], [20]: Twiss alpha for the transverse directions
+        :math:`\alpha_x = - \Big\langle (x-\langle x \rangle) (p_x-\langle p_x \rangle) \Big\rangle \Big/ \epsilon_x`,
+        :math:`\alpha_y = - \Big\langle (y-\langle y \rangle) (p_y-\langle p_y \rangle) \Big\rangle \Big/ \epsilon_y`.
 
-            [21], [22]: beta function for the transverse directions (m)
-            :math:`\beta_x = \dfrac{{\delta_x}^2}{\epsilon_x}`,
-            :math:`\beta_y = \dfrac{{\delta_y}^2}{\epsilon_y}`.
+        [21], [22]: beta function for the transverse directions (m)
+        :math:`\beta_x = \dfrac{{\delta_x}^2}{\epsilon_x}`,
+        :math:`\beta_y = \dfrac{{\delta_y}^2}{\epsilon_y}`.
 
-            [23]: The charge of the beam (C).
+        [23]: The charge of the beam (C).
 
-            For 2D-XZ,
-            :math:`\langle y \rangle`,
-            :math:`\delta_y`, and
-            :math:`\epsilon_y` will not be outputted.
+        For 2D-XZ,
+        :math:`\langle y \rangle`,
+        :math:`\delta_y`, and
+        :math:`\epsilon_y` will not be outputted.
 
     .. fv:var:: LoadBalanceCosts
-            This type computes the cost, used in load balancing, for each box on the domain.
-            The cost :math:`c` is computed as
+        This type computes the cost, used in load balancing, for each box on the domain.
+        The cost :math:`c` is computed as
 
-            .. math::
+        .. math::
 
-                c = n_{\text{particle}} \cdot w_{\text{particle}} + n_{\text{cell}} \cdot w_{\text{cell}},
+            c = n_{\text{particle}} \cdot w_{\text{particle}} + n_{\text{cell}} \cdot w_{\text{cell}},
 
-            where
-            :math:`n_{\text{particle}}` is the number of particles on the box,
-            :math:`w_{\text{particle}}` is the particle cost weight factor (controlled by ``algo.costs_heuristic_particles_wt``),
-            :math:`n_{\text{cell}}` is the number of cells on the box, and
-            :math:`w_{\text{cell}}` is the cell cost weight factor (controlled by ``algo.costs_heuristic_cells_wt``).
+        where
+        :math:`n_{\text{particle}}` is the number of particles on the box,
+        :math:`w_{\text{particle}}` is the particle cost weight factor (controlled by ``algo.costs_heuristic_particles_wt``),
+        :math:`n_{\text{cell}}` is the number of cells on the box, and
+        :math:`w_{\text{cell}}` is the cell cost weight factor (controlled by ``algo.costs_heuristic_cells_wt``).
 
     .. fv:var:: LoadBalanceEfficiency
-            This type computes the load balance efficiency, given the present costs
-            and distribution mapping. Load balance efficiency is computed as the
-            mean cost over all ranks, divided by the maximum cost over all ranks.
-            Until costs are recorded, load balance efficiency is output as `-1`;
-            at earliest, the load balance efficiency can be output starting at step
-            `2`, since costs are not recorded until step `1`.
+        This type computes the load balance efficiency, given the present costs
+        and distribution mapping. Load balance efficiency is computed as the
+        mean cost over all ranks, divided by the maximum cost over all ranks.
+        Until costs are recorded, load balance efficiency is output as `-1`;
+        at earliest, the load balance efficiency can be output starting at step
+        `2`, since costs are not recorded until step `1`.
 
     .. fv:var:: ParticleHistogram
-            This type computes a user defined particle histogram.
+        This type computes a user defined particle histogram.
 
-            .. fv:var:: <reduced_diags_name>.species
-                :type: `str`
+        .. fv:var:: <reduced_diags_name>.species
+            :type: `str`
 
-                    A species name must be provided,
-                    such that the diagnostics are done for this species.
+            A species name must be provided,
+            such that the diagnostics are done for this species.
 
-            .. fv:var:: <reduced_diags_name>.histogram_function(t,x,y,z,ux,uy,uz)
-                :type: `str`
+        .. fv:var:: <reduced_diags_name>.histogram_function(t,x,y,z,ux,uy,uz)
+            :type: `str`
 
-                    A histogram function must be provided.
-                    `t` represents the physical time in seconds during the simulation.
-                    `x, y, z` represent particle positions in the unit of meter.
-                    `ux, uy, uz` represent the particle momenta in the unit of
-                    :math:`\gamma v/c`, where
-                    :math:`\gamma` is the Lorentz factor,
-                    :math:`v/c` is the particle velocity normalized by the speed of light.
-                    E.g.
-                    ``x`` produces the position (density) distribution in `x`.
-                    ``ux`` produces the momentum distribution in `x`,
-                    ``sqrt(ux*ux+uy*uy+uz*uz)`` produces the speed distribution.
-                    The default value of the histogram without normalization is
-                    :math:`f = \sum\limits_{i=1}^N w_i`, where
-                    :math:`\sum\limits_{i=1}^N` is the sum over :math:`N` particles
-                    in that bin,
-                    :math:`w_i` denotes the weight of the ith particle.
+            A histogram function must be provided.
+            `t` represents the physical time in seconds during the simulation.
+            `x, y, z` represent particle positions in the unit of meter.
+            `ux, uy, uz` represent the particle momenta in the unit of
+            :math:`\gamma v/c`, where
+            :math:`\gamma` is the Lorentz factor,
+            :math:`v/c` is the particle velocity normalized by the speed of light.
+            E.g.
+            ``x`` produces the position (density) distribution in `x`.
+            ``ux`` produces the momentum distribution in `x`,
+            ``sqrt(ux*ux+uy*uy+uz*uz)`` produces the speed distribution.
+            The default value of the histogram without normalization is
+            :math:`f = \sum\limits_{i=1}^N w_i`, where
+            :math:`\sum\limits_{i=1}^N` is the sum over :math:`N` particles
+            in that bin,
+            :math:`w_i` denotes the weight of the ith particle.
 
-            .. fv:var:: <reduced_diags_name>.bin_number
-                :type: `int` > 0
+        .. fv:var:: <reduced_diags_name>.bin_number
+            :type: `int` > 0
 
-                    This is the number of bins used for the histogram.
+            This is the number of bins used for the histogram.
 
-            .. fv:var:: <reduced_diags_name>.bin_max
-                :type: `float`
+        .. fv:var:: <reduced_diags_name>.bin_max
+            :type: `float`
 
-                    This is the maximum value of the bins.
+            This is the maximum value of the bins.
 
-            .. fv:var:: <reduced_diags_name>.bin_min
-                :type: `float`
+        .. fv:var:: <reduced_diags_name>.bin_min
+            :type: `float`
 
-                    This is the minimum value of the bins.
+            This is the minimum value of the bins.
 
-            .. fv:var:: <reduced_diags_name>.normalization
-                :type: optional
+        .. fv:var:: <reduced_diags_name>.normalization
+            :type: optional
 
-                    This provides options to normalize the histogram:
+            This provides options to normalize the histogram:
 
-                    ``unity_particle_weight``
-                    uses unity particle weight to compute the histogram,
-                    such that the values of the histogram are
-                    the number of counted macroparticles in that bin,
-                    i.e.  :math:`f = \sum\limits_{i=1}^N 1`,
-                    :math:`N` is the number of particles in that bin.
+            ``unity_particle_weight``
+            uses unity particle weight to compute the histogram,
+            such that the values of the histogram are
+            the number of counted macroparticles in that bin,
+            i.e.  :math:`f = \sum\limits_{i=1}^N 1`,
+            :math:`N` is the number of particles in that bin.
 
-                    ``max_to_unity`` will normalize the histogram such that
-                    its maximum value is one.
+            ``max_to_unity`` will normalize the histogram such that
+            its maximum value is one.
 
-                    ``area_to_unity`` will normalize the histogram such that
-                    the area under the histogram is one,
-                    so the histogram is also the probability density function.
+            ``area_to_unity`` will normalize the histogram such that
+            the area under the histogram is one,
+            so the histogram is also the probability density function.
 
-                    If nothing is provided,
-                    the macroparticle weight will be used to compute
-                    the histogram, and no normalization will be done.
+            If nothing is provided,
+            the macroparticle weight will be used to compute
+            the histogram, and no normalization will be done.
 
-            .. fv:var:: <reduced_diags_name>.filter_function(t,x,y,z,ux,uy,uz)
-                :type: `str`
+        .. fv:var:: <reduced_diags_name>.filter_function(t,x,y,z,ux,uy,uz)
+            :type: `str`
 
-                    Users can provide an expression returning a boolean for whether a particle is taken
-                    into account when calculating the histogram.
-                    `t` represents the physical time in seconds during the simulation.
-                    `x, y, z` represent particle positions in the unit of meter.
-                    `ux, uy, uz` represent particle momenta in the unit of
-                    :math:`\gamma v/c`, where
-                    :math:`\gamma` is the Lorentz factor,
-                    :math:`v/c` is the particle velocity normalized by the speed of light.
-                    E.g. If provided `(x>0.0)*(uz<10.0)` only those particles located at
-                    positions `x` greater than `0`, and those having momentum `uz` less than 10,
-                    will be taken into account when calculating the histogram.
+            Users can provide an expression returning a boolean for whether a particle is taken
+            into account when calculating the histogram.
+            `t` represents the physical time in seconds during the simulation.
+            `x, y, z` represent particle positions in the unit of meter.
+            `ux, uy, uz` represent particle momenta in the unit of
+            :math:`\gamma v/c`, where
+            :math:`\gamma` is the Lorentz factor,
+            :math:`v/c` is the particle velocity normalized by the speed of light.
+            E.g. If provided `(x>0.0)*(uz<10.0)` only those particles located at
+            positions `x` greater than `0`, and those having momentum `uz` less than 10,
+            will be taken into account when calculating the histogram.
 
-            The output columns are
-            values of the 1st bin, the 2nd bin, ..., the nth bin.
-            An example input file and a loading python script of
-            using the histogram reduced diagnostics
-            are given in ``Examples/Tests/initial_distribution/``.
+        The output columns are
+        values of the 1st bin, the 2nd bin, ..., the nth bin.
+        An example input file and a loading python script of
+        using the histogram reduced diagnostics
+        are given in ``Examples/Tests/initial_distribution/``.
 
     .. fv:var:: ParticleHistogram2D
-            This type computes a user defined, 2D particle histogram.
+        This type computes a user defined, 2D particle histogram.
 
-            .. fv:var:: <reduced_diags_name>.species
-                :type: `str`
+        .. fv:var:: <reduced_diags_name>.species
+            :type: `str`
 
-                    A species name must be provided,
-                    such that the diagnostics are done for this species.
+            A species name must be provided,
+            such that the diagnostics are done for this species.
 
-            .. fv:var:: <reduced_diags_name>.file_min_digits
-                :type: `int`
-                :default: `6`
+        .. fv:var:: <reduced_diags_name>.file_min_digits
+            :type: `int`
+            :default: `6`
 
-                    The minimum number of digits used for the iteration number appended to the diagnostic file names.
+            The minimum number of digits used for the iteration number appended to the diagnostic file names.
 
-            .. fv:var:: <reduced_diags_name>.histogram_function_abs(t,x,y,z,ux,uy,uz,w)
-                :type: `str`
+        .. fv:var:: <reduced_diags_name>.histogram_function_abs(t,x,y,z,ux,uy,uz,w)
+            :type: `str`
 
-                    A histogram function must be provided for the abscissa axis.
-                    `t` represents the physical time in seconds during the simulation.
-                    `x, y, z` represent particle positions in the unit of meter.
-                    `ux, uy, uz` represent the particle velocities in the unit of
-                    :math:`\gamma v/c`, where
-                    :math:`\gamma` is the Lorentz factor,
-                    :math:`v/c` is the particle velocity normalized by the speed of light.
-                    `w` represents the weight.
+            A histogram function must be provided for the abscissa axis.
+            `t` represents the physical time in seconds during the simulation.
+            `x, y, z` represent particle positions in the unit of meter.
+            `ux, uy, uz` represent the particle velocities in the unit of
+            :math:`\gamma v/c`, where
+            :math:`\gamma` is the Lorentz factor,
+            :math:`v/c` is the particle velocity normalized by the speed of light.
+            `w` represents the weight.
 
-            .. fv:var:: <reduced_diags_name>.histogram_function_ord(t,x,y,z,ux,uy,uz,w)
-                :type: `str`
+        .. fv:var:: <reduced_diags_name>.histogram_function_ord(t,x,y,z,ux,uy,uz,w)
+            :type: `str`
 
-                    A histogram function must be provided for the ordinate axis.
+            A histogram function must be provided for the ordinate axis.
 
-            .. fv:var:: <reduced_diags_name>.bin_number_abs
-                :type: `int` > 0
+        .. fv:var:: <reduced_diags_name>.bin_number_abs
+            :type: `int` > 0
 
-                and ``<reduced_diags_name>.bin_number_ord`` (`int` > 0)
-                    These are the number of bins used for the histogram for the abscissa and ordinate axis respectively.
+            and ``<reduced_diags_name>.bin_number_ord`` (`int` > 0)
+                These are the number of bins used for the histogram for the abscissa and ordinate axis respectively.
 
-            .. fv:var:: <reduced_diags_name>.bin_max_abs
-                :type: `float`
+        .. fv:var:: <reduced_diags_name>.bin_max_abs
+            :type: `float`
 
-                and ``<reduced_diags_name>.bin_max_ord`` (`float`)
-                    These are the maximum value of the bins for the abscissa and ordinate axis respectively.
-                    Particles with values outside of these ranges are discarded.
+            and ``<reduced_diags_name>.bin_max_ord`` (`float`)
+                These are the maximum value of the bins for the abscissa and ordinate axis respectively.
+                Particles with values outside of these ranges are discarded.
 
-            .. fv:var:: <reduced_diags_name>.bin_min_abs
-                :type: `float`
+        .. fv:var:: <reduced_diags_name>.bin_min_abs
+            :type: `float`
 
-                and ``<reduced_diags_name>.bin_min_ord`` (`float`)
-                    These are the minimum value of the bins for the abscissa and ordinate axis respectively.
-                    Particles with values outside of these ranges are discarded.
+            and ``<reduced_diags_name>.bin_min_ord`` (`float`)
+                These are the minimum value of the bins for the abscissa and ordinate axis respectively.
+                Particles with values outside of these ranges are discarded.
 
-            .. fv:var:: <reduced_diags_name>.filter_function(t,x,y,z,ux,uy,uz,w)
-                :type: `str`
+        .. fv:var:: <reduced_diags_name>.filter_function(t,x,y,z,ux,uy,uz,w)
+            :type: `str`
 
-                    Users can provide an expression returning a boolean for whether a particle is taken
-                    into account when calculating the histogram.
-                    `t` represents the physical time in seconds during the simulation.
-                    `x, y, z` represent particle positions in the unit of meter.
-                    `ux, uy, uz` represent particle velocities in the unit of
-                    :math:`\gamma v/c`, where
-                    :math:`\gamma` is the Lorentz factor,
-                    :math:`v/c` is the particle velocity normalized by the speed of light.
-                    `w` represents the weight.
+            Users can provide an expression returning a boolean for whether a particle is taken
+            into account when calculating the histogram.
+            `t` represents the physical time in seconds during the simulation.
+            `x, y, z` represent particle positions in the unit of meter.
+            `ux, uy, uz` represent particle velocities in the unit of
+            :math:`\gamma v/c`, where
+            :math:`\gamma` is the Lorentz factor,
+            :math:`v/c` is the particle velocity normalized by the speed of light.
+            `w` represents the weight.
 
-            .. fv:var:: <reduced_diags_name>.value_function(t,x,y,z,ux,uy,uz,w)
-                :type: `str`
+        .. fv:var:: <reduced_diags_name>.value_function(t,x,y,z,ux,uy,uz,w)
+            :type: `str`
 
-                    Users can provide an expression for the weight used to calculate the number of particles
-                    per cell associated with the selected abscissa and ordinate functions and/or the filter function.
-                    `t` represents the physical time in seconds during the simulation.
-                    `x, y, z` represent particle positions in the unit of meter.
-                    `ux, uy, uz` represent particle velocities in the unit of
-                    :math:`\gamma v/c`, where
-                    :math:`\gamma` is the Lorentz factor,
-                    :math:`v/c` is the particle velocity normalized by the speed of light.
-                    `w` represents the weight.
+            Users can provide an expression for the weight used to calculate the number of particles
+            per cell associated with the selected abscissa and ordinate functions and/or the filter function.
+            `t` represents the physical time in seconds during the simulation.
+            `x, y, z` represent particle positions in the unit of meter.
+            `ux, uy, uz` represent particle velocities in the unit of
+            :math:`\gamma v/c`, where
+            :math:`\gamma` is the Lorentz factor,
+            :math:`v/c` is the particle velocity normalized by the speed of light.
+            `w` represents the weight.
 
-            The output is a ``<reduced_diags_name>`` folder containing a set of openPMD files.
-            An example input file and a loading python script of
-            using the histogram2D reduced diagnostics
-            are given in ``Examples/Tests/histogram2D/``.
+        The output is a ``<reduced_diags_name>`` folder containing a set of openPMD files.
+        An example input file and a loading python script of
+        using the histogram2D reduced diagnostics
+        are given in ``Examples/Tests/histogram2D/``.
 
     .. fv:var:: ParticleExtrema
-            This type computes the minimum and maximum values of
-            particle position, momentum, gamma, weight,
-            and the :math:`\chi` parameter for QED species.
+        This type computes the minimum and maximum values of
+        particle position, momentum, gamma, weight,
+        and the :math:`\chi` parameter for QED species.
 
-            ``<reduced_diags_name>.species`` must be provided,
-            such that the diagnostics are done for this species only.
+        ``<reduced_diags_name>.species`` must be provided,
+        such that the diagnostics are done for this species only.
 
-            The output columns are
-            minimum and maximum position :math:`x`, :math:`y`, :math:`z`;
-            minimum and maximum momentum :math:`p_x`, :math:`p_y`, :math:`p_z`;
-            minimum and maximum gamma :math:`\gamma`;
-            minimum and maximum weight :math:`w`;
-            minimum and maximum :math:`\chi`.
+        The output columns are
+        minimum and maximum position :math:`x`, :math:`y`, :math:`z`;
+        minimum and maximum momentum :math:`p_x`, :math:`p_y`, :math:`p_z`;
+        minimum and maximum gamma :math:`\gamma`;
+        minimum and maximum weight :math:`w`;
+        minimum and maximum :math:`\chi`.
 
-            Note that when the QED parameter :math:`\chi` is computed,
-            field gather is carried out at every output,
-            so the time of the diagnostic may be long
-            depending on the simulation size.
+        Note that when the QED parameter :math:`\chi` is computed,
+        field gather is carried out at every output,
+        so the time of the diagnostic may be long
+        depending on the simulation size.
 
     .. fv:var:: ChargeOnEB
-            This type computes the total surface charge on the embedded boundary
-            (in Coulombs), by using the formula
+        This type computes the total surface charge on the embedded boundary
+        (in Coulombs), by using the formula
 
-            .. math::
+        .. math::
 
-                Q_{tot} = \epsilon_0 \iint dS \cdot E
+            Q_{tot} = \epsilon_0 \iint dS \cdot E
 
-            where the integral is performed over the surface of the embedded boundary.
+        where the integral is performed over the surface of the embedded boundary.
 
-            When providing ``<reduced_diags_name>.weighting_function(x,y,z)``, the
-            computed integral is weighted:
+        When providing ``<reduced_diags_name>.weighting_function(x,y,z)``, the
+        computed integral is weighted:
 
-            .. math::
+        .. math::
 
-                Q = \epsilon_0 \iint dS \cdot E \times weighting(x, y, z)
+            Q = \epsilon_0 \iint dS \cdot E \times weighting(x, y, z)
 
-            In particular, by choosing a weighting function which returns either
-            1 or 0, it is possible to compute the charge on only some part of the
-            embedded boundary.
+        In particular, by choosing a weighting function which returns either
+        1 or 0, it is possible to compute the charge on only some part of the
+        embedded boundary.
 
     .. fv:var:: ColliderRelevant
-            This diagnostics computes properties of two colliding beams that are relevant for particle colliders.
-            Two species must be specified. Photon species are not supported yet.
-            It is assumed that the two species propagate and collide along the ``z`` direction.
-            The output columns (for 3D-XYZ) are the following, where the minimum, average and maximum
-            are done over the whole species:
+        This diagnostics computes properties of two colliding beams that are relevant for particle colliders.
+        Two species must be specified. Photon species are not supported yet.
+        It is assumed that the two species propagate and collide along the ``z`` direction.
+        The output columns (for 3D-XYZ) are the following, where the minimum, average and maximum
+        are done over the whole species:
 
-            [0]: simulation step (iteration).
+        [0]: simulation step (iteration).
 
-            [1]: time (s).
+        [1]: time (s).
 
-            [2]: time derivative of the luminosity (:math:`m^{-2}s^{-1}`) defined as:
+        [2]: time derivative of the luminosity (:math:`m^{-2}s^{-1}`) defined as:
 
-            .. math::
+        .. math::
 
-                \frac{dL}{dt} = 2 c \iiint  n_1(x,y,z) n_2(x,y,z) dx dy dz
+            \frac{dL}{dt} = 2 c \iiint  n_1(x,y,z) n_2(x,y,z) dx dy dz
 
-            where :math:`n_1`, :math:`n_2` are the number densities of the two colliding species.
+        where :math:`n_1`, :math:`n_2` are the number densities of the two colliding species.
 
-            [3], [4], [5]: If, QED is enabled, the minimum, average and maximum values of the quantum parameter :math:`\chi` of species 1:
-            :math:`\chi_{min}`,
-            :math:`\langle \chi \rangle`,
-            :math:`\chi_{max}`.
-            If QED is not enabled, these numbers are not computed.
+        [3], [4], [5]: If, QED is enabled, the minimum, average and maximum values of the quantum parameter :math:`\chi` of species 1:
+        :math:`\chi_{min}`,
+        :math:`\langle \chi \rangle`,
+        :math:`\chi_{max}`.
+        If QED is not enabled, these numbers are not computed.
 
-            [6], [7]: The average and standard deviation of the values of the transverse coordinate :math:`x` (m) of species 1:
-            :math:`\langle x \rangle`,
-            :math:`\sqrt{\langle x- \langle x \rangle \rangle^2}`.
+        [6], [7]: The average and standard deviation of the values of the transverse coordinate :math:`x` (m) of species 1:
+        :math:`\langle x \rangle`,
+        :math:`\sqrt{\langle x- \langle x \rangle \rangle^2}`.
 
-            [8], [9]: The average and standard deviation of the values of the transverse coordinate :math:`y` (m) of species 1:
-            :math:`\langle y \rangle`,
-            :math:`\sqrt{\langle y- \langle y \rangle \rangle^2}`.
+        [8], [9]: The average and standard deviation of the values of the transverse coordinate :math:`y` (m) of species 1:
+        :math:`\langle y \rangle`,
+        :math:`\sqrt{\langle y- \langle y \rangle \rangle^2}`.
 
-            [10], [11], [12], [13]: The minimum, average, maximum and standard deviation of the angle :math:`\theta_x = \angle (u_x, u_z)` (rad) of species 1:
-            :math:`{\theta_x}_{min}`,
-            :math:`\langle \theta_x \rangle`,
-            :math:`{\theta_x}_{max}`,
-            :math:`\sqrt{\langle \theta_x- \langle \theta_x \rangle \rangle^2}`.
+        [10], [11], [12], [13]: The minimum, average, maximum and standard deviation of the angle :math:`\theta_x = \angle (u_x, u_z)` (rad) of species 1:
+        :math:`{\theta_x}_{min}`,
+        :math:`\langle \theta_x \rangle`,
+        :math:`{\theta_x}_{max}`,
+        :math:`\sqrt{\langle \theta_x- \langle \theta_x \rangle \rangle^2}`.
 
-            [14], [15], [16], [17]:  The minimum, average, maximum and standard deviation of the angle :math:`\theta_y = \angle (u_y, u_z)` (rad) of species 1:
-            :math:`{\theta_y}_{min}`,
-            :math:`\langle \theta_y \rangle`,
-            :math:`{\theta_y}_{max}`,
-            :math:`\sqrt{\langle \theta_y- \langle \theta_y \rangle \rangle^2}`.
+        [14], [15], [16], [17]:  The minimum, average, maximum and standard deviation of the angle :math:`\theta_y = \angle (u_y, u_z)` (rad) of species 1:
+        :math:`{\theta_y}_{min}`,
+        :math:`\langle \theta_y \rangle`,
+        :math:`{\theta_y}_{max}`,
+        :math:`\sqrt{\langle \theta_y- \langle \theta_y \rangle \rangle^2}`.
 
-            [18], ..., [32]: Analogous quantities for species 2.
+        [18], ..., [32]: Analogous quantities for species 2.
 
-            For 2D-XZ, :math:`y`-related quantities are not outputted.
-            For 1D-Z, :math:`x`-related and :math:`y`-related quantities are not outputted.
-            RZ, RCYLINDER, RSPHERE geometries are not supported yet.
+        For 2D-XZ, :math:`y`-related quantities are not outputted.
+        For 1D-Z, :math:`x`-related and :math:`y`-related quantities are not outputted.
+        RZ, RCYLINDER, RSPHERE geometries are not supported yet.
 
     .. fv:var:: DifferentialLuminosity
-            This type computes the differential luminosity between two species, defined as:
+        This type computes the differential luminosity between two species, defined as:
 
-            .. math::
+        .. math::
 
-                \frac{d\mathcal{L}}{d\mathcal{E}^*}(\mathcal{E}^*, t) = \int_0^t dt'\int d\boldsymbol{x}\,d\boldsymbol{p}_1 d\boldsymbol{p}_2\;
-                 \sqrt{ |\boldsymbol{v}_1 - \boldsymbol{v}_2|^2 - |\boldsymbol{v}_1\times\boldsymbol{v}_2|^2/c^2} \\ f_1(\boldsymbol{x}, \boldsymbol{p}_1, t')f_2(\boldsymbol{x}, \boldsymbol{p}_2, t') \delta(\mathcal{E}^* - \mathcal{E}^*(\boldsymbol{p}_1, \boldsymbol{p}_2))
+            \frac{d\mathcal{L}}{d\mathcal{E}^*}(\mathcal{E}^*, t) = \int_0^t dt'\int d\boldsymbol{x}\,d\boldsymbol{p}_1 d\boldsymbol{p}_2\;
+             \sqrt{ |\boldsymbol{v}_1 - \boldsymbol{v}_2|^2 - |\boldsymbol{v}_1\times\boldsymbol{v}_2|^2/c^2} \\ f_1(\boldsymbol{x}, \boldsymbol{p}_1, t')f_2(\boldsymbol{x}, \boldsymbol{p}_2, t') \delta(\mathcal{E}^* - \mathcal{E}^*(\boldsymbol{p}_1, \boldsymbol{p}_2))
 
-            where :math:`f_i` is the distribution function of species :math:`i` and
-            :math:`\mathcal{E}^*(\boldsymbol{p}_1, \boldsymbol{p}_2) = \sqrt{m_1^2c^4 + m_2^2c^4 + 2 c^2{p_1}^\mu {p_2}_\mu}`
-            is the energy in the center-of-mass frame, where :math:`p^\mu = (\sqrt{m^2 c^2 + \boldsymbol{p}^2}, \boldsymbol{p})`
-            represents the 4-momentum. Note that, if :math:`\sigma^*(\mathcal{E}^*)`
-            is the center-of-mass cross-section of a given collision process, then
-            :math:`\int d\mathcal{E}^* \frac{d\mathcal{L}}{d\mathcal{E}^*} (\mathcal{E}^*, t)\sigma^*(\mathcal{E}^*)`
-            gives the total number of collisions of that process (from the beginning of the simulation up until time :math:`t`).
+        where :math:`f_i` is the distribution function of species :math:`i` and
+        :math:`\mathcal{E}^*(\boldsymbol{p}_1, \boldsymbol{p}_2) = \sqrt{m_1^2c^4 + m_2^2c^4 + 2 c^2{p_1}^\mu {p_2}_\mu}`
+        is the energy in the center-of-mass frame, where :math:`p^\mu = (\sqrt{m^2 c^2 + \boldsymbol{p}^2}, \boldsymbol{p})`
+        represents the 4-momentum. Note that, if :math:`\sigma^*(\mathcal{E}^*)`
+        is the center-of-mass cross-section of a given collision process, then
+        :math:`\int d\mathcal{E}^* \frac{d\mathcal{L}}{d\mathcal{E}^*} (\mathcal{E}^*, t)\sigma^*(\mathcal{E}^*)`
+        gives the total number of collisions of that process (from the beginning of the simulation up until time :math:`t`).
 
-            The differential luminosity is given in units of :math:`\text{m}^{-2}.\text{eV}^{-1}`. For collider-relevant WarpX simulations
-            involving two crossing, high-energy beams of particles, the differential luminosity in :math:`\text{s}^{-1}.\text{m}^{-2}.\text{eV}^{-1}`
-            can be obtained by multiplying the above differential luminosity by the expected repetition rate of the beams.
+        The differential luminosity is given in units of :math:`\text{m}^{-2}.\text{eV}^{-1}`. For collider-relevant WarpX simulations
+        involving two crossing, high-energy beams of particles, the differential luminosity in :math:`\text{s}^{-1}.\text{m}^{-2}.\text{eV}^{-1}`
+        can be obtained by multiplying the above differential luminosity by the expected repetition rate of the beams.
 
-            In practice, the above expression of the differential luminosity is evaluated over discrete bins in energy :math:`\mathcal{E}^*`,
-            and by summing over macroparticles.
+        In practice, the above expression of the differential luminosity is evaluated over discrete bins in energy :math:`\mathcal{E}^*`,
+        and by summing over macroparticles.
 
-            .. fv:var:: <reduced_diags_name>.species
-                :type: `list of two strings`
+        .. fv:var:: <reduced_diags_name>.species
+            :type: `list of two strings`
 
-                    The names of the two species for which the differential luminosity is computed.
+            The names of the two species for which the differential luminosity is computed.
 
-            .. fv:var:: <reduced_diags_name>.bin_number
-                :type: `int` > 0
+        .. fv:var:: <reduced_diags_name>.bin_number
+            :type: `int` > 0
 
-                    The number of bins in energy :math:`\mathcal{E}^*`
+            The number of bins in energy :math:`\mathcal{E}^*`
 
-            .. fv:var:: <reduced_diags_name>.bin_max
-                :type: `float`, in eV
+        .. fv:var:: <reduced_diags_name>.bin_max
+            :type: `float`, in eV
 
-                    The minimum value of :math:`\mathcal{E}^*` for which the differential luminosity is computed.
+            The minimum value of :math:`\mathcal{E}^*` for which the differential luminosity is computed.
 
-            .. fv:var:: <reduced_diags_name>.bin_min
-                :type: `float`, in eV
+        .. fv:var:: <reduced_diags_name>.bin_min
+            :type: `float`, in eV
 
-                    The maximum value of :math:`\mathcal{E}^*` for which the differential luminosity is computed.
+            The maximum value of :math:`\mathcal{E}^*` for which the differential luminosity is computed.
 
     .. fv:var:: DifferentialLuminosity2D
-            This type computes the two-dimensional differential luminosity between two species, defined as:
+        This type computes the two-dimensional differential luminosity between two species, defined as:
 
-            .. math::
+        .. math::
 
-                \frac{d^2\mathcal{L}}{dE_1 dE_2}(E_1, E_2, t) = \int_0^t dt'\int d\boldsymbol{x}\, \int d\boldsymbol{p}_1 \int d\boldsymbol{p}_2\;
-                 \sqrt{ |\boldsymbol{v}_1 - \boldsymbol{v}_2|^2 - |\boldsymbol{v}_1\times\boldsymbol{v}_2|^2/c^2} \\
-                 f_1(\boldsymbol{x}, \boldsymbol{p}_1, t')f_2(\boldsymbol{x}, \boldsymbol{p}_2, t') \delta(E_1 - E_1(\boldsymbol{p}_1)) \delta(E_2 - E_2(\boldsymbol{p}_2))
+            \frac{d^2\mathcal{L}}{dE_1 dE_2}(E_1, E_2, t) = \int_0^t dt'\int d\boldsymbol{x}\, \int d\boldsymbol{p}_1 \int d\boldsymbol{p}_2\;
+             \sqrt{ |\boldsymbol{v}_1 - \boldsymbol{v}_2|^2 - |\boldsymbol{v}_1\times\boldsymbol{v}_2|^2/c^2} \\
+             f_1(\boldsymbol{x}, \boldsymbol{p}_1, t')f_2(\boldsymbol{x}, \boldsymbol{p}_2, t') \delta(E_1 - E_1(\boldsymbol{p}_1)) \delta(E_2 - E_2(\boldsymbol{p}_2))
 
-            where :math:`f_i` is the distribution function of species :math:`i`
-            (normalized such that :math:`\int \int f(\boldsymbol{x} \boldsymbol{p}, t )d\boldsymbol{x} d\boldsymbol{p} = N`
-            is the number of particles in species :math:`i` at time :math:`t`),
-            :math:`\boldsymbol{p}_i` and :math:`E_i (\boldsymbol{p}_i) = \sqrt{m_1^2c^4 + c^2 |\boldsymbol{p}_i|^2}`
-            are, respectively, the momentum and the energy of a particle of the :math:`i`-th species.
-            The 2D differential luminosity is given in units of :math:`\text{m}^{-2}.\text{eV}^{-2}`.
+        where :math:`f_i` is the distribution function of species :math:`i`
+        (normalized such that :math:`\int \int f(\boldsymbol{x} \boldsymbol{p}, t )d\boldsymbol{x} d\boldsymbol{p} = N`
+        is the number of particles in species :math:`i` at time :math:`t`),
+        :math:`\boldsymbol{p}_i` and :math:`E_i (\boldsymbol{p}_i) = \sqrt{m_1^2c^4 + c^2 |\boldsymbol{p}_i|^2}`
+        are, respectively, the momentum and the energy of a particle of the :math:`i`-th species.
+        The 2D differential luminosity is given in units of :math:`\text{m}^{-2}.\text{eV}^{-2}`.
 
-            .. fv:var:: <reduced_diags_name>.species
-                :type: `list of two strings`
+        .. fv:var:: <reduced_diags_name>.species
+            :type: `list of two strings`
 
-                    The names of the two species for which the differential luminosity is computed.
+            The names of the two species for which the differential luminosity is computed.
 
-            .. fv:var:: <reduced_diags_name>.bin_number_1
-                :type: `int` > 0
+        .. fv:var:: <reduced_diags_name>.bin_number_1
+            :type: `int` > 0
 
-                    The number of bins in energy :math:`E_1`
+            The number of bins in energy :math:`E_1`
 
-            .. fv:var:: <reduced_diags_name>.bin_max_1
-                :type: `float`, in eV
+        .. fv:var:: <reduced_diags_name>.bin_max_1
+            :type: `float`, in eV
 
-                    The minimum value of :math:`E_1` for which the 2D differential luminosity is computed.
+            The minimum value of :math:`E_1` for which the 2D differential luminosity is computed.
 
-            .. fv:var:: <reduced_diags_name>.bin_min_1
-                :type: `float`, in eV
+        .. fv:var:: <reduced_diags_name>.bin_min_1
+            :type: `float`, in eV
 
-                    The maximum value of :math:`E_2` for which the 2D differential luminosity is compute
+            The maximum value of :math:`E_2` for which the 2D differential luminosity is compute
 
-            .. fv:var:: <reduced_diags_name>.bin_number_2
-                :type: `int` > 0
+        .. fv:var:: <reduced_diags_name>.bin_number_2
+            :type: `int` > 0
 
-                    The number of bins in energy :math:`E_2`
+            The number of bins in energy :math:`E_2`
 
-            .. fv:var:: <reduced_diags_name>.bin_max_2
-                :type: `float`, in eV
+        .. fv:var:: <reduced_diags_name>.bin_max_2
+            :type: `float`, in eV
 
-                    The minimum value of :math:`E_2` for which the 2D differential luminosity is computed.
+            The minimum value of :math:`E_2` for which the 2D differential luminosity is computed.
 
-            .. fv:var:: <reduced_diags_name>.bin_min_2
-                :type: `float`, in eV
+        .. fv:var:: <reduced_diags_name>.bin_min_2
+            :type: `float`, in eV
 
-                    The minimum value of :math:`E_2` for which the 2D differential luminosity is computed.
+            The minimum value of :math:`E_2` for which the 2D differential luminosity is computed.
 
-            .. fv:var:: <reduced_diags_name>.file_min_digits
-                :type: `int`
-                :default: `6`
+        .. fv:var:: <reduced_diags_name>.file_min_digits
+            :type: `int`
+            :default: `6`
 
-                    The minimum number of digits used for the iteration number appended to the diagnostic file names.
+            The minimum number of digits used for the iteration number appended to the diagnostic file names.
 
-            The output is a ``<reduced_diags_name>`` folder containing a set of openPMD files.
-            The values of the diagnostic are stored in a record labeled `d2L_dE1_dE2`.
-            An example input file and a loading python script of
-            using the DifferentialLuminosity2D reduced diagnostics
-            are given in ``Examples/Tests/diff_lumi_diag/``.
+        The output is a ``<reduced_diags_name>`` folder containing a set of openPMD files.
+        The values of the diagnostic are stored in a record labeled `d2L_dE1_dE2`.
+        An example input file and a loading python script of
+        using the DifferentialLuminosity2D reduced diagnostics
+        are given in ``Examples/Tests/diff_lumi_diag/``.
 
     .. fv:var:: Timestep
-            This type outputs the simulation's physical timestep (in seconds) at each mesh refinement level.
+        This type outputs the simulation's physical timestep (in seconds) at each mesh refinement level.
 
 .. fv:var:: reduced_diags.intervals
     :type: `str`
@@ -5521,10 +5521,10 @@ Schwinger process
     :type: `float`
     :default: 1.3050122.e-52
 
-     Overwrites the actual quantum parameter used in Maxwell's QED equations. Assigning a
-     value here will make the simulation unphysical, but will allow QED effects to become more apparent.
-     Note that this option will only have an effect if the ``warpx.use_Hybrid_QED`` flag is also triggered.
-     This feature does not require to compile with ``-DWarpX_QED=ON``.
+    Overwrites the actual quantum parameter used in Maxwell's QED equations. Assigning a
+    value here will make the simulation unphysical, but will allow QED effects to become more apparent.
+    Note that this option will only have an effect if the ``warpx.use_Hybrid_QED`` flag is also triggered.
+    This feature does not require to compile with ``-DWarpX_QED=ON``.
 
 Checkpoints and restart
 -----------------------
