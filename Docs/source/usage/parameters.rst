@@ -2220,8 +2220,8 @@ Particle initialization
       .. fv:var:: <virtual_photon_species>.qed_virtual_photons_multiplier
           :type: `int`
 
-          , sampling factor for the virtual photons.
-            A sampling factor of ``f`` means that the number of virtual photons is multiplied by ``f``, while their weights are divided by ``f``.
+          sampling factor for the virtual photons.
+          A sampling factor of ``f`` means that the number of virtual photons is multiplied by ``f``, while their weights are divided by ``f``.
 
     The virtual photons can undergo collisions via the linear Breit-Wheeler or linear Compton processes.
     This is useful to model incoherent beam-beam effects in colliders (e.g. pair generation, radiative Bhabha scattering).
@@ -4160,7 +4160,7 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
 .. fv:var:: <diag_name>.openpmd_backend
     :type: ``bp5``, ``bp4``, ``h5`` or ``json``
 
-    , only used if ``<diag_name>.format = openpmd``
+    only used if ``<diag_name>.format = openpmd``
     `I/O backend <https://openpmd-api.readthedocs.io/en/latest/backends/overview.html>`_ for `openPMD <https://www.openPMD.org>`_ data dumps.
     ``bp5``/``bp4`` is the `ADIOS I/O library <https://csmd.ornl.gov/adios>`_, ``h5`` is the `HDF5 format <https://www.hdfgroup.org/solutions/hdf5/>`_, and ``json`` is a `simple text format <https://en.wikipedia.org/wiki/JSON>`_.
     ``json`` is for debugging and only works with serial/single-rank jobs.
@@ -4177,13 +4177,13 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
 
 .. fv:var:: <diag_name>.buffer_flush_limit_btd
     :type: `int`
-    :default: s to 5
+    :default: 5
 
-    , only read if ``<diag_name>.diag_type = BackTransformed``
+    only read if ``<diag_name>.diag_type = BackTransformed``
     This parameter is intended for ADIOS backend to group every N buffers (N is the value of this parameter) and then flush to disk.
 
 .. fv:var:: <diag_name>.adios2_operator.type
-    :type: ``zfp``, ``blosc``
+    :type: (``zfp``, ``blosc``) optional
 
     ,
     `ADIOS2 I/O operator type <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ for `openPMD <https://www.openPMD.org>`_ data dumps.
@@ -4220,12 +4220,11 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
 .. fv:var:: <diag_name>.adios2_engine.type
     :type: ``bp5``, ``bp4``, ``sst``, ``ssc``, ``dataman``
 
-    ,
     `ADIOS2 Engine type <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ for `openPMD <https://www.openPMD.org>`_ data dumps.
     See full list of engines at `ADIOS2 readthedocs <https://adios2.readthedocs.io/en/latest/engines/engines.html>`__
 
 .. fv:var:: <diag_name>.adios2_engine.parameters.*
-    ,
+
     `ADIOS2 Engine parameters <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ for `openPMD <https://www.openPMD.org>`_ data dumps.
 
     An example for parameters for the BP engine are setting the number of writers (``NumAggregators``), transparently redirecting data to burst buffers etc.
