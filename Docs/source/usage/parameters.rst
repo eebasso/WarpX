@@ -748,15 +748,7 @@ Setting up the field mesh
     When using the RZ version, this is the number of azimuthal modes.
     The default is ``1``, which corresponds to a perfectly axisymmetric simulation.
 
-.. fv:var:: geometry.prob_lo
-    :type: `2 floats in 2D`, `3 floats in 3D`; in meters
-
-    The extent of the full simulation box. This box is rectangular, and thus its
-    extent is given here by the coordinates of the lower corner (``geometry.prob_lo``) and
-    upper corner (``geometry.prob_hi``). The first axis of the coordinates is x
-    (or r with cylindrical) and the last is z.
-
-.. fv:var:: geometry.prob_hi
+.. fv:var:: geometry.prob_lo/hi
     :type: `2 floats in 2D`, `3 floats in 3D`; in meters
 
     The extent of the full simulation box. This box is rectangular, and thus its
@@ -793,14 +785,7 @@ Setting up the field mesh
 
     The timestep at which the moving window ends.
 
-.. fv:var:: warpx.fine_tag_lo
-    :type: `2 floats in 2D`, `3 floats in 3D`; in meters
-
-    **When using static mesh refinement with 1 level**, the extent of the refined patch.
-    This patch is rectangular, and thus its extent is given here by the coordinates
-    of the lower corner (``warpx.fine_tag_lo``) and upper corner (``warpx.fine_tag_hi``).
-
-.. fv:var:: warpx.fine_tag_hi
+.. fv:var:: warpx.fine_tag_lo/hi
     :type: `2 floats in 2D`, `3 floats in 3D`; in meters
 
     **When using static mesh refinement with 1 level**, the extent of the refined patch.
@@ -873,7 +858,7 @@ Setting up the field mesh
 Domain Boundary Conditions
 --------------------------
 
-.. fv:var:: boundary.field_lo
+.. fv:var:: boundary.field_lo/hi
     :type: `2 strings` for 2D, `3 strings` for 3D
     :default: `pml`
 
@@ -992,127 +977,8 @@ Domain Boundary Conditions
 
     * ``open``: For the electrostatic Poisson solver based on a Integrated Green Function method.
 
-.. fv:var:: boundary.field_hi
-    :type: `2 strings` for 2D, `3 strings` for 3D
-    :default: `pml`
-
-    Boundary conditions applied to fields at the lower and upper domain boundaries.
-    Options are:
-
-    * ``Periodic``: This option can be used to set periodic domain boundaries. Note that if the fields for lo in a certain dimension are set to periodic, then the corresponding upper boundary must also be set to periodic. If particle boundaries are not specified in the input file, then particles boundaries by default will be set to periodic. If particles boundaries are specified, then they must be set to periodic corresponding to the periodic field boundaries.
-
-    * ``pml`` (default): This option can be used to add Perfectly Matched Layers (PML) around the simulation domain. See the :ref:`PML theory section <theory-bc-PML>` for more details.
-      Additional pml algorithms can be explored using the parameters ``warpx.do_pml_in_domain``, ``warpx.pml_has_particles``, and ``warpx.do_pml_j_damping``.
-
-    * ``absorbing_silver_mueller``: This option can be used to set the Silver-Mueller absorbing boundary conditions. These boundary conditions are simpler and less computationally expensive than the pml, but are also less effective at absorbing the field. They only work with the Yee Maxwell solver.
-
-    * ``damped``: This is the recommended option in the moving direction when using the spectral solver with moving window (currently only supported along z). This boundary condition applies a damping factor to the electric and magnetic fields in the outer half of the guard cells, using a sine squared profile. As the spectral solver is by nature periodic, the damping prevents fields from wrapping around to the other end of the domain when the periodicity is not desired. This boundary condition is only valid when using the spectral solver.
-
-    * ``pec``: This option can be used to set a Perfect Electric Conductor at the simulation boundary. Please see the :ref:`PEC theory section <theory-bc-pec>` for more details. Note that PEC boundary is invalid at `r=0` for RZ, RCYLINDER, and RSPHERE. Please use ``none`` option. This boundary condition does not work with the spectral solver.
-      There is the additional input parameter ``particles.crop_on_PEC_boundary`` which sets whether particle trajectories are cropped when particles cross PEC boundaries, defaulting to false.
-
-    * ``pmc``: This option can be used to set a Perfect Magnetic Conductor at the simulation boundary. Please see the :ref:`PEC theory section <theory-bc-pmc>` for more details. This is equivalent to ``Neumann``. This boundary condition does not work with the spectral solver.
-
-    * ``pec_insulator``: This option specifies a mixed perfect electric conductor and insulator boundary, where some part of the
-      boundary is PEC and some is insulator. In the insulator portion, the normal fields are extrapolated and the tangential fields
-      are either set to the specified value or extrapolated. The region that is insulator is specified using a spatially dependent expression with the insulator being in the area where the value of the expression is greater than zero.
-      The expressions are given for the low and high boundary on each axis, as listed below. The tangential fields are specified as
-      expressions that can depend on the location and time. The tangential fields are in two pairs, the electric fields and the
-      magnetic fields. In each pair, if one is specified, the other will be set to zero if not also specified.
-      There is the additional input parameter ``particles.crop_on_PEC_boundary`` which sets whether particle trajectories are cropped when particles cross pec_insulator boundaries, defaulting to false.
-
-      * ``insulator.area_x_lo(y,z)``: For the lower x (or r) boundary, expression specifying the insulator location
-
-      * ``insulator.area_x_hi(y,z)``: For the upper x (or r) boundary, expression specifying the insulator location
-
-      * ``insulator.area_y_lo(x,z)``: For the lower y boundary, expression specifying the insulator location
-
-      * ``insulator.area_y_hi(x,z)``: For the upper y boundary, expression specifying the insulator location
-
-      * ``insulator.area_z_lo(x,y)``: For the lower z boundary, expression specifying the insulator location
-
-      * ``insulator.area_z_hi(x,y)``: For the upper z boundary, expression specifying the insulator location
-
-      .. fv:var:: insulator.Ey_x_lo(y,z,t)
-          : expressions of the tangential field values for the lower x (or r) boundary
-
-      .. fv:var:: insulator.Ez_x_lo(y,z,t)
-          : expressions of the tangential field values for the lower x (or r) boundary
-
-      .. fv:var:: insulator.By_x_lo(y,z,t)
-          : expressions of the tangential field values for the lower x (or r) boundary
-
-      .. fv:var:: insulator.Bz_x_lo(y,z,t)
-          : expressions of the tangential field values for the lower x (or r) boundary
-
-      .. fv:var:: insulator.Ey_x_hi(y,z,t)
-          : expressions of the tangential field values for the upper x (or r) boundary
-
-      .. fv:var:: insulator.Ez_x_hi(y,z,t)
-          : expressions of the tangential field values for the upper x (or r) boundary
-
-      .. fv:var:: insulator.By_x_hi(y,z,t)
-          : expressions of the tangential field values for the upper x (or r) boundary
-
-      .. fv:var:: insulator.Bz_x_hi(y,z,t)
-          : expressions of the tangential field values for the upper x (or r) boundary
-
-      .. fv:var:: insulator.Ex_y_lo(x,z,t)
-          : expressions of the tangential field values for the lower y boundary
-
-      .. fv:var:: insulator.Ez_y_lo(x,z,t)
-          : expressions of the tangential field values for the lower y boundary
-
-      .. fv:var:: insulator.Bx_y_lo(x,z,t)
-          : expressions of the tangential field values for the lower y boundary
-
-      .. fv:var:: insulator.Bz_y_lo(x,z,t)
-          : expressions of the tangential field values for the lower y boundary
-
-      .. fv:var:: insulator.Ex_y_hi(x,z,t)
-          : expressions of the tangential field values for the upper y boundary
-
-      .. fv:var:: insulator.Ez_y_hi(x,z,t)
-          : expressions of the tangential field values for the upper y boundary
-
-      .. fv:var:: insulator.Bx_y_hi(x,z,t)
-          : expressions of the tangential field values for the upper y boundary
-
-      .. fv:var:: insulator.Bz_y_hi(x,z,t)
-          : expressions of the tangential field values for the upper y boundary
-
-      .. fv:var:: insulator.Ex_z_lo(x,y,t)
-          : expressions of the tangential field values for the lower z boundary
-
-      .. fv:var:: insulator.Ey_z_lo(x,y,t)
-          : expressions of the tangential field values for the lower z boundary
-
-      .. fv:var:: insulator.Bx_z_lo(x,y,t)
-          : expressions of the tangential field values for the lower z boundary
-
-      .. fv:var:: insulator.By_z_lo(x,y,t)
-          : expressions of the tangential field values for the lower z boundary
-
-      .. fv:var:: insulator.Ex_z_hi(x,y,t)
-          : expressions of the tangential field values for the upper z boundary
-
-      .. fv:var:: insulator.Ey_z_hi(x,y,t)
-          : expressions of the tangential field values for the upper z boundary
-
-      .. fv:var:: insulator.Bx_z_hi(x,y,t)
-          : expressions of the tangential field values for the upper z boundary
-
-      .. fv:var:: insulator.By_z_hi(x,y,t)
-          : expressions of the tangential field values for the upper z boundary
-
-    * ``none``: No boundary condition is applied to the fields with the electromagnetic solver. This option must be used for the lower boundary, `r=0`, with RZ, RCYLINDER, and RSPHERE.
-
-    * ``neumann``: For the electrostatic multigrid solver, a Neumann boundary condition (with gradient of the potential equal to 0) will be applied on the specified boundary.
-
-    * ``open``: For the electrostatic Poisson solver based on a Integrated Green Function method.
-
-.. fv:var:: boundary.potential_lo_x/y/z
-    :type: default `0`
+.. fv:var:: boundary.potential_lo/hi_x/y/z
+    :default: `0`
 
     Gives the value of the electric potential, in Volts, at the boundaries, for ``pec`` boundaries. With electrostatic solvers
     (i.e., with ``warpx.do_electrostatic = ...``), this is used in order to compute the potential
@@ -1120,39 +986,7 @@ Domain Boundary Conditions
     setting these variables will trigger an electrostatic solve at ``t=0``, to compute the initial
     electric field produced by the boundaries.
 
-.. fv:var:: boundary.potential_hi_x/y/z
-    :type: default `0`
-
-    Gives the value of the electric potential, in Volts, at the boundaries, for ``pec`` boundaries. With electrostatic solvers
-    (i.e., with ``warpx.do_electrostatic = ...``), this is used in order to compute the potential
-    in the simulation volume at each timestep. When using other solvers (e.g. Maxwell solver),
-    setting these variables will trigger an electrostatic solve at ``t=0``, to compute the initial
-    electric field produced by the boundaries.
-
-.. fv:var:: boundary.particle_lo
-    :type: `2 strings` for 2D, `3 strings` for 3D
-    :default: `absorbing`
-
-    Options are:
-
-    * ``Absorbing``: Particles leaving the boundary will be deleted.
-
-    * ``Periodic``: Particles leaving the boundary will re-enter from the opposite boundary. The field boundary condition must be consistently set to periodic and both lower and upper boundaries must be periodic.
-
-    * ``Reflecting``: Particles leaving the boundary are reflected from the boundary back into the domain.
-      When ``boundary.reflect_all_velocities`` is false, the sign of only the normal velocity is changed, otherwise the sign of all velocities are changed.
-
-    * ``Thermal``: Particles leaving the boundary are reflected from the boundary back into the domain
-      and their velocities are thermalized. The tangential velocity components are sampled from ``gaussian`` distribution
-      and the component normal to the boundary is sampled from ``gaussian flux`` distribution.
-      The standard deviation for these distributions should be provided for each species using
-      ``boundary.<species_name>.u_th``. The same standard deviation is used to sample all components.
-
-    * ``None``: No boundary conditions are applied to the particles.
-      When using RZ, RCYLINDER, and RSPHERE, this option must be used for the lower radial boundary, the first value of ``boundary.particle_lo``.
-      This should not be used in any other cases.
-
-.. fv:var:: boundary.particle_hi
+.. fv:var:: boundary.particle_lo/hi
     :type: `2 strings` for 2D, `3 strings` for 3D
     :default: `absorbing`
 
@@ -2156,6 +1990,7 @@ Particle initialization
     when the particles are generated.
     If the user-defined integer attribute is ``<int_attrib_name>`` then the
     following required parameter must be specified to initialize the attribute.
+
     .. fv:var:: <species_name>.attribute.<int_attrib_name>(x,y,z,ux,uy,uz,t)
         :type: `str`
 
@@ -2190,36 +2025,7 @@ Particle initialization
          :math:`\gamma` is the Lorentz factor,
          :math:`v/c` is the particle velocity normalized by the speed of light.
 
-.. fv:var:: <species_name>.save_particles_at_xlo/ylo/zlo
-    :type: bool; optional
-    :default: `0`
-
-    If `1` particles of this species will be copied to the scraped particle
-    buffer for the specified boundary if they leave the simulation domain in
-    the specified direction. **If USE_EB=TRUE** the ``save_particles_at_eb``
-    flag can be set to `1` to also save particle data for the particles of this
-    species that impact the embedded boundary.
-    The scraped particle buffer can be used to track particle fluxes out of the
-    simulation.
-    The particle data can be written out by setting up a ``BoundaryScrapingDiagnostic``.
-    It is also accessible via the Python interface. The
-    function ``get_particle_boundary_buffer``, found in the
-    ``picmi.Simulation`` class as
-    ``sim.extension.get_particle_boundary_buffer()``, can be
-    used to access the scraped particle buffer. An entry is included for every
-    particle in the buffer of the timestep at which the particle was scraped.
-    This can be accessed by passing the argument ``comp_name="stepScraped"`` to
-    the above mentioned function.
-
-    .. note::
-
-       When accessing the data via Python, the scraped particle buffer relies on the user
-       to clear the buffer after processing the data. The
-       buffer will grow unbounded as particles are scraped and therefore could
-       lead to memory issues if not periodically cleared. To clear the buffer
-       call ``clear_buffer()``.
-
-.. fv:var:: <species_name>.save_particles_at_xhi/yhi/zhi
+.. fv:var:: <species_name>.save_particles_at_xlo/hi_ylo/hi_zlo/hi
     :type: bool; optional
     :default: `0`
 
@@ -2573,6 +2379,7 @@ Laser initialization
       * ``nt``, number of timesteps (``uint32_t``, must be >=2)
       * ``nx``, number of points along x (``uint32_t``, must be >=2)
       * ``ny``, number of points along y (``uint32_t``, must be 1 for 2D simulations and >=2 for 3D simulations)
+
       .. fv:var:: timesteps
           :type: ``float[2]=[t_min,t_max]``
 
