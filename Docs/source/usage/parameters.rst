@@ -4,17 +4,30 @@
 .. role:: python(code)
    :language: python
 
-.. role:: flexvarcpp(fv:var)
-   :language: c++
+.. role:: param(fv:var)
+
+.. role:: p(fv:var)
+
+.. role:: w(fv:var)
+
+.. role:: wp(fv:var)
 
 .. _running-cpp-parameters:
 
 Inputs: Parameter List
 ======================
 
-Test default role (single backticks) `single backtick`
+Test default `single backtick`
 
 Test literal ``double backticks``
+
+Test literal ``oneword``
+
+Test fv:var :fv:var:`<species_name>.flex_var_<tail> = "abc"`
+
+Test fv:var :fv:var:`Not an xref`
+
+Test param :param:`<species_name>.flex_var_<tail> = "abc"`
 
 Test code :code:`code`
 
@@ -37,8 +50,6 @@ Text FlexVar :fv:var:`Explicit title <<species_name>.flex_var_<tail>>`
 Test FlexVar :fv:var:`<species_name>.flex_var_<tail>=abc`
 
 Test FlexVar :fv:var:`<species_name>.flex_var_<tail> = abc`
-
-Test any        :any:`<species_name>.flex_var_<tail> = abc`
 
 .. fv:var:: flex_var_basic_test_2
     :type: string
@@ -244,38 +255,23 @@ For example, ``something_intervals = -1`` deactivates ``something`` and ``someth
 Simulation Time
 ---------------
 
-.. py:data:: max_step
-    :type: int
-    :value: 123
+.. fv:var:: max_step
+    :type: `int`
 
     The number of PIC cycles to perform.
 
-.. py:data:: max_step_2
-    :type: integer
-    :value: 123
-
-    The number of PIC cycles to perform.
-
-.. py:data:: stop_time
-    :type: float
-    :value: 1.0
-
-.. py:data:: stop_time_2
+.. fv:var:: stop_time
     :type: (`float`; in seconds)
-    :value: 1.0
 
-.. py:data:: test_str
-    :type: str
-    :value: "abc"
-
-``stop_time`` (`float`; in seconds)
-    The maximum physical time of the simulation. Can be provided instead of :py:data:`max_step`. If both
-    :py:data:`max_step` and ``stop_time`` are provided, both criteria are used and the simulation stops
+    The maximum physical time of the simulation. Can be provided instead of :p:`max_step`. If both
+    :p:`max_step` and :p:`stop_time` are provided, both criteria are used and the simulation stops
     when the first criterion is hit.
 
-    Note: in boosted-frame simulations, ``stop_time`` refers to the time in the boosted frame.
+    Note: in boosted-frame simulations, :p:`stop_time` refers to the time in the boosted frame.
 
-``warpx.zmax_plasma_to_compute_max_step`` (`float`) optional
+.. fv:var:: ``warpx.zmax_plasma_to_compute_max_step``
+    :type: (`float`) optional
+
     Can be useful when running in a boosted frame. If specified, automatically
     calculates the number of iterations required in the boosted frame for the
     lower `z` end of the simulation domain to reach
@@ -284,7 +280,10 @@ Simulation Time
     printed to standard output. Currently only works if the Lorentz boost and
     the moving window are along the z direction.
 
-``warpx.compute_max_step_from_btd`` (`integer`; 0 by default) optional
+.. fv:var:: warpx.compute_max_step_from_btd
+    :type: (`integer`) optional
+    :default: 0
+
     Can be useful when computing back-transformed diagnostics.  If specified,
     automatically calculates the number of iterations required in the boosted
     frame for all back-transformed diagnostics to be completed. If ``max_step``,
@@ -299,16 +298,19 @@ Simulation Time
 Overall simulation parameters
 -----------------------------
 
-* ``authors`` (`string`: e.g. :cpp:`"Jane Doe <jane@example.com>, Jimmy Joe <jimmy@example.com>"`)
+.. fv:var:: authors
+    :type: (`string`: e.g. :cpp:`"Jane Doe <jane@example.com>, Jimmy Joe <jimmy@example.com>"`)
+
     Authors of an input file / simulation setup.
     When provided, this information is added as metadata to (openPMD) output files.
-    :py:data:`max_step` :
 
-* ``warpx.used_inputs_file`` (`string`; default: :cpp:`"warpx_used_inputs"`)
+.. fv:var:: warpx.used_inputs_file
+    :type: (`string`; default: :cpp:`"warpx_used_inputs"`)
+
     Name of a file that WarpX writes to archive the used inputs.
     The context of this file will contain an exact copy of all explicitly and implicitly used inputs parameters, including those :ref:`extended and overwritten from the command line <usage_run>`.
 
-* ``warpx.gamma_boost`` (`float`)
+.. fv:var:: ``warpx.gamma_boost`` (`float`)
 
     The Lorentz factor of the boosted frame in which the simulation is run. (The corresponding Lorentz transformation is assumed to be along ``warpx.boost_direction``.)
     For more practical guidance on setting up boosted-frame simulations, refer to the :ref:`FAQ: What do I need to know about using the boosted frame? <faq_boosted_frame>`.
@@ -317,17 +319,17 @@ Overall simulation parameters
     lab-frame and automatically converted to the boosted frame.
     (See the corresponding documentation of each input parameters for exceptions.)
 
-* ``warpx.boost_direction`` (string: ``x``, ``y`` or ``z``)
+.. fv:var:: ``warpx.boost_direction`` (string: ``x``, ``y`` or ``z``)
+
     The direction of the Lorentz-transform for boosted-frame simulations
     (The direction ``y`` cannot be used in 2D simulations.)
 
-.. py:data:: algo.evolve_scheme_test
-    :type: string
-    :value: explicit
+.. fv:var:: algo.evolve_scheme_test
+    :type: `string`
+    :default: ``explicit``
 
     Specifies the evolve scheme used by WarpX.
     Supported values ``explicit``, ``theta_implicit_em``, ``semi_implicit_em``, ``strang_implicit_spectral_em``
-
 
     explicit
         Use an explicit solver, such as the standard FDTD or PSATD
@@ -335,7 +337,8 @@ Overall simulation parameters
     theta_implicit_em
         Use a :math:`\theta`-implicit electromagnetic solver.
 
-* ``warpx.random_seed`` (`string` or `int` > 0) optional
+.. fv:var:: ``warpx.random_seed`` (`string` or `int` > 0) optional
+
     If provided ``warpx.random_seed = random``, the random seed will be determined
     using `std::random_device` and `std::clock()`,
     thus every simulation run produces different random numbers.
@@ -348,7 +351,8 @@ Overall simulation parameters
     one should not expect to obtain the same random numbers,
     even if a fixed ``warpx.random_seed`` is provided.
 
-.. py:data:: algo.evolve_scheme
+.. fv:var:: algo.evolve_scheme
+
     :type: string
     :value: explicit
 
@@ -362,15 +366,15 @@ Overall simulation parameters
     theta_implicit_em
         Use a :math:`\theta`-implicit electromagnetic solver.
 
-        Related parameters: ``implicit_evolve.theta``, ``algo.current_deposition``, ``implicit_evolve.nonlinear_solver``
+        Related parameters: :p:`implicit_evolve.theta`, :p:`algo.current_deposition`, :p:`implicit_evolve.nonlinear_solver`
 
         **Field gather and current depositions**
-        Exact energy conservation requires matching gather and deposition. :py:data:`max_step`
-        The following depositions (:py:data:`algo.current_deposition`) support this
+        Exact energy conservation requires matching gather and deposition. :p:`max_step`
+        The following depositions (:p:`algo.current_deposition`) support this
 
-        - :cpp:`algo.current_deposition = "direct"`
-        - :cpp:`algo.current_deposition = "villasenor"`
-        - :cpp:`algo.current_deposition = "esirkepov"` (Not compatible with :py:data:`implicit_evolve.use_mass_matrices_jacobian` = ``true``.)
+        - :p:`algo.current_deposition = direct`
+        - :p:`algo.current_deposition = villasenor`
+        - :p:`algo.current_deposition = esirkepov` (Not compatible with :p:`implicit_evolve.use_mass_matrices_jacobian` = ``true``.)
 
         **Numerical stability:**
 
@@ -400,7 +404,7 @@ Overall simulation parameters
             - ``implicit_evolve.particle_suborbits`` (`bool`, default: false)
             - ``implicit_evolve.print_unconverged_particle_details`` (`bool`, default: false)
 
-        .. py:data:: implicit_evolve.use_mass_matrices_jacobian
+        .. fv:var:: implicit_evolve.use_mass_matrices_jacobian
             :type: bool
             :value: false
 
@@ -440,7 +444,9 @@ Overall simulation parameters
 
 .. _param-electrostatic-pic:
 
-* ``warpx.do_electrostatic`` (`string`) optional (default `none`)
+.. fv:var:: warpx.do_electrostatic
+    :type: (`string`) optional (default `none`)
+
     Specifies the electrostatic mode. When turned on, instead of updating
     the fields at each iteration with the full Maxwell equations, the fields
     are recomputed at each iteration from the Poisson equation.
@@ -451,7 +457,10 @@ Overall simulation parameters
     and ``relativistic``. See :ref:`here <theory-electrostatic-pic>` for details
     of each scheme.
 
-* ``warpx.poisson_solver`` (`string`) optional (default `multigrid`)
+.. fv:var::  warpx.poisson_solver``
+    :type: (`string`) optional
+    :default: `multigrid`
+
     * ``multigrid``: Poisson's equation is solved using an iterative multigrid (MLMG) solver.
 
         See the `AMReX documentation <https://amrex-codes.github.io/amrex/docs_html/LinearSolvers.html#>`__
@@ -1078,8 +1087,7 @@ Particle initialization
     Controls whether tiling ('cache blocking') transformation is used for particles.
     Tiling should be on when using OpenMP and off when using GPUs.
 
-.. py:data:: <species_name>.species_type
-
+.. fv:var:: <species_name>.species_type
     :type: string
 
     Type of physical species.
@@ -1097,7 +1105,9 @@ Particle initialization
     also the stable isotopes as an option for ``species_type`` (e.g., ``"helium3"`` and ``"helium4"``).
     Either ``species_type`` or both ``mass`` and ``charge`` have to be specified.
 
-* ``<species_name>.charge`` (`float`) optional (default `NaN`)
+.. fv:var:: <species_name>.charge
+    :type: (`float`) optional (default `NaN`)
+
     The charge of one `physical` particle of this species.
     If ``species_type`` is specified, the charge will be set to the physical value and ``charge`` is optional.
     When ``<species_name>.do_field_ionization = 1``, the physical particle charge is equal to ``ionization_initial_level * charge``, so latter parameter should be equal to q_e (which is defined in WarpX as the elementary charge in coulombs).
@@ -1121,10 +1131,12 @@ Particle initialization
     If it is not given, the value of the parameter without the source name will be used. This allows parameters used for all
     sources to be specified once. For example, if the ``source1`` and ``source2`` have the same value of ``uz_m``, then it can be
     set using ``<species_name>.uz_m`` instead of setting it for each source.
-    Note that since by default ``<species_name>.injection_style = none``, all injection sources can be input this way.
+    Note that since by default :p:`<species_name>.injection_style = none`, all injection sources can be input this way.
     Note that if a moving window is used, the bulk velocity of all of the sources must be the same since it is used when updating the window.
 
-* ``<species_name>.injection_style`` (`string`; default: ``none``)
+.. fv:var:: <species_name>.injection_style
+    :type: (`string`; default: ``none``)
+
     Determines how the (macro-)particles will be injected in the simulation.
     The number of particles per cell is always given with respect to the coarsest level (level 0/mother grid), even if particles are immediately assigned to a refined patch.
 
@@ -4366,7 +4378,10 @@ When developing, testing and :ref:`debugging WarpX <debugging_warpx>`, the follo
     Run all ``FillBoundary`` operations on ``MultiFab`` to force-synchronize shared nodal points.
     This slightly increases communication cost and can help to spot missing ``nodal_sync`` flags in these operations.
 
-``implicit_evolve.theta`` (`float`, default: 0.5)
+.. fv:var:: implicit_evolve.theta
+    :type: float
+    :default: 0.5
+
     Time-biasing parameter.
     The fields (:math:`\textbf{E}` & :math:`\textbf{B}`) used to advance the system are computed at time :math:`t^{n+\theta}`: :math:`\mathbf{E}^{n+\theta}=\left(1-\theta\right)\mathbf{E}^n + \theta\mathbf{E}^{n+1}`, where :math:`\theta\in[0.5,1.0]`.
 
