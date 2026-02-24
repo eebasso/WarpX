@@ -140,14 +140,20 @@ class FlexVarDirective(ObjectDescription[str]):
             # testnodelist.extend(self._parse_inline(" |_parse_inline"))
             # testnodelist.append(nodes.Text(" |Text"))
 
-            signode += addnodes.desc_annotation(
-                value, '',
+            value_nodelist: list[nodes.Node] = [
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation('', '='),
                 addnodes.desc_sig_space(),
                 # *testnodelist,
                 *self._parse_inline(value),
-            )
+            ]
+
+            # signode += addnodes.desc_annotation(
+            #     value, '',
+            #     *value_nodelist
+            # )
+
+            signode += value_nodelist
 
             # signode += testnodelist
 
