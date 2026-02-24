@@ -353,29 +353,29 @@ Overall simulation parameters
             :type: `bool`
             :default: false
 
-            When `true`, the plasma current density is computed using the mass matrices during the linear stage of PS-JFNK, replacing direct particle calculations. This can enable large speed ups for simulations with many particles.
+              When `true`, the plasma current density is computed using the mass matrices during the linear stage of PS-JFNK, replacing direct particle calculations. This can enable large speed ups for simulations with many particles.
 
-        .. fv:var:: implicit_evolve.skip_particle_picard_init
-            :type: `bool`
-            :default: false
+              .. fv:var:: implicit_evolve.skip_particle_picard_init
+                  :type: `bool`
+                  :default: false
 
-            When `true` and ``implicit_evolve.use_mass_matrices_jacobian = true``, the full Picard update of the particles is skipped on the initial Newton step, and only a single iteration is performed.
-            This can enhance the overall efficiency of the Newton solver.
-            Default is true if ``implicit_evolve.particle_suborbits = true``.
+                    When `true` and ``implicit_evolve.use_mass_matrices_jacobian = true``, the full Picard update of the particles is skipped on the initial Newton step, and only a single iteration is performed.
+                    This can enhance the overall efficiency of the Newton solver.
+                    Default is true if ``implicit_evolve.particle_suborbits = true``.
 
         .. fv:var:: implicit_evolve.use_mass_matrices_pc
             :type: `bool`
             :default: false
 
-            When `true`, the plasma response is captured in the preconditioner.
-            Requires use of a preconditioner (``jacobian.pc_type = pc_curl_curl_mlmg``, ``pc_petsc``, or ``pc_jacobi``).
+              When `true`, the plasma response is captured in the preconditioner.
+              Requires use of a preconditioner (``jacobian.pc_type = pc_curl_curl_mlmg``, ``pc_petsc``, or ``pc_jacobi``).
 
         .. fv:var:: implicit_evolve.mass_matrices_pc_width
             :type: `int`
             :default: 0
 
-            If using ``jacobian.pc_type = pc_petsc``, this parameter specifies the width of the mass matrices included in the preconditioner.
-            In most cases, a width of 1 is sufficient for good GMRES performance.
+              If using ``jacobian.pc_type = pc_petsc``, this parameter specifies the width of the mass matrices included in the preconditioner.
+              In most cases, a width of 1 is sufficient for good GMRES performance.
 
         .. fv:var:: jacobian.pc_type
             :type: `str`
@@ -383,11 +383,11 @@ Overall simulation parameters
 
             A preconditioner can be used to minimize the number of linear GMRES iterations. There are two options:
 
-            - ``jacobian.pc_type = pc_curl_curl_mlmg``: Use the AMReX MLMG solver for the curl curl formulation of Maxwell's equations. This preconditioner solves the following equation:
+              - ``jacobian.pc_type = pc_curl_curl_mlmg``: Use the AMReX MLMG solver for the curl curl formulation of Maxwell's equations. This preconditioner solves the following equation:
 
                 .. math::
 
-                    \nabla \times \left( \alpha\nabla\times\textbf{E} \right) + \boldsymbol{\beta}\cdot\textbf{E} = \textbf{b},
+                   \nabla \times \left( \alpha\nabla\times\textbf{E} \right) + \boldsymbol{\beta}\cdot\textbf{E} = \textbf{b},
 
                 where :math:`\alpha=\theta^2\Delta t^2c^2` is a scalar and :math:`\boldsymbol{\beta}` is a diagonal matrix that scales the components of :math:`\textbf{E}`.
 
@@ -426,7 +426,7 @@ Overall simulation parameters
                     :type: `float`
                     :default: 1.0e-16
 
-            - ``jacobian.pc_type = pc_jacobi``: Use the Point-Jacobi method. This preconditioner only captures the plasma response via the diagonal mass matrices.
+              - ``jacobian.pc_type = pc_jacobi``: Use the Point-Jacobi method. This preconditioner only captures the plasma response via the diagonal mass matrices.
 
                 .. fv:var:: pc_jacobi.verbose
                     :type: `bool`
@@ -1507,8 +1507,6 @@ Particle initialization
           :type: order of symmetrization
           :default: 4, can be 4 or 8
 
-          .
-
       If ``<species_name>.do_symmetrize`` is 0, no symmetrization occurs.  If ``<species_name>.do_symmetrize`` is 1,
       then the beam is symmetrized according to the value of ``<species_name>.symmetrization_order``.
       If set to 4, symmetrization is in the x and y direction, (x,y) (-x,y) (x,-y) (-x,-y).
@@ -2392,8 +2390,6 @@ Laser initialization
       .. fv:var:: field_data
           :type: ``float[nt x nx * ny]``, with ``nt`` being the slowest coordinate
 
-          .
-
       A binary file can be generated from Python, see an example at ``Examples/Tests/laser_injection_from_file``
 
 .. fv:var:: <laser_name>.profile_t_peak
@@ -2501,7 +2497,6 @@ Laser initialization
     :type: bool
     :default: `0`
 
-    .
     Whether or not to use continuous injection.
     If the antenna starts outside of the simulation domain but enters it
     at some point (due to moving window or moving antenna in the boosted
@@ -3040,7 +3035,6 @@ Details about the collision models can be found in the :ref:`theory section <mul
 .. fv:var:: <collision_name>.event_multiplier
     :type: `float`
 
-    .
     Only for ``nuclearfusion``, ``linear_breit_wheeler``, and ``linear_compton``.
     Increasing ``event_multiplier`` creates more macroparticles products,
     but with lower weight (in such a way that the corresponding
@@ -3055,7 +3049,6 @@ Details about the collision models can be found in the :ref:`theory section <mul
 .. fv:var:: <collision_name>.probability_threshold
     :type: `float`
 
-    .
     Only for ``nuclearfusion``, ``linear_breit_wheeler``, and ``linear_compton``.
     If the event multiplier is too high and results in a probability
     that approaches 1 (for a given collision between two macroparticles), then
@@ -3067,7 +3060,6 @@ Details about the collision models can be found in the :ref:`theory section <mul
 .. fv:var:: <collision_name>.probability_target_value
     :type: `float`
 
-    .
     Only for ``nuclearfusion``, ``linear_breit_wheeler``, and ``linear_compton``.
     When the probability of fusion or linear Breit-Wheeler for a given collision exceeds
     ``probability_threshold``, WarpX reduces the event multiplier for
