@@ -4,3 +4,49 @@
     /* Copied from https://github.com/readthedocs/sphinx_rtd_theme/issues/301#issuecomment-1205755904 */
     float: right;
 }
+
+/* Cross references, overridden by active xref */
+.rst-content code.xref {
+    color: #11F;
+}
+
+/* Active cross references */
+.rst-content a code.xref {
+    color: #1F1;
+}
+
+/* .rst-content code.literal {
+    color: #1F1
+} */
+
+/* code {
+    color: #11F
+} */
+
+/* code {
+    color: inherit;
+    border: 1px solid #1F1;
+    padding: 0 4px;
+    background-color: #1F1;
+    font-size: 90%;
+    border-radius: 3px;
+} */
+
+/* a {
+    color: inherit;
+    border: 1px solid #1F1;
+    padding: 0 4px;
+    background-color: #1F1;
+    font-size: 90%;
+    border-radius: 3px;
+} */
+
+/* code span {
+    color: inherit;
+    border: 1px solid #1F1;
+    padding: 0 4px;
+    background-color: #1F1;
+    font-size: 90%;
+    border-radius: 3px;
+} */
+
