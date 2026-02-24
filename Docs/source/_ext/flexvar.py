@@ -101,62 +101,55 @@ class FlexVarDirective(ObjectDescription[str]):
         value = self.options.get("default", "").strip()
         if value:
 
-            test_nodetypelist: list[type[nodes.TextElement]] = [
-                # addnodes.desc,
-                # addnodes.desc_signature,
-                # addnodes.desc_signature_line,
-                # addnodes.desc_content,
-                addnodes.desc_inline,
+            # test_nodetypelist: list[type[nodes.TextElement]] = [
+            #     # addnodes.desc,
+            #     # addnodes.desc_signature,
+            #     # addnodes.desc_signature_line,
+            #     # addnodes.desc_content,
+            #     addnodes.desc_inline,
+            #     # Nodes for high-level structure in signatures
+            #     ##############################################
+            #     addnodes.desc_name,
+            #     addnodes.desc_addname,
+            #     addnodes.desc_type,
+            #     addnodes.desc_returns,
+            #     addnodes.desc_parameterlist,
+            #     addnodes.desc_type_parameter_list,
+            #     addnodes.desc_parameter,
+            #     addnodes.desc_type_parameter,
+            #     addnodes.desc_optional,
+            #     addnodes.desc_annotation,
+            #     # Leaf nodes for markup of text fragments
+            #     #########################################
+            #     addnodes.desc_sig_element,
+            #     addnodes.desc_sig_space,
+            #     addnodes.desc_sig_name,
+            #     addnodes.desc_sig_punctuation,
+            #     addnodes.desc_sig_literal_number,
+            #     addnodes.desc_sig_literal_string,
+            #     addnodes.desc_sig_literal_char,
+            #     # inline nodes
+            #     addnodes.literal_strong,
+            #     addnodes.literal_emphasis,
+            # ]
 
-
-                # Nodes for high-level structure in signatures
-                ##############################################
-                addnodes.desc_name,
-                addnodes.desc_addname,
-                addnodes.desc_type,
-                addnodes.desc_returns,
-                addnodes.desc_parameterlist,
-                addnodes.desc_type_parameter_list,
-                addnodes.desc_parameter,
-                addnodes.desc_type_parameter,
-                addnodes.desc_optional,
-                addnodes.desc_annotation,
-
-                # Leaf nodes for markup of text fragments
-                #########################################
-                addnodes.desc_sig_element,
-                addnodes.desc_sig_space,
-                addnodes.desc_sig_name,
-                addnodes.desc_sig_punctuation,
-                # addnodes.,
-                addnodes.desc_sig_literal_number,
-                addnodes.desc_sig_literal_string,
-                addnodes.desc_sig_literal_char,
-                # addnodes.,
-                # addnodes.,
-
-                # inline nodes
-                addnodes.literal_strong,
-                addnodes.literal_emphasis,
-            ]
-
-            testnodelist: list[nodes.Node] = [
-                nodetype("", f" |{nodetype.__name__}") for nodetype in test_nodetypelist
-            ]
-            # Extra
-            testnodelist.extend(self._parse_inline(" |_parse_inline"))
-            testnodelist.append(nodes.Text(" |Text"))
+            # testnodelist: list[nodes.Node] = [
+            #     nodetype("", f" |{nodetype.__name__}") for nodetype in test_nodetypelist
+            # ]
+            # # Extra
+            # testnodelist.extend(self._parse_inline(" |_parse_inline"))
+            # testnodelist.append(nodes.Text(" |Text"))
 
             signode += addnodes.desc_annotation(
                 value, '',
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation('', '='),
                 addnodes.desc_sig_space(),
-                *testnodelist,
+                # *testnodelist,
                 *self._parse_inline(value),
             )
 
-            signode += testnodelist
+            # signode += testnodelist
 
         return name
 
