@@ -10,7 +10,6 @@ Usage
 Directive::
 
     .. fv:var:: my/variable<T>
-
         :type: list<int>
         :default: []
 
@@ -53,18 +52,15 @@ from sphinx.util.nodes import make_id, make_refnode
 
 class FlexVarDirective(ObjectDescription[str]):
     """
-    Directive: .. fv:var:: <name>
-
-    Options
-    -------
-    :type: <type string>   (optional) the variable's type
-    :default: <value>      (optional) the variable's default value
-    :noindex:              suppress index entry
+    Directive of a variable.
+    Supports variable names containing characters like <, >, /, commas, etc.
     """
 
     option_spec = {
         "type": directives.unchanged,
         "default": directives.unchanged,
+        "optional": directives.flag,
+        "comment": directives.unchanged,
         "noindex": directives.flag,
     }
 
