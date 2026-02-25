@@ -1,4 +1,4 @@
-"""
+r"""
 flexvar - A Sphinx domain for documenting variables with flexible names.
 
 Supports variable names containing characters like <, >, /, commas, etc.
@@ -194,7 +194,7 @@ class FlexVarDirective(ObjectDescription[str]):
 # ---------------------------------------------------------------------------
 
 class FlexVarRole(XRefRole):
-    """
+    r"""
     Role: :fv:var:`name` or :fv:var:`Title <name>`
 
     Two customisations over the base ``XRefRole``:
