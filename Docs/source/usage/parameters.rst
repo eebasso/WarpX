@@ -218,10 +218,7 @@ Overall simulation parameters
       - **Time-biasing parameter:**
         The fields (:math:`\textbf{E}` & :math:`\textbf{B}`) used to advance the system are computed at time :math:`t^{n+\theta}`: :math:`\mathbf{E}^{n+\theta}=\left(1-\theta\right)\mathbf{E}^n + \theta\mathbf{E}^{n+1}`, where :math:`\theta\in[0.5,1.0]`.
 
-        .. fv:var:: implicit_evolve.theta
-            :type: `float`
-            :default: 0.5
-
+        - ``implicit_evolve.theta`` (`float`, default: 0.5)
         - :math:`\theta = 0.5`: Exact energy conservation.
         - :math:`\theta = 1.0`: Maximal damping of high-k modes.
 
@@ -242,207 +239,90 @@ Overall simulation parameters
       - **Nonlinear solvers:**
         Advancing the implicit system in time requires solving a nonlinear system. The nonlinear solver options are `picard` and `newton`.
 
-        .. fv:var:: implicit_evolve.nonlinear_solver
-            :type: `str`
-            :default: None
+        - ``implicit_evolve.nonlinear_solver`` (`string`, default: None)
 
         - ``implicit_evolve.nonlinear_solver = picard``: Use a Picard iteration method. Requires small time steps; often non-convergent for large time steps.
 
-          .. fv:var:: picard.verbose
-              :type: `bool`
-              :default: true
-
-          .. fv:var:: picard.require_convergence
-              :type: `bool`
-              :default: true
-
-          .. fv:var:: picard.maximum_iterations
-              :type: `int`
-              :default: 100
-
-          .. fv:var:: picard.relative_tolerance
-              :type: `float`
-              :default: 1.0e-6
-
-          .. fv:var:: picard.absolute_tolerance
-              :type: `float`
-              :default: 0.0
-
-          .. fv:var:: picard.diagnostic_file
-              :type: `str`
-              :default: None
-
-          .. fv:var:: picard.diagnostic_interval
-              :type: `int`
-              :default: 1
+          - ``picard.verbose`` (`bool`, default: true)
+          - ``picard.require_convergence`` (`bool`, default: true)
+          - ``picard.maximum_iterations`` (`int`, default: 100)
+          - ``picard.relative_tolerance`` (`float`, default: 1.0e-6)
+          - ``picard.absolute_tolerance`` (`float`, default: 0.0)
+          - ``picard.diagnostic_file`` (`string`, default: None)
+          - ``picard.diagnostic_interval`` (`int`, default: 1)
 
         - ``implicit_evolve.nonlinear_solver = newton``: Use a PS-JFNK method. Required for large time steps, but efficiency often relies on preconditioning and/or using ``implicit_evolve.use_mass_matrices_jacobian = true``.
 
-          .. fv:var:: newton.verbose
-              :type: `bool`
-              :default: true
-
-          .. fv:var:: newton.require_convergence
-              :type: `bool`
-              :default: true
-
-          .. fv:var:: newton.maximum_iterations
-              :type: `int`
-              :default: 100
-
-          .. fv:var:: newton.relative_tolerance
-              :type: `float`
-              :default: 1.0e-6
-
-          .. fv:var:: newton.absolute_tolerance
-              :type: `float`
-              :default: 0.0
-
-          .. fv:var:: newton.diagnostic_file
-              :type: `str`
-              :default: None
-
-          .. fv:var:: newton.diagnostic_interval
-              :type: `int`
-              :default: 1
+          - ``newton.verbose`` (`bool`, default: true)
+          - ``newton.require_convergence`` (`bool`, default: true)
+          - ``newton.maximum_iterations`` (`int`, default: 100)
+          - ``newton.relative_tolerance`` (`float`, default: 1.0e-6)
+          - ``newton.absolute_tolerance`` (`float`, default: 0.0)
+          - ``newton.diagnostic_file`` (`string`, default: None)
+          - ``newton.diagnostic_interval`` (`int`, default: 1)
 
           - The PS-JFNK solver uses GMRES to solve the linear system at each nonlinear iteration:
 
-          .. fv:var:: gmres.verbose_int
-              :type: `int`
-              :default: 2
-
-          .. fv:var:: gmres.restart_length
-              :type: `int`
-              :default: 30
-
-          .. fv:var:: gmres.maximum_iterations
-              :type: `int`
-              :default: 1000
-
-          .. fv:var:: gmres.relative_tolerance
-              :type: `float`
-              :default: 1.0e-4
-
-          .. fv:var:: gmres.absolute_tolerance
-              :type: `float`
-              :default: 0.0
+          - ``gmres.verbose_int`` (`int`, default: 2)
+          - ``gmres.restart_length`` (`int`, default: 30)
+          - ``gmres.maximum_iterations`` (`int`, default: 1000)
+          - ``gmres.relative_tolerance`` (`float`, default: 1.0e-4)
+          - ``gmres.absolute_tolerance`` (`float`, default: 0.0)
 
       - **PS-JFNK solver specific options:**
         The PS-JFNK solver (``implicit_evolve.nonlinear_solver = newton``) has a variety of additional parameters and options.
 
         - At each iteration in the PS-JFNK process, each particle is self-consistently updated for fixed :math:`\textbf{E}` and :math:`\textbf{B}` on the grid using a Picard method. The options for this Picard solve are set by:
 
-          .. fv:var:: implicit_evolve.max_particle_iterations
-              :type: `int`
-              :default: 21
+          - ``implicit_evolve.max_particle_iterations`` (`integer`, default: 21)
+          - ``implicit_evolve.particle_tolerance`` (`float`, default: 1.e-10)
+          - ``implicit_evolve.particle_suborbits`` (`bool`, default: false)
+          - ``implicit_evolve.print_unconverged_particle_details`` (`bool`, default: false)
 
-          .. fv:var:: implicit_evolve.particle_tolerance
-              :type: `float`
-              :default: 1.e-10
+        - ``implicit_evolve.use_mass_matrices_jacobian`` (`bool`, default: false).
+          When `true`, the plasma current density is computed using the mass matrices during the linear stage of PS-JFNK, replacing direct particle calculations. This can enable large speed ups for simulations with many particles.
 
-          .. fv:var:: implicit_evolve.particle_suborbits
-              :type: `bool`
-              :default: false
+          - ``implicit_evolve.skip_particle_picard_init`` (`bool`, default: false).
+            When `true` and ``implicit_evolve.use_mass_matrices_jacobian = true``, the full Picard update of the particles is skipped on the initial Newton step, and only a single iteration is performed.
+            This can enhance the overall efficiency of the Newton solver.
+            Default is true if ``implicit_evolve.particle_suborbits = true``.
 
-          .. fv:var:: implicit_evolve.print_unconverged_particle_details
-              :type: `bool`
-              :default: false
+        - ``implicit_evolve.use_mass_matrices_pc`` (`bool`, default: false).
+          When `true`, the plasma response is captured in the preconditioner.
+          Requires use of a preconditioner (``jacobian.pc_type = pc_curl_curl_mlmg``, ``pc_petsc``, or ``pc_jacobi``).
 
-        .. fv:var:: implicit_evolve.use_mass_matrices_jacobian
-            :type: `bool`
-            :default: false
+        - ``implicit_evolve.mass_matrices_pc_width`` (`integer`, default: 0).
+          If using ``jacobian.pc_type = pc_petsc``, this parameter specifies the width of the mass matrices included in the preconditioner.
+          In most cases, a width of 1 is sufficient for good GMRES performance.
 
-            When `true`, the plasma current density is computed using the mass matrices during the linear stage of PS-JFNK, replacing direct particle calculations. This can enable large speed ups for simulations with many particles.
+        - ``jacobian.pc_type`` (`string`, default: None). A preconditioner can be used to minimize the number of linear GMRES iterations. There are two options:
 
-            .. fv:var:: implicit_evolve.skip_particle_picard_init
-                :type: `bool`
-                :default: false
+          - ``jacobian.pc_type = pc_curl_curl_mlmg``: Use the AMReX MLMG solver for the curl curl formulation of Maxwell's equations. This preconditioner solves the following equation:
 
-                When `true` and ``implicit_evolve.use_mass_matrices_jacobian = true``, the full Picard update of the particles is skipped on the initial Newton step, and only a single iteration is performed.
-                This can enhance the overall efficiency of the Newton solver.
-                Default is true if ``implicit_evolve.particle_suborbits = true``.
+            .. math::
 
-        .. fv:var:: implicit_evolve.use_mass_matrices_pc
-            :type: `bool`
-            :default: false
+               \nabla \times \left( \alpha\nabla\times\textbf{E} \right) + \boldsymbol{\beta}\cdot\textbf{E} = \textbf{b},
 
-            When `true`, the plasma response is captured in the preconditioner.
-            Requires use of a preconditioner (``jacobian.pc_type = pc_curl_curl_mlmg``, ``pc_petsc``, or ``pc_jacobi``).
+            where :math:`\alpha=\theta^2\Delta t^2c^2` is a scalar and :math:`\boldsymbol{\beta}` is a diagonal matrix that scales the components of :math:`\textbf{E}`.
 
-        .. fv:var:: implicit_evolve.mass_matrices_pc_width
-            :type: `int`
-            :default: 0
+              - Default: :math:`\boldsymbol\beta = \mathbb{I}`, giving implicit Maxwell equations, suitable for time steps that under-resolve light waves (:math:`c\Delta t > 1/\sqrt{\left(\sum_i1/\Delta x_i^2\right)}`).
+              - ``implicit_evolve.use_mass_matrices_pc = true``: :math:`\boldsymbol\beta` also includes plasma response via the diagonal mass matrices, enabling time steps that under-resolve the plasma period (:math:`\omega_{pe}\Delta t > 1`).
 
-            If using ``jacobian.pc_type = pc_petsc``, this parameter specifies the width of the mass matrices included in the preconditioner.
-            In most cases, a width of 1 is sufficient for good GMRES performance.
+            - ``pc_curl_curl_mlmg.verbose`` (`bool`, default: true)
+            - ``pc_curl_curl_mlmg.bottom_verbose`` (`bool`, default: false)
+            - ``pc_curl_curl_mlmg.agglomeration`` (`bool`, default: true)
+            - ``pc_curl_curl_mlmg.consolidation`` (`bool`, default: true)
+            - ``pc_curl_curl_mlmg.max_iter`` (`int`, default: 10)
+            - ``pc_curl_curl_mlmg.max_coarsening_level`` (`int`, default: 30)
+            - ``pc_curl_curl_mlmg.relative_tolerance`` (`float`, default: 1.0e-4)
+            - ``pc_curl_curl_mlmg.absolute_tolerance`` (`float`, default: 1.0e-16)
 
-        .. fv:var:: jacobian.pc_type
-            :type: `str`
-            :default: None
+          - ``jacobian.pc_type = pc_jacobi``: Use the Point-Jacobi method. This preconditioner only captures the plasma response via the diagonal mass matrices.
 
-            A preconditioner can be used to minimize the number of linear GMRES iterations. There are two options:
-
-              - ``jacobian.pc_type = pc_curl_curl_mlmg``: Use the AMReX MLMG solver for the curl curl formulation of Maxwell's equations. This preconditioner solves the following equation:
-
-                .. math::
-
-                   \nabla \times \left( \alpha\nabla\times\textbf{E} \right) + \boldsymbol{\beta}\cdot\textbf{E} = \textbf{b},
-
-                where :math:`\alpha=\theta^2\Delta t^2c^2` is a scalar and :math:`\boldsymbol{\beta}` is a diagonal matrix that scales the components of :math:`\textbf{E}`.
-
-                  - Default: :math:`\boldsymbol\beta = \mathbb{I}`, giving implicit Maxwell equations, suitable for time steps that under-resolve light waves (:math:`c\Delta t > 1/\sqrt{\left(\sum_i1/\Delta x_i^2\right)}`).
-                  - ``implicit_evolve.use_mass_matrices_pc = true``: :math:`\boldsymbol\beta` also includes plasma response via the diagonal mass matrices, enabling time steps that under-resolve the plasma period (:math:`\omega_{pe}\Delta t > 1`).
-
-                .. fv:var:: pc_curl_curl_mlmg.verbose
-                    :type: `bool`
-                    :default: true
-
-                .. fv:var:: pc_curl_curl_mlmg.bottom_verbose
-                    :type: `bool`
-                    :default: false
-
-                .. fv:var:: pc_curl_curl_mlmg.agglomeration
-                    :type: `bool`
-                    :default: true
-
-                .. fv:var:: pc_curl_curl_mlmg.consolidation
-                    :type: `bool`
-                    :default: true
-
-                .. fv:var:: pc_curl_curl_mlmg.max_iter
-                    :type: `int`
-                    :default: 10
-
-                .. fv:var:: pc_curl_curl_mlmg.max_coarsening_level
-                    :type: `int`
-                    :default: 30
-
-                .. fv:var:: pc_curl_curl_mlmg.relative_tolerance
-                    :type: `float`
-                    :default: 1.0e-4
-
-                .. fv:var:: pc_curl_curl_mlmg.absolute_tolerance
-                    :type: `float`
-                    :default: 1.0e-16
-
-              - ``jacobian.pc_type = pc_jacobi``: Use the Point-Jacobi method. This preconditioner only captures the plasma response via the diagonal mass matrices.
-
-                .. fv:var:: pc_jacobi.verbose
-                    :type: `bool`
-                    :default: true
-
-                .. fv:var:: pc_jacobi.max_iter
-                    :type: `int`
-                    :default: 10
-
-                .. fv:var:: pc_jacobi.relative_tolerance
-                    :type: `float`
-                    :default: 1.0e-4
-
-                .. fv:var:: pc_jacobi.absolute_tolerance
-                    :type: `float`
-                    :default: 1.0e-16
+            - ``pc_jacobi.verbose`` (`bool`, default: true)
+            - ``pc_jacobi.max_iter`` (`int`, default: 10)
+            - ``pc_jacobi.relative_tolerance`` (`float`, default: 1.0e-4)
+            - ``pc_jacobi.absolute_tolerance`` (`float`, default: 1.0e-16)
 
       - **References:** (WarpX includes relativistic extensions not discussed in references.)
 
@@ -505,28 +385,20 @@ Overall simulation parameters
         In electromagnetic mode, this solver can be used to initialize the species' self fields
         (``<species_name>.initialize_self_fields=1``) provided that the field BCs are PML (``boundary.field_lo,hi = PML``).
 
-          .. fv:var:: warpx.use_2d_slices_fft_solver
-              :type: `bool`
-              :default: 0
+          * ``warpx.use_2d_slices_fft_solver`` (`bool`) optional (default: 0): Select the type of Integrated Green Function solver.
+            If 0, solve Poisson equation in full 3D geometry.
+            If 1, solve Poisson equation in a quasi 3D geometry, neglecting the :math:`z` derivatives in the Laplacian of the Poisson equation.
+            In practice, in this case, the code performes many 2D Poisson solves on all :math:`(x,y)` slices, each slice at a given :math:`z`.
+            This is often a good approximation for ultra-relativistic beams propagating along the :math:`z` direction, with the relativistic solver.
+            As a consequence, this solver does not need to do an FFT along the :math:`z` direction,
+            and instead uses only transverse FFTs (along :math:`x` and :math:`y`) at each :math:`z` position (or :math:`z` "slice").
 
-              : Select the type of Integrated Green Function solver.
-                If 0, solve Poisson equation in full 3D geometry.
-                If 1, solve Poisson equation in a quasi 3D geometry, neglecting the :math:`z` derivatives in the Laplacian of the Poisson equation.
-                In practice, in this case, the code performes many 2D Poisson solves on all :math:`(x,y)` slices, each slice at a given :math:`z`.
-                This is often a good approximation for ultra-relativistic beams propagating along the :math:`z` direction, with the relativistic solver.
-                As a consequence, this solver does not need to do an FFT along the :math:`z` direction,
-                and instead uses only transverse FFTs (along :math:`x` and :math:`y`) at each :math:`z` position (or :math:`z` "slice").
-
-          .. fv:var:: ablastr.nprocs_igf_fft
-              :type: `int`
-              :default: number of MPI ranks
-
-              : Number of MPI ranks used to parallalelize the FFT solver.
-                This can be less or equal than then number of MPI ranks that are used to run the overall simulation.
-                It can be useful if the auxiliary simulation boxes fit within a single process, so to avoid extra communications.
-                The auxiliary boxes are extended boxes in real and spectral space that are used to perform the necessary FFTs.
-                The extended simulation box size in real space is :math:`2n_x-1, 2n_y-1, 2n_z-1` with the 3D solver, :math:`2n_x-1, 2n_y -1, n_z` with the 2D solver.
-                The extended simulation box size in spectral space is :math:`n_x, 2n_y-1, 2n_z-1` with the 3D solver, :math:`n_x, 2n_y-1, n_z` with the 2D solver.
+          * ``ablastr.nprocs_igf_fft`` (`int`) optional (default: number of MPI ranks): Number of MPI ranks used to parallalelize the FFT solver.
+            This can be less or equal than then number of MPI ranks that are used to run the overall simulation.
+            It can be useful if the auxiliary simulation boxes fit within a single process, so to avoid extra communications.
+            The auxiliary boxes are extended boxes in real and spectral space that are used to perform the necessary FFTs.
+            The extended simulation box size in real space is :math:`2n_x-1, 2n_y-1, 2n_z-1` with the 3D solver, :math:`2n_x-1, 2n_y -1, n_z` with the 2D solver.
+            The extended simulation box size in spectral space is :math:`n_x, 2n_y-1, 2n_z-1` with the 3D solver, :math:`n_x, 2n_y-1, n_z` with the 2D solver.
 
 .. fv:var:: warpx.self_fields_required_precision
     :type: `float`
@@ -699,7 +571,7 @@ Setting up the field mesh
 -------------------------
 
 .. fv:var:: amr.n_cell
-    :type: `2 integers in 2D`, `3 integers in 3D`
+    :type: `2 int in 2D`, `3 int in 3D`
 
     The number of grid points along each direction (on the **coarsest level**)
 
@@ -719,7 +591,7 @@ Setting up the field mesh
     With this option, all directions are fined by the same ratio.
 
 .. fv:var:: amr.ref_ratio_vect
-    :type: `3 integers for x,y,z per refined level`
+    :type: `3 int for x,y,z per refined level`
 
     When using mesh refinement, this can be used to set the refinement ratio per direction and level, relative to the previous level.
 
@@ -899,77 +771,17 @@ Domain Boundary Conditions
 
       * ``insulator.area_z_hi(x,y)``: For the upper z boundary, expression specifying the insulator location
 
-      .. fv:var:: insulator.Ey_x_lo(y,z,t)
-          : expressions of the tangential field values for the lower x (or r) boundary
+      * ``insulator.Ey_x_lo(y,z,t)``, ``insulator.Ez_x_lo(y,z,t)``, ``insulator.By_x_lo(y,z,t)``, ``insulator.Bz_x_lo(y,z,t)``: expressions of the tangential field values for the lower x (or r) boundary
 
-      .. fv:var:: insulator.Ez_x_lo(y,z,t)
-          : expressions of the tangential field values for the lower x (or r) boundary
+      * ``insulator.Ey_x_hi(y,z,t)``, ``insulator.Ez_x_hi(y,z,t)``, ``insulator.By_x_hi(y,z,t)``, ``insulator.Bz_x_hi(y,z,t)``: expressions of the tangential field values for the upper x (or r) boundary
 
-      .. fv:var:: insulator.By_x_lo(y,z,t)
-          : expressions of the tangential field values for the lower x (or r) boundary
+      * ``insulator.Ex_y_lo(x,z,t)``, ``insulator.Ez_y_lo(x,z,t)``, ``insulator.Bx_y_lo(x,z,t)``, ``insulator.Bz_y_lo(x,z,t)``: expressions of the tangential field values for the lower y boundary
 
-      .. fv:var:: insulator.Bz_x_lo(y,z,t)
-          : expressions of the tangential field values for the lower x (or r) boundary
+      * ``insulator.Ex_y_hi(x,z,t)``, ``insulator.Ez_y_hi(x,z,t)``, ``insulator.Bx_y_hi(x,z,t)``, ``insulator.Bz_y_hi(x,z,t)``: expressions of the tangential field values for the upper y boundary
 
-      .. fv:var:: insulator.Ey_x_hi(y,z,t)
-          : expressions of the tangential field values for the upper x (or r) boundary
+      * ``insulator.Ex_z_lo(x,y,t)``, ``insulator.Ey_z_lo(x,y,t)``, ``insulator.Bx_z_lo(x,y,t)``, ``insulator.By_z_lo(x,y,t)``: expressions of the tangential field values for the lower z boundary
 
-      .. fv:var:: insulator.Ez_x_hi(y,z,t)
-          : expressions of the tangential field values for the upper x (or r) boundary
-
-      .. fv:var:: insulator.By_x_hi(y,z,t)
-          : expressions of the tangential field values for the upper x (or r) boundary
-
-      .. fv:var:: insulator.Bz_x_hi(y,z,t)
-          : expressions of the tangential field values for the upper x (or r) boundary
-
-      .. fv:var:: insulator.Ex_y_lo(x,z,t)
-          : expressions of the tangential field values for the lower y boundary
-
-      .. fv:var:: insulator.Ez_y_lo(x,z,t)
-          : expressions of the tangential field values for the lower y boundary
-
-      .. fv:var:: insulator.Bx_y_lo(x,z,t)
-          : expressions of the tangential field values for the lower y boundary
-
-      .. fv:var:: insulator.Bz_y_lo(x,z,t)
-          : expressions of the tangential field values for the lower y boundary
-
-      .. fv:var:: insulator.Ex_y_hi(x,z,t)
-          : expressions of the tangential field values for the upper y boundary
-
-      .. fv:var:: insulator.Ez_y_hi(x,z,t)
-          : expressions of the tangential field values for the upper y boundary
-
-      .. fv:var:: insulator.Bx_y_hi(x,z,t)
-          : expressions of the tangential field values for the upper y boundary
-
-      .. fv:var:: insulator.Bz_y_hi(x,z,t)
-          : expressions of the tangential field values for the upper y boundary
-
-      .. fv:var:: insulator.Ex_z_lo(x,y,t)
-          : expressions of the tangential field values for the lower z boundary
-
-      .. fv:var:: insulator.Ey_z_lo(x,y,t)
-          : expressions of the tangential field values for the lower z boundary
-
-      .. fv:var:: insulator.Bx_z_lo(x,y,t)
-          : expressions of the tangential field values for the lower z boundary
-
-      .. fv:var:: insulator.By_z_lo(x,y,t)
-          : expressions of the tangential field values for the lower z boundary
-
-      .. fv:var:: insulator.Ex_z_hi(x,y,t)
-          : expressions of the tangential field values for the upper z boundary
-
-      .. fv:var:: insulator.Ey_z_hi(x,y,t)
-          : expressions of the tangential field values for the upper z boundary
-
-      .. fv:var:: insulator.Bx_z_hi(x,y,t)
-          : expressions of the tangential field values for the upper z boundary
-
-      .. fv:var:: insulator.By_z_hi(x,y,t)
-          : expressions of the tangential field values for the upper z boundary
+      * ``insulator.Ex_z_hi(x,y,t)``, ``insulator.Ey_z_hi(x,y,t)``, ``insulator.Bx_z_hi(x,y,t)``, ``insulator.By_z_hi(x,y,t)``: expressions of the tangential field values for the upper z boundary
 
     * ``none``: No boundary condition is applied to the fields with the electromagnetic solver. This option must be used for the lower boundary, `r=0`, with RZ, RCYLINDER, and RSPHERE.
 
@@ -978,7 +790,7 @@ Domain Boundary Conditions
     * ``open``: For the electrostatic Poisson solver based on a Integrated Green Function method.
 
 .. fv:var:: boundary.potential_lo/hi_x/y/z
-    :default: `0`
+    :type: default `0`
 
     Gives the value of the electric potential, in Volts, at the boundaries, for ``pec`` boundaries. With electrostatic solvers
     (i.e., with ``warpx.do_electrostatic = ...``), this is used in order to compute the potential
@@ -1101,7 +913,9 @@ In WarpX, the embedded boundary can be defined in either of two ways:
     - **From an analytical function:**
         In that case, you will need to set the following parameter in the input file.
 
-        * ``warpx.eb_implicit_function`` (`string`)
+        .. fv:var:: warpx.eb_implicit_function
+            :type: `str`
+
             A function of `x`, `y`, `z` that defines the surface of the embedded
             boundary. That surface lies where the function value is 0 ;
             the physics simulation area is where the function value is negative ;
@@ -1110,7 +924,9 @@ In WarpX, the embedded boundary can be defined in either of two ways:
     - **From an STL file:**
         In that case, you will need to set the following parameters in the input file.
 
-        * ``eb2.stl_file`` (`string`)
+        .. fv:var:: eb2.stl_file
+            :type: `str`
+
             The path to an `STL file <https://en.wikipedia.org/wiki/STL_(file_format)>`__.
             In addition, you also need to set ``eb2.geom_type = stl``, in order for the file to be read by WarpX.
             `See the AMReX documentation for more details <https://amrex-codes.github.io/amrex/docs_html/EB.html>`__.
@@ -1431,89 +1247,58 @@ Particle initialization
     * ``SingleParticle``: Inject a single macroparticle.
       This requires the additional parameters:
 
-      .. fv:var:: <species_name>.single_particle_pos
-          :type: `3 float`, particle 3D position [meter]
+      * ``<species_name>.single_particle_pos`` (`3 doubles`, particle 3D position [meter])
 
-      .. fv:var:: <species_name>.single_particle_u
-          :type: `3 float`, particle 3D normalized momentum, i.e. :math:`\gamma \beta`
+      * ``<species_name>.single_particle_u`` (`3 doubles`, particle 3D normalized momentum, i.e. :math:`\gamma \beta`)
 
-      .. fv:var:: <species_name>.single_particle_weight
-          :type: `float`, macroparticle weight, i.e. number of physical particles it represents
+      * ``<species_name>.single_particle_weight`` ( `double`, macroparticle weight, i.e. number of physical particles it represents)
 
     * ``MultipleParticles``: Inject multiple macroparticles.
       This requires the additional parameters:
 
-      .. fv:var:: <species_name>.multiple_particles_pos_x
-          :type: list of `float`, X positions of the particles [meter]
+      * ``<species_name>.multiple_particles_pos_x`` (list of `doubles`, X positions of the particles [meter])
 
-      .. fv:var:: <species_name>.multiple_particles_pos_y
-          :type: list of `float`, Y positions of the particles [meter]
+      * ``<species_name>.multiple_particles_pos_y`` (list of `doubles`, Y positions of the particles [meter])
 
-      .. fv:var:: <species_name>.multiple_particles_pos_z
-          :type: list of `float`, Z positions of the particles [meter]
+      * ``<species_name>.multiple_particles_pos_z`` (list of `doubles`, Z positions of the particles [meter])
 
-      .. fv:var:: <species_name>.multiple_particles_ux
-          :type: list of `float`, X normalized momenta of the particles, i.e. :math:`\gamma \beta_x`
+      * ``<species_name>.multiple_particles_ux`` (list of `doubles`, X normalized momenta of the particles, i.e. :math:`\gamma \beta_x`)
 
-      .. fv:var:: <species_name>.multiple_particles_uy
-          :type: list of `float`, Y normalized momenta of the particles, i.e. :math:`\gamma \beta_y`
+      * ``<species_name>.multiple_particles_uy`` (list of `doubles`, Y normalized momenta of the particles, i.e. :math:`\gamma \beta_y`)
 
-      .. fv:var:: <species_name>.multiple_particles_uz
-          :type: list of `float`, Z normalized momenta of the particles, i.e. :math:`\gamma \beta_z`
+      * ``<species_name>.multiple_particles_uz`` (list of `doubles`, Z normalized momenta of the particles, i.e. :math:`\gamma \beta_z`)
 
-      .. fv:var:: <species_name>.multiple_particles_weight
-          :type: list of `float`, macroparticle weights, i.e. number of physical particles each represents
+      * ``<species_name>.multiple_particles_weight`` (list of `doubles`, macroparticle weights, i.e. number of physical particles each represents)
 
     * ``gaussian_beam``: Inject particle beam with gaussian distribution in
       space in all directions. This requires additional parameters:
 
-      .. fv:var:: <species_name>.q_tot
-          :type: beam charge
+      * ``<species_name>.q_tot`` (beam charge),
 
-          ,
-
-      .. fv:var:: <species_name>.npart_real
-          :type: total number of real particles in the beam
+      * ``<species_name>.npart_real`` (total number of real particles in the beam)
 
       The user must define one and only only between ``q_tot`` and ``npart_real``.
       The latter must be used for neutral species.
 
-      .. fv:var:: <species_name>.npart
-          :type: number of macroparticles in the beam
+      * ``<species_name>.npart`` (number of macroparticles in the beam),
 
-          ,
+      * ``<species_name>.x/y/z_m`` (average position in `x/y/z`),
 
-      .. fv:var:: <species_name>.x/y/z_m
-          :type: average position in `x/y/z`
-
-          ,
-
-      .. fv:var:: <species_name>.x/y/z_rms
-          :type: standard deviation in `x/y/z`
-
-          ,
+      * ``<species_name>.x/y/z_rms`` (standard deviation in `x/y/z`),
 
       There are additional optional parameters:
 
-      .. fv:var:: <species_name>.x/y/z_cut
-          :type: optional, particles with ``abs(x-x_m) > x_cut*x_rms`` are not injected, same for y and z. ``<species_name>.q_tot`` is the charge of the un-cut beam, so that cutting the distribution is likely to result in a lower total charge
+      * ``<species_name>.x/y/z_cut`` (optional, particles with ``abs(x-x_m) > x_cut*x_rms`` are not injected, same for y and z. ``<species_name>.q_tot`` is the charge of the un-cut beam, so that cutting the distribution is likely to result in a lower total charge),
+      * ``<species_name>.do_symmetrize`` (optional, whether to symmetrize the beam)
 
-          ,
-
-      .. fv:var:: <species_name>.do_symmetrize
-          :type: optional, whether to symmetrize the beam
-
-      .. fv:var:: <species_name>.symmetrization_order
-          :type: order of symmetrization
-          :default: 4, can be 4 or 8
+      * ``<species_name>.symmetrization_order`` (order of symmetrization, default is 4, can be 4 or 8).
 
       If ``<species_name>.do_symmetrize`` is 0, no symmetrization occurs.  If ``<species_name>.do_symmetrize`` is 1,
       then the beam is symmetrized according to the value of ``<species_name>.symmetrization_order``.
       If set to 4, symmetrization is in the x and y direction, (x,y) (-x,y) (x,-y) (-x,-y).
       If set to 8, symmetrization is also done with x and y exchanged, (y,x), (-y,x), (y,-x), (-y,-x)).
 
-      .. fv:var:: <species_name>.focal_distance
-          :type: optional, distance between the beam centroid and the position of the focal plane of the beam, along the direction of the beam mean velocity; space charge is ignored in the initialization of the particles
+      * ``<species_name>.focal_distance`` (optional, distance between the beam centroid and the position of the focal plane of the beam, along the direction of the beam mean velocity; space charge is ignored in the initialization of the particles)
 
       If ``<species_name>.focal_distance`` is specified, ``x_rms``, ``y_rms`` and ``z_rms`` are the sizes of the beam in the focal plane. Since the beam is not necessarily initialized close to its focal plane, the initial size of the beam will differ from ``x_rms``, ``y_rms``, ``z_rms``.
 
@@ -1529,10 +1314,7 @@ Particle initialization
 
           \sigma_{x,y}(z) &= \sigma^*_{x,y} \sqrt{1 + \left( \frac{z - z^*}{\beta^*_{x,y}} \right)^2}
 
-      .. fv:var:: <species_name>.do_gaussian_beam_rotation
-          :type: `bool`, optional
-
-          the positions of the beam particles are rotated around the beam centroid.
+      * ``<species_name>.do_gaussian_beam_rotation`` (`bool`, optional) the positions of the beam particles are rotated around the beam centroid.
 
       If ``do_gaussian_beam_rotation = 1`` then the user needs to specify:
 
@@ -1540,10 +1322,7 @@ Particle initialization
 
           * ``<species_name>.gaussian_beam_rotation_angle``: (`double`) angle of rotation around the specified axis, in radians.
 
-      .. fv:var:: <species_name>.do_gaussian_beam_rotation_momenta
-          :type: `bool`, optional
-
-          the momenta of the beam particles are also rotated using the same transformation applied to their positions. The rotation is the same as that for the positions. Momenta cannot be rotated independently; position rotation must be enabled first.
+      * ``<species_name>.do_gaussian_beam_rotation_momenta`` (`bool`, optional) the momenta of the beam particles are also rotated using the same transformation applied to their positions. The rotation is the same as that for the positions. Momenta cannot be rotated independently; position rotation must be enabled first.
 
       Note that the other beam parameters (e.g. ``<species_name>.x/y/z_rms``, etc.) are used in the initialization process `before` performing the rotation.
       Therefore, the user should define the beam size, cuts, and focal distance for the beam pre-rotation, hence aligned to the Cartesian axes.
@@ -1551,34 +1330,15 @@ Particle initialization
     * ``external_file``: Inject macroparticles with properties (mass, charge, position, and momentum - :math:`\gamma \beta m c`) read from an external openPMD file.
       With it users can specify the additional arguments:
 
-      .. fv:var:: <species_name>.injection_file
-          :type: `str`
+      * ``<species_name>.injection_file`` (`string`) openPMD file name and
 
-          openPMD file name and
+      * ``<species_name>.charge`` (`double`) optional (default is read from openPMD file) when set this will be the charge of the physical particle represented by the injected macroparticles.
 
-      .. fv:var:: <species_name>.charge
-          :type: `float`
-          :default: is read from openPMD file
+      * ``<species_name>.mass`` (`double`) optional (default is read from openPMD file) when set this will be the charge of the physical particle represented by the injected macroparticles.
 
-          when set this will be the charge of the physical particle represented by the injected macroparticles.
+      * ``<species_name>.z_shift`` (`double`) optional (default is no shift) when set this value will be added to the longitudinal, ``z``, position of the particles.
 
-      .. fv:var:: <species_name>.mass
-          :type: `float`
-          :default: is read from openPMD file
-
-          when set this will be the charge of the physical particle represented by the injected macroparticles.
-
-      .. fv:var:: <species_name>.z_shift
-          :type: `float`
-          :default: is no shift
-
-          when set this value will be added to the longitudinal, ``z``, position of the particles.
-
-      .. fv:var:: <species_name>.impose_t_lab_from_file
-          :type: `bool`
-          :default: is false
-
-          only read if warpx.gamma_boost > 1., it allows to set t_lab for the Lorentz Transform as being the time stored in the openPMD file.
+      * ``<species_name>.impose_t_lab_from_file`` (`bool`) optional (default is false) only read if warpx.gamma_boost > 1., it allows to set t_lab for the Lorentz Transform as being the time stored in the openPMD file.
 
       Warning: ``q_tot!=0`` is not supported with the ``external_file`` injection style. If a value is provided, it is ignored and no re-scaling is done.
       The external file must include the species ``openPMD::Record`` labeled ``position`` and ``momentum`` (`double` arrays), with dimensionality and units set via ``openPMD::setUnitDimension`` and ``setUnitSI``.
@@ -1592,38 +1352,28 @@ Particle initialization
       defined by the user (using some of the parameters listed below), or the embedded boundary (see :ref:`Embedded Boundary Conditions <running-cpp-parameters-eb>`).
       This requires the additional parameters:
 
-      .. fv:var:: <species_name>.flux_profile
-          :type: see the description of this parameter further below
+      * ``<species_name>.flux_profile`` (see the description of this parameter further below)
 
-      .. fv:var:: <species_name>.inject_from_embedded_boundary
-          :type: bool
-          :default: `0` ; whether to inject from the embedded boundary or from a user-specified plane
+      * ``<species_name>.inject_from_embedded_boundary`` (`0` or `1`, default `0` ; whether to inject from the embedded boundary or from a user-specified plane.
+        When injecting from the embedded boundary, the momentum distribution specified by the user along ``z`` (see e.g. ``uz_m``, ``uz_th`` below) is interpreted
+        as the momentum distribution along the local normal to the embedded boundary.)
 
-          When injecting from the embedded boundary, the momentum distribution specified by the user along ``z`` (see e.g. ``uz_m``, ``uz_th`` below) is interpreted
-          as the momentum distribution along the local normal to the embedded boundary.)
+      * ``<species_name>.surface_flux_pos`` (only used when injecting from a plane, `double`, location of the injection plane [meter])
 
-      .. fv:var:: <species_name>.surface_flux_pos
-          :type: only used when injecting from a plane, `float`, location of the injection plane [meter]
+      * ``<species_name>.flux_normal_axis`` (only used when injecting from a plane, `x`, `y`, or `z` for 3D, `x` or `z` for 2D, or `r`, `t`, or `z` for RZ, or `r` for RCYLINDER and RSPHERE. When `flux_normal_axis` is `r` or `t`, the `x` and `y` components of the user-specified momentum distribution are interpreted as the `r` and `t` components respectively)
 
-      .. fv:var:: <species_name>.flux_normal_axis
-          :type: only used when injecting from a plane, `x`, `y`, or `z` for 3D, `x` or `z` for 2D, or `r`, `t`, or `z` for RZ, or `r` for RCYLINDER and RSPHERE. When `flux_normal_axis` is `r` or `t`, the `x` and `y` components of the user-specified momentum distribution are interpreted as the `r` and `t` components respectively
+      * ``<species_name>.flux_direction`` (only used when injecting from a plane, `-1` or `+1`, direction of flux relative to the plane)
 
-      .. fv:var:: <species_name>.flux_direction
-          :type: only used when injecting from a plane, `-1` or `+1`, direction of flux relative to the plane
+      * ``<species_name>.num_particles_per_cell`` (`double`)
 
-      .. fv:var:: <species_name>.num_particles_per_cell
-          :type: `float`
+      * ``<species_name>.flux_tmin`` (`double`, Optional time at which the flux will be turned on. Ignored when negative.)
 
-      .. fv:var:: <species_name>.flux_tmin
-          :type: `float`, Optional time at which the flux will be turned on. Ignored when negative.
-
-      .. fv:var:: <species_name>.flux_tmax
-          :type: `float`, Optional time at which the flux will be turned off. Ignored when negative.
+      * ``<species_name>.flux_tmax`` (`double`, Optional time at which the flux will be turned off. Ignored when negative.)
 
     * ``none``: Do not inject macro-particles (for example, in a simulation that starts with neutral, ionizable atoms, one may want to create the electrons species -- where ionized electrons can be stored later on -- without injecting electron macro-particles).
 
 .. fv:var:: <species_name>.num_particles_per_cell_each_dim
-    :type: `3 integers in 3D, RZ, RSPHERE, 2 integers in 2D and RCYLINDER`
+    :type: `3 int in 3D, RZ, RSPHERE, 2 int in 2D and RCYLINDER`
 
     With the NUniformPerCell injection style, this specifies the number of particles along each axis
     within a cell. For RZ, the three axis are radius, theta, and z and that the recommended
@@ -1960,21 +1710,21 @@ Particle initialization
     along the diagonals (4 particles in 2D, 8 particles in 3D).
 
 .. fv:var:: <species_name>.do_not_deposit
-    :type: bool; optional
+    :type: bool optional
     :default: `0`
 
     If `1` is given, both charge deposition and current deposition will
     not be done, thus that species does not contribute to the fields.
 
 .. fv:var:: <species_name>.do_not_gather
-    :type: bool; optional
+    :type: bool optional
     :default: `0`
 
     If `1` is given, field gather from grids will not be done,
     thus that species will not be affected by the field on grids.
 
 .. fv:var:: <species_name>.do_not_push
-    :type: bool; optional
+    :type: bool optional
     :default: `0`
 
     If `1` is given, this species will not be pushed
@@ -1988,10 +1738,7 @@ Particle initialization
     when the particles are generated.
     If the user-defined integer attribute is ``<int_attrib_name>`` then the
     following required parameter must be specified to initialize the attribute.
-
-    .. fv:var:: <species_name>.attribute.<int_attrib_name>(x,y,z,ux,uy,uz,t)
-        :type: `str`
-
+    * ``<species_name>.attribute.<int_attrib_name>(x,y,z,ux,uy,uz,t)`` (`string`)
     ``t`` represents the physical time in seconds during the simulation.
     ``x``, ``y``, ``z`` represent particle positions in the unit of meter.
     ``ux``, ``uy``, ``uz`` represent the particle momenta in the unit of
@@ -2013,18 +1760,16 @@ Particle initialization
     If the user-defined real attribute is ``<real_attrib_name>`` then the
     following required parameter must be specified to initialize the attribute.
 
-       .. fv:var:: <species_name>.attribute.<real_attrib_name>(x,y,z,ux,uy,uz,t)
-       :type: `str`
-
-           ``t`` represents the physical time in seconds during the simulation.
-           ``x``, ``y``, ``z`` represent particle positions in the unit of meter.
-           ``ux``, ``uy``, ``uz`` represent the particle momenta in the unit of
-           :math:`\gamma v/c`, where
-           :math:`\gamma` is the Lorentz factor,
-           :math:`v/c` is the particle velocity normalized by the speed of light.
+    * ``<species_name>.attribute.<real_attrib_name>(x,y,z,ux,uy,uz,t)`` (`string`)
+     ``t`` represents the physical time in seconds during the simulation.
+     ``x``, ``y``, ``z`` represent particle positions in the unit of meter.
+     ``ux``, ``uy``, ``uz`` represent the particle momenta in the unit of
+     :math:`\gamma v/c`, where
+     :math:`\gamma` is the Lorentz factor,
+     :math:`v/c` is the particle velocity normalized by the speed of light.
 
 .. fv:var:: <species_name>.save_particles_at_xlo/hi_ylo/hi_zlo/hi
-    :type: bool; optional
+    :type: bool optional
     :default: `0`
 
     If `1` particles of this species will be copied to the scraped particle
@@ -2053,7 +1798,7 @@ Particle initialization
        call ``clear_buffer()``.
 
 .. fv:var:: <species_name>.save_particles_at_eb
-    :type: bool; optional
+    :type: bool optional
     :default: `0`
 
     If `1` particles of this species will be copied to the scraped particle
@@ -2137,10 +1882,7 @@ Particle initialization
     * ``leveling_thinning`` This algorithm is defined in :cite:t:`param-MuravievCPC2021`.
       It has one parameter:
 
-        .. fv:var:: <species_name>.resampling_algorithm_target_ratio
-            :type: `float`
-            :default: `1.5`
-
+        * ``<species_name>.resampling_algorithm_target_ratio`` (`float`) optional (default `1.5`)
             This **roughly** corresponds to the ratio between the number of particles before and
             after resampling.
 
@@ -2148,20 +1890,14 @@ Particle initialization
       cells and merged, similar to the approach described in :cite:t:`param-Vranic2015`.
       It has three parameters:
 
-        .. fv:var:: <species_name>.resampling_algorithm_delta_ur
-            :type: `float`
-
+        * ``<species_name>.resampling_algorithm_delta_ur`` (`float`)
             The width of momentum cells used in clustering particles, in m/s.
 
-        .. fv:var:: <species_name>.resampling_algorithm_n_theta
-            :type: `int`
-
+        * ``<species_name>.resampling_algorithm_n_theta`` (`int`)
             The number of cell divisions to use in the :math:`\theta` direction
             when clustering the particle velocities.
 
-        .. fv:var:: <species_name>.resampling_algorithm_n_phi
-            :type: `int`
-
+        * ``<species_name>.resampling_algorithm_n_phi`` (`int`)
             The number of cell divisions to use in the :math:`\phi` direction
             when clustering the particle velocities.
 
@@ -2207,21 +1943,12 @@ Particle initialization
     The momentum of the virtual photons is parallel to that of the parent particle.
     This feature also requires the following input parameters:
 
-      .. fv:var:: <species>.qed_virtual_photon_species_name
-          :type: `str`
+      * ``<species>.qed_virtual_photon_species_name`` (`string`) name of the virtual photon species associated with the current lepton species.
 
-          name of the virtual photon species associated with the current lepton species.
+      * ``<virtual_photon_species>.qed_virtual_photons_min_energy`` (`float`, in Joules) minimum energy of the virtual photons
 
-      .. fv:var:: <virtual_photon_species>.qed_virtual_photons_min_energy
-          :type: `float`, in Joules
-
-          minimum energy of the virtual photons
-
-      .. fv:var:: <virtual_photon_species>.qed_virtual_photons_multiplier
-          :type: `int`
-
-          sampling factor for the virtual photons.
-          A sampling factor of ``f`` means that the number of virtual photons is multiplied by ``f``, while their weights are divided by ``f``.
+      * ``<virtual_photon_species>.qed_virtual_photons_multiplier`` (`int`), sampling factor for the virtual photons.
+        A sampling factor of ``f`` means that the number of virtual photons is multiplied by ``f``, while their weights are divided by ``f``.
 
     The virtual photons can undergo collisions via the linear Breit-Wheeler or linear Compton processes.
     This is useful to model incoherent beam-beam effects in colliders (e.g. pair generation, radiative Bhabha scattering).
@@ -2377,18 +2104,10 @@ Laser initialization
       * ``nt``, number of timesteps (``uint32_t``, must be >=2)
       * ``nx``, number of points along x (``uint32_t``, must be >=2)
       * ``ny``, number of points along y (``uint32_t``, must be 1 for 2D simulations and >=2 for 3D simulations)
-
-      .. fv:var:: timesteps
-          :type: ``float[2]=[t_min,t_max]``
-
-      .. fv:var:: x_coords
-          :type: ``float[2]=[x_min,x_max]``
-
-      .. fv:var:: y_coords
-          :type: ``float[1]`` in 2D, ``float[2]=[y_min,y_max]`` in 3D
-
-      .. fv:var:: field_data
-          :type: ``float[nt x nx * ny]``, with ``nt`` being the slowest coordinate
+      * ``timesteps`` (``double[2]=[t_min,t_max]``)
+      * ``x_coords`` (``double[2]=[x_min,x_max]``)
+      * ``y_coords`` (``double[1]`` in 2D, ``double[2]=[y_min,y_max]`` in 3D)
+      * ``field_data`` (``double[nt x nx * ny]``, with ``nt`` being the slowest coordinate).
 
       A binary file can be generated from Python, see an example at ``Examples/Tests/laser_injection_from_file``
 
@@ -2638,6 +2357,7 @@ are applied to the grid directly. In particular, these fields can be seen in the
     should contain both B and E external fields data.
 
 .. fv:var:: warpx.E_external_grid
+
     & ``warpx.B_external_grid`` (list of `3 floats`)
     required when ``warpx.E_ext_grid_init_style="constant"``
     and when ``warpx.B_ext_grid_init_style="constant"``, respectively.
@@ -2663,6 +2383,7 @@ The external fields defined with input parameters that start with ``warpx.B_ext_
 are applied to the particles directly, at each timestep. As a results, these fields **cannot** be seen in the diagnostics that output the fields on the grid.
 
 .. fv:var:: particles.E_ext_particle_init_style
+
     & ``particles.B_ext_particle_init_style`` (string) optional (default "none")
     These parameters determine the type of the external electric and
     magnetic fields respectively that are applied directly to the particles at every timestep.
@@ -2678,19 +2399,19 @@ are applied to the particles directly, at each timestep. As a results, these fie
       expression that is a function of space (x,y,z) and time (t), relative to the lab frame.
       The E-field is specified by the input parameters:
 
-        .. fv:var:: particles.Ex_external_particle_function(x,y,z,t)
+        * ``particles.Ex_external_particle_function(x,y,z,t)``
 
-        .. fv:var:: particles.Ey_external_particle_function(x,y,z,t)
+        * ``particles.Ey_external_particle_function(x,y,z,t)``
 
-        .. fv:var:: particles.Ez_external_particle_function(x,y,z,t)
+        * ``particles.Ez_external_particle_function(x,y,z,t)``
 
       The B-field is specified by the input parameters:
 
-        .. fv:var:: particles.Bx_external_particle_function(x,y,z,t)
+        * ``particles.Bx_external_particle_function(x,y,z,t)``
 
-        .. fv:var:: particles.By_external_particle_function(x,y,z,t)
+        * ``particles.By_external_particle_function(x,y,z,t)``
 
-        .. fv:var:: particles.Bz_external_particle_function(x,y,z,t)
+        * ``particles.Bz_external_particle_function(x,y,z,t)``
 
       Note that the position is defined in Cartesian coordinates, as a function of (x,y,z), even for RZ, RCYLINDER, and RSPHERE.
 
@@ -2707,9 +2428,9 @@ are applied to the particles directly, at each timestep. As a results, these fie
 
         The time dependency of the E- and B-field can be specified by the input parameters:
 
-        .. fv:var:: particles.read_fields_E_dependency(t)
+        * ``particles.read_fields_E_dependency(t)``
 
-        .. fv:var:: particles.read_fields_B_dependency(t)
+        * ``particles.read_fields_B_dependency(t)``
 
         The time dependency scales the corresponding field uniformly in space
         and per level by the given function of time ``t`` (in seconds).
@@ -2733,11 +2454,8 @@ are applied to the particles directly, at each timestep. As a results, these fie
         In this mode, several field maps can be loaded independently. Each field
         is given a unique name listed in
 
-        .. fv:var:: particles.E_ext_particle_fields
-            :type: for electric fields
-
-        .. fv:var:: particles.B_ext_particle_fields
-            :type: for magnetic fields
+        * ``particles.E_ext_particle_fields``  (for electric fields)
+        * ``particles.B_ext_particle_fields``  (for magnetic fields)
 
         Each named field must define its own path and may optionally define a
         time dependency. The general key ``particles.read_fields_from_path`` is
@@ -2798,6 +2516,7 @@ The external fields defined with input parameters that start with ``warpx.B_ext_
 are applied to the fluids directly, at each timestep. As a results, these fields **cannot** be seen in the diagnostics that output the fields on the grid.
 
 .. fv:var:: <fluid_species_name>.E_ext_init_style
+
     & ``<fluid_species_name>.B_ext_init_style`` (string) optional (default "none")
     These parameters determine the type of the external electric and
     magnetic fields respectively that are applied directly to the cold relativistic fluids at every timestep.
@@ -2809,19 +2528,19 @@ are applied to the fluids directly, at each timestep. As a results, these fields
       expression that is a function of space (x,y,z) and time (t), relative to the lab frame.
       The E-field is specified by the input parameters:
 
-        .. fv:var:: <fluid_species_name>.Ex_external_function(x,y,z,t)
+        * ``<fluid_species_name>.Ex_external_function(x,y,z,t)``
 
-        .. fv:var:: <fluid_species_name>.Ey_external_function(x,y,z,t)
+        * ``<fluid_species_name>.Ey_external_function(x,y,z,t)``
 
-        .. fv:var:: <fluid_species_name>.Ez_external_function(x,y,z,t)
+        * ``<fluid_species_name>.Ez_external_function(x,y,z,t)``
 
       The B-field is specified by the input parameters:
 
-        .. fv:var:: <fluid_species_name>.Bx_external_function(x,y,z,t)
+        * ``<fluid_species_name>.Bx_external_function(x,y,z,t)``
 
-        .. fv:var:: <fluid_species_name>.By_external_function(x,y,z,t)
+        * ``<fluid_species_name>.By_external_function(x,y,z,t)``
 
-        .. fv:var:: <fluid_species_name>.Bz_external_function(x,y,z,t)
+        * ``<fluid_species_name>.Bz_external_function(x,y,z,t)``
 
       Note that the position is defined in Cartesian coordinates, as a function of (x,y,z), even for RZ, RCYLINDER, and RSPHERE.
 
@@ -2841,22 +2560,19 @@ Note that elements of the same type cannot overlap each other.
     appear in the lattice.
 
 .. fv:var:: lattice.reverse
-    :type: ``bool``
+    :type: `bool`
     :default: ``false``
 
     Reverse the list of elements in the lattice.
 
 .. fv:var:: <element_name>.type
-    :type: ``str``
+    :type: `str`
 
     Indicates the element type for this lattice element. This should be one of:
 
         * ``drift`` for free drift. This requires this additional parameter:
 
-            .. fv:var:: <element_name>.ds
-                :type: ``float``, in meters
-
-                the segment length
+            * ``<element_name>.ds`` (``float``, in meters) the segment length
 
         * ``quad`` for a hard edged quadrupole.
           This applies a quadrupole field that is uniform within the `z` extent of the element with a sharp cut off at the ends.
@@ -2864,24 +2580,13 @@ Note that elements of the same type cannot overlap each other.
           or leaving it, to increase the accuracy.
           This requires these additional parameters:
 
-            .. fv:var:: <element_name>.ds
-                :type: ``float``, in meters
+            * ``<element_name>.ds`` (``float``, in meters) the segment length
 
-                the segment length
+            * ``<element_name>.dEdx`` (``float``, in volts/meter^2) optional (default: 0.) the electric quadrupole field gradient
+              The field applied to the particles will be `Ex = dEdx*x` and `Ey = -dEdx*y`.
 
-            .. fv:var:: <element_name>.dEdx
-                :type: ``float``, in volts/meter^2
-                :default: 0.
-
-                the electric quadrupole field gradient
-                  The field applied to the particles will be `Ex = dEdx*x` and `Ey = -dEdx*y`.
-
-            .. fv:var:: <element_name>.dBdx
-                :type: ``float``, in Tesla/meter
-                :default: 0.
-
-                the magnetic quadrupole field gradient
-                  The field applied to the particles will be `Bx = dBdx*y` and `By = dBdx*x`.
+            * ``<element_name>.dBdx`` (``float``, in Tesla/meter) optional (default: 0.) the magnetic quadrupole field gradient
+              The field applied to the particles will be `Bx = dBdx*y` and `By = dBdx*x`.
 
         * ``plasmalens`` for a field modeling a plasma lens
           This applies a radially directed plasma lens field that is uniform within the `z` extent of the element with
@@ -2890,38 +2595,21 @@ Note that elements of the same type cannot overlap each other.
           or leaving it, to increase the accuracy.
           This requires these additional parameters:
 
-            .. fv:var:: <element_name>.ds
-                :type: ``float``, in meters
+            * ``<element_name>.ds`` (``float``, in meters) the segment length
 
-                the segment length
+            * ``<element_name>.dEdx`` (``float``, in volts/meter^2) optional (default: 0.) the electric field gradient
+              The field applied to the particles will be `Ex = dEdx*x` and `Ey = dEdx*y`.
 
-            .. fv:var:: <element_name>.dEdx
-                :type: ``float``, in volts/meter^2
-                :default: 0.
-
-                the electric field gradient
-                  The field applied to the particles will be `Ex = dEdx*x` and `Ey = dEdx*y`.
-
-            .. fv:var:: <element_name>.dBdx
-                :type: ``float``, in Tesla/meter
-                :default: 0.
-
-                the magnetic field gradient
-                  The field applied to the particles will be `Bx = dBdx*y` and `By = -dBdx*x`.
+            * ``<element_name>.dBdx`` (``float``, in Tesla/meter) optional (default: 0.) the magnetic field gradient
+              The field applied to the particles will be `Bx = dBdx*y` and `By = -dBdx*x`.
 
         * ``line`` a sub-lattice (line) of elements to append to the lattice.
 
-            .. fv:var:: <element_name>.elements
-                :type: ``list of strings``
-                :default: no elements
+            * ``<element_name>.elements`` (``list of strings``) optional (default: no elements)
+              A list of names (one name per lattice element), in the order that they appear in the lattice.
 
-                A list of names (one name per lattice element), in the order that they appear in the lattice.
-
-            .. fv:var:: <element_name>.reverse
-                :type: ``bool``
-                :default: ``false``
-
-                Reverse the list of elements in the line before appending to the lattice.
+            * ``<element_name>.reverse`` (``boolean``) optional (default: ``false``)
+              Reverse the list of elements in the line before appending to the lattice.
 
 .. _running-cpp-parameters-collision:
 
@@ -3223,7 +2911,7 @@ Details about the collision models can be found in the :ref:`theory section <mul
     With a value greater than 1, it will distribute more of the correction to particles with higher weights.
 
 .. fv:var:: collisions.split_position_push
-    :type: ``bool``, optional
+    :type: `bool`, optional
     :default: = 1
 
     If true, collisions are performed in the middle of the position push, which is split into two substeps.
@@ -3625,7 +3313,7 @@ Maxwell solver: PSATD method
     Whether to use an averaged Galilean PSATD algorithm or standard Galilean PSATD.
 
 .. fv:var:: psatd.JRhom
-    :type: ``str``
+    :type: `str`
 
     This determines whether the PSATD JRhom algorithm is used, where current deposition and field update are performed multiple times within one time step, while field gathering is performed only once.
     For simulations with strong numerical Cherenkov instability (NCI), the PSATD JRhom algorithm is recommended in combination with ``psatd.do_time_averaging = 1``.
@@ -3703,8 +3391,13 @@ Maxwell solver: kinetic-fluid hybrid
 
     **Required Parameters:**
 
-    - ``hybrid_pic_model.elec_temp`` must be specified when using the hybrid solver.
-    - ``hybrid_pic_model.n0_ref`` should be specified if ``hybrid_pic_model.gamma != 1``.
+    .. fv:var:: hybrid_pic_model.elec_temp
+
+        must be specified when using the hybrid solver.
+
+    .. fv:var:: hybrid_pic_model.n0_ref
+
+        should be specified if ``hybrid_pic_model.gamma != 1``.
 
     **Best Practices**
 
@@ -3890,7 +3583,7 @@ Grid types (collocated, staggered, hybrid)
     Default: ``warpx.current_centering_no<x,y,z> = 8`` with hybrid grids (typically necessary to ensure stability in boosted-frame simulations of relativistic plasmas and beams).
 
 .. fv:var:: warpx.do_current_centering
-    :type: `bool`, `0` or `1`
+    :type: `bool`, bool
 
     If true, the current is deposited on a nodal grid and then centered to a staggered grid (Yee grid), using finite-order interpolation.
 
@@ -4071,7 +3764,7 @@ Similar to what is done for physical species, WarpX has a class Diagnostics that
 This currently applies to standard diagnostics, but should be extended to back-transformed diagnostics and reduced diagnostics (and others) in a near future.
 
 .. fv:var:: warpx.synchronize_velocity_for_diagnostics
-    :type: bool; , optional
+    :type: bool, optional
     :default: ``1``
 
     Whether to synchronize the particle velocities with the particle positions in the diagnostics.
@@ -4092,7 +3785,7 @@ This should be changed in the future.
 In-situ capabilities can be used by turning on Sensei or Ascent (provided they are installed) through the output format, see below.
 
 .. fv:var:: diagnostics.enable
-    :type: bool; , optional
+    :type: bool, optional
     :default: `1`
 
     Whether to enable or disable diagnostics. This flag overwrites all other diagnostics input parameters.
@@ -4160,7 +3853,7 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
 .. fv:var:: <diag_name>.openpmd_backend
     :type: ``bp5``, ``bp4``, ``h5`` or ``json``
 
-    only used if ``<diag_name>.format = openpmd``
+    , only used if ``<diag_name>.format = openpmd``
     `I/O backend <https://openpmd-api.readthedocs.io/en/latest/backends/overview.html>`_ for `openPMD <https://www.openPMD.org>`_ data dumps.
     ``bp5``/``bp4`` is the `ADIOS I/O library <https://csmd.ornl.gov/adios>`_, ``h5`` is the `HDF5 format <https://www.hdfgroup.org/solutions/hdf5/>`_, and ``json`` is a `simple text format <https://en.wikipedia.org/wiki/JSON>`_.
     ``json`` is for debugging and only works with serial/single-rank jobs.
@@ -4170,25 +3863,26 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
     :type: optional, ``v`` (variable based), ``f`` (file based) or ``g`` (group based)
 
     only read if ``<diag_name>.format = openpmd``.
-     openPMD `file output encoding <https://openpmd-api.readthedocs.io/en/0.17.0/usage/concepts.html#iteration-and-series>`__.
-     File based: one file per timestep (slower), group/variable based: one file for all steps (faster)).
-     ``variable based`` is an `experimental feature with ADIOS2 BP5 <https://openpmd-api.readthedocs.io/en/0.17.0/backends/adios2.html#experimental-new-adios2-schema>`__ that will replace ``g``.
-     Default: ``f`` (full diagnostics)
+    openPMD `file output encoding <https://openpmd-api.readthedocs.io/en/0.17.0/usage/concepts.html#iteration-and-series>`__.
+    File based: one file per timestep (slower), group/variable based: one file for all steps (faster)).
+    ``variable based`` is an `experimental feature with ADIOS2 BP5 <https://openpmd-api.readthedocs.io/en/0.17.0/backends/adios2.html#experimental-new-adios2-schema>`__ that will replace ``g``.
+    Default: ``f`` (full diagnostics)
 
 .. fv:var:: <diag_name>.buffer_flush_limit_btd
     :type: `int`
-    :default: 5
+    :default: s to 5
 
-    only read if ``<diag_name>.diag_type = BackTransformed``
+    , only read if ``<diag_name>.diag_type = BackTransformed``
     This parameter is intended for ADIOS backend to group every N buffers (N is the value of this parameter) and then flush to disk.
 
 .. fv:var:: <diag_name>.adios2_operator.type
-    :type: (``zfp``, ``blosc``) optional
+    :type: ``zfp``, ``blosc``
 
     ,
     `ADIOS2 I/O operator type <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ for `openPMD <https://www.openPMD.org>`_ data dumps.
 
 .. fv:var:: <diag_name>.adios2_operator.parameters.*
+
     ,
     `ADIOS2 I/O operator parameters <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ for `openPMD <https://www.openPMD.org>`_ data dumps.
 
@@ -4220,11 +3914,13 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
 .. fv:var:: <diag_name>.adios2_engine.type
     :type: ``bp5``, ``bp4``, ``sst``, ``ssc``, ``dataman``
 
+    ,
     `ADIOS2 Engine type <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ for `openPMD <https://www.openPMD.org>`_ data dumps.
     See full list of engines at `ADIOS2 readthedocs <https://adios2.readthedocs.io/en/latest/engines/engines.html>`__
 
 .. fv:var:: <diag_name>.adios2_engine.parameters.*
 
+    ,
     `ADIOS2 Engine parameters <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ for `openPMD <https://www.openPMD.org>`_ data dumps.
 
     An example for parameters for the BP engine are setting the number of writers (``NumAggregators``), transparently redirecting data to burst buffers etc.
@@ -4288,7 +3984,7 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
 
     .. math::
 
-   \texttt{<field_name>_<species_name>} = \frac{\sum_{i=1}^N w_i \, f(x_i,y_i,z_i,u_{x,i},u_{y,i},u_{z,i})}{\sum_{i=1}^N w_i}
+       \texttt{<field_name>_<species_name>} = \frac{\sum_{i=1}^N w_i \, f(x_i,y_i,z_i,u_{x,i},u_{y,i},u_{z,i})}{\sum_{i=1}^N w_i}
 
     where :math:`w_i` is the particle weight, :math:`f()` is the parser function, and :math:`(x_i,y_i,z_i)` are particle positions in units of a meter. The sums are over all particles of type ``<species_name>`` in a cell (ignoring the particle shape factor) that satisfy ``<diag_name>.particle_fields.<field_name>.filter(x,y,z,ux,uy,uz)``.
     When ``<diag_name>.particle_fields.<field_name>.do_average`` is `0`, the division by the sum over particle weights is not done.
@@ -4629,7 +4325,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
     the first and the second columns in the output file are
     the time step and the corresponding physical time in seconds, respectively.
 
-    .. fv:var:: ParticleEnergy
+    * ``ParticleEnergy``
         This type computes the total and mean relativistic particle kinetic energy among all species:
 
         .. math::
@@ -4640,7 +4336,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
 
         The output columns are the total energy of all species, the total energy per species, the total mean energy :math:`E_p / \sum_i w_i` of all species, and the total mean energy per species.
 
-    .. fv:var:: ParticleMomentum
+    * ``ParticleMomentum``
         This type computes the total and mean relativistic particle momentum among all species:
 
         .. math::
@@ -4651,7 +4347,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
 
         The output columns are the components of the total momentum of all species, the total momentum per species, the total mean momentum :math:`\boldsymbol{P}_p / \sum_i w_i` of all species, and the total mean momentum per species.
 
-    .. fv:var:: FieldEnergy
+    * ``FieldEnergy``
         This type computes the electromagnetic field energy
 
         .. math::
@@ -4662,7 +4358,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
 
         The output columns are the total field energy :math:`E_f`, the :math:`\boldsymbol{E}` field energy, and the :math:`\boldsymbol{B}` field energy, at each mesh refinement level.
 
-    .. fv:var:: FieldMomentum
+    * ``FieldMomentum``
         This type computes the electromagnetic field momentum
 
         .. math::
@@ -4676,7 +4372,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         Note that the fields are *not* averaged on the cell centers before their energy is
         computed.
 
-    .. fv:var:: FieldMaximum
+    * ``FieldMaximum``
         This type computes the maximum value of each component of the electric and magnetic fields
         and of the norm of the electric and magnetic field vectors.
         Measuring maximum fields in a plasma might be very noisy in PIC, use this instead
@@ -4696,13 +4392,13 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         Note that the fields are averaged on the cell centers before their maximum values are
         computed.
 
-    .. fv:var:: FieldPoyntingFlux
+    * ``FieldPoyntingFlux``
         Integrates the normal Poynting flux over each domain boundary surface and also integrates the flux over time.
         This provides the power and total energy loss into or out of the simulation domain.
         The output columns are the flux for each dimension on the lower boundaries, then the higher boundaries,
         then the integrated energy loss for each dimension on the the lower and higher boundaries.
 
-    .. fv:var:: FieldProbe
+    * ``FieldProbe``
         This type computes the value of each component of the electric and magnetic fields
         and of the Poynting vector (a measure of electromagnetic flux) at points in the domain.
 
@@ -4751,7 +4447,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
            The FieldProbe reduced diagnostic does not yet add a Lorentz back transformation for boosted frame simulations.
            Thus, it records field data in the boosted frame, not (yet) in the lab frame.
 
-    .. fv:var:: RhoMaximum
+    * ``RhoMaximum``
         This type computes the maximum and minimum values of the total charge density as well as
         the maximum absolute value of the charge density of each charged species.
         Please be aware that measuring maximum charge densities might be very noisy in PIC simulations.
@@ -4764,17 +4460,13 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         Note that the charge densities are averaged on the cell centers before their maximum values
         are computed.
 
-    .. fv:var:: FieldReduction
+    * ``FieldReduction``
         This type computes an arbitrary reduction of the positions, the current density, and the electromagnetic fields.
 
-        .. fv:var:: <reduced_diags_name>.reduced_function(x,y,z,Ex,Ey,Ez,Bx,By,Bz,jx,jy,jz)
-            :type: `str`
-
+        * ``<reduced_diags_name>.reduced_function(x,y,z,Ex,Ey,Ez,Bx,By,Bz,jx,jy,jz)`` (`string`)
             An analytic function to be reduced must be provided, using the math parser.
 
-        .. fv:var:: <reduced_diags_name>.reduction_type
-            :type: `str`
-
+        * ``<reduced_diags_name>.reduction_type`` (`string`)
             The type of reduction to be performed. It must be either ``Maximum``, ``Minimum`` or
             ``Integral``.
             ``Integral`` computes the spatial integral of the function defined in the parser by
@@ -4787,7 +4479,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
 
         Note that the fields are averaged on the cell centers before the reduction is performed.
 
-    .. fv:var:: ParticleNumber
+    * ``ParticleNumber``
         This type computes the total number of macroparticles and of physical particles (i.e. the
         sum of their weights) in the whole simulation domain (for each species and summed over all
         species). It can be useful in particular for simulations with creation (ionization, QED
@@ -4799,7 +4491,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         sum of the particles' weight summed over all species,
         sum of the particles' weight of each species.
 
-    .. fv:var:: BeamRelevant
+    * ``BeamRelevant``
         This type computes properties of a particle beam relevant for particle accelerators, like position, momentum, emittance, etc.
 
         ``<reduced_diags_name>.species`` must be provided, such that the diagnostics are done for this (beam-like) species only.
@@ -4858,7 +4550,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         :math:`\delta_y`, and
         :math:`\epsilon_y` will not be outputted.
 
-    .. fv:var:: LoadBalanceCosts
+    * ``LoadBalanceCosts``
         This type computes the cost, used in load balancing, for each box on the domain.
         The cost :math:`c` is computed as
 
@@ -4872,7 +4564,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         :math:`n_{\text{cell}}` is the number of cells on the box, and
         :math:`w_{\text{cell}}` is the cell cost weight factor (controlled by ``algo.costs_heuristic_cells_wt``).
 
-    .. fv:var:: LoadBalanceEfficiency
+    * ``LoadBalanceEfficiency``
         This type computes the load balance efficiency, given the present costs
         and distribution mapping. Load balance efficiency is computed as the
         mean cost over all ranks, divided by the maximum cost over all ranks.
@@ -4880,18 +4572,14 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         at earliest, the load balance efficiency can be output starting at step
         `2`, since costs are not recorded until step `1`.
 
-    .. fv:var:: ParticleHistogram
+    * ``ParticleHistogram``
         This type computes a user defined particle histogram.
 
-        .. fv:var:: <reduced_diags_name>.species
-            :type: `str`
-
+        * ``<reduced_diags_name>.species`` (`string`)
             A species name must be provided,
             such that the diagnostics are done for this species.
 
-        .. fv:var:: <reduced_diags_name>.histogram_function(t,x,y,z,ux,uy,uz)
-            :type: `str`
-
+        * ``<reduced_diags_name>.histogram_function(t,x,y,z,ux,uy,uz)`` (`string`)
             A histogram function must be provided.
             `t` represents the physical time in seconds during the simulation.
             `x, y, z` represent particle positions in the unit of meter.
@@ -4909,24 +4597,16 @@ This shifts analysis from post-processing to runtime calculation of reduction op
             in that bin,
             :math:`w_i` denotes the weight of the ith particle.
 
-        .. fv:var:: <reduced_diags_name>.bin_number
-            :type: `int` > 0
-
+        * ``<reduced_diags_name>.bin_number`` (`int` > 0)
             This is the number of bins used for the histogram.
 
-        .. fv:var:: <reduced_diags_name>.bin_max
-            :type: `float`
-
+        * ``<reduced_diags_name>.bin_max`` (`float`)
             This is the maximum value of the bins.
 
-        .. fv:var:: <reduced_diags_name>.bin_min
-            :type: `float`
-
+        * ``<reduced_diags_name>.bin_min`` (`float`)
             This is the minimum value of the bins.
 
-        .. fv:var:: <reduced_diags_name>.normalization
-            :type: optional
-
+        * ``<reduced_diags_name>.normalization`` (optional)
             This provides options to normalize the histogram:
 
             ``unity_particle_weight``
@@ -4947,9 +4627,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
             the macroparticle weight will be used to compute
             the histogram, and no normalization will be done.
 
-        .. fv:var:: <reduced_diags_name>.filter_function(t,x,y,z,ux,uy,uz)
-            :type: `str`
-
+        * ``<reduced_diags_name>.filter_function(t,x,y,z,ux,uy,uz)`` (`string`) optional
             Users can provide an expression returning a boolean for whether a particle is taken
             into account when calculating the histogram.
             `t` represents the physical time in seconds during the simulation.
@@ -4968,24 +4646,17 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         using the histogram reduced diagnostics
         are given in ``Examples/Tests/initial_distribution/``.
 
-    .. fv:var:: ParticleHistogram2D
+    * ``ParticleHistogram2D``
         This type computes a user defined, 2D particle histogram.
 
-        .. fv:var:: <reduced_diags_name>.species
-            :type: `str`
-
+        * ``<reduced_diags_name>.species`` (`string`)
             A species name must be provided,
             such that the diagnostics are done for this species.
 
-        .. fv:var:: <reduced_diags_name>.file_min_digits
-            :type: `int`
-            :default: `6`
-
+        * ``<reduced_diags_name>.file_min_digits`` (`int`) optional (default `6`)
             The minimum number of digits used for the iteration number appended to the diagnostic file names.
 
-        .. fv:var:: <reduced_diags_name>.histogram_function_abs(t,x,y,z,ux,uy,uz,w)
-            :type: `str`
-
+        * ``<reduced_diags_name>.histogram_function_abs(t,x,y,z,ux,uy,uz,w)`` (`string`)
             A histogram function must be provided for the abscissa axis.
             `t` represents the physical time in seconds during the simulation.
             `x, y, z` represent particle positions in the unit of meter.
@@ -4995,34 +4666,21 @@ This shifts analysis from post-processing to runtime calculation of reduction op
             :math:`v/c` is the particle velocity normalized by the speed of light.
             `w` represents the weight.
 
-        .. fv:var:: <reduced_diags_name>.histogram_function_ord(t,x,y,z,ux,uy,uz,w)
-            :type: `str`
-
+        * ``<reduced_diags_name>.histogram_function_ord(t,x,y,z,ux,uy,uz,w)`` (`string`)
             A histogram function must be provided for the ordinate axis.
 
-        .. fv:var:: <reduced_diags_name>.bin_number_abs
-            :type: `int` > 0
+        * ``<reduced_diags_name>.bin_number_abs`` (`int` > 0) and ``<reduced_diags_name>.bin_number_ord`` (`int` > 0)
+            These are the number of bins used for the histogram for the abscissa and ordinate axis respectively.
 
-            and ``<reduced_diags_name>.bin_number_ord`` (`int` > 0)
-                These are the number of bins used for the histogram for the abscissa and ordinate axis respectively.
+        * ``<reduced_diags_name>.bin_max_abs`` (`float`) and ``<reduced_diags_name>.bin_max_ord`` (`float`)
+            These are the maximum value of the bins for the abscissa and ordinate axis respectively.
+            Particles with values outside of these ranges are discarded.
 
-        .. fv:var:: <reduced_diags_name>.bin_max_abs
-            :type: `float`
+        * ``<reduced_diags_name>.bin_min_abs`` (`float`) and ``<reduced_diags_name>.bin_min_ord`` (`float`)
+            These are the minimum value of the bins for the abscissa and ordinate axis respectively.
+            Particles with values outside of these ranges are discarded.
 
-            and ``<reduced_diags_name>.bin_max_ord`` (`float`)
-                These are the maximum value of the bins for the abscissa and ordinate axis respectively.
-                Particles with values outside of these ranges are discarded.
-
-        .. fv:var:: <reduced_diags_name>.bin_min_abs
-            :type: `float`
-
-            and ``<reduced_diags_name>.bin_min_ord`` (`float`)
-                These are the minimum value of the bins for the abscissa and ordinate axis respectively.
-                Particles with values outside of these ranges are discarded.
-
-        .. fv:var:: <reduced_diags_name>.filter_function(t,x,y,z,ux,uy,uz,w)
-            :type: `str`
-
+        * ``<reduced_diags_name>.filter_function(t,x,y,z,ux,uy,uz,w)`` (`string`) optional
             Users can provide an expression returning a boolean for whether a particle is taken
             into account when calculating the histogram.
             `t` represents the physical time in seconds during the simulation.
@@ -5033,9 +4691,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
             :math:`v/c` is the particle velocity normalized by the speed of light.
             `w` represents the weight.
 
-        .. fv:var:: <reduced_diags_name>.value_function(t,x,y,z,ux,uy,uz,w)
-            :type: `str`
-
+        * ``<reduced_diags_name>.value_function(t,x,y,z,ux,uy,uz,w)`` (`string`) optional
             Users can provide an expression for the weight used to calculate the number of particles
             per cell associated with the selected abscissa and ordinate functions and/or the filter function.
             `t` represents the physical time in seconds during the simulation.
@@ -5051,7 +4707,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         using the histogram2D reduced diagnostics
         are given in ``Examples/Tests/histogram2D/``.
 
-    .. fv:var:: ParticleExtrema
+    * ``ParticleExtrema``
         This type computes the minimum and maximum values of
         particle position, momentum, gamma, weight,
         and the :math:`\chi` parameter for QED species.
@@ -5071,7 +4727,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         so the time of the diagnostic may be long
         depending on the simulation size.
 
-    .. fv:var:: ChargeOnEB
+    * ``ChargeOnEB``
         This type computes the total surface charge on the embedded boundary
         (in Coulombs), by using the formula
 
@@ -5092,7 +4748,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         1 or 0, it is possible to compute the charge on only some part of the
         embedded boundary.
 
-    .. fv:var:: ColliderRelevant
+    * ``ColliderRelevant``
         This diagnostics computes properties of two colliding beams that are relevant for particle colliders.
         Two species must be specified. Photon species are not supported yet.
         It is assumed that the two species propagate and collide along the ``z`` direction.
@@ -5143,7 +4799,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         For 1D-Z, :math:`x`-related and :math:`y`-related quantities are not outputted.
         RZ, RCYLINDER, RSPHERE geometries are not supported yet.
 
-    .. fv:var:: DifferentialLuminosity
+    * ``DifferentialLuminosity``
         This type computes the differential luminosity between two species, defined as:
 
         .. math::
@@ -5166,27 +4822,19 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         In practice, the above expression of the differential luminosity is evaluated over discrete bins in energy :math:`\mathcal{E}^*`,
         and by summing over macroparticles.
 
-        .. fv:var:: <reduced_diags_name>.species
-            :type: `list of two strings`
-
+        * ``<reduced_diags_name>.species`` (`list of two strings`)
             The names of the two species for which the differential luminosity is computed.
 
-        .. fv:var:: <reduced_diags_name>.bin_number
-            :type: `int` > 0
-
+        * ``<reduced_diags_name>.bin_number`` (`int` > 0)
             The number of bins in energy :math:`\mathcal{E}^*`
 
-        .. fv:var:: <reduced_diags_name>.bin_max
-            :type: `float`, in eV
-
+        * ``<reduced_diags_name>.bin_max`` (`float`, in eV)
             The minimum value of :math:`\mathcal{E}^*` for which the differential luminosity is computed.
 
-        .. fv:var:: <reduced_diags_name>.bin_min
-            :type: `float`, in eV
-
+        * ``<reduced_diags_name>.bin_min`` (`float`, in eV)
             The maximum value of :math:`\mathcal{E}^*` for which the differential luminosity is computed.
 
-    .. fv:var:: DifferentialLuminosity2D
+    * ``DifferentialLuminosity2D``
         This type computes the two-dimensional differential luminosity between two species, defined as:
 
         .. math::
@@ -5202,45 +4850,28 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         are, respectively, the momentum and the energy of a particle of the :math:`i`-th species.
         The 2D differential luminosity is given in units of :math:`\text{m}^{-2}.\text{eV}^{-2}`.
 
-        .. fv:var:: <reduced_diags_name>.species
-            :type: `list of two strings`
-
+        * ``<reduced_diags_name>.species`` (`list of two strings`)
             The names of the two species for which the differential luminosity is computed.
 
-        .. fv:var:: <reduced_diags_name>.bin_number_1
-            :type: `int` > 0
-
+        * ``<reduced_diags_name>.bin_number_1`` (`int` > 0)
             The number of bins in energy :math:`E_1`
 
-        .. fv:var:: <reduced_diags_name>.bin_max_1
-            :type: `float`, in eV
-
+        * ``<reduced_diags_name>.bin_max_1`` (`float`, in eV)
             The minimum value of :math:`E_1` for which the 2D differential luminosity is computed.
 
-        .. fv:var:: <reduced_diags_name>.bin_min_1
-            :type: `float`, in eV
-
+        * ``<reduced_diags_name>.bin_min_1`` (`float`, in eV)
             The maximum value of :math:`E_2` for which the 2D differential luminosity is compute
 
-        .. fv:var:: <reduced_diags_name>.bin_number_2
-            :type: `int` > 0
-
+        * ``<reduced_diags_name>.bin_number_2`` (`int` > 0)
             The number of bins in energy :math:`E_2`
 
-        .. fv:var:: <reduced_diags_name>.bin_max_2
-            :type: `float`, in eV
-
+        * ``<reduced_diags_name>.bin_max_2`` (`float`, in eV)
             The minimum value of :math:`E_2` for which the 2D differential luminosity is computed.
 
-        .. fv:var:: <reduced_diags_name>.bin_min_2
-            :type: `float`, in eV
-
+        * ``<reduced_diags_name>.bin_min_2`` (`float`, in eV)
             The minimum value of :math:`E_2` for which the 2D differential luminosity is computed.
 
-        .. fv:var:: <reduced_diags_name>.file_min_digits
-            :type: `int`
-            :default: `6`
-
+        * ``<reduced_diags_name>.file_min_digits`` (`int`) optional (default `6`)
             The minimum number of digits used for the iteration number appended to the diagnostic file names.
 
         The output is a ``<reduced_diags_name>`` folder containing a set of openPMD files.
@@ -5249,7 +4880,7 @@ This shifts analysis from post-processing to runtime calculation of reduction op
         using the DifferentialLuminosity2D reduced diagnostics
         are given in ``Examples/Tests/diff_lumi_diag/``.
 
-    .. fv:var:: Timestep
+    * ``Timestep``
         This type outputs the simulation's physical timestep (in seconds) at each mesh refinement level.
 
 .. fv:var:: reduced_diags.intervals
@@ -5439,10 +5070,16 @@ Alternatively, one can use the low-resolution builtin tables or generate them on
 
         * ``qed_bw.load_table_from`` (`string`): name of the lookup table file to read from.
 
-* ``qed_qs.chi_min`` (`float`): minimum chi parameter to be considered by the Quantum Synchrotron engine
+.. fv:var:: qed_qs.chi_min
+    :type: `float`
+
+    : minimum chi parameter to be considered by the Quantum Synchrotron engine
     (suggested value : 0.001)
 
-* ``qed_bw.chi_min`` (`float`): minimum chi parameter to be considered by the Breit-Wheeler engine
+.. fv:var:: qed_bw.chi_min
+    :type: `float`
+
+    : minimum chi parameter to be considered by the Breit-Wheeler engine
     (suggested value : 0.01)
 
 Schwinger process
