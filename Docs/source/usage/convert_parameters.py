@@ -150,6 +150,15 @@ def make_directive(name, type_str, default_str, body_lines, indent='', body_extr
             out.append(f'{indent}{body_extra}{line}' if line.strip() else '')
         while out and out[-1].strip() == '':
             out.pop()
+
+    # out.append('')
+
+    # out = ('\n'.join(out).rstrip()).split('\n')
+
+    # if "max_step" in out[0] or "stop_time" in out[0]:
+    #     print("")
+    #     print(f"out[0] = {out[0]}, out[-1] = {out[-1]}")
+
     return out
 
 
@@ -273,14 +282,21 @@ def merge_lo_hi_names(names):
     return result
 
 
-def convert(lines):
+def convert(lines: list[str]) -> list[str]:
     """Convert lines to fv:var directives, recursively for nested params."""
-    out = []
+    out: list[str] = []
     i = 0
+
+    lprintcount = 3
+
     while i < len(lines):
         line = lines[i]
         m = PARAM_BULLET_RE.match(line)
         if m and is_param_bullet(m.group(3), m.group(4)):
+            debugdict = {}
+            debugdict['istart'] = i
+            debugdict['m'] = m
+
             bullet_indent = len(m.group(1))
             bullet_char = m.group(2)
             first_name = m.group(3).strip()
@@ -295,6 +311,9 @@ def convert(lines):
             body_offset = strip_amount - bullet_indent
             body_extra = '    ' if body_offset >= 4 else '      '
             raw_body, i = collect_body(lines, i, bullet_indent, strip_amount)
+
+            debugdict['icollect_body'] = i
+
             converted_body = convert(raw_body)
             if extra_desc:
                 converted_body.insert(0, extra_desc)
@@ -303,6 +322,21 @@ def convert(lines):
                 out.extend(make_directive(name, type_str, default_str, converted_body,
                                           dir_indent, body_extra))
                 out.append('')
+
+            debugdict['out[0]'] = out[0]
+            debugdict['out[-2:]'] = out[-2:]
+
+            while i < len(line) and line[i].strip() == '':
+                i += 1
+
+            debugdict['ifinal'] = i
+
+            if lprintcount > 0:
+                lprintcount -= 1
+                print("")
+                print("debugdict:")
+                for k, v in debugdict.items():
+                    print(f"{k}: {v}")
         else:
             out.append(line.rstrip('\n'))
             i += 1
