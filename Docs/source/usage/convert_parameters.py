@@ -58,7 +58,7 @@ class Directive:
 
         # Re-indented body: strip source indent, leaving content ready to be
         # prefixed with ``bullet_indent * ' ' + '    '`` in render_directive.
-        strip = detect_body_indent(lines, span.start + 1, bullet_indent)
+        body_indent = detect_body_indent(lines, span.start + 1, bullet_indent)
         body: list[str] = []
         # if annotation.inline_desc:
         #     body.append(annotation.inline_desc + " inline_desc_TEST")
@@ -67,7 +67,7 @@ class Directive:
                 body.append('')
             else:
                 col = len(raw) - len(raw.lstrip())
-                body.append(raw[min(strip, col):])
+                body.append(raw[min(body_indent, col):])
 
         self.bullet_line: str = bullet_line
         self.names: list[str] = names
@@ -78,6 +78,7 @@ class Directive:
         self.raw_body: list[str] = raw_body
         self.body: list[str] = body
         self.bullet_indent: int = bullet_indent
+        self.body_indent: int = body_indent
 
         self.source_span: Span = span
 
