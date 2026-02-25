@@ -236,15 +236,22 @@ def merge_multiple_names(names: list[str]) -> list[str]:
     used: set[int] = set()
 
     patterns_pre_mid_suf = [
+        # Pattern: <PREFIX>(x|y|z)<SUFFIX>
+        re.compile(r'^(?P<prefix>.*)(?P<middle>x|y|z)(?P<suffix>.*)$'),
         # Pattern: <PREFIX>(nx|ny|nz)<SUFFIX>
         re.compile(r'^(?P<prefix>.*)(?P<middle>nx|ny|nz|nox|noy|noz)(?P<suffix>.*)$'),
-        # Pattern: <PREFIX>(sigma|epsilon|mu)<SUFFIX>
+        # Pattern: <PREFIX>(xlo/ylo/zlo|xhi/yhi/zhi|at_eb)<SUFFIX>
+        re.compile(r'^(?P<prefix>.*)(?P<middle>xlo/ylo/zlo|xhi/yhi/zhi|eb)(?P<suffix>.*)$'),
+        # Pattern: <PREFIX>(sigma|epsilon|mu|field|particle)<SUFFIX>
         re.compile(r'^(?P<prefix>.*)(?P<middle>sigma|epsilon|mu|field|particle)(?P<suffix>.*)$'),
-        # Pattern: <PREFIX>(x|y|z)
-        # re.compile(r'^(?P<prefix>.*)(?P<middle>x|y|z)(?P<suffix>)$'),
+        # Pattern: <PREFIX>(lo|hi)<SUFFIX>
+        re.compile(r'^(?P<prefix>.*)(?P<middle>lo|hi)(?P<suffix>.*)$'),
     ]
 
-    # result = ['psatd.nox', 'psatd.noy', 'pstad.noz']
+    # group_sets: list[set[str]] = []
+
+    # for ig in range(len(matchlist[0].groups())):
+    #     group_sets.append(set([ m.group(ig) for m in matchlist ]))
 
     for pattern in patterns_pre_mid_suf:
         matchlist: list[re.Match] = []
@@ -254,25 +261,33 @@ def merge_multiple_names(names: list[str]) -> list[str]:
                 matchlist.append(m)
         if len(matchlist) != len(names):
             continue
-        print(f"\nmerge_multiple_names: found match\n  names = {names}\n  pattern = {pattern}")
+        # print(f"\nmerge_multiple_names: found match\n  names = {names}\n  pattern = {pattern}")
 
         pre_list: list[str] = [m.group('prefix') for m in matchlist]
         mid_list: list[str] = [m.group('middle') for m in matchlist]
         suf_list: list[str] = [m.group('suffix') for m in matchlist]
 
-        if any(p != pre_list[0] for p in pre_list):
-            print(f"  pre_list = {pre_list}")
+        if len(set(pre_list)) != 1:
+            # print(f"  pre_list = {pre_list}")
             continue
-        if any(s != suf_list[0] for s in suf_list):
-            print(f"  suf_list = {suf_list}")
+        if len(set(suf_list)) != 1:
+            # print(f"  suf_list = {suf_list}")
             continue
-        if all(m == mid_list[0] for m in mid_list):
-            print(f"  mid_list = {mid_list}")
+        if len(set(mid_list)) != len(mid_list):
+            # print(f"  mid_list = {mid_list}")
             continue
 
-        merged_name = f"{pre_list[0]}{'/'.join(mid_list)}{suf_list[0]}"
+        merged_name = "".join([
+            pre_list[0],
+            # '<',
+            '/'.join(mid_list),
+            # '>',
+            suf_list[0]
+        ])
+
         result.append(merged_name)
 
+        print(f"\nmerge_multiple_names: found match\n  names = {names}\n  pattern = {pattern.pattern}")
         print(f"  result = {result}")
 
         return result

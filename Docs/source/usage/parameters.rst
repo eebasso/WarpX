@@ -1472,7 +1472,7 @@ Particle initialization
      :math:`\gamma` is the Lorentz factor,
      :math:`v/c` is the particle velocity normalized by the speed of light.
 
-.. fv:var:: <species_name>.save_particles_at_xlo/ylo/zlo/xhi/yhi/zhi
+.. fv:var:: <species_name>.save_particles_at_xlo/ylo/zlo/xhi/yhi/zhi/eb
     If `1` particles of this species will be copied to the scraped particle
     buffer for the specified boundary if they leave the simulation domain in
     the specified direction. **If USE_EB=TRUE** the ``save_particles_at_eb``
@@ -2588,11 +2588,11 @@ Two families of Maxwell solvers are implemented in WarpX, based on the Finite-Di
 Maxwell solver: PSATD method
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. fv:var:: psatd.nox
+.. fv:var:: psatd.nox/y/z
     The order of accuracy of the spatial derivatives, when using the code compiled with a PSATD solver.
     If ``psatd.periodic_single_box_fft`` is used, these can be set to ``inf`` for infinite-order PSATD.
 
-.. fv:var:: psatd.nx/ny/nz_guard
+.. fv:var:: psatd.nx/y/z_guard
     The number of guard cells to use with PSATD solver.
     If not set by users, these values are calculated automatically and determined *empirically* and
     equal the order of the solver for collocated grids and half the order of the solver for staggered grids.
@@ -2851,12 +2851,12 @@ Grid types (collocated, staggered, hybrid)
         The default behavior should not normally be changed.
         At present, this parameter is intended mainly for testing and development purposes.
 
-.. fv:var:: warpx.field_centering_nox/noy/noz
+.. fv:var:: warpx.field_centering_nox/y/z
     The order of interpolation used with staggered or hybrid grids (``warpx.grid_type = staggered`` or ``warpx.grid_type = hybrid``) and momentum-conserving field gathering (``algo.field_gathering = momentum-conserving``) to interpolate the electric and magnetic fields from the cell centers to the cell nodes, before gathering the fields from the cell nodes to the particle positions.
 
     Default: ``warpx.field_centering_no<x,y,z> = 2`` with staggered grids, ``warpx.field_centering_no<x,y,z> = 8`` with hybrid grids (typically necessary to ensure stability in boosted-frame simulations of relativistic plasmas and beams).
 
-.. fv:var:: warpx.current_centering_nox/noy/noz
+.. fv:var:: warpx.current_centering_nox/y/z
     The order of interpolation used with hybrid grids (``warpx.grid_type = hybrid``) to interpolate the currents from the cell nodes to the cell centers when ``warpx.do_current_centering = 1``, before pushing the Maxwell fields on staggered grids.
 
     Default: ``warpx.current_centering_no<x,y,z> = 8`` with hybrid grids (typically necessary to ensure stability in boosted-frame simulations of relativistic plasmas and beams).
