@@ -384,8 +384,7 @@ def build_directive(lines: list[str], span: Span) -> Directive:
             col = len(raw) - len(raw.lstrip())
             body.append(raw[min(strip, col):])
     # Drop trailing blank lines
-    while body and body[-1].strip() == '':
-        body.pop()
+    remove_trailing_blank_lines(body)
 
     return Directive(
         names=names,
@@ -397,6 +396,20 @@ def build_directive(lines: list[str], span: Span) -> Directive:
         bullet_indent=bullet_indent,
     )
 
+def remove_leading_blank_lines(lines: list[str]):
+    while lines and lines[-1].strip() == '':
+        lines.pop(-1)
+    return lines
+
+def remove_trailing_blank_lines(lines: list[str]):
+    while lines and lines[0].strip() == '':
+        lines.pop(0)
+    return lines
+
+def strip_blank_lines(lines: list[str]):
+    remove_leading_blank_lines(lines)
+    remove_trailing_blank_lines(lines)
+    return lines
 
 # ── RST output rendering ──────────────────────────────────────────────────────
 
@@ -409,19 +422,25 @@ def render_directive(d: Directive) -> list[str]:
     indent = ' ' * d.bullet_indent
     out: list[str] = []
 
+    l_past_first_name = False
     for name in d.names:
+        if l_past_first_name:
+            out.append('')
+        l_past_first_name = True
         out.append(f'{indent}.. fv:var:: {name}')
         if d.type_str:
             out.append(f'{indent}    :type: {d.type_str}')
         if d.default_str:
             out.append(f'{indent}    :default: {d.default_str}')
-        if d.body:
+        if '\n'.join(d.body).strip():
             out.append('')
             for line in d.body:
                 out.append(f'{indent}    {line}' if line.strip() else '')
-            while out and out[-1].strip() == '':
-                out.pop()
-        out.append('')  # blank line between / after directives
+
+    while out and out[0].strip == '':
+        out.pop(0)
+    while out and out[-1].strip() == '':
+        out.pop()
 
     return out
 
@@ -449,22 +468,13 @@ def convert(lines: list[str]) -> list[str]:
         if i in body_line_indices:
             continue
         if i in span_starts:
+            if len(out) > 0 and out[-1].strip() != "":
+                out.append("")
             out.extend(render_directive(span_starts[i]))
         else:
             out.append(line.rstrip('\n'))
 
-    # Collapse runs of multiple blank lines down to one
-    collapsed: list[str] = []
-    prev_blank = False
-    for line in out:
-        is_blank = line.strip() == ''
-        if is_blank and prev_blank:
-            continue
-        collapsed.append(line)
-        prev_blank = is_blank
-
-    return collapsed
-
+    return out
 
 # ── Entry point ───────────────────────────────────────────────────────────────
 

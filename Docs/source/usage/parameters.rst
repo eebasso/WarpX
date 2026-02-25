@@ -116,6 +116,7 @@ This is similar to the Python slicing syntax, except that the stop is inclusive 
 Note that if a given period is zero or negative, the corresponding slice is disregarded.
 For example, ``something_intervals = -1`` deactivates ``something`` and ``something_intervals = ::-1,100:1000:25`` is equivalent to ``something_intervals = 100:1000:25``.
 
+
 Simulation Time
 ---------------
 
@@ -155,6 +156,7 @@ Simulation Time
     or the current values of ``max_step`` and/or ``stop_time`` are too low to fill
     all BTD snapshots, the values of ``max_step`` and/or ``stop_time`` are
     overwritten with the new values and printed to standard output.
+
 
 .. _running-cpp-parameters-overall:
 
@@ -336,6 +338,7 @@ Overall simulation parameters
       - Particles are treated implicitly, and all of the comments for ``theta_implicit_em`` above apply here as well (except that :math:`\theta` is fixed to 0.5).
       - The method is described in `Chen et al., A semi-implicit, energy- and charge-conserving particle-in-cell algorithm for the relativistic Vlasov-Maxwell equations <https://doi.org/10.1016/j.jcp.2020.109228>`__.
 
+
     * ``strang_implicit_spectral_em``: Use a fully implicit electromagnetic solver. All of the comments for ``theta_implicit_em``
       above apply here as well (except that :math:`\theta` is fixed to 0.5 and that charge will not be conserved).
       In this version, the advance is Strang split, with a half advance of the source free Maxwell's equation (with a spectral solver), a full advance of the particles plus longitudinal E field, and a second half advance of the source free Maxwell's equations.
@@ -506,6 +509,7 @@ Overall simulation parameters
     An integer number can be set in lieu of the ``OMP_NUM_THREADS`` environment variable to control the number of OpenMP threads to use for the ``OMP`` compute backend on CPUs.
     By default, we use the ``nosmt`` option, which overwrites the OpenMP default of spawning one thread per logical CPU core, and instead only spawns a number of threads equal to the number of physical CPU cores on the machine.
     If set, the environment variable ``OMP_NUM_THREADS`` takes precedence over ``system`` and ``nosmt``, but not over integer numbers set in this option.
+
 
 .. _running-cpp-parameters-signal:
 
@@ -1127,6 +1131,7 @@ Distribution across MPI ranks and parallelization
 
     During splitting high density boxes, if a Box's longest side is already
     less than or equal to this number, it will not be split.
+
 
 .. _running-cpp-parameters-particle:
 
@@ -2484,6 +2489,7 @@ are applied to the particles directly, at each timestep. As a results, these fie
         To prepare openPMD-compatible field data files, see the
         `openPMD-example-datasets <https://github.com/openPMD/openPMD-example-datasets>`__.
 
+
     * ``repeated_plasma_lens``: apply a series of plasma lenses.
       The properties of the lenses are defined in the lab frame by the input parameters:
 
@@ -2508,6 +2514,7 @@ are applied to the particles directly, at each timestep. As a results, these fie
       The fields are of the form :math:`E_x = \mathrm{strength} \cdot x`, :math:`E_y = \mathrm{strength} \cdot y`,
       and :math:`E_z = 0`, and
       :math:`B_x = \mathrm{strength} \cdot y`, :math:`B_y = -\mathrm{strength} \cdot x`, and :math:`B_z = 0`.
+
 
 Applied to Cold Relativistic Fluids
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -2611,6 +2618,7 @@ Note that elements of the same type cannot overlap each other.
             * ``<element_name>.reverse`` (``boolean``) optional (default: ``false``)
               Reverse the list of elements in the line before appending to the lattice.
 
+
 .. _running-cpp-parameters-collision:
 
 Collision models
@@ -2680,6 +2688,7 @@ Details about the collision models can be found in the :ref:`theory section <mul
     In this case, only one species name should be given.
     If using ``linear_breit_wheeler`` these should be two photon species.
     If using ``linear_compton``, these should be two species: first, a photon species, and second, a lepton species, in this exact order.
+
 
 .. fv:var:: <collision_name>.product_species
     :type: `strings`
@@ -3070,6 +3079,7 @@ Particle push, charge and current deposition, field gathering
      * ``momentum-conserving``: first average the fields from the grid points to
        the nodes, and then gather from the nodes.
 
+
     Default: ``algo.field_gathering = energy-conserving`` with collocated or staggered grids (note that ``energy-conserving`` and ``momentum-conserving`` are equivalent with collocated grids), ``algo.field_gathering = momentum-conserving`` with hybrid grids.
 
 .. fv:var:: algo.particle_pusher
@@ -3324,6 +3334,7 @@ Maxwell solver: PSATD method
     Examples: "CL1" (equivalent to the standard PSATD PIC algorithm), "CL2", "LL4", etc.
     By default, the string is empty and the PSATD JRhom algorithm is not used.
 
+
 Maxwell solver: macroscopic media
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -3509,6 +3520,7 @@ Maxwell solver: kinetic-fluid hybrid
     :default: ``"1"``
 
     This sets the relative strength of the external vector potential by a dimensionless implicit time function, which can compute the external B fields and E fields based on the value and first time derivative of the function.
+
 
 Grid types (collocated, staggered, hybrid)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -3743,6 +3755,7 @@ Additional parameters
     Used to tune performance when ``do_shared_mem_current_deposition`` is
     enabled. ``shared_mem_current_tpb`` controls the number of threads per
     block (tpb), i.e. the number of threads operating on a shared buffer.
+
 
 .. _running-cpp-parameters-diagnostics:
 
@@ -4137,6 +4150,7 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
     :default: `4`
 
     Limit the number of concurrent readers per file.
+
 
 .. _running-cpp-parameters-diagnostics-timeavg:
 
@@ -4963,6 +4977,7 @@ This process is also known more generically as Quantum Synchrotron emission.
     will be used when the particle's chi parameter is below ``qed_qs.chi_min``,
     the discrete quantum module otherwise. This feature does not require to compile with ``-DWarpX_QED=ON``.
 
+
 Nonlinear Breit-Wheeler
 ^^^^^^^^^^^^^^^^^^^^^^^
 
@@ -4986,6 +5001,7 @@ Nonlinear Breit-Wheeler
 
     If a photon species has the Breit-Wheeler process, a positron product species must be specified
     (the name of an existing positron species must be provided).
+
 
 Lookup tables
 ^^^^^^^^^^^^^
@@ -5082,6 +5098,7 @@ Alternatively, one can use the low-resolution builtin tables or generate them on
     : minimum chi parameter to be considered by the Breit-Wheeler engine
     (suggested value : 0.01)
 
+
 Schwinger process
 ^^^^^^^^^^^^^^^^^
 
@@ -5162,6 +5179,7 @@ Schwinger process
     Note that this option will only have an effect if the ``warpx.use_Hybrid_QED`` flag is also triggered.
     This feature does not require to compile with ``-DWarpX_QED=ON``.
 
+
 Checkpoints and restart
 -----------------------
 WarpX supports checkpoints/restart via AMReX.
@@ -5178,6 +5196,7 @@ The checkpoint capability can be turned with regular diagnostics: ``<diag_name>.
     :default: `false`
 
     When `true`, write the diagnostics after restart at the time of the restart.
+
 
 .. _running-cpp-parameters-test-debug:
 
