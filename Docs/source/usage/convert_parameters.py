@@ -216,14 +216,14 @@ def parse_bullet_annotation(rest: str) -> BulletAnnotation:
 
 # ── lo/hi name merging ────────────────────────────────────────────────────────
 
-def merge_lo_hi_names(names: list[str]) -> list[str]:
+def merge_multiple_names(names: list[str]) -> list[str]:
     """Collapse lo/hi name pairs into a single combined name.
 
     Three patterns are handled:
       1. Simple pair:       foo_lo + foo_hi              → foo_lo/hi
       2. Suffixed pair:     foo_lo_x/y/z + foo_hi_x/y/z → foo_lo/hi_x/y/z
       3. Multi-axis pair:   at_xlo/ylo/zlo + at_xhi/yhi/zhi
-                             → at_xlo/hi_ylo/hi_zlo/hi
+                             → at_xlo/ylo/zlo/xhi/yhi/zhi
 
     Names that do not participate in any merge are returned unchanged.
     When three names are present and two merge, the merged name and the
@@ -264,16 +264,32 @@ def merge_lo_hi_names(names: list[str]) -> list[str]:
             m_lo = re.match(r'^(.*?)xlo(/ylo)?(/zlo)?$', name)
             m_hi = re.match(r'^(.*?)xhi(/yhi)?(/zhi)?$', other)
             if m_lo and m_hi and m_lo.group(1) == m_hi.group(1):
-                axes = (
-                    ('_ylo/hi' if m_lo.group(2) else '')
-                    + ('_zlo/hi' if m_lo.group(3) else '')
-                )
-                result.append(m_lo.group(1) + 'xlo/hi' + axes)
+                # txt_xlo = "xlo"
+                # txt_ylo = "ylo" if m_lo.group(2) else ""
+                # txt_zlo = "zlo" if m_lo.group(3) else ""
+                # txt_xhi = "xhi"
+                # txt_yhi = "yhi" if m_hi.group(2) else ""
+                # txt_zhi = "zhi" if m_hi.group(3) else ""
+                # txt = m_lo.group(1)
+                # txt += '/'.join([txt_xlo, txt_ylo, txt_zlo, txt_xhi, txt_yhi, txt_zhi])
+                txt = m_lo.group(1)
+                txt += "xlo"
+                txt += "/ylo" if m_lo.group(2) else ""
+                txt += "/zlo" if m_lo.group(3) else ""
+                txt += "/xhi"
+                txt += "/yhi" if m_hi.group(2) else ""
+                txt += "/zhi" if m_hi.group(3) else ""
+                result.append(txt)
                 used |= {i, j}
                 merged = True
                 break
         if not merged:
             result.append(name)
+
+    if len(result) != 1:
+        print(f"\nmerge_multiple_names: failed to merge all names.\ninput names = {names}\nresult = {result}")
+    if len(result) == 0:
+        print(f"merge_multiple_names: WARNING: result = {result} is empty!")
 
     # txt = ' '.join(result) + "TEST"
     # result = [ txt ]
@@ -369,7 +385,7 @@ def build_directive(lines: list[str], span: Span) -> Directive:
     rest = m.group(4).rstrip('\n')
 
     annotation = parse_bullet_annotation(rest)
-    names = merge_lo_hi_names([first_name] + annotation.extra_names)
+    names = merge_multiple_names([first_name] + annotation.extra_names)
 
     # Raw body: every source line after the bullet, newlines stripped
     raw_body: list[str] = [lines[k].rstrip('\n') for k in range(span.start + 1, span.end)]
