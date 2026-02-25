@@ -21,51 +21,67 @@ from typing import NamedTuple, Any
 PARAM_BULLET_RE = re.compile(r'^( *)([*\-]) ``([^`]+)``(.*)', re.DOTALL)
 
 
-# ── Span ──────────────────────────────────────────────────────────────────────
-
+# Span
 class Span(NamedTuple):
     """Half-open line range [start, end) within the source file."""
     start: int
     end: int
 
-
-# ── Directive dataclass ───────────────────────────────────────────────────────
-
-@dataclass
+# Directive
 class Directive:
-    """All information extracted from one parameter bullet.
-
-    A single source bullet may produce multiple directives when its names
-    don't all merge (e.g. save_particles_at_xlo/hi + save_particles_at_eb).
-    Each name in `names` will be rendered as a separate ``.. fv:var::`` block
-    sharing the same type, default, and body.
+    """
+    All information extracted from one parameter bullet.
     """
 
-    # Final names after lo/hi merging; each becomes its own fv:var directive
-    names: list[str]
+    # ── Directive construction ────────────────────────────────────────────────────
+    def __init__(self, lines: list[str], span: Span | None = None):
+        """Construct a Directive from the source lines covered by span."""
+        if span is None:
+            span = Span(0, len(lines))
 
-    # RST :type: value (may be empty)
-    type_str: str
+        self.raw_first_line: str = lines[span.start]
+        self.raw_body_txt: str = '\n'.join(lines[span.start + 1:span.end])
 
-    # RST :default: value (may be empty)
-    default_str: str
+        bullet_line = lines[span.start]
+        m = PARAM_BULLET_RE.match(bullet_line)
+        assert m is not None  # guaranteed by find_directive_spans
 
-    # Body lines as they appear in the source (original indentation, no newlines)
-    raw_body: list[str]
+        bullet_indent = len(m.group(1))
+        first_name = m.group(3).strip()
+        rest = m.group(4).rstrip('\n')
 
-    # Body lines re-indented for output (source indent stripped, ready for
-    # ``indent + "    " + line`` in render_directive)
-    body: list[str]
+        annotation = parse_bullet_annotation(rest)
+        names = merge_multiple_names([first_name] + annotation.extra_names)
 
-    # Source line range [start, end) that this directive was built from
-    source_span: Span
+        # Raw body: every source line after the bullet, newlines stripped
+        raw_body: list[str] = [lines[k].rstrip('\n') for k in range(span.start + 1, span.end)]
 
-    # Number of leading spaces on the originating bullet line
-    bullet_indent: int
+        # Re-indented body: strip source indent, leaving content ready to be
+        # prefixed with ``bullet_indent * ' ' + '    '`` in render_directive.
+        strip = detect_body_indent(lines, span.start + 1, bullet_indent)
+        body: list[str] = []
+        # if annotation.inline_desc:
+        #     body.append(annotation.inline_desc + " inline_desc_TEST")
+        for raw in raw_body:
+            if raw.strip() == '':
+                body.append('')
+            else:
+                col = len(raw) - len(raw.lstrip())
+                body.append(raw[min(strip, col):])
 
+        self.bullet_line: str = bullet_line
+        self.names: list[str] = names
+        self.type_str: str = annotation.type_str
+        self.default_str: str = annotation.default_str
+        self.annotation: BulletAnnotation = annotation
 
-# ── Type normalisation ────────────────────────────────────────────────────────
+        self.raw_body: list[str] = raw_body
+        self.body: list[str] = body
+        self.bullet_indent: int = bullet_indent
 
+        self.source_span: Span = span
+
+# Type normalisation
 WORD_NORMS: dict[str, str] = {
     'integer': 'int',
     'integers': 'int',
@@ -74,7 +90,6 @@ WORD_NORMS: dict[str, str] = {
     'doubles': 'float',
     'string': 'str',
 }
-
 
 def normalise_type(s: str) -> str:
     """Normalise a type string extracted from a parameter bullet."""
@@ -91,8 +106,7 @@ def normalise_type(s: str) -> str:
     return s
 
 
-# ── Parenthesis finder ────────────────────────────────────────────────────────
-
+# Parenthesis finder
 def find_paren_end(s: str) -> int:
     """Return the index of the ')' matching the '(' assumed to be at s[0].
     Skips ``double-backtick`` spans to avoid false matches inside code."""
@@ -114,7 +128,7 @@ def find_paren_end(s: str) -> int:
     return len(s) - 1
 
 
-# ── Meta parsing ──────────────────────────────────────────────────────────────
+# Meta parsing
 
 def parse_meta(s: str) -> tuple[str, str]:
     """Parse the interior of a parenthesised annotation into (type_str, default_str).
@@ -460,50 +474,6 @@ def detect_body_indent(lines: list[str], body_start: int, bullet_indent: int) ->
             return col
     return bullet_indent + 4  # fallback
 
-
-# ── Directive construction ────────────────────────────────────────────────────
-
-def build_directive(lines: list[str], span: Span) -> Directive:
-    """Construct a Directive from the source lines covered by span."""
-    bullet_line = lines[span.start]
-    m = PARAM_BULLET_RE.match(bullet_line)
-    assert m is not None  # guaranteed by find_directive_spans
-
-    bullet_indent = len(m.group(1))
-    first_name = m.group(3).strip()
-    rest = m.group(4).rstrip('\n')
-
-    annotation = parse_bullet_annotation(rest)
-    names = merge_multiple_names([first_name] + annotation.extra_names)
-
-    # Raw body: every source line after the bullet, newlines stripped
-    raw_body: list[str] = [lines[k].rstrip('\n') for k in range(span.start + 1, span.end)]
-
-    # Re-indented body: strip source indent, leaving content ready to be
-    # prefixed with ``bullet_indent * ' ' + '    '`` in render_directive.
-    strip = detect_body_indent(lines, span.start + 1, bullet_indent)
-    body: list[str] = []
-    # if annotation.inline_desc:
-    #     body.append(annotation.inline_desc + " inline_desc_TEST")
-    for raw in raw_body:
-        if raw.strip() == '':
-            body.append('')
-        else:
-            col = len(raw) - len(raw.lstrip())
-            body.append(raw[min(strip, col):])
-    # Drop trailing blank lines
-    rstrip_lines(body)
-
-    return Directive(
-        names=names,
-        type_str=annotation.type_str,
-        default_str=annotation.default_str,
-        raw_body=raw_body,
-        body=body,
-        source_span=span,
-        bullet_indent=bullet_indent,
-    )
-
 def lstrip_lines(lines: list[str]) -> list[str]:
     return '\n'.join(lines).lstrip().split('\n')
 
@@ -563,7 +533,7 @@ def convert(lines: list[str]) -> list[str]:
     span_starts: dict[int, Directive] = {}
     body_line_indices: set[int] = set()
     for span in spans:
-        span_starts[span.start] = build_directive(lines, span)
+        span_starts[span.start] = Directive(lines, span)
         body_line_indices.update(range(span.start + 1, span.end))
 
     out: list[str] = []
