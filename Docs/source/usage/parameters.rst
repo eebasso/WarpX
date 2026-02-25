@@ -988,7 +988,7 @@ Particle initialization
     If ``species_type`` is specified, the mass will be set to the physical value and ``mass`` is optional.
     ``mass`` must be strictly positive. For massless species, use ``<species_name>.species_type``. The only allowed massless species type is ``photon``.
 
-.. fv:var:: <species_name>.xmin,ymin,zmin
+.. fv:var:: <species_name>.xmin,ymin,zmin,xmax,ymax,zmax
     When ``<species_name>.xmin`` and ``<species_name>.xmax`` are set, they delimit the region within which particles are injected.
     If periodic boundary conditions are used in direction ``i``, then the default (i.e. if the range is not specified) range will be the simulation box, ``[geometry.prob_hi[i], geometry.prob_lo[i]]``.
 
@@ -2588,11 +2588,11 @@ Two families of Maxwell solvers are implemented in WarpX, based on the Finite-Di
 Maxwell solver: PSATD method
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. fv:var:: psatd.nox/y/z
+.. fv:var:: psatd.nox/noy/noz
     The order of accuracy of the spatial derivatives, when using the code compiled with a PSATD solver.
     If ``psatd.periodic_single_box_fft`` is used, these can be set to ``inf`` for infinite-order PSATD.
 
-.. fv:var:: psatd.nx/y/z_guard
+.. fv:var:: psatd.nx/ny/nz_guard
     The number of guard cells to use with PSATD solver.
     If not set by users, these values are calculated automatically and determined *empirically* and
     equal the order of the solver for collocated grids and half the order of the solver for staggered grids.
@@ -2851,12 +2851,12 @@ Grid types (collocated, staggered, hybrid)
         The default behavior should not normally be changed.
         At present, this parameter is intended mainly for testing and development purposes.
 
-.. fv:var:: warpx.field_centering_nox/y/z
+.. fv:var:: warpx.field_centering_nox/noy/noz
     The order of interpolation used with staggered or hybrid grids (``warpx.grid_type = staggered`` or ``warpx.grid_type = hybrid``) and momentum-conserving field gathering (``algo.field_gathering = momentum-conserving``) to interpolate the electric and magnetic fields from the cell centers to the cell nodes, before gathering the fields from the cell nodes to the particle positions.
 
     Default: ``warpx.field_centering_no<x,y,z> = 2`` with staggered grids, ``warpx.field_centering_no<x,y,z> = 8`` with hybrid grids (typically necessary to ensure stability in boosted-frame simulations of relativistic plasmas and beams).
 
-.. fv:var:: warpx.current_centering_nox/y/z
+.. fv:var:: warpx.current_centering_nox/noy/noz
     The order of interpolation used with hybrid grids (``warpx.grid_type = hybrid``) to interpolate the currents from the cell nodes to the cell centers when ``warpx.do_current_centering = 1``, before pushing the Maxwell fields on staggered grids.
 
     Default: ``warpx.current_centering_no<x,y,z> = 8`` with hybrid grids (typically necessary to ensure stability in boosted-frame simulations of relativistic plasmas and beams).
@@ -4161,7 +4161,7 @@ Schwinger process
     This value should correspond to the typical transverse extent for which the EM field has a very high value
     (e.g. the beam waist for a focused laser beam).
 
-.. fv:var:: qed_schwinger.xmin,ymin,zmin
+.. fv:var:: qed_schwinger.xmin,ymin,zmin,xmax,ymax,zmax
     When ``qed_schwinger.xmin`` and ``qed_schwinger.xmax`` are set, they delimit the region within
     which Schwinger pairs can be created.
     The same is applicable in the other directions.

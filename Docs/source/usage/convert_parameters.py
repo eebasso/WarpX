@@ -235,10 +235,10 @@ def merge_multiple_names(names: list[str]) -> list[str]:
     result: list[str] = []
     used: set[int] = set()
 
+    # First try spliting by `_` and see if only
+
     patterns_pre_mid_suf = [
-        # Pattern: <PREFIX>(x|y|z)<SUFFIX>
-        re.compile(r'^(?P<prefix>.*)(?P<middle>x|y|z)(?P<suffix>.*)$'),
-        # Pattern: <PREFIX>(nx|ny|nz)<SUFFIX>
+        # Pattern: <PREFIX>(nx|ny|nz|nox|noy|noz)<SUFFIX>
         re.compile(r'^(?P<prefix>.*)(?P<middle>nx|ny|nz|nox|noy|noz)(?P<suffix>.*)$'),
         # Pattern: <PREFIX>(xlo/ylo/zlo|xhi/yhi/zhi|at_eb)<SUFFIX>
         re.compile(r'^(?P<prefix>.*)(?P<middle>xlo/ylo/zlo|xhi/yhi/zhi|eb)(?P<suffix>.*)$'),
@@ -246,6 +246,10 @@ def merge_multiple_names(names: list[str]) -> list[str]:
         re.compile(r'^(?P<prefix>.*)(?P<middle>sigma|epsilon|mu|field|particle)(?P<suffix>.*)$'),
         # Pattern: <PREFIX>(lo|hi)<SUFFIX>
         re.compile(r'^(?P<prefix>.*)(?P<middle>lo|hi)(?P<suffix>.*)$'),
+        # Pattern: <PREFIX>(lo|hi)<SUFFIX>
+        re.compile(r'^(?P<prefix>.*)(?P<middle>Ex|Ey|Ez|Bx|By|Bz)(?P<suffix>.*)$'),
+        # Pattern: <PREFIX>(x|y|z)<SUFFIX>
+        re.compile(r'^(?P<prefix>.*)(?P<middle>x|y|z)(?P<suffix>.*)$'),
     ]
 
     for pattern in patterns_pre_mid_suf:
@@ -272,20 +276,34 @@ def merge_multiple_names(names: list[str]) -> list[str]:
             # print(f"  mid_list = {mid_list}")
             continue
 
-        merged_name = "".join([
+        result.append("".join([
             pre_list[0],
             # '<',
             '/'.join(mid_list),
             # '>',
             suf_list[0]
-        ])
-
-        result.append(merged_name)
+        ]))
 
         print(f"\nmerge_multiple_names: found match\n  names  = {names}\n  pattern = {pattern.pattern}")
         print(f"  result = {result}")
 
         return result
+
+    # Pattern: <PREFIX>xmin,ymin,zmin & <PREFIX>xmax,ymax,zmax
+    if len(names) == 2:
+        matchlist: list[re.Match] = []
+        pattern = re.compile(r'^(.*)(xmin,ymin,zmin|xmax,ymax,zmax)$')
+        for name in names:
+            m = re.match(pattern, name)
+            if m:
+                matchlist.append(m)
+        pre_list: list[str] = [m.group(1) for m in matchlist]
+        mid_list: list[str] = [m.group(2) for m in matchlist]
+
+        if len(matchlist) == len(names):
+            result.append(pre_list[0] + ','.join(mid_list))
+            print(f"\nmerge_multiple_names: found match\n  names  = {names}\n  pattern = {pattern.pattern}\n  result={result}")
+            return result
 
     for i, name in enumerate(names):
         if i in used:
