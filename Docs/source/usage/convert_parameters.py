@@ -214,7 +214,7 @@ def parse_bullet_annotation(rest: str) -> BulletAnnotation:
     )
 
 
-# ── lo/hi name merging ────────────────────────────────────────────────────────
+# ── multiple name merging ────────────────────────────────────────────────────────
 
 def merge_multiple_names(names: list[str]) -> list[str]:
     """Collapse lo/hi name pairs into a single combined name.
@@ -284,9 +284,7 @@ def merge_multiple_names(names: list[str]) -> list[str]:
             suf_list[0]
         ]))
 
-        print(f"\nmerge_multiple_names: found match\n  names  = {names}\n  pattern = {pattern.pattern}")
-        print(f"  result = {result}")
-
+        # print(f"\nmerge_multiple_names: found match\n  names  = {names}\n  pattern = {pattern.pattern}\n  result={result}")
         return result
 
     # Pattern: <PREFIX>xmin,ymin,zmin & <PREFIX>xmax,ymax,zmax
@@ -302,7 +300,7 @@ def merge_multiple_names(names: list[str]) -> list[str]:
 
         if len(matchlist) == len(names):
             result.append(pre_list[0] + ','.join(mid_list))
-            print(f"\nmerge_multiple_names: found match\n  names  = {names}\n  pattern = {pattern.pattern}\n  result={result}")
+            # print(f"\nmerge_multiple_names: found match\n  names  = {names}\n  pattern = {pattern.pattern}\n  result={result}")
             return result
 
     for i, name in enumerate(names):
@@ -585,7 +583,10 @@ def convert(lines: list[str]) -> list[str]:
 
 def main() -> None:
     with open('parameters_old.rst') as f:
-        lines = f.readlines()
+        # lines = f.readlines()
+        lines = f.read().split('\n')
+        if lines[-1] == '':
+            lines.pop()
 
     result = convert(lines)
 
