@@ -81,6 +81,40 @@ class Directive:
 
         self.source_span: Span = span
 
+    # RST output rendering
+    def render(self) -> list[str]:
+        """
+        Render a Directive to output lines.
+
+        One ``.. fv:var::`` block is emitted per name in d.names, all sharing
+        the same type, default, and body.  Blocks are separated by blank lines.
+        """
+        indent = ' ' * self.bullet_indent
+        out: list[str] = []
+
+        l_past_first_name = False
+        for name in self.names[:1]:
+            if l_past_first_name:
+                out.append('')
+            l_past_first_name = True
+            out.append(f'{indent}.. fv:var:: {name}')
+            # if d.type_str:
+            #     out.append(f'{indent}    :type: {d.type_str}')
+            # if d.default_str:
+            #     out.append(f'{indent}    :default: {d.default_str}')
+            # d.body = strip_lines(d.body)
+            if self.body:
+                # out.append('')
+                for line in self.body:
+                    out.append(f'{indent}    {line}' if line.strip() else '')
+
+        while out and out[0].strip == '':
+            out.pop(0)
+        while out and out[-1].strip() == '':
+            out.pop()
+
+        return out
+
 # Type normalisation
 WORD_NORMS: dict[str, str] = {
     'integer': 'int',
@@ -483,41 +517,6 @@ def rstrip_lines(lines: list[str]) -> list[str]:
 def strip_lines(lines: list[str]) -> list[str]:
     return '\n'.join(lines).strip().split('\n')
 
-# ── RST output rendering ──────────────────────────────────────────────────────
-
-def render_directive(d: Directive) -> list[str]:
-    """Render a Directive to output lines.
-
-    One ``.. fv:var::`` block is emitted per name in d.names, all sharing
-    the same type, default, and body.  Blocks are separated by blank lines.
-    """
-    indent = ' ' * d.bullet_indent
-    out: list[str] = []
-
-    l_past_first_name = False
-    for name in d.names[:1]:
-        if l_past_first_name:
-            out.append('')
-        l_past_first_name = True
-        out.append(f'{indent}.. fv:var:: {name}')
-        # if d.type_str:
-        #     out.append(f'{indent}    :type: {d.type_str}')
-        # if d.default_str:
-        #     out.append(f'{indent}    :default: {d.default_str}')
-        # d.body = strip_lines(d.body)
-        if d.body:
-            # out.append('')
-            for line in d.body:
-                out.append(f'{indent}    {line}' if line.strip() else '')
-
-    while out and out[0].strip == '':
-        out.pop(0)
-    while out and out[-1].strip() == '':
-        out.pop()
-
-    return out
-
-
 # ── Main conversion ───────────────────────────────────────────────────────────
 
 def convert(lines: list[str]) -> list[str]:
@@ -543,7 +542,7 @@ def convert(lines: list[str]) -> list[str]:
         if i in span_starts:
             # if len(out) > 0 and out[-1].strip() != "":
             #     out.append("")
-            out.extend(render_directive(span_starts[i]))
+            out.extend(span_starts[i].render())
         else:
             out.append(line.rstrip('\n'))
 
