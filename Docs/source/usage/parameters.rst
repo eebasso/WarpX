@@ -1837,15 +1837,12 @@ Laser initialization
     when ``warpx.num_mirrors`` is >0.
 
 .. fv:var:: warpx.mirror_z
-    required if ``warpx.num_mirrors>0``
     ``z`` location of the front of the mirrors.
 
 .. fv:var:: warpx.mirror_z_width
-    required if ``warpx.num_mirrors>0``
     ``z`` width of the mirrors.
 
 .. fv:var:: warpx.mirror_z_npoints
-    required if ``warpx.num_mirrors>0``
     In the boosted frame, depending on `gamma_boost`, ``warpx.mirror_z_width``
     can be smaller than the cell size, so that the mirror would not work. This
     parameter is the minimum number of points for the mirror. If
@@ -1932,7 +1929,6 @@ are applied to the grid directly. In particular, these fields can be seen in the
     should contain both B and E external fields data.
 
 .. fv:var:: warpx.E_external_grid
-    & ``warpx.B_external_grid`` (list of `3 floats`)
     required when ``warpx.E_ext_grid_init_style="constant"``
     and when ``warpx.B_ext_grid_init_style="constant"``, respectively.
     External uniform and constant electrostatic and magnetostatic field added
@@ -1955,7 +1951,6 @@ The external fields defined with input parameters that start with ``warpx.B_ext_
 are applied to the particles directly, at each timestep. As a results, these fields **cannot** be seen in the diagnostics that output the fields on the grid.
 
 .. fv:var:: particles.E_ext_particle_init_style
-    & ``particles.B_ext_particle_init_style`` (string) optional (default "none")
     These parameters determine the type of the external electric and
     magnetic fields respectively that are applied directly to the particles at every timestep.
     The field values are specified in the lab frame.
@@ -2089,7 +2084,6 @@ The external fields defined with input parameters that start with ``warpx.B_ext_
 are applied to the fluids directly, at each timestep. As a results, these fields **cannot** be seen in the diagnostics that output the fields on the grid.
 
 .. fv:var:: <fluid_species_name>.E_ext_init_style
-    & ``<fluid_species_name>.B_ext_init_style`` (string) optional (default "none")
     These parameters determine the type of the external electric and
     magnetic fields respectively that are applied directly to the cold relativistic fluids at every timestep.
     The field values are specified in the lab frame.
@@ -2763,9 +2757,7 @@ Maxwell solver: kinetic-fluid hybrid
     **Required Parameters:**
 
     .. fv:var:: hybrid_pic_model.elec_temp
-        must be specified when using the hybrid solver.
     .. fv:var:: hybrid_pic_model.n0_ref
-        should be specified if ``hybrid_pic_model.gamma != 1``.
 
     **Best Practices**
 
@@ -3068,29 +3060,24 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
     When 1 lower left corner of the mesh is pinned to 0.,0.,0.
 
 .. fv:var:: <diag_name>.openpmd_backend
-    , only used if ``<diag_name>.format = openpmd``
     `I/O backend <https://openpmd-api.readthedocs.io/en/latest/backends/overview.html>`_ for `openPMD <https://www.openPMD.org>`_ data dumps.
     ``bp5``/``bp4`` is the `ADIOS I/O library <https://csmd.ornl.gov/adios>`_, ``h5`` is the `HDF5 format <https://www.hdfgroup.org/solutions/hdf5/>`_, and ``json`` is a `simple text format <https://en.wikipedia.org/wiki/JSON>`_.
     ``json`` is for debugging and only works with serial/single-rank jobs.
     When WarpX is compiled with openPMD support, the first available backend in the order given above is taken.
 
 .. fv:var:: <diag_name>.openpmd_encoding
-    only read if ``<diag_name>.format = openpmd``.
     openPMD `file output encoding <https://openpmd-api.readthedocs.io/en/0.17.0/usage/concepts.html#iteration-and-series>`__.
     File based: one file per timestep (slower), group/variable based: one file for all steps (faster)).
     ``variable based`` is an `experimental feature with ADIOS2 BP5 <https://openpmd-api.readthedocs.io/en/0.17.0/backends/adios2.html#experimental-new-adios2-schema>`__ that will replace ``g``.
     Default: ``f`` (full diagnostics)
 
 .. fv:var:: <diag_name>.buffer_flush_limit_btd
-    , only read if ``<diag_name>.diag_type = BackTransformed``
     This parameter is intended for ADIOS backend to group every N buffers (N is the value of this parameter) and then flush to disk.
 
 .. fv:var:: <diag_name>.adios2_operator.type
-    ,
     `ADIOS2 I/O operator type <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ for `openPMD <https://www.openPMD.org>`_ data dumps.
 
 .. fv:var:: <diag_name>.adios2_operator.parameters.*
-    ,
     `ADIOS2 I/O operator parameters <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ for `openPMD <https://www.openPMD.org>`_ data dumps.
 
     A typical example for `ADIOS2 output using lossless compression <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ with ``blosc`` using the ``zstd`` compressor and 6 CPU treads per MPI Rank (e.g. for a `GPU run with spare CPU resources <https://arxiv.org/abs/1706.00522>`__):
@@ -3119,12 +3106,10 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
        <diag_name>.adios2_engine.parameters.FlattenSteps = on
 
 .. fv:var:: <diag_name>.adios2_engine.type
-    ,
     `ADIOS2 Engine type <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ for `openPMD <https://www.openPMD.org>`_ data dumps.
     See full list of engines at `ADIOS2 readthedocs <https://adios2.readthedocs.io/en/latest/engines/engines.html>`__
 
 .. fv:var:: <diag_name>.adios2_engine.parameters.*
-    ,
     `ADIOS2 Engine parameters <https://openpmd-api.readthedocs.io/en/0.17.0/details/backendconfig.html#adios2>`__ for `openPMD <https://www.openPMD.org>`_ data dumps.
 
     An example for parameters for the BP engine are setting the number of writers (``NumAggregators``), transparently redirecting data to burst buffers etc.
@@ -4144,11 +4129,9 @@ Alternatively, one can use the low-resolution builtin tables or generate them on
         * ``qed_bw.load_table_from`` (`string`): name of the lookup table file to read from.
 
 .. fv:var:: qed_qs.chi_min
-    : minimum chi parameter to be considered by the Quantum Synchrotron engine
     (suggested value : 0.001)
 
 .. fv:var:: qed_bw.chi_min
-    : minimum chi parameter to be considered by the Breit-Wheeler engine
     (suggested value : 0.01)
 
 

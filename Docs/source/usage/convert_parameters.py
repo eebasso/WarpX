@@ -378,8 +378,8 @@ def build_directive(lines: list[str], span: Span) -> Directive:
     # prefixed with ``bullet_indent * ' ' + '    '`` in render_directive.
     strip = detect_body_indent(lines, span.start + 1, bullet_indent)
     body: list[str] = []
-    if annotation.inline_desc:
-        body.append(annotation.inline_desc)
+    # if annotation.inline_desc:
+    #     body.append(annotation.inline_desc + " inline_desc_TEST")
     for raw in raw_body:
         if raw.strip() == '':
             body.append('')
