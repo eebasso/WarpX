@@ -248,11 +248,6 @@ def merge_multiple_names(names: list[str]) -> list[str]:
         re.compile(r'^(?P<prefix>.*)(?P<middle>lo|hi)(?P<suffix>.*)$'),
     ]
 
-    # group_sets: list[set[str]] = []
-
-    # for ig in range(len(matchlist[0].groups())):
-    #     group_sets.append(set([ m.group(ig) for m in matchlist ]))
-
     for pattern in patterns_pre_mid_suf:
         matchlist: list[re.Match] = []
         for name in names:
@@ -291,38 +286,6 @@ def merge_multiple_names(names: list[str]) -> list[str]:
         print(f"  result = {result}")
 
         return result
-
-    # Pattern: <PREFIX>(x|y|z)
-    # pattern = re.compile(r'^(?P<prefix>.*)(x|y|z)$')
-    # matchlist: list[re.Match | None] = [re.match(r'^(.*?)(x|y|z)$', name) for name in names]
-    # if all(matchlist):
-    #     prefixes: list[str] = []
-    #     xyz_txt: list[str] = []
-    #     for m in matchlist:
-    #         if m:
-    #             prefixes.append(m.group(1))
-    #             xyz_txt.append(m.group(2))
-    #     merged_name = prefixes[0] + '/'.join(xyz_txt)
-    #     result.append(merged_name)
-    #     print(f"\nmerge_multiple_names: pattern = {pattern}\n  Found match for names = {names}:\n  result = {result}")
-    #     return result
-
-    # # Pattern: <PREFIX>(sigma|epsilon|mu)<SUFFIX>
-    # pattern = re.compile(r'^(?P<prefix>.*)(?P<middle>sigma|epsilon|mu|field|particle)(?P<suffix>.*)$')
-    # matchlist = [re.match(pattern, name) for name in names]
-    # if all(matchlist):
-    #     pre_list: list[str] = []
-    #     mid_list: list[str] = []
-    #     suf_list: list[str] = []
-    #     for m in matchlist:
-    #         if m:
-    #             pre_list.append(m.group('prefix'))
-    #             mid_list.append(m.group('middle'))
-    #             suf_list.append(m.group('suffix'))
-    #     merged_name = pre_list[0] + '/'.join(mid_list) + suf_list[0]
-    #     result.append(merged_name)
-    #     # print(f"\nFound match for names = {names}:\n  result = {result}")
-    #     return result
 
     for i, name in enumerate(names):
         if i in used:
