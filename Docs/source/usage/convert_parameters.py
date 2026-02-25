@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass
-from typing import NamedTuple
+from typing import NamedTuple, Any
 
 
 # ── Regex ─────────────────────────────────────────────────────────────────────
@@ -78,16 +78,16 @@ WORD_NORMS: dict[str, str] = {
 
 def normalise_type(s: str) -> str:
     """Normalise a type string extracted from a parameter bullet."""
-    if not s:
-        return s
-    s = s.strip()
-    # ``0`` or ``1`` → bool
-    s = re.sub(r'[`]*0[`]*\s+or\s+[`]*1[`]*', 'bool', s)
-    # Normalise standalone type words
-    for old, new in WORD_NORMS.items():
-        s = re.sub(rf'(?<!\w){re.escape(old)}(?!\w)', new, s, flags=re.IGNORECASE)
-    # Fix double-backtick artifacts: ``bool`` → `bool`
-    s = re.sub(r'``(int|float|str|bool)``', r'`\1`', s)
+    # if not s:
+    #     return s
+    # s = s.strip()
+    # # ``0`` or ``1`` → bool
+    # s = re.sub(r'[`]*0[`]*\s+or\s+[`]*1[`]*', 'bool', s)
+    # # Normalise standalone type words
+    # for old, new in WORD_NORMS.items():
+    #     s = re.sub(rf'(?<!\w){re.escape(old)}(?!\w)', new, s, flags=re.IGNORECASE)
+    # # Fix double-backtick artifacts: ``bool`` → `bool`
+    # s = re.sub(r'``(int|float|str|bool)``', r'`\1`', s)
     return s
 
 
@@ -235,6 +235,80 @@ def merge_multiple_names(names: list[str]) -> list[str]:
     result: list[str] = []
     used: set[int] = set()
 
+    patterns_pre_mid_suf = [
+        # Pattern: <PREFIX>(nx|ny|nz)<SUFFIX>
+        re.compile(r'^(?P<prefix>.*)(?P<middle>nx|ny|nz|nox|noy|noz)(?P<suffix>.*)$'),
+        # Pattern: <PREFIX>(sigma|epsilon|mu)<SUFFIX>
+        re.compile(r'^(?P<prefix>.*)(?P<middle>sigma|epsilon|mu|field|particle)(?P<suffix>.*)$'),
+        # Pattern: <PREFIX>(x|y|z)
+        # re.compile(r'^(?P<prefix>.*)(?P<middle>x|y|z)(?P<suffix>)$'),
+    ]
+
+    # result = ['psatd.nox', 'psatd.noy', 'pstad.noz']
+
+    for pattern in patterns_pre_mid_suf:
+        matchlist: list[re.Match] = []
+        for name in names:
+            m = re.match(pattern, name)
+            if m:
+                matchlist.append(m)
+        if len(matchlist) != len(names):
+            continue
+        print(f"\nmerge_multiple_names: found match\n  names = {names}\n  pattern = {pattern}")
+
+        pre_list: list[str] = [m.group('prefix') for m in matchlist]
+        mid_list: list[str] = [m.group('middle') for m in matchlist]
+        suf_list: list[str] = [m.group('suffix') for m in matchlist]
+
+        if any(p != pre_list[0] for p in pre_list):
+            print(f"  pre_list = {pre_list}")
+            continue
+        if any(s != suf_list[0] for s in suf_list):
+            print(f"  suf_list = {suf_list}")
+            continue
+        if all(m == mid_list[0] for m in mid_list):
+            print(f"  mid_list = {mid_list}")
+            continue
+
+        merged_name = f"{pre_list[0]}{'/'.join(mid_list)}{suf_list[0]}"
+        result.append(merged_name)
+
+        print(f"  result = {result}")
+
+        return result
+
+    # Pattern: <PREFIX>(x|y|z)
+    # pattern = re.compile(r'^(?P<prefix>.*)(x|y|z)$')
+    # matchlist: list[re.Match | None] = [re.match(r'^(.*?)(x|y|z)$', name) for name in names]
+    # if all(matchlist):
+    #     prefixes: list[str] = []
+    #     xyz_txt: list[str] = []
+    #     for m in matchlist:
+    #         if m:
+    #             prefixes.append(m.group(1))
+    #             xyz_txt.append(m.group(2))
+    #     merged_name = prefixes[0] + '/'.join(xyz_txt)
+    #     result.append(merged_name)
+    #     print(f"\nmerge_multiple_names: pattern = {pattern}\n  Found match for names = {names}:\n  result = {result}")
+    #     return result
+
+    # # Pattern: <PREFIX>(sigma|epsilon|mu)<SUFFIX>
+    # pattern = re.compile(r'^(?P<prefix>.*)(?P<middle>sigma|epsilon|mu|field|particle)(?P<suffix>.*)$')
+    # matchlist = [re.match(pattern, name) for name in names]
+    # if all(matchlist):
+    #     pre_list: list[str] = []
+    #     mid_list: list[str] = []
+    #     suf_list: list[str] = []
+    #     for m in matchlist:
+    #         if m:
+    #             pre_list.append(m.group('prefix'))
+    #             mid_list.append(m.group('middle'))
+    #             suf_list.append(m.group('suffix'))
+    #     merged_name = pre_list[0] + '/'.join(mid_list) + suf_list[0]
+    #     result.append(merged_name)
+    #     # print(f"\nFound match for names = {names}:\n  result = {result}")
+    #     return result
+
     for i, name in enumerate(names):
         if i in used:
             continue
@@ -283,11 +357,30 @@ def merge_multiple_names(names: list[str]) -> list[str]:
                 used |= {i, j}
                 merged = True
                 break
+            # Pattern: xmin,ymin,zmin & xmax,ymax,zmax
+            sep_pat = r'([/,])'
+            suffix_pat = r'(min|max)'
+            pattern = fr'^(.*?)x{suffix_pat}({sep_pat}y{suffix_pat})?({sep_pat}z{suffix_pat})?(.*?)$'
+            m1 = re.match(pattern, name)
+            m2 = re.match(pattern, other)
+            if m1 and m2 and m1.group(1) == m2.group(2):
+                txt = m1.group(1)
+                txt += 'xmin,ymin,zmin,xmax,ymax,zmax'
+                result.append(txt)
+                used |= {i, j}
+                merged = True
+                break
+            # Pattern: PREFIX_x(...) & PREFIX_other
+
+            # Pattern: <PREFIX>x<SUFFIX> & <PREFIX>y<SUFFIX> & <PREFIX>z<SUFFIX>
+            pattern = r'^(.*?)([xyz])(.*?)'
+            m1 = r'^'
+
         if not merged:
             result.append(name)
 
     if len(result) != 1:
-        print(f"\nmerge_multiple_names: failed to merge all names.\ninput names = {names}\nresult = {result}")
+        print(f"\nmerge_multiple_names: failed to merge all names.\n  input names = {names}\n  result = {result}")
     if len(result) == 0:
         print(f"merge_multiple_names: WARNING: result = {result} is empty!")
 

@@ -1472,7 +1472,7 @@ Particle initialization
      :math:`\gamma` is the Lorentz factor,
      :math:`v/c` is the particle velocity normalized by the speed of light.
 
-.. fv:var:: <species_name>.save_particles_at_xlo/hi_ylo/hi_zlo/hi
+.. fv:var:: <species_name>.save_particles_at_xlo/ylo/zlo/xhi/yhi/zhi
     If `1` particles of this species will be copied to the scraped particle
     buffer for the specified boundary if they leave the simulation domain in
     the specified direction. **If USE_EB=TRUE** the ``save_particles_at_eb``
@@ -2592,7 +2592,7 @@ Maxwell solver: PSATD method
     The order of accuracy of the spatial derivatives, when using the code compiled with a PSATD solver.
     If ``psatd.periodic_single_box_fft`` is used, these can be set to ``inf`` for infinite-order PSATD.
 
-.. fv:var:: psatd.nx_guard
+.. fv:var:: psatd.nx/ny/nz_guard
     The number of guard cells to use with PSATD solver.
     If not set by users, these values are calculated automatically and determined *empirically* and
     equal the order of the solver for collocated grids and half the order of the solver for staggered grids.
@@ -2736,13 +2736,13 @@ Maxwell solver: macroscopic media
 
     Comparing the two methods, Lax-Wendroff is more prone to developing oscillations and requires a smaller timestep for stability. On the other hand, Backward Euler is more robust but it is first-order accurate in time compared to the second-order Lax-Wendroff method.
 
-.. fv:var:: macroscopic.sigma_function(x,y,z)
+.. fv:var:: macroscopic.sigma/epsilon/mu_function(x,y,z)
     To initialize spatially varying conductivity, permittivity, and permeability, respectively,
     using a mathematical function in the input. Constants required in the
     mathematical expression can be set using ``my_constants``. These parameters are parsed
     if ``algo.em_solver_medium=macroscopic``.
 
-.. fv:var:: macroscopic.sigma
+.. fv:var:: macroscopic.sigma/epsilon/mu
     To initialize a constant conductivity, permittivity, and permeability of the
     computational medium, respectively. The default values are the corresponding values
     in vacuum.
@@ -2851,12 +2851,12 @@ Grid types (collocated, staggered, hybrid)
         The default behavior should not normally be changed.
         At present, this parameter is intended mainly for testing and development purposes.
 
-.. fv:var:: warpx.field_centering_nox
+.. fv:var:: warpx.field_centering_nox/noy/noz
     The order of interpolation used with staggered or hybrid grids (``warpx.grid_type = staggered`` or ``warpx.grid_type = hybrid``) and momentum-conserving field gathering (``algo.field_gathering = momentum-conserving``) to interpolate the electric and magnetic fields from the cell centers to the cell nodes, before gathering the fields from the cell nodes to the particle positions.
 
     Default: ``warpx.field_centering_no<x,y,z> = 2`` with staggered grids, ``warpx.field_centering_no<x,y,z> = 8`` with hybrid grids (typically necessary to ensure stability in boosted-frame simulations of relativistic plasmas and beams).
 
-.. fv:var:: warpx.current_centering_nox
+.. fv:var:: warpx.current_centering_nox/noy/noz
     The order of interpolation used with hybrid grids (``warpx.grid_type = hybrid``) to interpolate the currents from the cell nodes to the cell centers when ``warpx.do_current_centering = 1``, before pushing the Maxwell fields on staggered grids.
 
     Default: ``warpx.current_centering_no<x,y,z> = 8`` with hybrid grids (typically necessary to ensure stability in boosted-frame simulations of relativistic plasmas and beams).
@@ -3252,7 +3252,7 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
     run with more MPI ranks than ``amrex.async_out_nfiles``, build WarpX with
     ``-DWarpX_MPI_THREAD_MULTIPLE=ON``.
 
-.. fv:var:: warpx.field_io_nfiles
+.. fv:var:: warpx.field/particle_io_nfiles
     The maximum number of files to use when writing field and particle data to plotfile directories.
 
 .. fv:var:: warpx.mffile_nstreams
