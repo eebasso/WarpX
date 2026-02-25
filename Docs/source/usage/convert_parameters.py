@@ -287,7 +287,7 @@ def merge_multiple_names(names: list[str]) -> list[str]:
 
         result.append(merged_name)
 
-        print(f"\nmerge_multiple_names: found match\n  names = {names}\n  pattern = {pattern.pattern}")
+        print(f"\nmerge_multiple_names: found match\n  names  = {names}\n  pattern = {pattern.pattern}")
         print(f"  result = {result}")
 
         return result
@@ -395,9 +395,11 @@ def merge_multiple_names(names: list[str]) -> list[str]:
             result.append(name)
 
     if len(result) != 1:
-        print(f"\nmerge_multiple_names: failed to merge all names.\n  input names = {names}\n  result = {result}")
+        print(f"\nmerge_multiple_names: failed to merge all names.\n  names  = {names}\n  result = {result}")
     if len(result) == 0:
         print(f"merge_multiple_names: WARNING: result = {result} is empty!")
+    if len(result) == 1 and len(names) != 1:
+        print(f"\nmerge_multiple_names: iterative match successful\n  names  = {names}\n  result = {result}")
 
     # txt = ' '.join(result) + "TEST"
     # result = [ txt ]
