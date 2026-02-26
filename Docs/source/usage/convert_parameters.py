@@ -39,9 +39,6 @@ class Directive:
         if span is None:
             span = Span(0, len(lines))
 
-        self.raw_first_line: str = lines[span.start]
-        self.raw_body_txt: str = '\n'.join(lines[span.start + 1:span.end])
-
         bullet_line = lines[span.start]
         m = PARAM_BULLET_RE.match(bullet_line)
         assert m is not None  # guaranteed by find_directive_spans
@@ -56,9 +53,9 @@ class Directive:
         # Raw body: every source line after the bullet, newlines stripped
         raw_body: list[str] = [lines[k].rstrip('\n') for k in range(span.start + 1, span.end)]
 
-        # Re-indented body: strip source indent, leaving content ready to be
-        # prefixed with ``bullet_indent * ' ' + '    '`` in render_directive.
-        body_indent = detect_body_indent(lines, span.start + 1, bullet_indent)
+        # Find body indent
+        body_indent = detect_body_indent(raw_body, bullet_indent=bullet_indent)
+
         body: list[str] = []
         # if annotation.inline_desc:
         #     body.append(annotation.inline_desc + " inline_desc_TEST")
@@ -67,6 +64,8 @@ class Directive:
                 body.append('')
             else:
                 col = len(raw) - len(raw.lstrip())
+                if col < body_indent:
+                    print(f"\nWARNING: {names}, bullet_indent={bullet_indent}, col={col}, body_indent={body_indent}, raw={raw}")
                 body.append(raw[min(body_indent, col):])
 
         self.bullet_line: str = bullet_line
@@ -90,7 +89,8 @@ class Directive:
         One ``.. fv:var::`` block is emitted per name in d.names, all sharing
         the same type, default, and body.  Blocks are separated by blank lines.
         """
-        indent = ' ' * self.bullet_indent
+        indent: str = ' ' * self.bullet_indent
+        body_indent: str = ' ' * self.body_indent
         out: list[str] = []
 
         l_past_first_name = False
@@ -100,14 +100,16 @@ class Directive:
             l_past_first_name = True
             out.append(f'{indent}.. fv:var:: {name}')
             # if d.type_str:
-            #     out.append(f'{indent}    :type: {d.type_str}')
+            #     out.append(f'{indent}{body_indent}:type: {d.type_str}')
             # if d.default_str:
-            #     out.append(f'{indent}    :default: {d.default_str}')
+            #     out.append(f'{indent}{body_indent}:default: {d.default_str}')
             # d.body = strip_lines(d.body)
-            if self.body:
+            # if self.body:
                 # out.append('')
-                for line in self.body:
-                    out.append(f'{indent}    {line}' if line.strip() else '')
+            for line in self.body:
+                out.append(f'{body_indent}{line}'.rstrip())
+                # for line in self.raw_body:
+                #     out.append(f'{line}' if line.strip() else '')
 
         # while out and out[0].strip == '':
         #     out.pop(0)
@@ -461,8 +463,9 @@ def find_directive_spans(lines: list[str]) -> list[Span]:
     first line that is no longer part of that bullet's body.
     """
     spans: list[Span] = []
-    bullet_indent: int = 0
-    start: int = 0
+    bullet_indent: int = -1
+    body_indent: int = -1
+    start: int = -1
     l_directive: bool = False
 
     for i, line in enumerate(lines):
@@ -472,14 +475,17 @@ def find_directive_spans(lines: list[str]) -> list[Span]:
             if line.strip() == '':
                 continue
             line_indent = len(line) - len(line.lstrip())
-            if line_indent <= bullet_indent:
+            if line_indent <= bullet_indent or line_indent < body_indent:
                 spans.append(Span(start, i))
                 l_directive = False
-                print(f"\nfind_directive_spans:  span={start, i} bullet_indent={bullet_indent}")
+                # print(f"\nfind_directive_spans:  span={start, i} bullet_indent={bullet_indent}")
         if not l_directive:
             m = PARAM_BULLET_RE.match(lines[i])
             if m and is_param_bullet(m.group(3), m.group(4)):
                 bullet_indent = len(m.group(1))
+                body_indent = detect_body_indent(lines, istart=i-1, bullet_indent=bullet_indent)
+                if bullet_indent >= body_indent:
+                    print(f"\nWARNING: bullet_indent >= b , {bullet_indent, body_indent}")
                 start = i
                 l_directive = True
     return spans
@@ -487,17 +493,17 @@ def find_directive_spans(lines: list[str]) -> list[Span]:
 
 # ── Body stripping ────────────────────────────────────────────────────────────
 
-def detect_body_indent(lines: list[str], body_start: int, bullet_indent: int) -> int:
+def detect_body_indent(lines: list[str], *, istart=0, bullet_indent: int) -> int:
     """Return the column of the first non-blank body line.
 
     This is used to strip the source-level indentation when re-indenting
     body lines for the output directive.
     """
-    j = body_start
-    for j in range(body_start, len(lines)):
-        if lines[j].strip() == '':
+    for i in range(istart, len(lines)):
+        line = lines[i]
+        if line.strip() == '':
             continue
-        col = len(lines[j]) - len(lines[j].lstrip())
+        col = len(line) - len(line.lstrip())
         if col > bullet_indent:
             return col
     return bullet_indent + 4  # fallback

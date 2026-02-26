@@ -1464,7 +1464,7 @@ Particle initialization
     If the user-defined real attribute is ``<real_attrib_name>`` then the
     following required parameter must be specified to initialize the attribute.
 
-    * ``<species_name>.attribute.<real_attrib_name>(x,y,z,ux,uy,uz,t)`` (`string`)
+   .. fv:var:: <species_name>.attribute.<real_attrib_name>(x,y,z,ux,uy,uz,t)
      ``t`` represents the physical time in seconds during the simulation.
      ``x``, ``y``, ``z`` represent particle positions in the unit of meter.
      ``ux``, ``uy``, ``uz`` represent the particle momenta in the unit of
@@ -2737,10 +2737,10 @@ Maxwell solver: macroscopic media
     Comparing the two methods, Lax-Wendroff is more prone to developing oscillations and requires a smaller timestep for stability. On the other hand, Backward Euler is more robust but it is first-order accurate in time compared to the second-order Lax-Wendroff method.
 
 .. fv:var:: macroscopic.sigma/epsilon/mu_function(x,y,z)
-    To initialize spatially varying conductivity, permittivity, and permeability, respectively,
-    using a mathematical function in the input. Constants required in the
-    mathematical expression can be set using ``my_constants``. These parameters are parsed
-    if ``algo.em_solver_medium=macroscopic``.
+     To initialize spatially varying conductivity, permittivity, and permeability, respectively,
+     using a mathematical function in the input. Constants required in the
+     mathematical expression can be set using ``my_constants``. These parameters are parsed
+     if ``algo.em_solver_medium=macroscopic``.
 
 .. fv:var:: macroscopic.sigma/epsilon/mu
     To initialize a constant conductivity, permittivity, and permeability of the
@@ -2915,16 +2915,16 @@ Additional parameters
     This allows the profiler to give meaningful timers, but (hardly) slows down the simulation.
 
 .. fv:var:: warpx.sort_intervals
-    Using the `Time intervals`_ syntax, this string defines the timesteps at which particles are
-    sorted.
-    If ``<=0``, do not sort particles.
-    It is turned on on GPUs for performance reasons (to improve memory locality).
+     Using the `Time intervals`_ syntax, this string defines the timesteps at which particles are
+     sorted.
+     If ``<=0``, do not sort particles.
+     It is turned on on GPUs for performance reasons (to improve memory locality).
 
 .. fv:var:: warpx.sort_particles_for_deposition
-    This option controls the type of sorting used if particle sorting is turned on, i.e. if ``sort_intervals`` is not ``<=0``.
-    If ``true``, particles will be sorted by cell to optimize deposition with many particles per cell, in the order x -> y -> z -> ppc.
-    If ``false``, particles will be sorted by bin, using the ``sort_bin_size`` parameter below, in the order ppc -> x -> y -> z.
-    ``true`` is recommend for best performance on NVIDIA GPUs, especially if there are many particles per cell.
+     This option controls the type of sorting used if particle sorting is turned on, i.e. if ``sort_intervals`` is not ``<=0``.
+     If ``true``, particles will be sorted by cell to optimize deposition with many particles per cell, in the order x -> y -> z -> ppc.
+     If ``false``, particles will be sorted by bin, using the ``sort_bin_size`` parameter below, in the order ppc -> x -> y -> z.
+     ``true`` is recommend for best performance on NVIDIA GPUs, especially if there are many particles per cell.
 
 .. fv:var:: warpx.sort_idx_type
     This controls the type of grid used to sort the particles when ``sort_particles_for_deposition`` is ``true``. Possible values are:
@@ -2935,46 +2935,46 @@ Additional parameters
     In 1D, only the first element is read.
 
 .. fv:var:: warpx.sort_bin_size
-    If ``sort_intervals`` is activated and ``sort_particles_for_deposition`` is ``false``, particles are sorted in bins of ``sort_bin_size`` cells.
-    In 2D, only the first two elements are read.
+     If ``sort_intervals`` is activated and ``sort_particles_for_deposition`` is ``false``, particles are sorted in bins of ``sort_bin_size`` cells.
+     In 2D, only the first two elements are read.
 
 .. fv:var:: warpx.do_shared_mem_charge_deposition
-    If activated, charge deposition will allocate and use small
-    temporary buffers on which to accumulate deposited charge values
-    from particles. On GPUs these buffers will reside in ``__shared__``
-    memory, which is faster than the usual ``__global__``
-    memory. Performance impact will depend on the relative overhead
-    of assigning the particles to bins small enough to fit in the
-    space available for the temporary buffers.
+     If activated, charge deposition will allocate and use small
+     temporary buffers on which to accumulate deposited charge values
+     from particles. On GPUs these buffers will reside in ``__shared__``
+     memory, which is faster than the usual ``__global__``
+     memory. Performance impact will depend on the relative overhead
+     of assigning the particles to bins small enough to fit in the
+     space available for the temporary buffers.
 
 .. fv:var:: warpx.do_shared_mem_current_deposition
-    If activated, current deposition will allocate and use small
-    temporary buffers on which to accumulate deposited current values
-    from particles. On GPUs these buffers will reside in ``__shared__``
-    memory, which is faster than the usual ``__global__``
-    memory. Performance impact will depend on the relative overhead
-    of assigning the particles to bins small enough to fit in the
-    space available for the temporary buffers. Performance is mostly improved
-    when there is lots of contention between particles writing to the same cell
-    (e.g. for high particles per cell). This feature is only available for CUDA
-    and HIP, and is only recommended for 3D or 2D.
+     If activated, current deposition will allocate and use small
+     temporary buffers on which to accumulate deposited current values
+     from particles. On GPUs these buffers will reside in ``__shared__``
+     memory, which is faster than the usual ``__global__``
+     memory. Performance impact will depend on the relative overhead
+     of assigning the particles to bins small enough to fit in the
+     space available for the temporary buffers. Performance is mostly improved
+     when there is lots of contention between particles writing to the same cell
+     (e.g. for high particles per cell). This feature is only available for CUDA
+     and HIP, and is only recommended for 3D or 2D.
 
 .. fv:var:: warpx.shared_tilesize
-    Used to tune performance when ``do_shared_mem_current_deposition`` or
-    ``do_shared_mem_charge_deposition`` is enabled. ``shared_tilesize`` is the
-    size of the temporary buffer allocated in shared memory for a threadblock.
-    A larger tilesize requires more shared memory, but gives more work to each
-    threadblock, which can lead to higher occupancy, and allows for more
-    buffered writes to ``__shared__`` instead of ``__global__``. The defaults
-    in 2D and 3D
-    are chosen from experimentation, but can be improved upon for specific
-    problems. The other defaults are not optimized and should always be fine
-    tuned for the problem.
+     Used to tune performance when ``do_shared_mem_current_deposition`` or
+     ``do_shared_mem_charge_deposition`` is enabled. ``shared_tilesize`` is the
+     size of the temporary buffer allocated in shared memory for a threadblock.
+     A larger tilesize requires more shared memory, but gives more work to each
+     threadblock, which can lead to higher occupancy, and allows for more
+     buffered writes to ``__shared__`` instead of ``__global__``. The defaults
+     in 2D and 3D
+     are chosen from experimentation, but can be improved upon for specific
+     problems. The other defaults are not optimized and should always be fine
+     tuned for the problem.
 
 .. fv:var:: warpx.shared_mem_current_tpb
-    Used to tune performance when ``do_shared_mem_current_deposition`` is
-    enabled. ``shared_mem_current_tpb`` controls the number of threads per
-    block (tpb), i.e. the number of threads operating on a shared buffer.
+     Used to tune performance when ``do_shared_mem_current_deposition`` is
+     enabled. ``shared_mem_current_tpb`` controls the number of threads per
+     block (tpb), i.e. the number of threads operating on a shared buffer.
 
 
 .. _running-cpp-parameters-diagnostics:
@@ -3066,10 +3066,10 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
     When WarpX is compiled with openPMD support, the first available backend in the order given above is taken.
 
 .. fv:var:: <diag_name>.openpmd_encoding
-    openPMD `file output encoding <https://openpmd-api.readthedocs.io/en/0.17.0/usage/concepts.html#iteration-and-series>`__.
-    File based: one file per timestep (slower), group/variable based: one file for all steps (faster)).
-    ``variable based`` is an `experimental feature with ADIOS2 BP5 <https://openpmd-api.readthedocs.io/en/0.17.0/backends/adios2.html#experimental-new-adios2-schema>`__ that will replace ``g``.
-    Default: ``f`` (full diagnostics)
+     openPMD `file output encoding <https://openpmd-api.readthedocs.io/en/0.17.0/usage/concepts.html#iteration-and-series>`__.
+     File based: one file per timestep (slower), group/variable based: one file for all steps (faster)).
+     ``variable based`` is an `experimental feature with ADIOS2 BP5 <https://openpmd-api.readthedocs.io/en/0.17.0/backends/adios2.html#experimental-new-adios2-schema>`__ that will replace ``g``.
+     Default: ``f`` (full diagnostics)
 
 .. fv:var:: <diag_name>.buffer_flush_limit_btd
     This parameter is intended for ADIOS backend to group every N buffers (N is the value of this parameter) and then flush to disk.
@@ -3139,32 +3139,32 @@ In-situ capabilities can be used by turning on Sensei or Ascent (provided they a
     Whether to save all modes when in RZ.  When ``openpmd_backend = openpmd``, this parameter is ignored and all modes are saved.
 
 .. fv:var:: <diag_name>.particle_fields_to_plot
-    Names of per-cell diagnostics of particle properties to calculate and output as additional fields.
-    Note that the deposition onto the grid does not respect the particle shape factor, but instead uses nearest-grid point interpolation.
-    Default is none.
-    Parser functions for these field names are specified by ``<diag_name>.particle_fields.<field_name>(x,y,z,ux,uy,uz)``.
-    Also, note that this option is only available for ``<diag_name>.diag_type = Full``
+   Names of per-cell diagnostics of particle properties to calculate and output as additional fields.
+   Note that the deposition onto the grid does not respect the particle shape factor, but instead uses nearest-grid point interpolation.
+   Default is none.
+   Parser functions for these field names are specified by ``<diag_name>.particle_fields.<field_name>(x,y,z,ux,uy,uz)``.
+   Also, note that this option is only available for ``<diag_name>.diag_type = Full``
 
 .. fv:var:: <diag_name>.particle_fields_species
-    Species for which to calculate ``particle_fields_to_plot``.
-    Fields will be calculated separately for each specified species.
-    The default is a list of all of the available particle species.
+         Species for which to calculate ``particle_fields_to_plot``.
+         Fields will be calculated separately for each specified species.
+         The default is a list of all of the available particle species.
 
 .. fv:var:: <diag_name>.particle_fields.<field_name>.do_average
-    Whether the diagnostic is an average or a sum. With an average, the sum over the specified function is divided
-    by the sum of the particle weights in each cell.
+   Whether the diagnostic is an average or a sum. With an average, the sum over the specified function is divided
+   by the sum of the particle weights in each cell.
 
 .. fv:var:: <diag_name>.particle_fields.<field_name>(x,y,z,ux,uy,uz)
-    Parser function to be calculated for each particle per cell. The averaged field written is
+   Parser function to be calculated for each particle per cell. The averaged field written is
 
-    .. math::
+   .. math::
 
-       \texttt{<field_name>_<species_name>} = \frac{\sum_{i=1}^N w_i \, f(x_i,y_i,z_i,u_{x,i},u_{y,i},u_{z,i})}{\sum_{i=1}^N w_i}
+      \texttt{<field_name>_<species_name>} = \frac{\sum_{i=1}^N w_i \, f(x_i,y_i,z_i,u_{x,i},u_{y,i},u_{z,i})}{\sum_{i=1}^N w_i}
 
-    where :math:`w_i` is the particle weight, :math:`f()` is the parser function, and :math:`(x_i,y_i,z_i)` are particle positions in units of a meter. The sums are over all particles of type ``<species_name>`` in a cell (ignoring the particle shape factor) that satisfy ``<diag_name>.particle_fields.<field_name>.filter(x,y,z,ux,uy,uz)``.
-    When ``<diag_name>.particle_fields.<field_name>.do_average`` is `0`, the division by the sum over particle weights is not done.
-    In 1D or 2D, the particle coordinates will follow the WarpX convention. :math:`(u_{x,i},u_{y,i},u_{z,i})` are components of the particle four-momentum. :math:`u = \gamma v/c`, :math:`\gamma` is the Lorentz factor, :math:`v` is the particle velocity and :math:`c` is the speed of light.
-    For photons, we use the standardized momentum :math:`u = p/(m_{e}c)`, where :math:`p` is the momentum of the photon and :math:`m_{e}` the mass of an electron.
+   where :math:`w_i` is the particle weight, :math:`f()` is the parser function, and :math:`(x_i,y_i,z_i)` are particle positions in units of a meter. The sums are over all particles of type ``<species_name>`` in a cell (ignoring the particle shape factor) that satisfy ``<diag_name>.particle_fields.<field_name>.filter(x,y,z,ux,uy,uz)``.
+   When ``<diag_name>.particle_fields.<field_name>.do_average`` is `0`, the division by the sum over particle weights is not done.
+   In 1D or 2D, the particle coordinates will follow the WarpX convention. :math:`(u_{x,i},u_{y,i},u_{z,i})` are components of the particle four-momentum. :math:`u = \gamma v/c`, :math:`\gamma` is the Lorentz factor, :math:`v` is the particle velocity and :math:`c` is the speed of light.
+   For photons, we use the standardized momentum :math:`u = p/(m_{e}c)`, where :math:`p` is the momentum of the photon and :math:`m_{e}` the mass of an electron.
 
 .. fv:var:: <diag_name>.particle_fields.<field_name>.filter(x,y,z,ux,uy,uz)
     Parser function returning a boolean for whether to include a particle in the diagnostic.
@@ -4181,10 +4181,10 @@ Schwinger process
     This feature does not require to compile with ``-DWarpX_QED=ON``.
 
 .. fv:var:: warpx.quantum_xi
-    Overwrites the actual quantum parameter used in Maxwell's QED equations. Assigning a
-    value here will make the simulation unphysical, but will allow QED effects to become more apparent.
-    Note that this option will only have an effect if the ``warpx.use_Hybrid_QED`` flag is also triggered.
-    This feature does not require to compile with ``-DWarpX_QED=ON``.
+     Overwrites the actual quantum parameter used in Maxwell's QED equations. Assigning a
+     value here will make the simulation unphysical, but will allow QED effects to become more apparent.
+     Note that this option will only have an effect if the ``warpx.use_Hybrid_QED`` flag is also triggered.
+     This feature does not require to compile with ``-DWarpX_QED=ON``.
 
 
 Checkpoints and restart
