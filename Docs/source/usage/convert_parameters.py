@@ -82,7 +82,7 @@ class Directive:
         self.source_span: Span = span
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self.names[0]
 
     # RST output rendering
@@ -93,7 +93,7 @@ class Directive:
         One ``.. fv:var::`` block is emitted per name in d.names, all sharing
         the same type, default, and body.  Blocks are separated by blank lines.
         """
-        indent: str = ' ' * self.bullet_indent
+        bullet_indent: str = ' ' * self.bullet_indent
         body_indent: str = ' ' * self.body_indent
         out: list[str] = []
 
@@ -104,14 +104,14 @@ class Directive:
             if l_past_first_name:
                 out.append('')
             l_past_first_name = True
-            out.append(f'{indent}.. fv:var:: {name}')
+            out.append(f'{bullet_indent}.. fv:var:: {name}')
             # if self.type_str:
-            #     out.append(f'{indent}{body_indent}:type: {self.type_str}')
+            #     out.append(f'{body_indent}{indent}:type: {self.type_str}')
             # if self.default_str:
-            #     out.append(f'{indent}{body_indent}:default: {self.default_str}')
+            #     out.append(f'{body_indent}{indent}:default: {self.default_str}')
             if l_use_raw_annotation:
                 raw_anno_txt = self.annotation.raw_annotation.strip().lstrip('.:').strip()
-                out.append(f"{indent}{body_indent}:comment: {raw_anno_txt}")
+                out.append(f"{body_indent}:comment: {raw_anno_txt}")
 
             body_lines = [ f'{body_indent}{line}'.rstrip() for line in self.body ]
             if len(body_lines) < 1 or body_lines[0] != "":
