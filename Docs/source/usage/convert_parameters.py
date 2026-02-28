@@ -97,19 +97,21 @@ class Directive:
         body_indent: str = ' ' * self.body_indent
         out: list[str] = []
 
+        l_use_raw_annotation = True
+
         l_past_first_name = False
         for name in self.names[:1]:
             if l_past_first_name:
                 out.append('')
             l_past_first_name = True
             out.append(f'{indent}.. fv:var:: {name}')
-            # if d.type_str:
-            #     out.append(f'{indent}{body_indent}:type: {d.type_str}')
-            # if d.default_str:
-            #     out.append(f'{indent}{body_indent}:default: {d.default_str}')
-            # d.body = strip_lines(d.body)
-            # if self.body:
-                # out.append('')
+            # if self.type_str:
+            #     out.append(f'{indent}{body_indent}:type: {self.type_str}')
+            # if self.default_str:
+            #     out.append(f'{indent}{body_indent}:default: {self.default_str}')
+            if l_use_raw_annotation:
+                raw_anno_txt = self.annotation.raw_annotation.strip().lstrip('.:').strip()
+                out.append(f"{indent}{body_indent}:comment: {raw_anno_txt}")
 
             body_lines = [ f'{body_indent}{line}'.rstrip() for line in self.body ]
             if len(body_lines) < 1 or body_lines[0] != "":
