@@ -225,7 +225,7 @@ def parse_bullet_annotation(rest: str) -> BulletAnnotation:
     # ── Collect additional co-listed names ────────────────────────────────────
     extra_names: list[str] = []
     while True:
-        m = re.match(r'^(?:,\s*|and\s+|,\s*and\s+)``([^`]+)``\s*(.*)', s, re.DOTALL)
+        m = re.match(r'^(?:,\s*|(?:and|&)\s+|,\s*(?:and|&)\s+)``([^`]+)``\s*(.*)', s, re.DOTALL)
         if m:
             extra_names.append(m.group(1).strip())
             s = m.group(2).strip()
@@ -279,7 +279,7 @@ def parse_bullet_annotation(rest: str) -> BulletAnnotation:
 
 # ── multiple name merging ────────────────────────────────────────────────────────
 
-def merge_multiple_names(names: list[str]) -> list[str]:
+def _merge_multiple_names(names: list[str]) -> list[str]:
     """Collapse lo/hi name pairs into a single combined name.
 
     Three patterns are handled:
@@ -313,6 +313,8 @@ def merge_multiple_names(names: list[str]) -> list[str]:
         re.compile(r'^(?P<prefix>.*)(?P<middle>Ex|Ey|Ez|Bx|By|Bz)(?P<suffix>.*)$'),
         # Pattern: <PREFIX>(x|y|z)<SUFFIX>
         re.compile(r'^(?P<prefix>.*)(?P<middle>x|y|z)(?P<suffix>.*)$'),
+        # Pattern: <PREFIX>(E|B)<SUFFIX>
+        re.compile(r'^(?P<prefix>.*)(?P<middle>E|B)(?P<suffix>.*)$'),
     ]
 
     for pattern in patterns_pre_mid_suf:
@@ -436,12 +438,29 @@ def merge_multiple_names(names: list[str]) -> list[str]:
         if not merged:
             result.append(name)
 
+    return result
+
+def merge_multiple_names(names: list[str]) -> list[str]:
+    result = _merge_multiple_names(names)
+
     if len(result) != 1:
         print(f"\nmerge_multiple_names: failed to merge all names.\n  names  = {names}\n  result = {result}")
     if len(result) == 0:
         print(f"merge_multiple_names: WARNING: result = {result} is empty!")
-    if len(result) == 1 and len(names) != 1:
-        print(f"\nmerge_multiple_names: iterative match successful\n  names  = {names}\n  result = {result}")
+    # if len(result) == 1 and len(names) != 1:
+    #     print(f"\nmerge_multiple_names: iterative match successful\n  names  = {names}\n  result = {result}")
+
+    if len(result) > 1:
+        txt = ""
+        for i, elem in enumerate(result):
+            if i == 0:
+                txt += elem
+            elif i == len(result) - 1:
+                txt += " & " + elem
+            else:
+                txt += ", " + elem
+        result = [ txt ]
+        print(f"  combined result = {result}")
 
     # txt = ' '.join(result) + "TEST"
     # result = [ txt ]

@@ -2235,8 +2235,8 @@ are applied to the grid directly. In particular, these fields can be seen in the
     ``read_from_file``, the openPMD file specified by ``warpx.read_fields_from_path``
     should contain both B and E external fields data.
 
-.. fv:var:: warpx.E_external_grid
-    :comment: & ``warpx.B_external_grid`` (list of `3 floats`)
+.. fv:var:: warpx.E/B_external_grid
+    :comment: (list of `3 floats`)
 
     required when ``warpx.E_ext_grid_init_style="constant"``
     and when ``warpx.B_ext_grid_init_style="constant"``, respectively.
@@ -2261,8 +2261,8 @@ Applied to Particles
 The external fields defined with input parameters that start with ``warpx.B_ext_particle_init_`` or ``warpx.E_ext_particle_init_``
 are applied to the particles directly, at each timestep. As a results, these fields **cannot** be seen in the diagnostics that output the fields on the grid.
 
-.. fv:var:: particles.E_ext_particle_init_style
-    :comment: & ``particles.B_ext_particle_init_style`` (string) optional (default "none")
+.. fv:var:: particles.E/B_ext_particle_init_style
+    :comment: (string) optional (default "none")
 
     These parameters determine the type of the external electric and
     magnetic fields respectively that are applied directly to the particles at every timestep.
@@ -2396,8 +2396,8 @@ Applied to Cold Relativistic Fluids
 The external fields defined with input parameters that start with ``warpx.B_ext_init_`` or ``warpx.E_ext_init_``
 are applied to the fluids directly, at each timestep. As a results, these fields **cannot** be seen in the diagnostics that output the fields on the grid.
 
-.. fv:var:: <fluid_species_name>.E_ext_init_style
-    :comment: & ``<fluid_species_name>.B_ext_init_style`` (string) optional (default "none")
+.. fv:var:: <fluid_species_name>.E/B_ext_init_style
+    :comment: (string) optional (default "none")
 
     These parameters determine the type of the external electric and
     magnetic fields respectively that are applied directly to the cold relativistic fluids at every timestep.
