@@ -571,7 +571,7 @@ def main() -> None:
 
     result = convert(lines)
 
-    with open('parameters.rst', 'w') as f:
+    with open('source/usage/parameters.rst', 'w') as f:
         f.write('\n'.join(result) + '\n')
 
     n = sum(1 for ln in result if re.search(r'^\s*\.\. fv:var::', ln))
