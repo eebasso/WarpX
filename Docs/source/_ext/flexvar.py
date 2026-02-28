@@ -41,7 +41,8 @@ from sphinx.application import Sphinx
 from sphinx.directives import ObjectDescription
 from sphinx.domains import Domain, ObjType
 from sphinx.environment import BuildEnvironment
-from sphinx.roles import XRefRole, ws_re
+from sphinx.roles import XRefRole
+from sphinx.util import ws_re
 from sphinx.util.docfields import Field
 from sphinx.util.nodes import make_id, make_refnode
 
