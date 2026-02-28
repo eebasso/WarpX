@@ -124,13 +124,13 @@ class FlexVarDirective(ObjectDescription[str]):
             signode += self._parse_inline(comment)
 
         # Test/debug
-        if True:
+        if False:
             test_nodetypelist: list[type[nodes.TextElement]] = [
                 # addnodes.desc,
                 # addnodes.desc_signature,
                 # addnodes.desc_signature_line,
                 # addnodes.desc_content,
-                addnodes.desc_inline,
+                # addnodes.desc_inline,
                 # Nodes for high-level structure in signatures
                 ##############################################
                 addnodes.desc_name,
@@ -157,12 +157,17 @@ class FlexVarDirective(ObjectDescription[str]):
                 addnodes.literal_emphasis,
             ]
 
-            testnodelist: list[nodes.Node] = [
-                nodetype("", f" |{nodetype.__name__}") for nodetype in test_nodetypelist
-            ]
+            testnodelist: list[nodes.Node] = []
+
+            testnodelist.append(addnodes.desc_inline("fv", "", " | desc_inline `singlebacktick` ``doublebacktick``"))
+
+            testnodelist.extend([
+                nodetype("", f" | {nodetype.__name__}") for nodetype in test_nodetypelist
+            ])
+
             # Extra
-            testnodelist.extend(self._parse_inline(" |_par`se`_in``line``"))
-            testnodelist.append(nodes.Text(" |Text"))
+            testnodelist.extend(self._parse_inline_into_node_list(" | _parse_inline normal text `singlebacktick` ``doublebacktick``"))
+            testnodelist.append(nodes.Text(" | Text"))
 
             signode += testnodelist
 
