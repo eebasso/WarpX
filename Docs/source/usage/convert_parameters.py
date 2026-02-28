@@ -198,6 +198,8 @@ class BulletAnnotation(NamedTuple):
     type_str: str
     default_str: str
     inline_desc: str        # descriptive text on the bullet line itself
+    raw_source: str
+    raw_annotation: str
 
 
 def parse_bullet_annotation(rest: str) -> BulletAnnotation:
@@ -222,6 +224,7 @@ def parse_bullet_annotation(rest: str) -> BulletAnnotation:
             s = m.group(2).strip()
         else:
             break
+    raw_annotation = s
 
     type_str = default_str = inline_desc = ''
 
@@ -262,6 +265,8 @@ def parse_bullet_annotation(rest: str) -> BulletAnnotation:
         type_str=type_str,
         default_str=default_str,
         inline_desc=inline_desc,
+        raw_source=rest,
+        raw_annotation=raw_annotation,
     )
 
 
