@@ -158,9 +158,9 @@ class FlexVarDirective(ObjectDescription[str]):
 
             # signode += testnodelist
 
-        value = self.options.get("comment")
-        if value:
-            signode += self._parse_inline(value)
+        comment = self.options.get("comment")
+        if comment:
+            signode += self._parse_inline(comment)
 
         return name
 
@@ -236,7 +236,15 @@ class FlexVarRole(XRefRole):
             m = self._value_re.match(target)
             if m:
                 target = m.group(1).strip()
-        return title, ws_re.sub(' ', target)
+        return XRefRole.process_link(
+            self,
+            env=env,
+            refnode=refnode,
+            has_explicit_title=has_explicit_title,
+            title=title,
+            target=target,
+        )
+        # return title, ws_re.sub(' ', target)
 
 
 # ---------------------------------------------------------------------------
