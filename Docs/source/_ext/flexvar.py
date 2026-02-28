@@ -101,46 +101,6 @@ class FlexVarDirective(ObjectDescription[str]):
         # Optional default value  ` = <value>`
         value = self.options.get("default", "").strip()
         if value:
-
-            # test_nodetypelist: list[type[nodes.TextElement]] = [
-            #     # addnodes.desc,
-            #     # addnodes.desc_signature,
-            #     # addnodes.desc_signature_line,
-            #     # addnodes.desc_content,
-            #     addnodes.desc_inline,
-            #     # Nodes for high-level structure in signatures
-            #     ##############################################
-            #     addnodes.desc_name,
-            #     addnodes.desc_addname,
-            #     addnodes.desc_type,
-            #     addnodes.desc_returns,
-            #     addnodes.desc_parameterlist,
-            #     addnodes.desc_type_parameter_list,
-            #     addnodes.desc_parameter,
-            #     addnodes.desc_type_parameter,
-            #     addnodes.desc_optional,
-            #     addnodes.desc_annotation,
-            #     # Leaf nodes for markup of text fragments
-            #     #########################################
-            #     addnodes.desc_sig_element,
-            #     addnodes.desc_sig_space,
-            #     addnodes.desc_sig_name,
-            #     addnodes.desc_sig_punctuation,
-            #     addnodes.desc_sig_literal_number,
-            #     addnodes.desc_sig_literal_string,
-            #     addnodes.desc_sig_literal_char,
-            #     # inline nodes
-            #     addnodes.literal_strong,
-            #     addnodes.literal_emphasis,
-            # ]
-
-            # testnodelist: list[nodes.Node] = [
-            #     nodetype("", f" |{nodetype.__name__}") for nodetype in test_nodetypelist
-            # ]
-            # # Extra
-            # testnodelist.extend(self._parse_inline(" |_parse_inline"))
-            # testnodelist.append(nodes.Text(" |Text"))
-
             value_nodelist: list[nodes.Node] = [
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation('', '='),
@@ -148,19 +108,58 @@ class FlexVarDirective(ObjectDescription[str]):
                 # *testnodelist,
                 *self._parse_inline(value),
             ]
-
             # signode += addnodes.desc_annotation(
             #     value, '',
             #     *value_nodelist
             # )
-
             signode += value_nodelist
-
-            # signode += testnodelist
 
         comment = self.options.get("comment")
         if comment:
             signode += self._parse_inline(comment)
+
+        # Test/debug
+        if True:
+            test_nodetypelist: list[type[nodes.TextElement]] = [
+                # addnodes.desc,
+                # addnodes.desc_signature,
+                # addnodes.desc_signature_line,
+                # addnodes.desc_content,
+                addnodes.desc_inline,
+                # Nodes for high-level structure in signatures
+                ##############################################
+                addnodes.desc_name,
+                addnodes.desc_addname,
+                addnodes.desc_type,
+                addnodes.desc_returns,
+                addnodes.desc_parameterlist,
+                addnodes.desc_type_parameter_list,
+                addnodes.desc_parameter,
+                addnodes.desc_type_parameter,
+                addnodes.desc_optional,
+                addnodes.desc_annotation,
+                # Leaf nodes for markup of text fragments
+                #########################################
+                addnodes.desc_sig_element,
+                addnodes.desc_sig_space,
+                addnodes.desc_sig_name,
+                addnodes.desc_sig_punctuation,
+                addnodes.desc_sig_literal_number,
+                addnodes.desc_sig_literal_string,
+                addnodes.desc_sig_literal_char,
+                # inline nodes
+                addnodes.literal_strong,
+                addnodes.literal_emphasis,
+            ]
+
+            testnodelist: list[nodes.Node] = [
+                nodetype("", f" |{nodetype.__name__}") for nodetype in test_nodetypelist
+            ]
+            # Extra
+            testnodelist.extend(self._parse_inline(" |_par`se`_in``line``"))
+            testnodelist.append(nodes.Text(" |Text"))
+
+            signode += testnodelist
 
         return name
 
