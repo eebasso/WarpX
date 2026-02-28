@@ -106,10 +106,11 @@ class Directive:
             # d.body = strip_lines(d.body)
             # if self.body:
                 # out.append('')
-            for line in self.body:
-                out.append(f'{body_indent}{line}'.rstrip())
-                # for line in self.raw_body:
-                #     out.append(f'{line}' if line.strip() else '')
+
+            body_lines = [ f'{body_indent}{line}'.rstrip() for line in self.body ]
+            if len(body_lines) < 1 or body_lines[0] != "":
+                body_lines.insert(0, "")
+            out.extend(body_lines)
 
         # while out and out[0].strip == '':
         #     out.pop(0)
