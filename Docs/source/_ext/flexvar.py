@@ -75,8 +75,13 @@ class FlexVarDirective(ObjectDescription[str]):
 
     def _parse_inline(self, text: str) -> list[nodes.Node]:
         """Parse *text* as RST inline content and return the resulting nodes."""
-        nodes_, _ = self.state.inline_text(text, self.lineno)
-        return nodes_
+        parsed, messages = self.state.inline_text(text, self.lineno)
+        # Report any parse warnings through the normal directive machinery
+        for msg in messages:
+            self.state_machine.reporter.system_message(
+                msg['level'], msg.astext(), source=self.get_source_info()[0]
+            )
+        return parsed
 
     def handle_signature(self, sig: str, signode: addnodes.desc_signature) -> str:
         """Build the rendered signature node and return the canonical name."""
