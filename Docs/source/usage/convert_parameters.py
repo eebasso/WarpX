@@ -254,8 +254,8 @@ def parse_bullet_annotation(rest: str) -> BulletAnnotation:
     elif s:
         inline_desc = s
 
-    # Strip a lone trailing "." left over from e.g. "(`type`, default: X)."
-    inline_desc = inline_desc.strip().lstrip('.').strip()
+    # Strip a lone trailing "." or ':' left over from e.g. "(`type`, default: X)."
+    inline_desc = inline_desc.strip().lstrip('.:').strip()
 
     return BulletAnnotation(
         extra_names=extra_names,
