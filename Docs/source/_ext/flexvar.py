@@ -73,8 +73,11 @@ class FlexVarDirective(ObjectDescription[str]):
     # Signature parsing / rendering
     # ------------------------------------------------------------------
 
-    def _parse_inline(self, text: str) -> list[nodes.Node]:
-        """Parse *text* as RST inline content and return the resulting nodes."""
+    def _parse_inline_into_node_list(self, text: str) -> list[nodes.Node]:
+        """
+        Parse *text* as RST inline content and return the resulting nodes.
+        Do not add directly to signode, as this will remove whitespaces.
+        """
         parsed, messages = self.state.inline_text(text, self.lineno)
         # Report any parse warnings through the normal directive machinery
         for msg in messages:
@@ -82,6 +85,14 @@ class FlexVarDirective(ObjectDescription[str]):
                 msg['level'], msg.astext(), source=self.get_source_info()[0]
             )
         return parsed
+
+    def _parse_inline_into_single_node(self, text: str) -> nodes.inline:
+        """
+        Parse text and combine into a single inline node.
+        This can added directly to signode to keep white
+        """
+        parsed_list: list[nodes.Node] = self._parse_inline_into_node_list(text)
+        return nodes.inline(text, '', *parsed_list)
 
     def handle_signature(self, sig: str, signode: addnodes.desc_signature) -> str:
         """Build the rendered signature node and return the canonical name."""
@@ -96,32 +107,32 @@ class FlexVarDirective(ObjectDescription[str]):
         # Optional type annotation  `: <type>`
         typ = self.options.get("type", "")
         if typ:
+            annotations = self._parse_inline_into_node_list(typ)
             signode += addnodes.desc_annotation(
                 typ, '',
                 addnodes.desc_sig_punctuation('', ':'),
                 addnodes.desc_sig_space(),
-                *self._parse_inline(typ),
+                *annotations,
             )
+            # signode += nodes.inline(typ, '', *annotations)
 
         # Optional default value  ` = <value>`
         value = self.options.get("default", "").strip()
         if value:
-            value_nodelist: list[nodes.Node] = [
+            signode += addnodes.desc_annotation(
+                value, '',
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation('', '='),
                 addnodes.desc_sig_space(),
-                # *testnodelist,
-                *self._parse_inline(value),
-            ]
-            # signode += addnodes.desc_annotation(
-            #     value, '',
-            #     *value_nodelist
-            # )
-            signode += value_nodelist
+                # nodes.Text(value),
+                # *self._parse_inline_into_node_list(value),
+            )
+            signode += self._parse_inline_into_single_node(value)
 
         comment = self.options.get("comment")
         if comment:
-            signode += self._parse_inline(comment)
+            signode += addnodes.desc_sig_space()
+            signode += self._parse_inline_into_single_node(comment)
 
         # Test/debug
         if False:
