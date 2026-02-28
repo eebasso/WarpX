@@ -883,7 +883,7 @@ In WarpX, the embedded boundary can be defined in either of two ways:
         In that case, you will need to set the following parameter in the input file.
 
         .. fv:var:: warpx.eb_implicit_function
-                    :comment: (`string`)
+            :comment: (`string`)
 
             A function of `x`, `y`, `z` that defines the surface of the embedded
             boundary. That surface lies where the function value is 0 ;
@@ -894,7 +894,7 @@ In WarpX, the embedded boundary can be defined in either of two ways:
         In that case, you will need to set the following parameters in the input file.
 
         .. fv:var:: eb2.stl_file
-                    :comment: (`string`)
+            :comment: (`string`)
 
             The path to an `STL file <https://en.wikipedia.org/wiki/STL_(file_format)>`__.
             In addition, you also need to set ``eb2.geom_type = stl``, in order for the file to be read by WarpX.
@@ -1690,7 +1690,7 @@ Particle initialization
     following required parameter must be specified to initialize the attribute.
 
    .. fv:var:: <species_name>.attribute.<real_attrib_name>(x,y,z,ux,uy,uz,t)
-        :comment: (`string`)
+     :comment: (`string`)
 
      ``t`` represents the physical time in seconds during the simulation.
      ``x``, ``y``, ``z`` represent particle positions in the unit of meter.
@@ -3200,10 +3200,10 @@ Maxwell solver: kinetic-fluid hybrid
     **Required Parameters:**
 
     .. fv:var:: hybrid_pic_model.elec_temp
-            :comment: must be specified when using the hybrid solver.
+        :comment: must be specified when using the hybrid solver.
 
     .. fv:var:: hybrid_pic_model.n0_ref
-            :comment: should be specified if ``hybrid_pic_model.gamma != 1``.
+        :comment: should be specified if ``hybrid_pic_model.gamma != 1``.
 
     **Best Practices**
 
