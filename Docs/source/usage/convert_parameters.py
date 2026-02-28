@@ -81,6 +81,10 @@ class Directive:
 
         self.source_span: Span = span
 
+    @property
+    def name(self):
+        return self.names[0]
+
     # RST output rendering
     def render(self) -> list[str]:
         """
