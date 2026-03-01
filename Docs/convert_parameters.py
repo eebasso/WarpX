@@ -450,20 +450,22 @@ def merge_multiple_names(names: list[str]) -> list[str]:
     # if len(result) == 1 and len(names) != 1:
     #     print(f"\nmerge_multiple_names: iterative match successful\n  names  = {names}\n  result = {result}")
 
+    # result = names
+
     if len(result) > 1:
         txt = ""
-        for i, elem in enumerate(result):
-            if i == 0:
-                txt += elem
-            elif i == len(result) - 1:
-                txt += " & " + elem
-            else:
-                txt += ", " + elem
+        if len(result) == 2:
+            txt = result[0] + " and " + result[1]
+        else:
+            for i, elem in enumerate(result):
+                if i == 0:
+                    txt += elem
+                # elif i == len(result) - 1:
+                #     txt += " & " + elem
+                else:
+                    txt += ", " + elem
         result = [ txt ]
         print(f"  combined result = {result}")
-
-    # txt = ' '.join(result) + "TEST"
-    # result = [ txt ]
 
     return result
 
