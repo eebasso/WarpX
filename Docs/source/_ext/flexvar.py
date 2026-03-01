@@ -134,6 +134,10 @@ class FlexVarDirective(ObjectDescription[str]):
             signode += addnodes.desc_sig_space()
             signode += self._parse_inline_into_single_node(comment)
 
+        if "optional" in self.options:
+            print(f"optional flag used for sig={sig}")
+            signode += self._parse_inline_into_single_node(" optional")
+
         # Test/debug
         if False:
             test_nodetypelist: list[type[nodes.TextElement]] = [
