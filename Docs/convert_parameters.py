@@ -47,7 +47,7 @@ class Directive:
         first_name = m.group(3).strip()
         rest = m.group(4).rstrip('\n')
 
-        annotation = parse_bullet_annotation(rest)
+        annotation = BulletAnnotation(rest)
         names = merge_multiple_names([first_name] + annotation.extra_names)
 
         # Raw body: every source line after the bullet, newlines stripped
@@ -199,82 +199,73 @@ def parse_meta(s: str) -> tuple[str, str]:
 
 # ── Bullet annotation ─────────────────────────────────────────────────────────
 
-class BulletAnnotation(NamedTuple):
+class BulletAnnotation:
     """Parsed result of everything after the first ``name`` on a bullet line."""
-    extra_names: list[str]  # co-listed names, e.g. from "and ``foo.hi``"
-    type_str: str
-    default_str: str
-    inline_desc: str        # descriptive text on the bullet line itself
-    raw_source: str
-    raw_annotation: str
 
+    def __init__(self, rest: str):
+        """Parse everything after the opening ``name`` on a parameter bullet line.
 
-def parse_bullet_annotation(rest: str) -> BulletAnnotation:
-    """Parse everything after the opening ``name`` on a parameter bullet line.
+        Handles the following source patterns (non-exhaustive):
+            , ``co.name`` and ``other.name`` (`type`; default: X) desc…
+            (`type`; default: X) optional
+            optional (default: X) desc…
+            (`string`: e.g. ``...``)
+            (``0`` or ``1``; default is ``1`` for true)
+            plain description with no annotation
+        """
+        s = rest.strip()
 
-    Handles the following source patterns (non-exhaustive):
-        , ``co.name`` and ``other.name`` (`type`; default: X) desc…
-        (`type`; default: X) optional
-        optional (default: X) desc…
-        (`string`: e.g. ``...``)
-        (``0`` or ``1``; default is ``1`` for true)
-        plain description with no annotation
-    """
-    s = rest.strip()
+        # ── Collect additional co-listed names ────────────────────────────────────
+        extra_names: list[str] = []
+        while True:
+            m = re.match(r'^(?:,\s*|(?:and|&)\s+|,\s*(?:and|&)\s+)``([^`]+)``\s*(.*)', s, re.DOTALL)
+            if m:
+                extra_names.append(m.group(1).strip())
+                s = m.group(2).strip()
+            else:
+                break
+        raw_annotation = s
 
-    # ── Collect additional co-listed names ────────────────────────────────────
-    extra_names: list[str] = []
-    while True:
-        m = re.match(r'^(?:,\s*|(?:and|&)\s+|,\s*(?:and|&)\s+)``([^`]+)``\s*(.*)', s, re.DOTALL)
-        if m:
-            extra_names.append(m.group(1).strip())
-            s = m.group(2).strip()
-        else:
-            break
-    raw_annotation = s
+        type_str = default_str = inline_desc = ''
 
-    type_str = default_str = inline_desc = ''
+        if s.startswith('('):
+            # Main parenthesised annotation
+            end = find_paren_end(s)
+            type_str, default_str = parse_meta(s[1:end])
+            after = s[end + 1:].strip()
+            # Strip a bare "optional" that sometimes follows
+            after = re.sub(r'^optional\b', '', after, flags=re.IGNORECASE).strip()
+            # A second parenthesis may carry the default when the first didn't
+            if after.startswith('(') and not default_str:
+                end2 = find_paren_end(after)
+                dm = re.match(r'default:?\s*(.*)', after[1:end2].strip(), re.IGNORECASE)
+                if dm:
+                    default_str = dm.group(1).strip()
+                inline_desc = after[end2 + 1:].strip()
+            else:
+                inline_desc = after
 
-    if s.startswith('('):
-        # Main parenthesised annotation
-        end = find_paren_end(s)
-        type_str, default_str = parse_meta(s[1:end])
-        after = s[end + 1:].strip()
-        # Strip a bare "optional" that sometimes follows
-        after = re.sub(r'^optional\b', '', after, flags=re.IGNORECASE).strip()
-        # A second parenthesis may carry the default when the first didn't
-        if after.startswith('(') and not default_str:
-            end2 = find_paren_end(after)
-            dm = re.match(r'default:?\s*(.*)', after[1:end2].strip(), re.IGNORECASE)
+        elif s.lower().startswith('optional'):
+            remainder = s[len('optional'):].strip()
+            dm = re.match(r'\(default:?\s*(.*?)\)(.*)', remainder, re.IGNORECASE | re.DOTALL)
             if dm:
                 default_str = dm.group(1).strip()
-            inline_desc = after[end2 + 1:].strip()
-        else:
-            inline_desc = after
+                inline_desc = dm.group(2).strip()
+            else:
+                inline_desc = remainder
 
-    elif s.lower().startswith('optional'):
-        remainder = s[len('optional'):].strip()
-        dm = re.match(r'\(default:?\s*(.*?)\)(.*)', remainder, re.IGNORECASE | re.DOTALL)
-        if dm:
-            default_str = dm.group(1).strip()
-            inline_desc = dm.group(2).strip()
-        else:
-            inline_desc = remainder
+        elif s:
+            inline_desc = s
 
-    elif s:
-        inline_desc = s
+        # Strip a lone trailing "." or ':' left over from e.g. "(`type`, default: X)."
+        inline_desc = inline_desc.strip().lstrip('.:').strip()
 
-    # Strip a lone trailing "." or ':' left over from e.g. "(`type`, default: X)."
-    inline_desc = inline_desc.strip().lstrip('.:').strip()
-
-    return BulletAnnotation(
-        extra_names=extra_names,
-        type_str=type_str,
-        default_str=default_str,
-        inline_desc=inline_desc,
-        raw_source=rest,
-        raw_annotation=raw_annotation,
-    )
+        self.extra_names: list[str]  = extra_names # co-listed names, e.g. from "and ``foo.hi``"
+        self.type_str: str = type_str
+        self.default_str: str = default_str
+        self.inline_desc: str = inline_desc # descriptive text on the bullet line itself
+        self.raw_source: str = rest
+        self.raw_annotation: str = raw_annotation
 
 
 # ── multiple name merging ────────────────────────────────────────────────────────
