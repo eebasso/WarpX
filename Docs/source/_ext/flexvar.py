@@ -89,7 +89,7 @@ class FlexVarDirective(ObjectDescription[str]):
     def _parse_inline_into_single_node(self, text: str) -> nodes.inline:
         """
         Parse text and combine into a single inline node.
-        This can added directly to signode to keep white
+        This can added directly to signode to keep whitespace.
         """
         parsed_list: list[nodes.Node] = self._parse_inline_into_node_list(text)
         return nodes.inline(text, '', *parsed_list)
@@ -102,7 +102,11 @@ class FlexVarDirective(ObjectDescription[str]):
         signode["ids"] = []  # filled in add_target_and_index
 
         # The variable name itself
-        signode += addnodes.desc_name(name, name)
+        # signode += addnodes.desc_name(name, name)
+        signode += addnodes.desc_name(
+            name, "",
+            *self._parse_inline_into_node_list(name),
+        )
 
         # Optional type annotation  `: <type>`
         typ = self.options.get("type", "")
