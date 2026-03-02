@@ -238,7 +238,9 @@ class FlexVarXRefRole(XRefRole):
 
     Usage::
 
-        :fv:var:`name` or :fv:var:`Title <name>`
+        :fv:var:`name`
+        :fv:var:`Title <name>`
+        :fv:var:`name = value`
 
     Customisations over the base ``XRefRole``:
 
