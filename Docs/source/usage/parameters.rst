@@ -1689,7 +1689,7 @@ Particle initialization
     If the user-defined real attribute is ``<real_attrib_name>`` then the
     following required parameter must be specified to initialize the attribute.
 
-   .. fv:var:: <species_name>.attribute.<real_attrib_name>(x,y,z,ux,uy,uz,t)
+    .. fv:var:: <species_name>.attribute.<real_attrib_name>(x,y,z,ux,uy,uz,t)
      :comment: (`string`)
 
      ``t`` represents the physical time in seconds during the simulation.
