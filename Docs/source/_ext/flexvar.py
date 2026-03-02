@@ -4,19 +4,20 @@ flexvar - A Sphinx domain for documenting variables with flexible names.
 Supports variable names containing characters like <, >, /, commas, etc.
 Provides type annotation and default value support, styled like the Python domain.
 
-Usage
------
+Usage / Examples
+----------------
 
 Directive::
 
     .. fv:var:: my/variable<T>
-        :type: list<int>
-        :default: []
+        :type: list of integers
+        :default: [0, 0]
 
         Description of the variable.
 
 Role::
 
+    # Cross reference to my/variable<T>
     See :fv:var:`my/variable<T>` for details.
 
     # With explicit title (whitespace required before the `<`):
@@ -26,7 +27,7 @@ Role::
     See :fv:var:`my/variable\<T\>` for details.
 
     # With inline value (value shown in link text, stripped for lookup):
-    See :fv:var:`my/variable<T> = []` for details.
+    See :fv:var:`my/variable<T> = [1, 1]` for details.
 """
 
 from __future__ import annotations
@@ -53,7 +54,8 @@ from sphinx.util.nodes import make_id, make_refnode
 
 class FlexVarDirective(ObjectDescription[str]):
     """
-    Directive of a variable.
+    Description of a variable.
+
     Supports variable names containing characters like <, >, /, commas, etc.
     """
 
@@ -224,22 +226,33 @@ class FlexVarDirective(ObjectDescription[str]):
 
 class FlexVarRole(XRefRole):
     r"""
-    Role: :fv:var:`name` or :fv:var:`Title <name>`
+    Cross-referencing role for flexible name variables.
 
-    Two customisations over the base ``XRefRole``:
+    Usage::
 
-    1. **Generic-style names** — variable names may contain ``<`` and ``>``
-       (e.g. ``filter<T>``).  We require whitespace before the ``<`` that
-       separates an explicit title from its target, so bare names like
-       ``filter<T>`` are never mis-split.  This is done by overriding
-       ``explicit_title_re``, which ``ReferenceRole.__call__`` uses directly.
+        :fv:var:`name` or :fv:var:`Title <name>`
 
-    2. **Inline value syntax** — a cross-reference may include a value
-       expression after `` = `` (e.g. ``:fv:var:`timeout = 30```).  The value
-       is kept in the displayed title but stripped from the lookup target so
-       that it still resolves to the ``.. fv:var:: timeout`` entry.
-       Backslash-escape support (``\<``, ``\>``) comes for free from the
-       base class.
+    Customisations over the base ``XRefRole``:
+
+    **Generic-style names**
+        Variable names may contain ``<`` and ``>``
+        (e.g. ``filter<T>``).  We require whitespace before the ``<`` that
+        separates an explicit title from its target, so bare names like
+        ``filter<T>`` are never mis-split.  This is done by overriding
+        ``explicit_title_re``, which ``ReferenceRole.__call__`` uses directly.
+
+    **Inline value syntax**
+        A cross-reference may include a value
+        expression after `` = ``. For example::
+
+            :fv:var:`timeout = 30`
+
+        will display as ``timeout = 30``. The value expression after
+        is kept in the displayed title but stripped from the lookup target so
+        that it still resolves to the ``.. fv:var:: timeout`` entry.
+        Backslash-escape support (``\<``, ``\>``) comes for free from the
+        base class.
+
     """
 
     # Same as ReferenceRole.explicit_title_re but with \s+ instead of \s*,
@@ -280,7 +293,7 @@ class FlexVarRole(XRefRole):
 # ---------------------------------------------------------------------------
 
 class FlexVarDomain(Domain):
-    """The ``fv`` domain for flexible variable documentation."""
+    """FlexVar domain."""
 
     name = "fv"
     label = "FlexVar"
