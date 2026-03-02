@@ -108,6 +108,7 @@ class FlexVarDirective(ObjectDescription[str]):
         signode += addnodes.desc_name(
             name, "",
             *self._parse_inline_into_node_list(name),
+            # nodes.inline("", name)
         )
 
         # Optional type annotation  `: <type>`
@@ -121,6 +122,7 @@ class FlexVarDirective(ObjectDescription[str]):
                 *annotations,
             )
             # signode += nodes.inline(typ, '', *annotations)
+            # signode += nodes.inline("", typ)
 
         # Optional default value  ` = <value>`
         value = self.options.get("default", "").strip()
@@ -134,19 +136,23 @@ class FlexVarDirective(ObjectDescription[str]):
                 # *self._parse_inline_into_node_list(value),
             )
             signode += self._parse_inline_into_single_node(value)
+            # signode += nodes.inline("", value)
 
         comment = self.options.get("comment")
         if comment:
             signode += addnodes.desc_sig_space()
             signode += self._parse_inline_into_single_node(comment)
+            # signode += nodes.inline("", comment)
 
         if "optional" in self.options:
             print(f"optional flag used for sig={sig}")
             signode += self._parse_inline_into_single_node(" optional")
+            # signode += nodes.inline("", " optional")
 
         # Test/debug
         if False:
             test_nodetypelist: list[type[nodes.TextElement]] = [
+                nodes.inline,
                 # addnodes.desc,
                 # addnodes.desc_signature,
                 # addnodes.desc_signature_line,
@@ -181,6 +187,8 @@ class FlexVarDirective(ObjectDescription[str]):
             testnodelist: list[nodes.Node] = []
 
             testnodelist.append(addnodes.desc_inline("fv", "", " | desc_inline `singlebacktick` ``doublebacktick``"))
+
+            testnodelist.append(nodes.inline("", " | nodes.inline `singlebacktick` ``doublebacktick``"))
 
             testnodelist.extend([
                 nodetype("", f" | {nodetype.__name__}") for nodetype in test_nodetypelist
