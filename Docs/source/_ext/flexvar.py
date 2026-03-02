@@ -232,7 +232,7 @@ class FlexVarDirective(ObjectDescription[str]):
 # XRef Role
 # ---------------------------------------------------------------------------
 
-class FlexVarRole(XRefRole):
+class FlexVarXRefRole(XRefRole):
     r"""
     Cross-referencing role for flexible name variables.
 
@@ -315,7 +315,7 @@ class FlexVarDomain(Domain):
     }
 
     roles = {
-        "var": FlexVarRole(),
+        "var": FlexVarXRefRole(),
     }
 
     initial_data: dict = {
