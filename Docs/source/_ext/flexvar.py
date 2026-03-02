@@ -211,7 +211,7 @@ class FlexVarDirective(ObjectDescription[str]):
         signode["ids"].append(node_id)
         self.state.document.note_explicit_target(signode)
 
-        domain = cast(FlexVarDomain, self.env.get_domain("fv"))
+        domain = cast(FlexVarDomain, self.env.get_domain(FlexVarDomain.name))
         domain.note_var(
             name=name,
             docname=self.env.docname,
