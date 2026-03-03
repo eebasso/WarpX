@@ -145,9 +145,7 @@ class FlexVarDirective(ObjectDescription[str]):
             # ])
 
         # Optional default value  ` = <value>`
-        value = self.options.get("default", "").strip()
-        if not value:
-            value = self.options.get("value", "").strip()
+        value = self.options.get("default", self.options.get("value", ""))
 
         # Maybe change logic to `if "default" in self.options` or `if value is not None`
         if value:
