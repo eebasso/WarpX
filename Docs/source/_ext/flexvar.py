@@ -115,37 +115,96 @@ class FlexVarDirective(ObjectDescription[str]):
             # nodes.inline("", name)
         )
 
+        desc_annotation_node_list: list[nodes.Node] = []
+
         # Optional type annotation  `: <type>`
         typ = self.options.get("type", "")
         if typ:
-            annotations = self._parse_inline_into_node_list(typ)
-            signode += addnodes.desc_annotation(
-                typ, '',
+            desc_annotation_node_list.extend([
                 addnodes.desc_sig_punctuation('', ':'),
                 addnodes.desc_sig_space(),
-                *annotations,
-            )
+                *self._parse_inline_into_node_list(typ),
+            ])
+            # annotations = self._parse_inline_into_node_list(typ)
+            # signode += addnodes.desc_sig_punctuation('', ':')
+            # signode += addnodes.desc_sig_space()
+            # signode += addnodes.desc_annotation(
+            #     typ, '',
+            #     # addnodes.desc_sig_punctuation('', ':'),
+            #     # addnodes.desc_sig_space(),
+            #     *annotations,
+            # )
             # signode += nodes.inline(typ, '', *annotations)
             # signode += nodes.inline("", typ)
 
         # Optional default value  ` = <value>`
         value = self.options.get("default", "").strip()
+        if not value:
+            value = self.options.get("value", "").strip()
+
         if value:
-            signode += addnodes.desc_annotation(
-                value, '',
+            desc_annotation_node_list.extend([
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation('', '='),
                 addnodes.desc_sig_space(),
-                # nodes.Text(value),
-                # *self._parse_inline_into_node_list(value),
-            )
-            signode += self._parse_inline_into_single_node(value)
+                *self._parse_inline_into_node_list(value),
+            ])
+            # signode += addnodes.desc_annotation(
+            #     value, '',
+            #     addnodes.desc_sig_space(),
+            #     addnodes.desc_sig_punctuation('', '='),
+            #     addnodes.desc_sig_space(),
+            #     # nodes.Text(value),
+            #     # *self._parse_inline_into_node_list(value),
+            # )
+            # signode += self._parse_inline_into_single_node(value)
             # signode += nodes.inline("", value)
+
+        if desc_annotation_node_list:
+            signode += addnodes.desc_annotation(
+                "", "",
+                *desc_annotation_node_list,
+            )
 
         anno = self.options.get("annotation")
         if anno:
             signode += addnodes.desc_sig_space()
             signode += self._parse_inline_into_single_node(anno)
+
+            signode += addnodes.desc_annotation(
+                " " + anno, "",
+                nodes.Text("      "),
+                *self._parse_inline_into_node_list(anno),
+            )
+
+            signode += addnodes.desc_sig_space()
+            signode += nodes.Text("      ")
+            signode += addnodes.desc_annotation(
+                " " + anno, "",
+                nodes.Text("      "),
+                self._parse_inline_into_single_node(anno),
+            )
+
+            # signode += addnodes.desc_annotation(
+            #     " " + anno, "",
+            #     addnodes.desc_sig_space(),
+            #     addnodes.desc_sig_space(),
+            #     addnodes.desc_sig_space(),
+            #     addnodes.desc_sig_space(),
+            #     addnodes.desc_sig_space(),
+            #     *self._parse_inline_into_node_list(anno),
+            # )
+
+            # signode += addnodes.desc_annotation(
+            #     " " + anno, "",
+            #     addnodes.desc_sig_space(),
+            #     addnodes.desc_sig_space(),
+            #     addnodes.desc_sig_space(),
+            #     addnodes.desc_sig_space(),
+            #     addnodes.desc_sig_space(),
+            #     self._parse_inline_into_single_node(anno),
+            # )
+
             # signode += nodes.inline("", anno)
 
         if "optional" in self.options:
