@@ -270,7 +270,7 @@ class FlexVarXRefRole(XRefRole):
 
     # Same as ReferenceRole.explicit_title_re but with \s+ instead of \s*,
     # so whitespace before the `<` is required for explicit-title syntax.
-    # \x00 means the "<" was backslash-escaped — preserve that lookbehind.
+    # \x00 means the "<" was backslash-escaped. Preserve that lookbehind.
     explicit_title_re = re.compile(r'^(.+?)\s+(?<!\x00)<(.*?)>$', re.DOTALL)
 
     # Matches an inline value expression: "varname = value" or "varname[=value]"
