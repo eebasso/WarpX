@@ -150,7 +150,8 @@ class FlexVarDirective(ObjectDescription[str]):
 
         if "optional" in self.options:
             print(f"optional flag used for sig={sig}")
-            signode += self._parse_inline_into_single_node(" optional")
+            signode += addnodes.desc_sig_space()
+            signode += self._parse_inline_into_single_node("optional")
             # signode += nodes.inline("", " optional")
 
         # Test/debug
