@@ -1,5 +1,13 @@
 .. _running-cpp-parameters:
 
+.. py:data:: data1
+    :type: integer
+    :value: "abcdd"
+
+.. py:data:: data2
+    :type: integer
+    :value: abc
+
 Inputs: Parameter List
 ======================
 
@@ -121,6 +129,8 @@ Simulation Time
 ---------------
 
 .. fv:var:: max_step
+    :type: ``int`` array, list of integers
+    :default: [``0`` ``0`` ``0``]
     :annotation: (`integer`)
 
     The number of PIC cycles to perform.

@@ -91,6 +91,7 @@ class FlexVarDirective(ObjectDescription[str]):
                 msg['level'], msg.astext(), source=self.get_source_info()[0]
             )
         return parsed
+        # return [ nodes.inline(text, '', *parsed) ]
 
     def _parse_inline_into_single_node(self, text: str) -> nodes.inline:
         """
@@ -177,13 +178,13 @@ class FlexVarDirective(ObjectDescription[str]):
                 *self._parse_inline_into_node_list(anno),
             )
 
-            signode += addnodes.desc_sig_space()
             signode += nodes.Text("      ")
-            signode += addnodes.desc_annotation(
-                " " + anno, "",
-                nodes.Text("      "),
-                self._parse_inline_into_single_node(anno),
-            )
+            signode += nodes.Text(" | node list: ")
+            signode += self._parse_inline_into_node_list(anno)
+
+            signode += nodes.Text("      ")
+            signode += nodes.Text(" | single node: ")
+            signode += self._parse_inline_into_single_node(anno)
 
             # signode += addnodes.desc_annotation(
             #     " " + anno, "",
