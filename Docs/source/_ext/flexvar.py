@@ -142,96 +142,94 @@ class FlexVarDirective(ObjectDescription[str]):
         value: str | None = self.options.get("value", self.options.get("default", None))
         units: str | None = self.options.get("units", None)
         anno: str | None = self.options.get("annotation", None)
-        optional: bool = ("optional" in self.options)
-        required: bool = ("required" in self.options)
+        l_optional: bool = ("optional" in self.options)
+        l_required: bool = ("required" in self.options)
 
         self.warn_conflicting_options(name, signode, "value", "default")
         self.warn_conflicting_options(name, signode, "optional", "required")
 
+        type_nodes: list[addnodes.desc_annotation] = []
+        value_nodes: list[addnodes.desc_annotation] = []
+        units_nodes: list[nodes.inline] = []
+        anno_nodes: list[nodes.inline] = []
+        optional_nodes: list[nodes.inline] = []
+        required_nodes: list[nodes.inline] = []
+
+        annotation_node: addnodes.desc_annotation
+        annotation_node = addnodes.desc_annotation("", "")
+
+        # Type  `: <type>`
         if type_:
-            # type_value_node_list.extend([
-            typ_node = addnodes.desc_annotation(
+            type_nodes.append(addnodes.desc_annotation(
                 type_, '',
                 addnodes.desc_sig_punctuation('', ':'),
                 addnodes.desc_sig_space(),
-                # *self._parse_inline_into_node_list(typ),
-                # self._parse_inline(typ),
-                self._parse_inline(type_),
-            )
-            signode += nodes.inline("", "", typ_node)
-            # ])
+                *self._parse_inline(type_),
+            ))
 
-        # Optional default value  ` = <value>`
-        value: str | None = self.options.get("default", self.options.get("value", ""))
-
-        # Maybe change logic to `if "default" in self.options` or `if value is not None`
         if value:
-            # type_value_node_list.extend([
-            val_node = addnodes.desc_annotation(
+            value_nodes.append(addnodes.desc_annotation(
                 value, '',
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation("", "="),
                 addnodes.desc_sig_space(),
                 self._parse_inline(value),
-            )
-            signode += nodes.inline("", "", val_node)
+            ))
 
-        units: str | None = self.options.get("units", "")
         if units:
-            signode += [
-            # signode += nodes.inline(
-            #     units, "",
+            units_nodes.append(nodes.inline(
+                units, "",
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation("", "("),
                 self._parse_inline(units),
                 addnodes.desc_sig_punctuation("", ")"),
-            # )
-            ]
+            ))
 
-        anno: str | None = self.options.get("annotation")
         if anno:
-            anno_nodes: list[Node] = [
+            anno_nodes.append(nodes.inline(
+                anno, "",
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation("", "("),
                 self._parse_inline(anno),
                 addnodes.desc_sig_punctuation("", ")"),
-                # *self._parse_inline(anno),
-                # *self._parse_inline_into_node_list(anno),
-            ]
-
-            signode += addnodes.desc_sig_space()
-            # signode += anno_nodes
-            signode += addnodes.desc_annotation(
-                anno, "",
-                *anno_nodes,
-            )
-
-        l_optional = ("optional" in self.options)
-        l_required = ("required" in self.options)
-        if l_optional and l_required:
-            logger.warning(
-                "Both the optional and required flags specified for %s, only specify one.",
-                name,
-                location=signode,
-            )
+            ))
 
         if l_optional:
-            print(f"optional flag used for sig={sig}")
-            signode += [
+            optional_nodes.append(nodes.inline(
+                "", "",
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation("", "["),
                 self._parse_inline("optional"),
                 addnodes.desc_sig_punctuation("", "]"),
-            ]
+            ))
             # signode += nodes.inline("", " optional")
         elif l_required:
-            signode += [
+            required_nodes.append(
                 addnodes.desc_sig_space(),
-                self._parse_inline("[required]"),
-            ]
+            )
+            required_nodes.append(nodes.inline(
+                "", "",
+                addnodes.desc_sig_punctuation("", "["),
+                self._parse_inline("required"),
+                addnodes.desc_sig_punctuation("", "]"),
+            ))
+
+        if units_nodes:
+            if type_nodes:
+                type_nodes[0] += units_nodes
+            else:
+                type_nodes.append(
+                    units_nodes,
+                )
+
+        signode += type_nodes
+        signode += value_nodes
+        signode += optional_nodes
+        signode += required_nodes
+
 
         # Test/debug
-        if False:
+        if True:
             test_nodetypelist: list[type[nodes.TextElement]] = [
                 nodes.line,
                 nodes.inline,
