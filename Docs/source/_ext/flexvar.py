@@ -128,17 +128,22 @@ class FlexVarDirective(ObjectDescription[str]):
             # nodes.inline("", name)
         )
 
-        type_nodes: list[Node] = []
-        default_nodes: list[Node] = []
-        unit_nodes: list[Node] = []
-        anno_nodes: list[Node] = []
-        optional_nodes: list[Node] = []
-        required_nodes: list[Node] = []
-
-        # type_value_node_list: list[nodes.Node] = []
-
+        # fvoptions = FlexVarDirectiveOptions(name=name, signode=signode, fvdir=self)
         # Optional type annotation  `: <type>`
-        type_: str | None = self.options.get("type", "")
+        # type_: str | None = fvoptions.type_
+        # value: str | None = fvoptions.value
+        # units: str | None = fvoptions.units
+        # anno: str | None = fvoptions.anno
+        # optional: bool = fvoptions.optional
+        # required: bool = fvoptions.required
+
+        type_: str | None = self.options.get("type", None)
+        value: str | None = self.options.get("value", self.options.get("default", None))
+        units: str | None = self.options.get("units", None)
+        anno: str | None = self.options.get("annotation", None)
+        optional: bool = ("optional" in self.options)
+        required: bool = ("required" in self.options)
+
         if type_:
             # type_value_node_list.extend([
             typ_node = addnodes.desc_annotation(
@@ -318,15 +323,17 @@ class FlexVarDirectiveOptions:
         self.optional: bool = ("optional" in self.options)
         self.required: bool = ("required" in self.options)
 
-        self.logger_warning_conflicting_options("value", "default")
-        self.logger_warning_conflicting_options("optional", "required")
+        self.check_conflicting_options("value", "default", name=name, signode=signode)
+        self.check_conflicting_options("optional", "required", name=name, signode=signode)
 
-    def logger_warning_conflicting_options(self, key1: str, key2: str):
+    def check_conflicting_options(
+        self, key1: str, key2: str, name: str, signode: addnodes.desc_signature,
+    ):
         if key1 in self.options and key2 in self.options:
             logger.warning(
                 "Conflicting options for %s: only specify one of :%s: and :%s:",
-                self.name, key1, key2,
-                location=self.signode,
+                name, key1, key2,
+                location=signode,
             )
 
 
