@@ -346,6 +346,38 @@ class FlexVarDirective(ObjectDescription[str]):
             )
 
 
+class FlexVarDirectiveOptions:
+
+    def __init__(self, name: str, signode: addnodes.desc_signature, flexvardir: FlexVarDirective):
+
+        self.name: str = name
+        self.signode: addnodes.desc_signature = signode
+        self.flexvardir: FlexVarDirective = flexvardir
+        self.options: dict[str, Any] = flexvardir.options
+
+        self.type_: str | None = self.options.get("type", None)
+        self.value: str | None = self.options.get("value", self.options.get("default", None))
+        self.default: str | None = self.value
+        self.units: str | None = self.options.get("units", None)
+        self.anno: str | None = self.options.get("annotation", None)
+        self.optional: bool = ("optional" in self.options)
+        self.required: bool = ("required" in self.options)
+
+        self.logger_warning_conflicting_options("value", "default")
+        self.logger_warning_conflicting_options("optional", "required")
+
+    def logger_warning_conflicting_options(self, key1: str, key2: str):
+        if key1 in self.options and key2 in self.options:
+            logger.warning(
+                "Conflicting options for %s: only specify one of :%s: and :%s:",
+                self.name, key1, key2,
+                location=self.signode,
+            )
+
+    def add_to_signode(self, node: nodes.inline | addnodes.desc_annotation):
+        self.signode += node
+
+
 class FlexVarXRefRole(XRefRole):
     r"""
     Cross-referencing role for flexible name variables.
