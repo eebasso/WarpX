@@ -1,7 +1,7 @@
 r"""
 flexvar - A Sphinx domain for documenting variables with flexible names.
 
-Supports variable names containing characters like <, >, /, commas, etc.
+Supports names containing characters like <, >, /, commas, etc.
 Provides type annotation and default value support, styled like the Python domain.
 
 Usage / Examples
@@ -33,7 +33,7 @@ Role::
 from __future__ import annotations
 
 import re
-from typing import Any, Iterator, List, cast
+from typing import Any, Iterator, List, cast, TypedDict
 
 from docutils import nodes
 from docutils.parsers.rst import directives
@@ -45,6 +45,11 @@ from sphinx.environment import BuildEnvironment
 from sphinx.roles import XRefRole
 from sphinx.util.nodes import make_id, make_refnode
 
+class ObjectEntry(TypedDict):
+    docname: str
+    node_id: str
+    type: str
+    default: str
 
 # ---------------------------------------------------------------------------
 # Directive
@@ -318,12 +323,12 @@ class FlexVarDomain(Domain):
         "var": FlexVarXRefRole(),
     }
 
-    initial_data: dict = {
+    initial_data: dict[str, dict[str, ObjectEntry]] = {
         "vars": {},  # name -> {"docname": str, "node_id": str, "type": str, "default": str}
     }
 
     @property
-    def vars(self) -> dict:
+    def vars(self) -> dict[str, ObjectEntry]:
         return self.data.setdefault("vars", {})
 
     def note_var(
@@ -346,8 +351,9 @@ class FlexVarDomain(Domain):
         for k in to_remove:
             del self.vars[k]
 
-    def merge_domaindata(self, docnames: List[str], otherdata: dict) -> None:
+    def merge_domaindata(self, docnames: List[str], otherdata: dict[str, dict]) -> None:
         for name, info in otherdata.get("vars", {}).items():
+            info = cast(ObjectEntry, info)
             if info["docname"] in docnames:
                 self.vars[name] = info
 
