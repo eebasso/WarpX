@@ -57,6 +57,7 @@ class ObjectEntry(TypedDict):
     type: str
     default: str
 
+
 class FlexVarDirective(ObjectDescription[str]):
     """
     Description of a variable.
@@ -121,12 +122,18 @@ class FlexVarDirective(ObjectDescription[str]):
         signode["ids"] = []  # filled in add_target_and_index
 
         # The variable name itself
-        # signode += addnodes.desc_name(name, name)
         signode += addnodes.desc_name(
             name, "",
-            *self._parse_inline_into_node_list(name),
+            self._parse_inline(name),
             # nodes.inline("", name)
         )
+
+        type_nodes: list[Node] = []
+        default_nodes: list[Node] = []
+        unit_nodes: list[Node] = []
+        anno_nodes: list[Node] = []
+        optional_nodes: list[Node] = []
+        required_nodes: list[Node] = []
 
         # type_value_node_list: list[nodes.Node] = []
 
@@ -134,54 +141,56 @@ class FlexVarDirective(ObjectDescription[str]):
         typ = self.options.get("type", "")
         if typ:
             # type_value_node_list.extend([
-            signode += addnodes.desc_annotation(
+            typ_node = addnodes.desc_annotation(
                 typ, '',
                 addnodes.desc_sig_punctuation('', ':'),
                 addnodes.desc_sig_space(),
-                *self._parse_inline_into_node_list(typ),
+                # *self._parse_inline_into_node_list(typ),
                 # self._parse_inline(typ),
-                # *self._parse_inline(typ),
+                self._parse_inline(typ),
             )
+            signode += nodes.inline("", "", typ_node)
             # ])
 
         # Optional default value  ` = <value>`
-        value = self.options.get("default", self.options.get("value", ""))
+        value: str | None = self.options.get("default", self.options.get("value", ""))
 
         # Maybe change logic to `if "default" in self.options` or `if value is not None`
         if value:
             # type_value_node_list.extend([
-            signode += addnodes.desc_annotation(
+            val_node = addnodes.desc_annotation(
                 value, '',
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation("", "="),
                 addnodes.desc_sig_space(),
-                *self._parse_inline_into_node_list(value),
+                self._parse_inline(value),
             )
-            # ])
-
-        # if type_value_node_list:
-        #     signode += addnodes.desc_annotation(
-        #         "", "",
-        #         *type_value_node_list,
-        #     )
+            signode += nodes.inline("", "", val_node)
 
         units: str | None = self.options.get("units", "")
         if units:
             signode += [
+            # signode += nodes.inline(
+            #     units, "",
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation("", "("),
                 self._parse_inline(units),
                 addnodes.desc_sig_punctuation("", ")"),
+            # )
             ]
 
         anno = self.options.get("annotation")
         if anno:
             anno_nodes: list[Node] = [
                 addnodes.desc_sig_space(),
+                addnodes.desc_sig_punctuation("", "("),
                 self._parse_inline(anno),
+                addnodes.desc_sig_punctuation("", ")"),
                 # *self._parse_inline(anno),
                 # *self._parse_inline_into_node_list(anno),
             ]
+
+            signode += addnodes.desc_sig_space()
             # signode += anno_nodes
             signode += addnodes.desc_annotation(
                 anno, "",
@@ -294,27 +303,20 @@ class FlexVarDirective(ObjectDescription[str]):
 
 class FlexVarDirectiveOptions:
 
-    def __init__(self, name: str, signode: addnodes.desc_signature, flexvardir: FlexVarDirective):
+    def __init__(self, name: str, signode: addnodes.desc_signature, fvdir: FlexVarDirective):
 
         self.name: str = name
         self.signode: addnodes.desc_signature = signode
-        self.flexvardir: FlexVarDirective = flexvardir
-        self.options: dict[str, Any] = flexvardir.options
+        self.flexvardir: FlexVarDirective = fvdir
+        self.options: dict[str, Any] = fvdir.options
 
-        typ = self.options.get("type", None)
-        value = self.options.get("value", self.options.get("default", None))
-        units = self.options.get("units", None)
-        anno = self.options.get("annotation", None)
-        l_optional = ("optional" in self.options)
-        l_required = ("required" in self.options)
-
-        self.typ: str | None = typ
-        self.value: str | None = value
-        self.default: str | None = value
-        self.units: str | None = units
-        self.anno: str | None = anno
-        self.optional: bool = l_optional
-        self.required: bool = l_required
+        self.typ: str | None = self.options.get("type", None)
+        self.value: str | None = self.options.get("value", self.options.get("default", None))
+        self.default: str | None = self.value
+        self.units: str | None = self.options.get("units", None)
+        self.anno: str | None = self.options.get("annotation", None)
+        self.optional: bool = ("optional" in self.options)
+        self.required: bool = ("required" in self.options)
 
         self.logger_warning_conflicting_options("value", "default")
         self.logger_warning_conflicting_options("optional", "required")
