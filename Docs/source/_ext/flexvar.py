@@ -125,7 +125,7 @@ class FlexVarDirective(ObjectDescription[str]):
         """
         Build the rendered signature node and return the canonical name.
 
-        Format: ``<name>: <type> = <default/value> (<units>) [optional/required] <annotation>``
+        Format: ``<name>: (<type>; in <unit>) <optional/required> (default <value>) (<annotation>)``
         """
         name = sig.strip()
 
@@ -138,94 +138,79 @@ class FlexVarDirective(ObjectDescription[str]):
             self._parse_inline(name),
         )
 
-        type_: str | None = self.options.get("type", None)
-        value: str | None = self.options.get("value", self.options.get("default", None))
-        units: str | None = self.options.get("units", None)
-        anno: str | None = self.options.get("annotation", None)
+        type_: str = self.options.get("type", "")
+        value: str = self.options.get("value", self.options.get("default", ""))
+        unit: str = self.options.get("unit", self.options.get("units", ""))
+        anno: str = self.options.get("annotation", "")
         l_optional: bool = ("optional" in self.options)
         l_required: bool = ("required" in self.options)
 
+        self.warn_conflicting_options(name, signode, "unit", "units")
         self.warn_conflicting_options(name, signode, "value", "default")
         self.warn_conflicting_options(name, signode, "optional", "required")
 
-        type_nodes: list[addnodes.desc_annotation] = []
-        value_nodes: list[addnodes.desc_annotation] = []
-        units_nodes: list[nodes.inline] = []
-        anno_nodes: list[nodes.inline] = []
-        optional_nodes: list[nodes.inline] = []
-        required_nodes: list[nodes.inline] = []
-
-        annotation_node: addnodes.desc_annotation
-        annotation_node = addnodes.desc_annotation("", "")
+        type_nodes: list[Node] = []
+        value_nodes: list[Node] = []
+        unit_nodes: list[Node] = []
+        anno_nodes: list[Node] = []
+        optional_nodes: list[Node] = []
+        required_nodes: list[Node] = []
 
         # Type  `: <type>`
         if type_:
-            type_nodes.append(addnodes.desc_annotation(
-                type_, '',
-                addnodes.desc_sig_punctuation('', ':'),
+            type_nodes.extend([
                 addnodes.desc_sig_space(),
-                *self._parse_inline(type_),
-            ))
+                self._parse_inline(type_),
+            ])
 
         if value:
-            value_nodes.append(addnodes.desc_annotation(
-                value, '',
-                addnodes.desc_sig_space(),
-                addnodes.desc_sig_punctuation("", "="),
+            value_nodes.extend([
                 addnodes.desc_sig_space(),
                 self._parse_inline(value),
-            ))
+            ])
 
-        if units:
-            units_nodes.append(nodes.inline(
-                units, "",
+        if unit:
+            unit_nodes.extend([
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation("", "("),
-                self._parse_inline(units),
+                self._parse_inline(unit),
                 addnodes.desc_sig_punctuation("", ")"),
-            ))
+            ])
 
         if anno:
-            anno_nodes.append(nodes.inline(
-                anno, "",
+            anno_nodes.extend([
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation("", "("),
                 self._parse_inline(anno),
                 addnodes.desc_sig_punctuation("", ")"),
-            ))
+            ])
 
         if l_optional:
-            optional_nodes.append(nodes.inline(
-                "", "",
+            optional_nodes.extend([
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation("", "["),
-                self._parse_inline("optional"),
+                nodes.inline("optional"),
                 addnodes.desc_sig_punctuation("", "]"),
-            ))
+            ])
             # signode += nodes.inline("", " optional")
         elif l_required:
-            required_nodes.append(
+            required_nodes.extend([
                 addnodes.desc_sig_space(),
-            )
-            required_nodes.append(nodes.inline(
-                "", "",
                 addnodes.desc_sig_punctuation("", "["),
-                self._parse_inline("required"),
+                nodes.inline("", "required"),
                 addnodes.desc_sig_punctuation("", "]"),
-            ))
+            ])
 
-        if units_nodes:
-            if type_nodes:
-                type_nodes[0] += units_nodes
-            else:
-                type_nodes.append(
-                    units_nodes,
-                )
+        if type_nodes or unit_nodes:
+            signode += addnodes.desc_annotation(
+                type_ + unit, "",
+                addnodes.desc_sig_punctuation('', ':'),
+                *type_nodes,
+                *unit_nodes,
+            )
 
-        signode += type_nodes
-        signode += value_nodes
-        signode += optional_nodes
-        signode += required_nodes
+        if value_nodes:
+            signode += value_nodes
 
 
         # Test/debug
