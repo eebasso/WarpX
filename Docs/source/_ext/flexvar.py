@@ -93,7 +93,7 @@ class FlexVarDirective(ObjectDescription[str]):
         return parsed
         # return [ nodes.inline(text, '', *parsed) ]
 
-    def _parse_inline_into_single_node(self, text: str) -> nodes.inline:
+    def _parse_inline(self, text: str) -> nodes.inline:
         """
         Parse text and combine into a single inline node.
         This can added directly to signode to keep whitespace.
@@ -116,12 +116,12 @@ class FlexVarDirective(ObjectDescription[str]):
             # nodes.inline("", name)
         )
 
-        desc_annotation_node_list: list[nodes.Node] = []
+        type_value_node_list: list[nodes.Node] = []
 
         # Optional type annotation  `: <type>`
         typ = self.options.get("type", "")
         if typ:
-            desc_annotation_node_list.extend([
+            type_value_node_list.extend([
                 addnodes.desc_sig_punctuation('', ':'),
                 addnodes.desc_sig_space(),
                 *self._parse_inline_into_node_list(typ),
@@ -144,7 +144,7 @@ class FlexVarDirective(ObjectDescription[str]):
             value = self.options.get("value", "").strip()
 
         if value:
-            desc_annotation_node_list.extend([
+            type_value_node_list.extend([
                 addnodes.desc_sig_space(),
                 addnodes.desc_sig_punctuation('', '='),
                 addnodes.desc_sig_space(),
@@ -158,33 +158,46 @@ class FlexVarDirective(ObjectDescription[str]):
             #     # nodes.Text(value),
             #     # *self._parse_inline_into_node_list(value),
             # )
-            # signode += self._parse_inline_into_single_node(value)
+            # signode += self._parse_inline(value)
             # signode += nodes.inline("", value)
 
-        if desc_annotation_node_list:
+        if type_value_node_list:
             signode += addnodes.desc_annotation(
                 "", "",
-                *desc_annotation_node_list,
+                *type_value_node_list,
             )
 
         anno = self.options.get("annotation")
         if anno:
             signode += addnodes.desc_sig_space()
-            signode += self._parse_inline_into_single_node(anno)
+            signode += self._parse_inline(anno)
 
+            signode += addnodes.desc_sig_space()
+            signode += nodes.Text("|1:")
+
+            signode += addnodes.desc_sig_space()
             signode += addnodes.desc_annotation(
-                " " + anno, "",
-                nodes.Text("      "),
+                anno, "",
                 *self._parse_inline_into_node_list(anno),
             )
 
-            signode += nodes.Text("      ")
-            signode += nodes.Text(" | node list: ")
-            signode += self._parse_inline_into_node_list(anno)
+            signode += addnodes.desc_sig_space()
+            signode += nodes.Text("|2:")
 
-            signode += nodes.Text("      ")
-            signode += nodes.Text(" | single node: ")
-            signode += self._parse_inline_into_single_node(anno)
+            signode += addnodes.desc_sig_space()
+            signode += addnodes.desc_annotation(
+                anno, "",
+                self._parse_inline(anno),
+            )
+
+            signode += addnodes.desc_sig_space()
+            signode += nodes.Text("|3:")
+
+            signode += addnodes.desc_sig_space()
+            signode += addnodes.desc_annotation(
+                anno, "",
+                *self._parse_inline(anno),
+            )
 
             # signode += addnodes.desc_annotation(
             #     " " + anno, "",
@@ -203,7 +216,7 @@ class FlexVarDirective(ObjectDescription[str]):
             #     addnodes.desc_sig_space(),
             #     addnodes.desc_sig_space(),
             #     addnodes.desc_sig_space(),
-            #     self._parse_inline_into_single_node(anno),
+            #     self._parse_inline(anno),
             # )
 
             # signode += nodes.inline("", anno)
@@ -211,7 +224,7 @@ class FlexVarDirective(ObjectDescription[str]):
         if "optional" in self.options:
             print(f"optional flag used for sig={sig}")
             signode += addnodes.desc_sig_space()
-            signode += self._parse_inline_into_single_node("optional")
+            signode += self._parse_inline("optional")
             # signode += nodes.inline("", " optional")
 
         # Test/debug
