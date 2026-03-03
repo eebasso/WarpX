@@ -37,13 +37,18 @@ from typing import Any, Iterator, List, cast, TypedDict
 
 from docutils import nodes
 from docutils.parsers.rst import directives
+
 from sphinx import addnodes
 from sphinx.application import Sphinx
 from sphinx.directives import ObjectDescription
 from sphinx.domains import Domain, ObjType
 from sphinx.environment import BuildEnvironment
 from sphinx.roles import XRefRole
+from sphinx.util import logging
 from sphinx.util.nodes import make_id, make_refnode
+
+logger = logging.getLogger(__name__)
+
 
 class ObjectEntry(TypedDict):
     docname: str
@@ -219,6 +224,7 @@ class FlexVarDirective(ObjectDescription[str]):
             node_id=node_id,
             type_str=self.options.get("type", ""),
             default_str=self.options.get("default", ""),
+            location=signode,
         )
 
         if "noindex" not in self.options:
@@ -324,7 +330,15 @@ class FlexVarDomain(Domain):
         node_id: str,
         type_str: str = "",
         default_str: str = "",
+        location: Any = None,
     ) -> None:
+        if name in self.vars:
+            other = self.vars[name]
+            logger.warning(
+                'duplicate object description of %s, '
+                'other instance in %s, use :noindex: for one of them',
+                name, other["docname"], location=location)
+
         self.vars[name] = {
             "docname": docname,
             "node_id": node_id,
