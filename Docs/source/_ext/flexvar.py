@@ -61,12 +61,16 @@ class FlexVarDirective(ObjectDescription[str]):
     Description of a variable.
 
     Supports variable names containing characters like <, >, /, commas, etc.
+    See `handle_signature` for formatting details.
     """
 
     option_spec = {
         "type": directives.unchanged,
         "default": directives.unchanged,
+        "value": directives.unchanged, # alias of default
         "optional": directives.flag,
+        "required": directives.flag,
+        "units": directives.unchanged,
         "annotation": directives.unchanged,
         "noindex": directives.flag,
     }
@@ -82,7 +86,7 @@ class FlexVarDirective(ObjectDescription[str]):
     def _parse_inline_into_node_list(self, text: str) -> list[nodes.Node]:
         """
         Parse *text* as RST inline content and return the resulting nodes.
-        Do not add directly to signode, as this will remove whitespaces.
+        Do not add directly to signode, as this will render without whitespaces.
         """
         parsed, messages = self.state.inline_text(text, self.lineno)
         # Report any parse warnings through the normal directive machinery
@@ -102,7 +106,11 @@ class FlexVarDirective(ObjectDescription[str]):
         return nodes.inline(text, '', *parsed_list)
 
     def handle_signature(self, sig: str, signode: addnodes.desc_signature) -> str:
-        """Build the rendered signature node and return the canonical name."""
+        """
+        Build the rendered signature node and return the canonical name.
+
+        Format: ``<name>: <type> = <default/value> (<units>) [optional/required] <annotation>``
+        """
         name = sig.strip()
 
         signode["fullname"] = name
@@ -167,6 +175,13 @@ class FlexVarDirective(ObjectDescription[str]):
                 *type_value_node_list,
             )
 
+        units: str | None = self.options.get("units", "")
+        if units:
+            signode += [
+                addnodes.desc_sig_space(),
+                self._parse_inline(f"({units})"),
+            ]
+
         anno = self.options.get("annotation")
         if anno:
             signode += addnodes.desc_sig_space()
@@ -221,11 +236,27 @@ class FlexVarDirective(ObjectDescription[str]):
 
             # signode += nodes.inline("", anno)
 
-        if "optional" in self.options:
+        l_optional = ("optional" in self.options)
+        l_required = ("required" in self.options)
+        if l_optional and l_required:
+            logger.warning(
+                "Both the optional and required flags specified for %s, only specify one.",
+                name,
+                location=signode,
+            )
+
+        if l_optional:
             print(f"optional flag used for sig={sig}")
-            signode += addnodes.desc_sig_space()
-            signode += self._parse_inline("optional")
+            signode += [
+                addnodes.desc_sig_space(),
+                self._parse_inline("[optional]"),
+            ]
             # signode += nodes.inline("", " optional")
+        elif l_required:
+            signode += [
+                addnodes.desc_sig_space(),
+                self._parse_inline("[required]"),
+            ]
 
         # Test/debug
         if False:
