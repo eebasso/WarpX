@@ -110,6 +110,17 @@ class FlexVarDirective(ObjectDescription[str]):
         parsed_list: list[nodes.Node] = self._parse_inline_into_node_list(text)
         return nodes.inline(text, '', *parsed_list)
 
+    def warn_conflicting_options(
+        self, name: str, signode: addnodes.desc_signature, *keys: str
+    ):
+        blist: list[bool] = [(key in self.options) for key in keys]
+        if sum(blist) > 1:
+            logger.warning(
+                "Conflicting options for %s: specify only one of :%s",
+                name, keys,
+                location=signode,
+            )
+
     def handle_signature(self, sig: str, signode: addnodes.desc_signature) -> str:
         """
         Build the rendered signature node and return the canonical name.
@@ -125,17 +136,7 @@ class FlexVarDirective(ObjectDescription[str]):
         signode += addnodes.desc_name(
             name, "",
             self._parse_inline(name),
-            # nodes.inline("", name)
         )
-
-        # fvoptions = FlexVarDirectiveOptions(name=name, signode=signode, fvdir=self)
-        # Optional type annotation  `: <type>`
-        # type_: str | None = fvoptions.type_
-        # value: str | None = fvoptions.value
-        # units: str | None = fvoptions.units
-        # anno: str | None = fvoptions.anno
-        # optional: bool = fvoptions.optional
-        # required: bool = fvoptions.required
 
         type_: str | None = self.options.get("type", None)
         value: str | None = self.options.get("value", self.options.get("default", None))
@@ -143,6 +144,9 @@ class FlexVarDirective(ObjectDescription[str]):
         anno: str | None = self.options.get("annotation", None)
         optional: bool = ("optional" in self.options)
         required: bool = ("required" in self.options)
+
+        self.warn_conflicting_options(name, signode, "value", "default")
+        self.warn_conflicting_options(name, signode, "optional", "required")
 
         if type_:
             # type_value_node_list.extend([
@@ -303,37 +307,6 @@ class FlexVarDirective(ObjectDescription[str]):
         if "noindex" not in self.options:
             self.indexnode["entries"].append(
                 ("single", name + " (variable)", node_id, "", None)
-            )
-
-
-class FlexVarDirectiveOptions:
-
-    def __init__(self, name: str, signode: addnodes.desc_signature, fvdir: FlexVarDirective):
-
-        self.name: str = name
-        self.signode: addnodes.desc_signature = signode
-        self.flexvardir: FlexVarDirective = fvdir
-        self.options: dict[str, Any] = fvdir.options
-
-        self.type_: str | None = self.options.get("type", None)
-        self.value: str | None = self.options.get("value", self.options.get("default", None))
-        self.default: str | None = self.value
-        self.units: str | None = self.options.get("units", None)
-        self.anno: str | None = self.options.get("annotation", None)
-        self.optional: bool = ("optional" in self.options)
-        self.required: bool = ("required" in self.options)
-
-        self.check_conflicting_options("value", "default", name=name, signode=signode)
-        self.check_conflicting_options("optional", "required", name=name, signode=signode)
-
-    def check_conflicting_options(
-        self, key1: str, key2: str, name: str, signode: addnodes.desc_signature,
-    ):
-        if key1 in self.options and key2 in self.options:
-            logger.warning(
-                "Conflicting options for %s: only specify one of :%s: and :%s:",
-                name, key1, key2,
-                location=signode,
             )
 
 
