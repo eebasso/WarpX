@@ -2,7 +2,7 @@
 
 .. py:data:: data1
     :type: integer
-    :value: "abcdd"
+    :value: 13
 
 .. py:data:: data2
     :type: integer

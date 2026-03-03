@@ -178,7 +178,7 @@ class FlexVarDirective(ObjectDescription[str]):
             signode += addnodes.desc_sig_space()
             signode += addnodes.desc_annotation(
                 anno, "",
-                *self._parse_inline_into_node_list(anno),
+                self._parse_inline(anno),
             )
 
             signode += addnodes.desc_sig_space()
@@ -187,7 +187,7 @@ class FlexVarDirective(ObjectDescription[str]):
             signode += addnodes.desc_sig_space()
             signode += addnodes.desc_annotation(
                 anno, "",
-                self._parse_inline(anno),
+                *self._parse_inline(anno),
             )
 
             signode += addnodes.desc_sig_space()
@@ -196,7 +196,7 @@ class FlexVarDirective(ObjectDescription[str]):
             signode += addnodes.desc_sig_space()
             signode += addnodes.desc_annotation(
                 anno, "",
-                *self._parse_inline(anno),
+                *self._parse_inline_into_node_list(anno),
             )
 
             # signode += addnodes.desc_annotation(
