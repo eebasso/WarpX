@@ -233,6 +233,7 @@ class FlexVarDirective(ObjectDescription[str]):
         # Test/debug
         if False:
             test_nodetypelist: list[type[nodes.TextElement]] = [
+                nodes.line,
                 nodes.inline,
                 # addnodes.desc,
                 # addnodes.desc_signature,
@@ -267,17 +268,52 @@ class FlexVarDirective(ObjectDescription[str]):
 
             testnodelist: list[nodes.Node] = []
 
-            testnodelist.append(addnodes.desc_inline("fv", "", " | desc_inline `singlebacktick` ``doublebacktick``"))
+            space_bracket_space: list[Node] = [
+                addnodes.desc_sig_space(),
+                addnodes.desc_sig_punctuation("", "|"),
+                addnodes.desc_sig_space(),
+            ]
 
-            testnodelist.append(nodes.inline("", " | nodes.inline `singlebacktick` ``doublebacktick``"))
+            space_dollar_space: list[Node] = [
+                addnodes.desc_sig_space(),
+                addnodes.desc_sig_punctuation("", "$"),
+                addnodes.desc_sig_space(),
+            ]
 
-            testnodelist.extend([
-                nodetype("", f" | {nodetype.__name__}") for nodetype in test_nodetypelist
-            ])
+            # testnodelist += space_bracket_space
+            # testnodelist.append(addnodes.desc_inline("fv", "", " desc_inline `singlebacktick` ``doublebacktick`` next word "))
+
+            for nodetype in test_nodetypelist:
+                testnodelist += space_bracket_space
+                testnodelist.append(nodetype(
+                    "", "",
+                    *space_dollar_space,
+                    nodes.Text(f" {nodetype.__name__} next word "),
+                    *space_dollar_space
+                ))
 
             # Extra
-            testnodelist.extend(self._parse_inline_into_node_list(" | _parse_inline normal text `singlebacktick` ``doublebacktick``"))
-            testnodelist.append(nodes.Text(" | Text"))
+            testnodelist += space_bracket_space
+            testnodelist.append(self._parse_inline(" $ _parse_inline `singlebacktick` ``doublebacktick`` next word $ "))
+
+            testnodelist += space_bracket_space
+            testnodelist.append(nodes.line(
+                "", "",
+                *space_dollar_space,
+                nodes.Text(" nodes.line `singlebacktick` ``doublebacktick`` next word "),
+                *space_dollar_space
+            ))
+
+            testnodelist += space_bracket_space
+            testnodelist.append(nodes.inline(
+                "", "",
+                *space_dollar_space,
+                nodes.Text("nodes.inline `singlebacktick` ``doublebacktick`` next word "),
+                *space_dollar_space
+            ))
+
+            testnodelist += space_bracket_space
+            testnodelist.append(nodes.Text("nodes.Text next word "))
 
             signode += testnodelist
 
