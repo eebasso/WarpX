@@ -62,7 +62,7 @@ class FlexVarDirective(ObjectDescription[str]):
         "type": directives.unchanged,
         "default": directives.unchanged,
         "optional": directives.flag,
-        "comment": directives.unchanged,
+        "annotation": directives.unchanged,
         "noindex": directives.flag,
     }
 
@@ -137,11 +137,11 @@ class FlexVarDirective(ObjectDescription[str]):
             signode += self._parse_inline_into_single_node(value)
             # signode += nodes.inline("", value)
 
-        comment = self.options.get("comment")
-        if comment:
+        anno = self.options.get("annotation")
+        if anno:
             signode += addnodes.desc_sig_space()
-            signode += self._parse_inline_into_single_node(comment)
-            # signode += nodes.inline("", comment)
+            signode += self._parse_inline_into_single_node(anno)
+            # signode += nodes.inline("", anno)
 
         if "optional" in self.options:
             print(f"optional flag used for sig={sig}")

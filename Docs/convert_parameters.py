@@ -111,7 +111,7 @@ class Directive:
             #     out.append(f'{body_indent}{indent}:default: {self.default_str}')
             if l_use_raw_annotation:
                 raw_anno_txt = self.annotation.raw_annotation.strip().lstrip('.:').strip()
-                out.append(f"{body_indent}:comment: {raw_anno_txt}")
+                out.append(f"{body_indent}:annotation: {raw_anno_txt}")
 
             body_lines = [ f'{body_indent}{line}'.rstrip() for line in self.body ]
             if len(body_lines) < 1 or body_lines[0] != "":
