@@ -51,10 +51,6 @@ class ObjectEntry(TypedDict):
     type: str
     default: str
 
-# ---------------------------------------------------------------------------
-# Directive
-# ---------------------------------------------------------------------------
-
 class FlexVarDirective(ObjectDescription[str]):
     """
     Description of a variable.
@@ -231,10 +227,6 @@ class FlexVarDirective(ObjectDescription[str]):
             )
 
 
-# ---------------------------------------------------------------------------
-# XRef Role
-# ---------------------------------------------------------------------------
-
 class FlexVarXRefRole(XRefRole):
     r"""
     Cross-referencing role for flexible name variables.
@@ -265,7 +257,6 @@ class FlexVarXRefRole(XRefRole):
         that it still resolves to the ``.. fv:var:: timeout`` entry.
         Backslash-escape support (``\<``, ``\>``) comes for free from the
         base class.
-
     """
 
     # Same as ReferenceRole.explicit_title_re but with \s+ instead of \s*,
@@ -298,12 +289,7 @@ class FlexVarXRefRole(XRefRole):
             title=title,
             target=target,
         )
-        # return title, ws_re.sub(' ', target)
 
-
-# ---------------------------------------------------------------------------
-# Domain
-# ---------------------------------------------------------------------------
 
 class FlexVarDomain(Domain):
     """FlexVar domain."""
@@ -390,10 +376,6 @@ class FlexVarDomain(Domain):
                 1,                # priority
             )
 
-
-# ---------------------------------------------------------------------------
-# Extension entry point
-# ---------------------------------------------------------------------------
 
 def setup(app: Sphinx) -> dict:
     app.add_domain(FlexVarDomain)
