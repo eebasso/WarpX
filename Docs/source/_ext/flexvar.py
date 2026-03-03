@@ -138,7 +138,7 @@ class FlexVarDirective(ObjectDescription[str]):
         # type_value_node_list: list[nodes.Node] = []
 
         # Optional type annotation  `: <type>`
-        type_ = self.options.get("type", "")
+        type_: str | None = self.options.get("type", "")
         if type_:
             # type_value_node_list.extend([
             typ_node = addnodes.desc_annotation(
@@ -179,7 +179,7 @@ class FlexVarDirective(ObjectDescription[str]):
             # )
             ]
 
-        anno = self.options.get("annotation")
+        anno: str | None = self.options.get("annotation")
         if anno:
             anno_nodes: list[Node] = [
                 addnodes.desc_sig_space(),
