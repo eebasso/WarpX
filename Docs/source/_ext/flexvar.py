@@ -214,28 +214,6 @@ class FlexVarDirective(ObjectDescription[str]):
                 *self._parse_inline_into_node_list(anno),
             )
 
-            # signode += addnodes.desc_annotation(
-            #     " " + anno, "",
-            #     addnodes.desc_sig_space(),
-            #     addnodes.desc_sig_space(),
-            #     addnodes.desc_sig_space(),
-            #     addnodes.desc_sig_space(),
-            #     addnodes.desc_sig_space(),
-            #     *self._parse_inline_into_node_list(anno),
-            # )
-
-            # signode += addnodes.desc_annotation(
-            #     " " + anno, "",
-            #     addnodes.desc_sig_space(),
-            #     addnodes.desc_sig_space(),
-            #     addnodes.desc_sig_space(),
-            #     addnodes.desc_sig_space(),
-            #     addnodes.desc_sig_space(),
-            #     self._parse_inline(anno),
-            # )
-
-            # signode += nodes.inline("", anno)
-
         l_optional = ("optional" in self.options)
         l_required = ("required" in self.options)
         if l_optional and l_required:
