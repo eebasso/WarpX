@@ -131,9 +131,18 @@ Simulation Time
 .. fv:var:: max_step
     :type: ``int`` array, list of integers
     :default: [``0`` ``0`` ``0``]
-    :annotation: (`integer`)
+    :units: seconds
+    :optional:
+    :annotation: `annotation` for ``max_step``
 
     The number of PIC cycles to perform.
+
+.. fv:var:: <string>_var_<test>
+    :type: string ``or`` `strings`
+    :default: ""
+    :units: ``no`` `units`
+    :optional:
+    :annotation: `annotation` for ``test_string``
 
 .. fv:var:: stop_time
     :annotation: (`float`; in seconds)

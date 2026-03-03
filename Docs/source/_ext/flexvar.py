@@ -36,6 +36,7 @@ import re
 from typing import Any, Iterator, List, cast, TypedDict
 
 from docutils import nodes
+from docutils.nodes import Node
 from docutils.parsers.rst import directives
 
 from sphinx import addnodes
@@ -101,6 +102,9 @@ class FlexVarDirective(ObjectDescription[str]):
         """
         Parse text and combine into a single inline node.
         This can added directly to signode to keep whitespace.
+
+        Note that *self._parse_inline might be equivalent to
+        self._parse_inline_into_node_list
         """
         parsed_list: list[nodes.Node] = self._parse_inline_into_node_list(text)
         return nodes.inline(text, '', *parsed_list)
@@ -124,94 +128,66 @@ class FlexVarDirective(ObjectDescription[str]):
             # nodes.inline("", name)
         )
 
-        type_value_node_list: list[nodes.Node] = []
+        # type_value_node_list: list[nodes.Node] = []
 
         # Optional type annotation  `: <type>`
         typ = self.options.get("type", "")
         if typ:
-            type_value_node_list.extend([
+            # type_value_node_list.extend([
+            signode += addnodes.desc_annotation(
+                typ, '',
                 addnodes.desc_sig_punctuation('', ':'),
                 addnodes.desc_sig_space(),
                 *self._parse_inline_into_node_list(typ),
-            ])
-            # annotations = self._parse_inline_into_node_list(typ)
-            # signode += addnodes.desc_sig_punctuation('', ':')
-            # signode += addnodes.desc_sig_space()
-            # signode += addnodes.desc_annotation(
-            #     typ, '',
-            #     # addnodes.desc_sig_punctuation('', ':'),
-            #     # addnodes.desc_sig_space(),
-            #     *annotations,
-            # )
-            # signode += nodes.inline(typ, '', *annotations)
-            # signode += nodes.inline("", typ)
+                # self._parse_inline(typ),
+                # *self._parse_inline(typ),
+            )
+            # ])
 
         # Optional default value  ` = <value>`
         value = self.options.get("default", "").strip()
         if not value:
             value = self.options.get("value", "").strip()
 
+        # Maybe change logic to `if "default" in self.options` or `if value is not None`
         if value:
-            type_value_node_list.extend([
+            # type_value_node_list.extend([
+            signode += addnodes.desc_annotation(
+                value, '',
                 addnodes.desc_sig_space(),
-                addnodes.desc_sig_punctuation('', '='),
+                addnodes.desc_sig_punctuation("", "="),
                 addnodes.desc_sig_space(),
                 *self._parse_inline_into_node_list(value),
-            ])
-            # signode += addnodes.desc_annotation(
-            #     value, '',
-            #     addnodes.desc_sig_space(),
-            #     addnodes.desc_sig_punctuation('', '='),
-            #     addnodes.desc_sig_space(),
-            #     # nodes.Text(value),
-            #     # *self._parse_inline_into_node_list(value),
-            # )
-            # signode += self._parse_inline(value)
-            # signode += nodes.inline("", value)
-
-        if type_value_node_list:
-            signode += addnodes.desc_annotation(
-                "", "",
-                *type_value_node_list,
             )
+            # ])
+
+        # if type_value_node_list:
+        #     signode += addnodes.desc_annotation(
+        #         "", "",
+        #         *type_value_node_list,
+        #     )
 
         units: str | None = self.options.get("units", "")
         if units:
             signode += [
                 addnodes.desc_sig_space(),
-                self._parse_inline(f"({units})"),
+                addnodes.desc_sig_punctuation("", "("),
+                self._parse_inline(units),
+                addnodes.desc_sig_punctuation("", ")"),
             ]
 
         anno = self.options.get("annotation")
         if anno:
-            signode += addnodes.desc_sig_space()
-            signode += self._parse_inline(anno)
-
-            signode += addnodes.desc_sig_space()
-            signode += nodes.Text("|1:")
-
-            signode += addnodes.desc_sig_space()
-            signode += addnodes.desc_annotation(
-                anno, "",
+            anno_nodes: list[Node] = [
+                addnodes.desc_sig_space(),
                 self._parse_inline(anno),
-            )
-
-            signode += addnodes.desc_sig_space()
-            signode += nodes.Text("|2:")
-
-            signode += addnodes.desc_sig_space()
+                # *self._parse_inline(anno),
+                # *self._parse_inline_into_node_list(anno),
+            ]
+            # signode += anno_nodes
             signode += addnodes.desc_annotation(
                 anno, "",
-                *self._parse_inline(anno),
-            )
-
-            signode += addnodes.desc_sig_space()
-            signode += nodes.Text("|3:")
-
-            signode += addnodes.desc_sig_space()
-            signode += addnodes.desc_annotation(
-                anno, "",
-                *self._parse_inline_into_node_list(anno),
+                *anno_nodes,
             )
 
         l_optional = ("optional" in self.options)
@@ -227,7 +203,9 @@ class FlexVarDirective(ObjectDescription[str]):
             print(f"optional flag used for sig={sig}")
             signode += [
                 addnodes.desc_sig_space(),
-                self._parse_inline("[optional]"),
+                addnodes.desc_sig_punctuation("", "["),
+                self._parse_inline("optional"),
+                addnodes.desc_sig_punctuation("", "]"),
             ]
             # signode += nodes.inline("", " optional")
         elif l_required:
