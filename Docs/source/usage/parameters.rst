@@ -137,12 +137,12 @@ Simulation Time
 
     The number of PIC cycles to perform.
 
-.. fv:var:: <string>_var_<test>
+.. fv:var:: <string>_var_<test1>
     :type: string ``or`` `strings`
     :default: ""
     :units: ``no`` `units`
     :optional:
-    :annotation: `annotation` for ``test_string``
+    :annotation: This is the `annotation` for ``test_string``
 
 .. fv:var:: stop_time
     :annotation: (`float`; in seconds)

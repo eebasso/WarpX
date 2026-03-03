@@ -138,16 +138,16 @@ class FlexVarDirective(ObjectDescription[str]):
         # type_value_node_list: list[nodes.Node] = []
 
         # Optional type annotation  `: <type>`
-        typ = self.options.get("type", "")
-        if typ:
+        type_ = self.options.get("type", "")
+        if type_:
             # type_value_node_list.extend([
             typ_node = addnodes.desc_annotation(
-                typ, '',
+                type_, '',
                 addnodes.desc_sig_punctuation('', ':'),
                 addnodes.desc_sig_space(),
                 # *self._parse_inline_into_node_list(typ),
                 # self._parse_inline(typ),
-                self._parse_inline(typ),
+                self._parse_inline(type_),
             )
             signode += nodes.inline("", "", typ_node)
             # ])
@@ -310,7 +310,7 @@ class FlexVarDirectiveOptions:
         self.flexvardir: FlexVarDirective = fvdir
         self.options: dict[str, Any] = fvdir.options
 
-        self.typ: str | None = self.options.get("type", None)
+        self.type_: str | None = self.options.get("type", None)
         self.value: str | None = self.options.get("value", self.options.get("default", None))
         self.default: str | None = self.value
         self.units: str | None = self.options.get("units", None)
