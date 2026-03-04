@@ -86,6 +86,9 @@ class FlexVarDirective(ObjectDescription[str]):
     # would be mis-parsed otherwise).
     allow_nesting = False
 
+    # Use emphasis for type and default value
+    use_emphasis = False
+
     # ------------------------------------------------------------------
     # Signature parsing / rendering
     # ------------------------------------------------------------------
@@ -161,10 +164,11 @@ class FlexVarDirective(ObjectDescription[str]):
             signode += addnodes.desc_sig_space()
             signode += addnodes.desc_sig_punctuation('', '(')
             if type_:
-                signode += nodes.emphasis(
-                    type_, "",
-                    self._parse_inline(type_)
-                )
+                type_node = self._parse_inline(type_)
+                if self.use_emphasis:
+                    signode += nodes.emphasis(type_, "", type_node)
+                else:
+                    signode += type_node
             if type_ and unit:
                 signode += addnodes.desc_sig_punctuation('', ';')
                 signode += addnodes.desc_sig_space()
@@ -181,6 +185,9 @@ class FlexVarDirective(ObjectDescription[str]):
         elif l_required:
             signode += addnodes.desc_sig_space()
             signode += nodes.Text("required")
+        else:
+            # Do nothing if neither flag is specified
+            pass
 
         # Format: (default `<value>``)
         if value:
@@ -189,10 +196,11 @@ class FlexVarDirective(ObjectDescription[str]):
             signode += nodes.inline("", "default")
             signode += addnodes.desc_sig_punctuation('', ':')
             signode += addnodes.desc_sig_space()
-            signode += nodes.emphasis(
-                value, "",
-                self._parse_inline(value)
-            )
+            value_node = self._parse_inline(value)
+            if self.use_emphasis:
+                signode += nodes.emphasis(value, "", value_node)
+            else:
+                signode += self._parse_inline(value)
             signode += addnodes.desc_sig_punctuation('', ')')
 
         # Format: <annotation>
