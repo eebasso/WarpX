@@ -191,7 +191,7 @@ class FlexVarDirective(ObjectDescription[str]):
             # Do nothing if neither flag is specified
             pass
 
-        # Format: (default `<value>``)
+        # Format: (default `<value>`)
         if value:
             signode += addnodes.desc_sig_space()
             signode += addnodes.desc_sig_punctuation("", "(")
