@@ -596,6 +596,15 @@ class FlexVarDomain(Domain):
 
 def setup(app: Sphinx) -> dict:
     app.add_domain(FlexVarDomain)
+
+    # print("\nflexvar.setup: START\n")
+    # # Add some convenient aliases to the global domain
+    # aliases = [ "warpxparam", "wparam", "param", "wp", "p" ]
+    # for alias in aliases:
+    #     app.add_directive_to_domain("std", alias, FlexVarDomain.directives["var"])
+    #     # app.add_role_to_domain("std", alias, FlexVarDomain.roles["var"])
+    # print(f"\naliases = {aliases}\n")
+
     return {
         "version": "0.1.0",
         "parallel_read_safe": True,

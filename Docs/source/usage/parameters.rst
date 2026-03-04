@@ -1,14 +1,57 @@
 .. _running-cpp-parameters:
 
-.. fv:var:: <string>_var_<test1>
+.. role:: p(fv:var)
+.. role:: wparam(fv:var)
+
+.. fv:var:: A
+.. fv:var:: B
+.. fv:var:: C
+.. fv:var:: D
+.. fv:var:: var1
+.. wparam:: var2
+.. p:: var3
+.. wp:: var4
+.. warpxparam:: var5
+
+Test ``:fv:var:`` role: :fv:var:`var1`, :fv:var:`var2`,
+
+Test ``:p:`` role: :p:`var1`, :p:`var2`, :p:`var3`, :p:`var4`, :p:`var5`
+
+.. wparam:: <string>_var_<test1>
     :type: string ``or`` `strings`
     :default: ""
-    :unit: ``test`` `units`
+    :unit: ``test`` `unit`
     :optional:
-    :annotation: This is the `annotation` for ``<string>_var_<test1>``.
+    :annotation: This is the `annotation` for ``var_test``.
+
+    Var description.
+
+Test :p:`<string>_var_<test1>`
+
+Test :p:`var_test` vs :p:`var_test_2`
+
+Test :p:`var_test` vs :p:`var_test_2`
 
 Inputs: Parameter List
 ======================
+
+.. role:: data(py:data)
+
+.. std:option:: option_test
+
+    Option description
+
+Test :option:`option_test` :std:option:`option_test`
+
+.. py:data:: test_var
+    :type: int
+
+    Var description
+
+Test 1: :py:data:`test_var`
+
+Test 2: :data:`test_var`
+
 
 This section describes the list of parameters that can be set in the WarpX inputs file.
 
@@ -127,7 +170,7 @@ For example, ``something_intervals = -1`` deactivates ``something`` and ``someth
 Simulation Time
 ---------------
 
-.. fv:var:: max_step
+.. p:: max_step
     :type: `int`
 
     The number of PIC cycles to perform.
@@ -143,7 +186,7 @@ Simulation Time
     Note: in boosted-frame simulations, ``stop_time`` refers to the time in the boosted frame.
 
 .. fv:var:: warpx.zmax_plasma_to_compute_max_step
-    :float: float
+    :type: `float`
     :optional:
 
     Can be useful when running in a boosted frame. If specified, automatically

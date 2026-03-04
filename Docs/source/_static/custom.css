@@ -5,6 +5,36 @@
     float: right;
 }
 
+html.writer-html5 .rst-content dl[class]:not(.option-list):not(.field-list):not(.footnote):not(.citation):not(.glossary):not(.simple):is(.fv) {
+    color: #909;
+    margin-bottom: 0px;
+}
+
+html.writer-html5 .rst-content dl[class]:is(.fv) {
+    color: #555;
+    margin-bottom: 0px;
+}
+
+html.writer-html5 .rst-content dl.fv {
+    color: #0F0;
+    margin-bottom: 0px;
+}
+
+html.writer-html5 .rst-content dl {
+    color: #FF0;
+    margin-bottom: 0px;
+}
+
+html.writer-html5 .rst-content {
+    color: #00F;
+    margin-bottom: 0px;
+}
+
+.rst-content dl.fv {
+    color: #F90;
+    margin-bottom: 0px;
+}
+
 /* Cross references, overridden by active xref */
 .rst-content code.xref {
     color: #11F;
