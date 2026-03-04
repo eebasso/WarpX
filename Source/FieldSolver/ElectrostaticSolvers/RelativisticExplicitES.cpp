@@ -36,7 +36,7 @@ void RelativisticExplicitES::ComputeSpaceChargeField (
     [[maybe_unused]] MultiFluidContainer* mfl,
     int max_level)
 {
-    WARPX_PROFILE("RelativisticExplicitES::ComputeSpaceChargeField");
+    ABLASTR_PROFILE("RelativisticExplicitES::ComputeSpaceChargeField");
 
     using ablastr::fields::MultiLevelVectorField;
     using warpx::fields::FieldType;
@@ -67,7 +67,7 @@ void RelativisticExplicitES::AddSpaceChargeField (
     ablastr::fields::MultiLevelVectorField& Efield_fp,
     ablastr::fields::MultiLevelVectorField& Bfield_fp)
 {
-    WARPX_PROFILE("RelativisticExplicitES::AddSpaceChargeField");
+    ABLASTR_PROFILE("RelativisticExplicitES::AddSpaceChargeField");
 
     if (pc.getCharge() == 0) { return; }
 
@@ -130,7 +130,7 @@ void RelativisticExplicitES::AddSpaceChargeField (
     computePhi( amrex::GetVecOfPtrs(rho), amrex::GetVecOfPtrs(phi),
                 beta, pc.self_fields_required_precision,
                 pc.self_fields_absolute_tolerance, pc.self_fields_max_iters,
-                pc.self_fields_verbosity );
+                pc.self_fields_verbosity, is_igf_2d_slices);
 
     // Compute the corresponding electric and magnetic field, from the potential phi
     computeE( Efield_fp, amrex::GetVecOfPtrs(phi), beta );
@@ -140,7 +140,7 @@ void RelativisticExplicitES::AddSpaceChargeField (
 
 void RelativisticExplicitES::AddBoundaryField (ablastr::fields::MultiLevelVectorField& Efield_fp)
 {
-    WARPX_PROFILE("RelativisticExplicitES::AddBoundaryField");
+    ABLASTR_PROFILE("RelativisticExplicitES::AddBoundaryField");
 
     auto & warpx = WarpX::GetInstance();
 
@@ -168,7 +168,7 @@ void RelativisticExplicitES::AddBoundaryField (ablastr::fields::MultiLevelVector
     computePhi( amrex::GetVecOfPtrs(rho), amrex::GetVecOfPtrs(phi),
                 beta, self_fields_required_precision,
                 self_fields_absolute_tolerance, self_fields_max_iters,
-                self_fields_verbosity );
+                self_fields_verbosity, is_igf_2d_slices);
 
     // Compute the corresponding electric field, from the potential phi.
     computeE( Efield_fp, amrex::GetVecOfPtrs(phi), beta );

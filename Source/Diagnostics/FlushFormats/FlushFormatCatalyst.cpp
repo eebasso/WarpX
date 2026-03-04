@@ -2,8 +2,8 @@
 
 #include "WarpX.H"
 #include "Utils/TextMsg.H"
-#include "Utils/WarpXProfilerWrapper.H"
 
+#include <ablastr/profiler/ProfilerWrapper.H>
 #include <AMReX.H>
 #include <AMReX_ParmParse.H>
 #include <AMReX_REAL.H>
@@ -110,7 +110,7 @@ FlushFormatCatalyst::FlushFormatCatalyst() {
     if (err != catalyst_status_ok)
     {
         std::string message = " Error: Failed to initialize Catalyst!\n";
-        std::cerr << message << err << std::endl;
+        std::cerr << message << err << "\n";
         amrex::Print() << message;
         amrex::Abort(message);
     }
@@ -127,6 +127,7 @@ FlushFormatCatalyst::WriteToFile (
     const amrex::Vector<ParticleDiag>& particle_diags, int nlev,
     const std::string prefix, int file_min_digits, bool plot_raw_fields,
     bool plot_raw_fields_guards,
+    int /*verbose*/,
     bool /*use_pinned_pc*/,
     bool isBTD, int /*snapshotID*/, int /*bufferID*/, int /*numBuffers*/,
     const amrex::Geometry& /*full_BTD_snapshot*/,
@@ -135,7 +136,7 @@ FlushFormatCatalyst::WriteToFile (
 #ifdef AMREX_USE_CATALYST
     amrex::Print() << Utils::TextMsg::Info("Running Catalyst pipeline scripts...");
 
-    WARPX_PROFILE("FlushFormatCatalyst::WriteToFile()");
+    ABLASTR_PROFILE("FlushFormatCatalyst::WriteToFile()");
     auto & warpx = WarpX::GetInstance();
 
     WARPX_ALWAYS_ASSERT_WITH_MESSAGE(
@@ -143,7 +144,7 @@ FlushFormatCatalyst::WriteToFile (
         "In-situ visualization is not currently supported for back-transformed diagnostics.");
 
     // Mesh data
-    WARPX_PROFILE_VAR("FlushFormatCatalyst::WriteToFile::MultiLevelToBlueprint", prof_catalyst_mesh_blueprint);
+    ABLASTR_PROFILE_VAR("FlushFormatCatalyst::WriteToFile::MultiLevelToBlueprint", prof_catalyst_mesh_blueprint);
     conduit::Node node;
     auto & state = node["catalyst/state"];
     state["timestep"].set(iteration[0]);
@@ -155,10 +156,10 @@ FlushFormatCatalyst::WriteToFile (
 
     amrex::MultiLevelToBlueprint(
         nlev, amrex::GetVecOfConstPtrs(mf), varnames, geom, time, iteration, warpx.refRatio(), meshData);
-    WARPX_PROFILE_VAR_STOP(prof_catalyst_mesh_blueprint);
+    ABLASTR_PROFILE_VAR_STOP(prof_catalyst_mesh_blueprint);
 
     // Particle data
-    WARPX_PROFILE_VAR("FlushFormatCatalyst::WriteToFile::WriteParticles", prof_catalyst_particles);
+    ABLASTR_PROFILE_VAR("FlushFormatCatalyst::WriteToFile::WriteParticles", prof_catalyst_particles);
     auto& particleChannel = node["catalyst/channels/particles"];
     particleChannel["type"].set_string("multimesh");
     auto& particleData = particleChannel["data"];
@@ -171,18 +172,18 @@ FlushFormatCatalyst::WriteToFile (
         internal::EmptyParticleData(varnames, particleData);
     }
 
-    WARPX_PROFILE_VAR_STOP(prof_catalyst_particles);
+    ABLASTR_PROFILE_VAR_STOP(prof_catalyst_particles);
 
     // Execution
-    WARPX_PROFILE_VAR("FlushFormatCatalyst::WriteToFile::execute", prof_catalyst_execute);
+    ABLASTR_PROFILE_VAR("FlushFormatCatalyst::WriteToFile::execute", prof_catalyst_execute);
     catalyst_status err = catalyst_execute(conduit::c_node(&node));
     if (err != catalyst_status_ok)
     {
         std::string message = " Error: Failed to execute Catalyst!\n";
-        std::cerr << message << err << std::endl;
+        std::cerr << message << err << "\n";
         amrex::Print() << message;
     }
-    WARPX_PROFILE_VAR_STOP(prof_catalyst_execute);
+    ABLASTR_PROFILE_VAR_STOP(prof_catalyst_execute);
 
 #else
     amrex::ignore_unused(varnames, mf, geom, iteration, time,
@@ -199,7 +200,7 @@ FlushFormatCatalyst::~FlushFormatCatalyst() {
     if (err != catalyst_status_ok)
     {
         std::string message = " Error: Failed to finalize Catalyst!\n";
-        std::cerr << message << err << std::endl;
+        std::cerr << message << err << "\n";
         amrex::Print() << message;
         amrex::Abort(message);
     } else {

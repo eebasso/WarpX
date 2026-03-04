@@ -94,45 +94,44 @@ namespace ParticleCreation {
      * first n_external_attr_real real attributes and the first n_external_attr_int integer
      * attributes, which have been in principle externally set elsewhere.
      *
-     * @tparam[in] The type of the particle tile to operate on (e.g. could use different allocators)
+     * @tparam PTile The type of the particle tile to operate on (e.g. could use different allocators)
+     * @tparam DstPC the destination particle container type
      * @param[inout] ptile the tile in which attributes are initialized
+     * @param[in] pc the destination particle container
+     * @param[in] do_qed_comps whether to initialize the qed components (these are usually handled by
+     * SmartCopy, but NOT when adding particles in AddNParticles)
+     * @param[in] start the index to start initializing particles
+     * @param[in] stop the index to stop initializing particles
      * @param[in] n_external_attr_real The number of real attributes that have been externally set.
      * These are NOT initialized by this function.
      * @param[in] n_external_attr_int The number of integer attributes that have been externally set.
      * These are NOT initialized by this function.
-     * @param[in] user_real_attribs The names of the real components for this particle tile
-     * @param[in] user_int_attribs The names of the int components for this particle tile
-     * @param[in] particle_comps map between particle component index and component name for real comps
-     * @param[in] particle_icomps map between particle component index and component name for int comps
-     * @param[in] user_real_attrib_parser the parser functions used to initialize the user real components
-     * @param[in] user_int_attrib_parser the parser functions used to initialize the user int components
-     * @param[in] do_qed_comps whether to initialize the qed components (these are usually handled by
-     * SmartCopy, but NOT when adding particles in AddNParticles)
-     * @param[in] p_bw_engine the engine to use for setting the breit-wheeler component for QED
-     * @param[in] p_qs_engine the engine to use for setting the quantum synchrotron component for QED
-     * @param[in] ionization_initial_level the ionization level particles created should start at
-     * @param[in] start the index to start initializing particles
-     * @param[in] stop the index to stop initializing particles
      */
-template <typename PTile>
+template <typename PTile, typename DstPC>
 void DefaultInitializeRuntimeAttributes (PTile& ptile,
-                                         const int n_external_attr_real,
-                                         const int n_external_attr_int,
-                                         const std::vector<std::string>& user_real_attribs,
-                                         const std::vector<std::string>& user_int_attribs,
-                                         const std::map<std::string, int>& particle_comps,
-                                         const std::map<std::string, int>& particle_icomps,
-                                         const std::vector<amrex::Parser*>& user_real_attrib_parser,
-                                         const std::vector<amrex::Parser*>& user_int_attrib_parser,
+                                         const DstPC& pc,
+                                         int start, int stop,
+                                         const int n_external_attr_real = 0,
+                                         const int n_external_attr_int = 0
 #ifdef WARPX_QED
-                                         const bool do_qed_comps,
-                                         BreitWheelerEngine* p_bw_engine,
-                                         QuantumSynchrotronEngine* p_qs_engine,
+                                         , const bool do_qed_comps = false )
+#else
+                                         )
 #endif
-                                         const int ionization_initial_level,
-                                         int start, int stop)
 {
         using namespace amrex::literals;
+
+        const std::vector<std::string>& user_real_attribs = pc.getUserRealAttribs();
+        const std::vector<std::string>& user_int_attribs  = pc.getUserIntAttribs();
+        const std::vector<std::string>& particle_comps  = pc.GetRealSoANames();
+        const std::vector<std::string>& particle_icomps = pc.GetIntSoANames();
+        const std::vector<amrex::Parser*>& user_real_attrib_parser = pc.getUserRealAttribParser();
+        const std::vector<amrex::Parser*>& user_int_attrib_parser  = pc.getUserIntAttribParser();
+#ifdef WARPX_QED
+        BreitWheelerEngine*       p_bw_engine = pc.get_breit_wheeler_engine_ptr();
+        QuantumSynchrotronEngine* p_qs_engine = pc.get_quantum_sync_engine_ptr();
+#endif
+        const int ionization_initial_level = pc.getIonizationInitialLevel();
 
         // Preparing data needed for user defined attributes
         const auto n_user_real_attribs = static_cast<int>(user_real_attribs.size());
@@ -151,8 +150,9 @@ void DefaultInitializeRuntimeAttributes (PTile& ptile,
             auto attr_ptr = ptile.GetStructOfArrays().GetRealData(j).data();
 #ifdef WARPX_QED
             // Current runtime comp is quantum synchrotron optical depth
-            if (particle_comps.find("opticalDepthQSR") != particle_comps.end() &&
-                particle_comps.at("opticalDepthQSR") == j)
+            auto const it_qsr = std::find(particle_comps.begin(), particle_comps.end(), "opticalDepthQSR");
+            if (it_qsr != particle_comps.end() &&
+                std::distance(particle_comps.begin(), it_qsr) == j)
             {
                 if (!do_qed_comps) { continue; }
                 const QuantumSynchrotronGetOpticalDepth quantum_sync_get_opt =
@@ -167,14 +167,19 @@ void DefaultInitializeRuntimeAttributes (PTile& ptile,
                 // Otherwise (e.g. particle tile allocated in pinned memory), run on CPU
                 } else {
                     for (int ip = start; ip < stop; ++ip) {
+#ifdef AMREX_USE_GPU
+                        attr_ptr[ip] = quantum_sync_get_opt(amrex::RandomEngine{nullptr});
+#else
                         attr_ptr[ip] = quantum_sync_get_opt(amrex::RandomEngine{});
+#endif
                     }
                 }
             }
 
-             // Current runtime comp is Breit-Wheeler optical depth
-            if (particle_comps.find("opticalDepthBW") != particle_comps.end() &&
-                particle_comps.at("opticalDepthBW") == j)
+            // Current runtime comp is Breit-Wheeler optical depth
+            auto const it_bw = std::find(particle_comps.begin(), particle_comps.end(), "opticalDepthBW");
+            if (it_bw != particle_comps.end() &&
+                std::distance(particle_comps.begin(), it_bw) == j)
             {
                 if (!do_qed_comps) { continue; }
                 const BreitWheelerGetOpticalDepth breit_wheeler_get_opt =
@@ -189,7 +194,11 @@ void DefaultInitializeRuntimeAttributes (PTile& ptile,
                 // Otherwise (e.g. particle tile allocated in pinned memory), run on CPU
                 } else {
                     for (int ip = start; ip < stop; ++ip) {
+#ifdef AMREX_USE_GPU
+                        attr_ptr[ip] = breit_wheeler_get_opt(amrex::RandomEngine{nullptr});
+#else
                         attr_ptr[ip] = breit_wheeler_get_opt(amrex::RandomEngine{});
+#endif
                     }
                 }
             }
@@ -198,8 +207,9 @@ void DefaultInitializeRuntimeAttributes (PTile& ptile,
             for (int ia = 0; ia < n_user_real_attribs; ++ia)
             {
                 // Current runtime comp is ia-th user defined attribute
-                if (particle_comps.find(user_real_attribs[ia]) != particle_comps.end() &&
-                    particle_comps.at(user_real_attribs[ia]) == j)
+                auto const it_ura = std::find(particle_comps.begin(), particle_comps.end(), user_real_attribs[ia]);
+                if (it_ura != particle_comps.end() &&
+                    std::distance(particle_comps.begin(), it_ura) == j)
                 {
                     const amrex::ParserExecutor<7> user_real_attrib_parserexec =
                                              user_real_attrib_parser[ia]->compile<7>();
@@ -232,8 +242,9 @@ void DefaultInitializeRuntimeAttributes (PTile& ptile,
             auto attr_ptr = ptile.GetStructOfArrays().GetIntData(j).data();
 
             // Current runtime comp is ionization level
-            if (particle_icomps.find("ionizationLevel") != particle_icomps.end() &&
-                particle_icomps.at("ionizationLevel") == j)
+            auto const it_ioniz = std::find(particle_icomps.begin(), particle_icomps.end(), "ionizationLevel");
+            if (it_ioniz != particle_icomps.end() &&
+                std::distance(particle_icomps.begin(), it_ioniz) == j)
             {
                 if constexpr (amrex::RunOnGpu<typename PTile::template AllocatorType<int>>::value) {
                         amrex::ParallelFor(stop - start,
@@ -251,8 +262,9 @@ void DefaultInitializeRuntimeAttributes (PTile& ptile,
             for (int ia = 0; ia < n_user_int_attribs; ++ia)
             {
                 // Current runtime comp is ia-th user defined attribute
-                if (particle_icomps.find(user_int_attribs[ia]) != particle_icomps.end() &&
-                    particle_icomps.at(user_int_attribs[ia]) == j)
+                auto const it_uia = std::find(particle_icomps.begin(), particle_icomps.end(), user_int_attribs[ia]);
+                if (it_uia != particle_icomps.end() &&
+                    std::distance(particle_icomps.begin(), it_uia) == j)
                 {
                      const amrex::ParserExecutor<7> user_int_attrib_parserexec =
                                              user_int_attrib_parser[ia]->compile<7>();

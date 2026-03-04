@@ -5,16 +5,12 @@
 #
 # License: BSD-3-Clause-LBNL
 
-import os
 import re
 import sys
 
-import yt
-
-sys.path.insert(1, "../../../../warpx/Regression/Checksum/")
 import numpy as np
 import scipy.constants as scc
-from checksumAPI import evaluate_checksum
+import yt
 
 ## This script performs various checks for the fusion module. The simulation
 ## that we check is made of 2 different tests, each with different reactant and product species.
@@ -69,24 +65,24 @@ if re.search("tritium", warpx_used_inputs):
     reactant_species = ["deuterium", "tritium"]
     product_species = ["helium4", "neutron"]
     ntests = 2
-    E_fusion = 17.5893 * MeV_to_Joule  # Energy released during the fusion reaction
+    E_fusion = 17.58929696 * MeV_to_Joule
 else:
     # else, this is the D+D test
     reaction_type = "DD"
     reactant_species = ["deuterium", "hydrogen2"]
     product_species = ["helium3", "neutron"]
     ntests = 1
-    E_fusion = 3.268911e6 * MeV_to_Joule
+    E_fusion = 3.26891111e6 * MeV_to_Joule
 
 mass = {
-    "deuterium": 2.01410177812 * scc.m_u,
-    "hydrogen2": 2.01410177812 * scc.m_u,
-    "tritium": 3.0160492779 * scc.m_u,
-    "helium3": 3.016029 * scc.m_u,
-    "helium4": 4.00260325413 * scc.m_u,
+    "deuterium": 2.01410177812 * scc.m_u - scc.m_e,
+    "hydrogen2": 2.01410177812 * scc.m_u - scc.m_e,
+    "tritium": 3.0160492779 * scc.m_u - scc.m_e,
+    "helium3": 3.016029 * scc.m_u - 2 * scc.m_e,
+    "helium4": 4.00260325413 * scc.m_u - 2 * scc.m_e,
     "neutron": 1.0013784193052508 * scc.m_p,
 }
-m_reduced = np.product([mass[s] for s in reactant_species]) / np.sum(
+m_reduced = np.prod([mass[s] for s in reactant_species]) / np.sum(
     [mass[s] for s in reactant_species]
 )
 
@@ -554,12 +550,6 @@ def main():
     rho_start = field_data_start["rho"].to_ndarray()
     rho_end = field_data_end["rho"].to_ndarray()
     check_charge_conservation(rho_start, rho_end)
-
-    # compare checksums
-    evaluate_checksum(
-        test_name=os.path.split(os.getcwd())[1],
-        output_file=sys.argv[1],
-    )
 
 
 if __name__ == "__main__":
