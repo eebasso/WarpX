@@ -10,8 +10,11 @@ Usage / Examples
 Directive::
 
     .. fv:var:: my/variable<T>
-        :type: list of integers
-        :default: [0, 0]
+        :type: real array
+        :default: [0.0, 0.0]
+        :unit: seconds
+        :optional:
+        :annotation: Inline comments on this variable.
 
         Description of the variable.
 
@@ -71,10 +74,11 @@ class FlexVarDirective(ObjectDescription[str]):
         "default": directives.unchanged,
         "value": directives.unchanged, # alias of `default`
         "optional": directives.flag,
-        "required": directives.flag,
+        "required": directives.flag, # opposite of `optional`
         "unit": directives.unchanged,
         "units": directives.unchanged, # alias of `unit`
         "annotation": directives.unchanged,
+        "comment": directives.unchanged, # alias of annotation
         "noindex": directives.flag,
     }
 
@@ -126,7 +130,7 @@ class FlexVarDirective(ObjectDescription[str]):
         """
         Build the rendered signature node and return the canonical name.
 
-        Format: ``<name>: (<type>; in <unit>) <optional/required> (default <value>) (<annotation>)``
+        Format: ``<name>: (<type>; in <unit>) [optional|required] (default: <value>) <annotation>``
         """
         name = sig.strip()
 
@@ -142,23 +146,18 @@ class FlexVarDirective(ObjectDescription[str]):
         type_: str | None = self.options.get("type")
         value: str | None = self.options.get("value", self.options.get("default"))
         unit: str | None = self.options.get("unit", self.options.get("units"))
-        anno: str | None = self.options.get("annotation")
+        anno: str | None = self.options.get("annotation", self.options.get("commment"))
         l_optional: bool = ("optional" in self.options)
         l_required: bool = ("required" in self.options)
 
         self.warn_conflicting_options(name, signode, "unit", "units")
         self.warn_conflicting_options(name, signode, "value", "default")
+        self.warn_conflicting_options(name, signode, "annotation", "commment")
         self.warn_conflicting_options(name, signode, "optional", "required")
 
-        # Format: <name>: (`<type>`; in <unit>) <optional/required> (default `<value>`) (<annotation>)
+        # Format: (`<type>`; in <unit>)
         if type_ or unit:
-            signode += addnodes.desc_sig_punctuation('', ':')
-            signode += addnodes.desc_sig_space()
-            signode += addnodes.desc_sig_punctuation('', '(')
-            signode += self._parse_inline("1: (")
-            signode += nodes.inline("", "2: (")
-            signode += [*self._parse_inline("3: (")]
-            signode += addnodes.desc_sig_punctuation('', ':')
+            # signode += addnodes.desc_sig_punctuation('', ':')
             signode += addnodes.desc_sig_space()
             signode += addnodes.desc_sig_punctuation('', '(')
             if type_:
@@ -169,44 +168,41 @@ class FlexVarDirective(ObjectDescription[str]):
             if type_ and unit:
                 signode += addnodes.desc_sig_punctuation('', ';')
                 signode += addnodes.desc_sig_space()
-                signode += nodes.inline("", "in")
+                signode += nodes.Text("in")
                 signode += addnodes.desc_sig_space()
-                signode += nodes.Text("test")
-                signode += addnodes.desc_sig_space()
-                signode += nodes.inline("", "; in1")
-                signode += self._parse_inline("; in2")
-                signode += nodes.inline("", "; in3 ")
-                signode += self._parse_inline("; in4 ")
-                signode += nodes.inline("", "; in5")
-                signode += self._parse_inline("; in6")
             if unit:
                 signode += self._parse_inline(unit)
             signode += addnodes.desc_sig_punctuation('', ')')
 
+        # Format: optional, required, or possibly neither
         if l_optional:
-            # signode += addnodes.desc_sig_space()
-            # signode += nodes.inline("", "optional")
-            signode += self._parse_inline(" optional")
+            signode += addnodes.desc_sig_space()
+            signode += nodes.Text("optional")
         elif l_required:
-            signode += nodes.inline("", " required")
+            signode += addnodes.desc_sig_space()
+            signode += nodes.Text("required")
 
+        # Format: (default `<value>``)
         if value:
             signode += addnodes.desc_sig_space()
             signode += addnodes.desc_sig_punctuation('', '(')
             signode += nodes.inline("", "default")
             signode += addnodes.desc_sig_punctuation('', ':')
             signode += addnodes.desc_sig_space()
-            signode += addnodes.desc_annotation(
-                    value, "",
-                    self._parse_inline(value)
-                )
+            signode += nodes.emphasis(
+                value, "",
+                self._parse_inline(value)
+            )
             signode += addnodes.desc_sig_punctuation('', ')')
 
+        # Format: <annotation>
         if anno:
+            # if anno.startswith('(') and anno.endswith(')'):
+                # anno = anno[1:-1]
             signode += addnodes.desc_sig_space()
-            signode += addnodes.desc_sig_punctuation('', '(')
-            signode += self._parse_inline(anno.lstrip('(').rstrip(')'))
-            signode += addnodes.desc_sig_punctuation('', ')')
+            # signode += addnodes.desc_sig_punctuation('', '(')
+            signode += self._parse_inline(anno)
+            # signode += addnodes.desc_sig_punctuation('', ')')
 
         return name
 
