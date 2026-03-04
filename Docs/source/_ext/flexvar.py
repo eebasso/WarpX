@@ -54,6 +54,8 @@ from sphinx.util.nodes import make_id, make_refnode
 
 logger = logging.getLogger(__name__)
 
+if typing.TYPE_CHECKING:
+    _VT = typing.TypeVar("_VT")
 
 class ObjectEntry(TypedDict):
     docname: str
@@ -118,17 +120,6 @@ class FlexVarDirective(ObjectDescription[str]):
         """
         parsed_list: list[nodes.Node] = self._parse_inline_into_node_list(text)
         return nodes.inline(text, '', *parsed_list)
-
-    def warn_conflicting_options(
-        self, name: str, signode: addnodes.desc_signature, *keys: str
-    ):
-        blist: list[bool] = [(key in self.options) for key in keys]
-        if sum(blist) > 1:
-            logger.warning(
-                "Conflicting options for %s: specify only one of :%s",
-                name, keys,
-                location=signode,
-            )
 
     def handle_signature(
         self, sig: str, signode: addnodes.desc_signature,
@@ -404,7 +395,7 @@ class FlexVarDirective(ObjectDescription[str]):
                 ("single", name + " (variable)", node_id, "", None)
             )
 
-_VT = typing.TypeVar("_VT")
+
 class FlexVarOptionUtil:
 
     def __init__(
@@ -418,14 +409,6 @@ class FlexVarOptionUtil:
         self.flexvardir: FlexVarDirective = fvdir
         self.options: dict[str, Any] = fvdir.options
 
-    def logger_warning_conflicting_options(self, key1: str, key2: str):
-        if key1 in self.options and key2 in self.options:
-            logger.warning(
-                "Conflicting options for %s: only specify one of :%s: and :%s:",
-                self.name, key1, key2,
-                location=self.signode,
-            )
-
     def add_to_signode(self, node: nodes.inline | addnodes.desc_annotation):
         self.signode += node
 
@@ -434,13 +417,22 @@ class FlexVarOptionUtil:
     @typing.overload
     def get_and_check_aliases(self, *keys: str, default: _VT) -> str | _VT: ...
 
-    def get_and_check_aliases(self, *keys: str, default=None):
+    def get_and_check_aliases(self, *keys: str, default=None) -> Any:
         if len(keys) > 1:
-            self.logger_warning_conflicting_options(*keys)
+            self.warn_conflicting_options(*keys)
         for key in keys:
             if key in self.options:
                 return self.options[key]
         return default
+
+    def warn_conflicting_options(self, *keys: str):
+        blist: list[bool] = [(key in self.options) for key in keys]
+        if sum(blist) > 1:
+            logger.warning(
+                "Conflicting options for %s: specify only one of :%s",
+                self.name, keys,
+                location=self.signode,
+            )
 
 
 class FlexVarXRefRole(XRefRole):
