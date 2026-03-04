@@ -409,9 +409,6 @@ class FlexVarOptionUtil:
         self.flexvardir: FlexVarDirective = fvdir
         self.options: dict[str, Any] = fvdir.options
 
-    def add_to_signode(self, node: nodes.inline | addnodes.desc_annotation):
-        self.signode += node
-
     @typing.overload
     def get_and_check_aliases(self, *keys: str, default: None = None) -> str | None: ...
     @typing.overload
