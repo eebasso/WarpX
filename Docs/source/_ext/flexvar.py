@@ -150,7 +150,7 @@ class FlexVarDirective(ObjectDescription[str]):
         )
 
         helper = FlexVarOptionHelper(
-            fvdir=self, name=name, signode=signode,
+            options=self.options, name=name, signode=signode,
         )
 
         type_ = helper.get_and_check_aliases("type")
@@ -400,14 +400,13 @@ class FlexVarOptionHelper:
 
     def __init__(
         self,
-        fvdir: FlexVarDirective,
+        options: dict[str, Any],
         name: str,
         signode: addnodes.desc_signature,
     ):
+        self.options: dict[str, Any] = options
         self.name: str = name
         self.signode: addnodes.desc_signature = signode
-        self.flexvardir: FlexVarDirective = fvdir
-        self.options: dict[str, Any] = fvdir.options
 
     @typing.overload
     def get_and_check_aliases(self, *keys: str, default: None = None) -> str | None: ...
