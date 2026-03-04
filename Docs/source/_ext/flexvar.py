@@ -149,14 +149,14 @@ class FlexVarDirective(ObjectDescription[str]):
             self._parse_inline(name),
         )
 
-        optutil = FlexVarOptionUtil(
+        helper = FlexVarOptionHelper(
             fvdir=self, name=name, signode=signode,
         )
 
-        type_ = optutil.get_and_check_aliases("type")
-        value = optutil.get_and_check_aliases("value", "default")
-        unit = optutil.get_and_check_aliases("unit", "units")
-        anno = optutil.get_and_check_aliases("annotation", "comment")
+        type_ = helper.get_and_check_aliases("type")
+        value = helper.get_and_check_aliases("value", "default")
+        unit = helper.get_and_check_aliases("unit", "units")
+        anno = helper.get_and_check_aliases("annotation", "comment")
         l_optional = ("optional" in self.options)
         l_required = ("required" in self.options)
 
@@ -396,7 +396,7 @@ class FlexVarDirective(ObjectDescription[str]):
             )
 
 
-class FlexVarOptionUtil:
+class FlexVarOptionHelper:
 
     def __init__(
         self,
