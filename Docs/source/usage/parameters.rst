@@ -1,12 +1,11 @@
 .. _running-cpp-parameters:
 
-.. py:data:: data1
-    :type: integer
-    :value: 13
-
-.. py:data:: data2
-    :type: integer
-    :value: abc
+.. fv:var:: <string>_var_<test1>
+    :type: string ``or`` `strings`
+    :default: ""
+    :unit: ``test`` `units`
+    :optional:
+    :annotation: This is the `annotation` for ``<string>_var_<test1>``.
 
 Inputs: Parameter List
 ======================
@@ -129,23 +128,13 @@ Simulation Time
 ---------------
 
 .. fv:var:: max_step
-    :type: ``int`` array, list of integers
-    :default: [``0`` ``0`` ``0``]
-    :units: seconds
-    :optional:
-    :annotation: `annotation` for ``max_step``
+    :type: `int`
 
     The number of PIC cycles to perform.
 
-.. fv:var:: <string>_var_<test1>
-    :type: string ``or`` `strings`
-    :default: ""
-    :units: ``no`` `units`
-    :optional:
-    :annotation: This is the `annotation` for ``test_string``
-
 .. fv:var:: stop_time
-    :annotation: (`float`; in seconds)
+    :type: `float`
+    :unit: seconds
 
     The maximum physical time of the simulation. Can be provided instead of ``max_step``. If both
     ``max_step`` and ``stop_time`` are provided, both criteria are used and the simulation stops
@@ -154,7 +143,8 @@ Simulation Time
     Note: in boosted-frame simulations, ``stop_time`` refers to the time in the boosted frame.
 
 .. fv:var:: warpx.zmax_plasma_to_compute_max_step
-    :annotation: (`float`) optional
+    :float: float
+    :optional:
 
     Can be useful when running in a boosted frame. If specified, automatically
     calculates the number of iterations required in the boosted frame for the
@@ -165,7 +155,9 @@ Simulation Time
     the moving window are along the z direction.
 
 .. fv:var:: warpx.compute_max_step_from_btd
-    :annotation: (`integer`; 0 by default) optional
+    :type: `integer`
+    :default: 0
+    :optional:
 
     Can be useful when computing back-transformed diagnostics.  If specified,
     automatically calculates the number of iterations required in the boosted
@@ -182,19 +174,21 @@ Overall simulation parameters
 -----------------------------
 
 .. fv:var:: authors
-    :annotation: (`string`: e.g. ``"Jane Doe <jane@example.com>, Jimmy Joe <jimmy@example.com>"``)
+    :type: string
+    :annotation: (e.g. ``"Jane Doe <jane@example.com>, Jimmy Joe <jimmy@example.com>"``)
 
     Authors of an input file / simulation setup.
     When provided, this information is added as metadata to (openPMD) output files.
 
 .. fv:var:: warpx.used_inputs_file
-    :annotation: (`string`; default: ``warpx_used_inputs``)
+    :type: `string`
+    :default: "warpx_used_inputs"
 
     Name of a file that WarpX writes to archive the used inputs.
     The context of this file will contain an exact copy of all explicitly and implicitly used inputs parameters, including those :ref:`extended and overwritten from the command line <usage_run>`.
 
 .. fv:var:: warpx.gamma_boost
-    :annotation: (`float`)
+    :type: `float`
 
     The Lorentz factor of the boosted frame in which the simulation is run. (The corresponding Lorentz transformation is assumed to be along ``warpx.boost_direction``.)
     For more practical guidance on setting up boosted-frame simulations, refer to the :ref:`FAQ: What do I need to know about using the boosted frame? <faq_boosted_frame>`.
@@ -204,13 +198,14 @@ Overall simulation parameters
     (See the corresponding documentation of each input parameters for exceptions.)
 
 .. fv:var:: warpx.boost_direction
-    :annotation: (string: ``x``, ``y`` or ``z``)
+    :type: `string`: ``x``, ``y`` or ``z``
 
     The direction of the Lorentz-transform for boosted-frame simulations
     (The direction ``y`` cannot be used in 2D simulations.)
 
 .. fv:var:: warpx.random_seed
-    :annotation: (`string` or `int` > 0) optional
+    :type: `string` or `int` > 0
+    :optional:
 
     If provided ``warpx.random_seed = random``, the random seed will be determined
     using `std::random_device` and `std::clock()`,
@@ -603,7 +598,7 @@ Setting up the field mesh
     Example: for three levels, a value of ``2 2 4 8 8 16`` refines the first level by 2-fold in x and y and 4-fold in z compared to the coarsest level (level 0/mother grid); compared to the first level, the second level is refined 8-fold in x and y and 16-fold in z.
 
 .. fv:var:: geometry.dims
-    :annotation: (`string`)
+    :type: `string`
 
     The dimensions of the simulation geometry.
     Supported values are ``1``, ``2``, ``3``, ``RZ``, ``RCYLINDER``, and ``RSPHERE``.
@@ -4663,7 +4658,9 @@ Nonlinear Compton scattering
 This process is also known more generically as Quantum Synchrotron emission.
 
 .. fv:var:: qed_qs.photon_creation_energy_threshold
-    :annotation: (`float`) optional (default `2`)
+    :type: float
+    :optional:
+    :default: 2
 
     Energy threshold for photon particle creation in units of :math:`m_e c^2`.
 
