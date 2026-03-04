@@ -1724,18 +1724,19 @@ Particle initialization
     when the particles are generated.
     If the user-defined integer attribute is ``<int_attrib_name>`` then the
     following required parameter must be specified to initialize the attribute.
+
     * ``<species_name>.attribute.<int_attrib_name>(x,y,z,ux,uy,uz,t)`` (`string`)
-    ``t`` represents the physical time in seconds during the simulation.
-    ``x``, ``y``, ``z`` represent particle positions in the unit of meter.
-    ``ux``, ``uy``, ``uz`` represent the particle momenta in the unit of
-    :math:`\gamma v/c`, where
-    :math:`\gamma` is the Lorentz factor,
-    :math:`v/c` is the particle velocity normalized by the speed of light.
-    E.g. If ``electrons.addIntegerAttributes = upstream``
-    and ``electrons.upstream(x,y,z,ux,uy,uz,t) = (x>0.0)*1`` is provided
-    then, an integer attribute ``upstream`` is added to all electron particles
-    and when these particles are generated, the particles with position less than ``0``
-    are assigned a value of ``1``.
+        ``t`` represents the physical time in seconds during the simulation.
+        ``x``, ``y``, ``z`` represent particle positions in the unit of meter.
+        ``ux``, ``uy``, ``uz`` represent the particle momenta in the unit of
+        :math:`\gamma v/c`, where
+        :math:`\gamma` is the Lorentz factor,
+        :math:`v/c` is the particle velocity normalized by the speed of light.
+        E.g. If ``electrons.addIntegerAttributes = upstream``
+        and ``electrons.upstream(x,y,z,ux,uy,uz,t) = (x>0.0)*1`` is provided
+        then, an integer attribute ``upstream`` is added to all electron particles
+        and when these particles are generated, the particles with position less than ``0``
+        are assigned a value of ``1``.
 
 .. fv:var:: <species_name>.addRealAttributes
     :annotation: (list of `string`)
@@ -2849,8 +2850,8 @@ Details about the collision models can be found in the :ref:`theory section <mul
 
     If true, collisions are performed in the middle of the position push, which is split into two substeps.
     This improves energy conservation, as demonstrated in (`Vay et al., Phys. Rev. E 111, 2025 <https://doi.org/10.1103/PhysRevE.111.025306>`__).
-    This is only implemented for the explicit evolve scheme and is not available for the implicit evolve schemes.
-    It is also not available with embedded boundaries.
+    This is only implemented for the explicit evolve scheme and is not available for the implicit evolve schemes, because the implicit
+    formulation is intrinsically energy-conserving when combined with MCC collisions, as shown in `Angus et al., J. Comput. Phys. 456, 2022 <https://doi.org/10.1016/j.jcp.2022.111030>`__.
 
 .. fv:var:: <collision_name>.correct_energy_momentum
     :annotation: (`bool`) optional
@@ -3011,7 +3012,7 @@ Particle push, charge and current deposition, field gathering
      - ``vay``: Vay pusher (see :cite:t:`param-Vaypop2008`)
      - ``higuera``: Higuera-Cary pusher (see :cite:t:`param-HigueraPOP2017`)
 
-     If ``algo.particle_pusher`` is not specified, ``boris`` is the default.
+    If ``algo.particle_pusher`` is not specified, ``boris`` is the default.
 
 .. fv:var:: algo.particle_shape
     :annotation: (`integer`; `1`, `2`, `3`, or `4`)
@@ -3047,7 +3048,7 @@ Two families of Maxwell solvers are implemented in WarpX, based on the Finite-Di
      - ``hybrid``: The E-field will be solved using Ohm's law and a kinetic-fluid hybrid model (see :ref:`theory <theory-kinetic-fluid-hybrid-model>`).
      - ``none``: No field solve will be performed.
 
-     If ``algo.maxwell_solver`` is not specified, ``yee`` is the default.
+    If ``algo.maxwell_solver`` is not specified, ``yee`` is the default.
 
 .. fv:var:: algo.em_solver_medium
     :annotation: (`string`, optional)
