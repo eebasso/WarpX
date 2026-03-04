@@ -69,10 +69,11 @@ class FlexVarDirective(ObjectDescription[str]):
     option_spec = {
         "type": directives.unchanged,
         "default": directives.unchanged,
-        "value": directives.unchanged, # alias of default
+        "value": directives.unchanged, # alias of `default`
         "optional": directives.flag,
         "required": directives.flag,
-        "units": directives.unchanged,
+        "unit": directives.unchanged,
+        "units": directives.unchanged, # alias of `unit`
         "annotation": directives.unchanged,
         "noindex": directives.flag,
     }
@@ -138,16 +139,76 @@ class FlexVarDirective(ObjectDescription[str]):
             self._parse_inline(name),
         )
 
-        type_: str = self.options.get("type", "")
-        value: str = self.options.get("value", self.options.get("default", ""))
-        unit: str = self.options.get("unit", self.options.get("units", ""))
-        anno: str = self.options.get("annotation", "")
+        type_: str | None = self.options.get("type")
+        value: str | None = self.options.get("value", self.options.get("default"))
+        unit: str | None = self.options.get("unit", self.options.get("units"))
+        anno: str | None = self.options.get("annotation")
         l_optional: bool = ("optional" in self.options)
         l_required: bool = ("required" in self.options)
 
         self.warn_conflicting_options(name, signode, "unit", "units")
         self.warn_conflicting_options(name, signode, "value", "default")
         self.warn_conflicting_options(name, signode, "optional", "required")
+
+        # Format: <name>: (`<type>`; in <unit>) <optional/required> (default `<value>`) (<annotation>)
+        if type_ or unit:
+            signode += addnodes.desc_sig_punctuation('', ':')
+            signode += addnodes.desc_sig_space()
+            signode += addnodes.desc_sig_punctuation('', '(')
+            signode += self._parse_inline("1: (")
+            signode += nodes.inline("", "2: (")
+            signode += [*self._parse_inline("3: (")]
+            signode += addnodes.desc_sig_punctuation('', ':')
+            signode += addnodes.desc_sig_space()
+            signode += addnodes.desc_sig_punctuation('', '(')
+            if type_:
+                signode += nodes.emphasis(
+                    type_, "",
+                    self._parse_inline(type_)
+                )
+            if type_ and unit:
+                signode += addnodes.desc_sig_punctuation('', ';')
+                signode += addnodes.desc_sig_space()
+                signode += nodes.inline("", "in")
+                signode += addnodes.desc_sig_space()
+                signode += nodes.Text("test")
+                signode += addnodes.desc_sig_space()
+                signode += nodes.inline("", "; in1")
+                signode += self._parse_inline("; in2")
+                signode += nodes.inline("", "; in3 ")
+                signode += self._parse_inline("; in4 ")
+                signode += nodes.inline("", "; in5")
+                signode += self._parse_inline("; in6")
+            if unit:
+                signode += self._parse_inline(unit)
+            signode += addnodes.desc_sig_punctuation('', ')')
+
+        if l_optional:
+            # signode += addnodes.desc_sig_space()
+            # signode += nodes.inline("", "optional")
+            signode += self._parse_inline(" optional")
+        elif l_required:
+            signode += nodes.inline("", " required")
+
+        if value:
+            signode += addnodes.desc_sig_space()
+            signode += addnodes.desc_sig_punctuation('', '(')
+            signode += nodes.inline("", "default")
+            signode += addnodes.desc_sig_punctuation('', ':')
+            signode += addnodes.desc_sig_space()
+            signode += addnodes.desc_annotation(
+                    value, "",
+                    self._parse_inline(value)
+                )
+            signode += addnodes.desc_sig_punctuation('', ')')
+
+        if anno:
+            signode += addnodes.desc_sig_space()
+            signode += addnodes.desc_sig_punctuation('', '(')
+            signode += self._parse_inline(anno.lstrip('(').rstrip(')'))
+            signode += addnodes.desc_sig_punctuation('', ')')
+
+        return name
 
         type_nodes: list[Node] = []
         value_nodes: list[Node] = []
