@@ -129,11 +129,14 @@ class FlexVarDirective(ObjectDescription[str]):
                 location=signode,
             )
 
-    def handle_signature(self, sig: str, signode: addnodes.desc_signature) -> str:
+    def handle_signature(
+        self, sig: str, signode: addnodes.desc_signature,
+    ) -> str:
         """
         Build the rendered signature node and return the canonical name.
 
-        Format: ``<name>: (<type>; in <unit>) [optional|required] (default: <value>) <annotation>``
+        Format:
+        ``<name>: (<type>; in <unit>) [optional|required] (default: <value>) <annotation>``
         """
         name = sig.strip()
 
@@ -146,12 +149,13 @@ class FlexVarDirective(ObjectDescription[str]):
             self._parse_inline(name),
         )
 
-        type_: str | None = self.options.get("type")
-        value: str | None = self.options.get("value", self.options.get("default"))
-        unit: str | None = self.options.get("unit", self.options.get("units"))
-        anno: str | None = self.options.get("annotation", self.options.get("commment"))
-        l_optional: bool = ("optional" in self.options)
-        l_required: bool = ("required" in self.options)
+        options = self.options
+        type_: str | None = options.get("type")
+        value: str | None = options.get("value", options.get("default"))
+        unit: str | None = options.get("unit", options.get("units"))
+        anno: str | None = options.get("annotation", options.get("commment"))
+        l_optional: bool = ("optional" in options)
+        l_required: bool = ("required" in options)
 
         self.warn_conflicting_options(name, signode, "unit", "units")
         self.warn_conflicting_options(name, signode, "value", "default")
@@ -396,15 +400,21 @@ class FlexVarDirective(ObjectDescription[str]):
 
 class FlexVarDirectiveOptions:
 
-    def __init__(self, name: str, signode: addnodes.desc_signature, flexvardir: FlexVarDirective):
-
+    def __init__(
+        self,
+        name: str,
+        signode: addnodes.desc_signature,
+        flexvardir: FlexVarDirective,
+    ):
         self.name: str = name
         self.signode: addnodes.desc_signature = signode
         self.flexvardir: FlexVarDirective = flexvardir
         self.options: dict[str, Any] = flexvardir.options
 
         self.type_: str | None = self.options.get("type", None)
-        self.value: str | None = self.options.get("value", self.options.get("default", None))
+        self.value: str | None = self.options.get(
+            "value", self.options.get("default", None)
+        )
         self.default: str | None = self.value
         self.units: str | None = self.options.get("units", None)
         self.anno: str | None = self.options.get("annotation", None)
