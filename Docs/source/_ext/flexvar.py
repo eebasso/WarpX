@@ -36,6 +36,7 @@ Role::
 from __future__ import annotations
 
 import re
+import typing
 from typing import Any, Iterator, List, cast, TypedDict
 
 from docutils import nodes
@@ -136,8 +137,16 @@ class FlexVarDirective(ObjectDescription[str]):
         Build the rendered signature node and return the canonical name.
 
         Format:
-        ``<name>: (<type>; in <unit>) [optional|required] (default: <value>) <annotation>``
+
+        <name>: (<type>; in <unit>) [optional|required] (default: <value>) <annotation>
         """
+        type_: str | None
+        value: str | None
+        unit: str | None
+        anno: str | None
+        l_optional: bool
+        l_required: bool
+
         name = sig.strip()
 
         signode["fullname"] = name
@@ -149,18 +158,16 @@ class FlexVarDirective(ObjectDescription[str]):
             self._parse_inline(name),
         )
 
-        options = self.options
-        type_: str | None = options.get("type")
-        value: str | None = options.get("value", options.get("default"))
-        unit: str | None = options.get("unit", options.get("units"))
-        anno: str | None = options.get("annotation", options.get("commment"))
-        l_optional: bool = ("optional" in options)
-        l_required: bool = ("required" in options)
+        optutil = FlexVarOptionUtil(
+            fvdir=self, name=name, signode=signode,
+        )
 
-        self.warn_conflicting_options(name, signode, "unit", "units")
-        self.warn_conflicting_options(name, signode, "value", "default")
-        self.warn_conflicting_options(name, signode, "annotation", "commment")
-        self.warn_conflicting_options(name, signode, "optional", "required")
+        type_ = optutil.get_and_check_aliases("type")
+        value = optutil.get_and_check_aliases("value", "default")
+        unit = optutil.get_and_check_aliases("unit", "units")
+        anno = optutil.get_and_check_aliases("annotation", "comment")
+        l_optional = ("optional" in self.options)
+        l_required = ("required" in self.options)
 
         # Format: (`<type>`; in <unit>)
         if type_ or unit:
@@ -397,32 +404,19 @@ class FlexVarDirective(ObjectDescription[str]):
                 ("single", name + " (variable)", node_id, "", None)
             )
 
-
-class FlexVarDirectiveOptions:
+_VT = typing.TypeVar("_VT")
+class FlexVarOptionUtil:
 
     def __init__(
         self,
+        fvdir: FlexVarDirective,
         name: str,
         signode: addnodes.desc_signature,
-        flexvardir: FlexVarDirective,
     ):
         self.name: str = name
         self.signode: addnodes.desc_signature = signode
-        self.flexvardir: FlexVarDirective = flexvardir
-        self.options: dict[str, Any] = flexvardir.options
-
-        self.type_: str | None = self.options.get("type", None)
-        self.value: str | None = self.options.get(
-            "value", self.options.get("default", None)
-        )
-        self.default: str | None = self.value
-        self.units: str | None = self.options.get("units", None)
-        self.anno: str | None = self.options.get("annotation", None)
-        self.optional: bool = ("optional" in self.options)
-        self.required: bool = ("required" in self.options)
-
-        self.logger_warning_conflicting_options("value", "default")
-        self.logger_warning_conflicting_options("optional", "required")
+        self.flexvardir: FlexVarDirective = fvdir
+        self.options: dict[str, Any] = fvdir.options
 
     def logger_warning_conflicting_options(self, key1: str, key2: str):
         if key1 in self.options and key2 in self.options:
@@ -434,6 +428,19 @@ class FlexVarDirectiveOptions:
 
     def add_to_signode(self, node: nodes.inline | addnodes.desc_annotation):
         self.signode += node
+
+    @typing.overload
+    def get_and_check_aliases(self, *keys: str, default: None = None) -> str | None: ...
+    @typing.overload
+    def get_and_check_aliases(self, *keys: str, default: _VT) -> str | _VT: ...
+
+    def get_and_check_aliases(self, *keys: str, default=None):
+        if len(keys) > 1:
+            self.logger_warning_conflicting_options(*keys)
+        for key in keys:
+            if key in self.options:
+                return self.options[key]
+        return default
 
 
 class FlexVarXRefRole(XRefRole):
