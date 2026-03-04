@@ -105,10 +105,10 @@ class FlexVarDirective(ObjectDescription[str]):
         # Report any parse warnings through the normal directive machinery
         for msg in messages:
             self.state_machine.reporter.system_message(
-                msg['level'], msg.astext(), source=self.get_source_info()[0]
+                msg["level"], msg.astext(), source=self.get_source_info()[0]
             )
         return parsed
-        # return [ nodes.inline(text, '', *parsed) ]
+        # return [ nodes.inline(text, "", *parsed) ]
 
     def _parse_inline(self, text: str) -> nodes.inline:
         """
@@ -119,7 +119,7 @@ class FlexVarDirective(ObjectDescription[str]):
         self._parse_inline_into_node_list
         """
         parsed_list: list[nodes.Node] = self._parse_inline_into_node_list(text)
-        return nodes.inline(text, '', *parsed_list)
+        return nodes.inline(text, "", *parsed_list)
 
     def handle_signature(
         self, sig: str, signode: addnodes.desc_signature,
@@ -162,9 +162,9 @@ class FlexVarDirective(ObjectDescription[str]):
 
         # Format: (`<type>`; in <unit>)
         if type_ or unit:
-            # signode += addnodes.desc_sig_punctuation('', ':')
+            # signode += addnodes.desc_sig_punctuation("", ":")
             signode += addnodes.desc_sig_space()
-            signode += addnodes.desc_sig_punctuation('', '(')
+            signode += addnodes.desc_sig_punctuation("", "(")
             if type_:
                 type_node = self._parse_inline(type_)
                 if self.use_emphasis:
@@ -172,13 +172,13 @@ class FlexVarDirective(ObjectDescription[str]):
                 else:
                     signode += type_node
             if type_ and unit:
-                signode += addnodes.desc_sig_punctuation('', ';')
+                signode += addnodes.desc_sig_punctuation("", ";")
                 signode += addnodes.desc_sig_space()
                 signode += nodes.Text("in")
                 signode += addnodes.desc_sig_space()
             if unit:
                 signode += self._parse_inline(unit)
-            signode += addnodes.desc_sig_punctuation('', ')')
+            signode += addnodes.desc_sig_punctuation("", ")")
 
         # Format: optional, required, or possibly neither
         if l_optional:
@@ -194,25 +194,25 @@ class FlexVarDirective(ObjectDescription[str]):
         # Format: (default `<value>``)
         if value:
             signode += addnodes.desc_sig_space()
-            signode += addnodes.desc_sig_punctuation('', '(')
+            signode += addnodes.desc_sig_punctuation("", "(")
             signode += nodes.inline("", "default")
-            signode += addnodes.desc_sig_punctuation('', ':')
+            signode += addnodes.desc_sig_punctuation("", ":")
             signode += addnodes.desc_sig_space()
             value_node = self._parse_inline(value)
             if self.use_emphasis:
                 signode += nodes.emphasis(value, "", value_node)
             else:
                 signode += self._parse_inline(value)
-            signode += addnodes.desc_sig_punctuation('', ')')
+            signode += addnodes.desc_sig_punctuation("", ")")
 
         # Format: <annotation>
         if anno:
-            # if anno.startswith('(') and anno.endswith(')'):
+            # if anno.startswith("(") and anno.endswith(")"):
                 # anno = anno[1:-1]
             signode += addnodes.desc_sig_space()
-            # signode += addnodes.desc_sig_punctuation('', '(')
+            # signode += addnodes.desc_sig_punctuation("", "(")
             signode += self._parse_inline(anno)
-            # signode += addnodes.desc_sig_punctuation('', ')')
+            # signode += addnodes.desc_sig_punctuation("", ")")
 
         return name
 
@@ -271,7 +271,7 @@ class FlexVarDirective(ObjectDescription[str]):
         if type_nodes or unit_nodes:
             signode += addnodes.desc_annotation(
                 type_ + unit, "",
-                addnodes.desc_sig_punctuation('', ':'),
+                addnodes.desc_sig_punctuation("", ":"),
                 *type_nodes,
                 *unit_nodes,
             )
@@ -376,7 +376,7 @@ class FlexVarDirective(ObjectDescription[str]):
     def add_target_and_index(
         self, name: str, sig: str, signode: addnodes.desc_signature
     ) -> None:
-        node_id = make_id(self.env, self.state.document, '', name)
+        node_id = make_id(self.env, self.state.document, "", name)
         signode["ids"].append(node_id)
         self.state.document.note_explicit_target(signode)
 
@@ -466,11 +466,11 @@ class FlexVarXRefRole(XRefRole):
     # Same as ReferenceRole.explicit_title_re but with \s+ instead of \s*,
     # so whitespace before the `<` is required for explicit-title syntax.
     # \x00 means the "<" was backslash-escaped. Preserve that lookbehind.
-    explicit_title_re = re.compile(r'^(.+?)\s+(?<!\x00)<(.*?)>$', re.DOTALL)
+    explicit_title_re = re.compile(r"^(.+?)\s+(?<!\x00)<(.*?)>$", re.DOTALL)
 
     # Matches an inline value expression: "varname = value" or "varname[=value]"
     # The name portion (before = or [=) is captured as group 1.
-    _value_re = re.compile(r'^(.+?)(?:\s*=\s*.*|\[=.*\])$', re.DOTALL)
+    _value_re = re.compile(r"^(.+?)(?:\s*=\s*.*|\[=.*\])$", re.DOTALL)
 
     def process_link(
         self,
@@ -533,8 +533,8 @@ class FlexVarDomain(Domain):
         if name in self.vars:
             other = self.vars[name]
             logger.warning(
-                'duplicate object description of %s, '
-                'other instance in %s, use :noindex: for one of them',
+                "duplicate object description of %s, "
+                "other instance in %s, use :noindex: for one of them",
                 name, other["docname"], location=location)
 
         self.vars[name] = {
