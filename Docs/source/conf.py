@@ -142,12 +142,20 @@ def format_href_fixed(
     prefix2: str,
     field_key: str,
 ):
-    node_raw = template.field(field_key, raw=True)
-    node1 = removeprefix_from_node(prefix=prefix1, node=node_raw)
-    node_fixed = removeprefix_from_node(prefix=prefix2, node=node1)
+    # node_raw = template.field(field_key, raw=True)
+    # node1 = removeprefix_from_node(prefix=prefix1, node=node_raw)
+    # node_fixed = removeprefix_from_node(prefix=prefix2, node=node1)
 
-    node_joined_1 = join_avoid_redundant_prefix[prefix1, node_fixed],
-    node_joined_2 = join_avoid_redundant_prefix[prefix2, node_fixed],
+    def _fix_text(text: Text) -> Text:
+        text = removeprefix_from_Text(text, prefix=prefix1)
+        text = removeprefix_from_Text(text, prefix=prefix2)
+        text = removeprefix_from_Text(text, prefix=prefix1)
+        text = removeprefix_from_Text(text, prefix=prefix2)
+        return text
+
+    node_fixed = template.field(field_key, apply_func=_fix_text, raw=True)
+    node_joined_1 = template.join[prefix1, node_fixed],
+    node_joined_2 = template.join[prefix2, node_fixed],
 
     return template.href[node_joined_1, node_joined_2]
 
