@@ -113,44 +113,43 @@ class WarpXBibStyle(UnsrtStyle):
         kwargs["abbreviate_names"] = True
         super().__init__(*args, **kwargs)
 
+    # Override
     def format_pubmed(self, e):
-        # based on urlbst format.pubmed
-        return template.href [
-            join_avoid_redundant_prefix[
-                'https://www.ncbi.nlm.nih.gov/pubmed/',
-                template.field('pubmed', raw=True)
-            ],
-            join_avoid_redundant_prefix[
-                'PMID:',
-                template.field('pubmed', raw=True)
-            ]
-        ]
+        return format_href_fixed(
+            prefix1='https://www.ncbi.nlm.nih.gov/pubmed/',
+            prefix2='PMID:',
+            field_key='pubmed',
+        )
 
+    # Override
     def format_doi(self, e):
-        # based on urlbst format.doi
-        return template.href [
-            join_avoid_redundant_prefix[
-                'https://doi.org/',
-                template.field('doi', raw=True)
-            ],
-            join_avoid_redundant_prefix[
-                'doi:',
-                template.field('doi', raw=True)
-            ]
-        ]
+        return format_href_fixed(
+            prefix1='https://doi.org/',
+            prefix2='doi:',
+            field_key='doi',
+        )
 
     def format_eprint(self, e):
         # based on urlbst format.eprint
-        return template.href[
-            join_avoid_redundant_prefix[
-                'https://arxiv.org/abs/',
-                template.field('eprint', raw=True)
-            ],
-            join_avoid_redundant_prefix[
-                'arXiv:',
-                template.field('eprint', raw=True)
-            ]
-        ]
+        return format_href_fixed(
+            prefix1='https://arxiv.org/abs/',
+            prefix2='arXiv:',
+            field_key='eprint',
+        )
+
+def format_href_fixed(
+    prefix1: str,
+    prefix2: str,
+    field_key: str,
+):
+    node_raw = template.field(field_key, raw=True)
+    node1 = removeprefix_from_node(prefix=prefix1, node=node_raw)
+    node_fixed = removeprefix_from_node(prefix=prefix2, node=node1)
+
+    node_joined_1 = join_avoid_redundant_prefix[prefix1, node_fixed],
+    node_joined_2 = join_avoid_redundant_prefix[prefix2, node_fixed],
+
+    return template.href[node_joined_1, node_joined_2]
 
 # `@template.node`` decorator is defined as
 # def node(f: Callable):
@@ -184,7 +183,7 @@ def removeprefix_from_Text(txt: richtext.Text, prefix: str) -> richtext.Text:
     return result
 
 @template.node
-def removeprefix_from_node(
+def _removeprefix_from_node(
     children,
     data,
     node: template.Node,
@@ -193,6 +192,12 @@ def removeprefix_from_node(
     txt = node[children].format_data(data)
     result = removeprefix_from_Text(txt, prefix=prefix)
     return result
+
+def removeprefix_from_node(
+    node: template.Node,
+    prefix: str
+) -> template.Node:
+    return _removeprefix_from_node(node=node, prefix=prefix)
 
 @template.node
 def join_avoid_redundant_prefix(
