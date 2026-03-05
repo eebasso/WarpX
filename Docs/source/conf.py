@@ -113,8 +113,23 @@ class WarpXBibStyle(UnsrtStyle):
         kwargs["abbreviate_names"] = True
         super().__init__(*args, **kwargs)
 
+    def format_web_refs(self, e):
+        print("")
+        print("format_web_refs: start")
+        try:
+            result = super().format_web_refs(e)
+            print("  format_web_refs: success")
+            print(f"  format_web_refs: result = {result}")
+            return result
+        except Exception as e:
+            print(f"  format_web_refs: Exception {e}")
+            raise e
+        finally:
+            print("format_web_refs: end")
+
     # Override
     def format_pubmed(self, e):
+        print("\nformat_pubmed: start")
         return format_href_fixed(
             prefix1='https://www.ncbi.nlm.nih.gov/pubmed/',
             prefix2='PMID:',
@@ -123,6 +138,7 @@ class WarpXBibStyle(UnsrtStyle):
 
     # Override
     def format_doi(self, e):
+        print("\nformat_doi: start")
         return format_href_fixed(
             prefix1='https://doi.org/',
             prefix2='doi:',
@@ -131,6 +147,7 @@ class WarpXBibStyle(UnsrtStyle):
 
     def format_eprint(self, e):
         # based on urlbst format.eprint
+        print("\nformat_eprint: start")
         return format_href_fixed(
             prefix1='https://arxiv.org/abs/',
             prefix2='arXiv:',
@@ -147,16 +164,23 @@ def format_href_fixed(
     # node_fixed = removeprefix_from_node(prefix=prefix2, node=node1)
 
     def _fix_text(text: Text) -> Text:
-        text = removeprefix_from_Text(text, prefix=prefix1)
-        text = removeprefix_from_Text(text, prefix=prefix2)
-        text = removeprefix_from_Text(text, prefix=prefix1)
-        text = removeprefix_from_Text(text, prefix=prefix2)
+        try:
+            print("\n_fix_text: start")
+            text = removeprefix_from_Text(text, prefix=prefix1)
+            text = removeprefix_from_Text(text, prefix=prefix2)
+            text = removeprefix_from_Text(text, prefix=prefix1)
+            text = removeprefix_from_Text(text, prefix=prefix2)
+        except Exception as e:
+            print(f"  _fix_text: Exception {e}")
+            raise e
+        finally:
+            print(f"  _fix_text: text={text}")
+            print("_fix_text: end")
         return text
 
     node_fixed = template.field(field_key, apply_func=_fix_text, raw=True)
-    node_joined_1 = template.join[prefix1, node_fixed],
-    node_joined_2 = template.join[prefix2, node_fixed],
-
+    node_joined_1 = template.join[prefix1, node_fixed]
+    node_joined_2 = template.join[prefix2, node_fixed]
     return template.href[node_joined_1, node_joined_2]
 
 # `@template.node`` decorator is defined as
