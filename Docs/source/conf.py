@@ -114,71 +114,86 @@ class WarpXBibStyle(UnsrtStyle):
         super().__init__(*args, **kwargs)
 
     def format_web_refs(self, e):
-        print("")
-        print("format_web_refs: start")
+        # print("")
+        # print("format_web_refs: start")
         try:
             result = super().format_web_refs(e)
-            print("  format_web_refs: success")
-            print(f"  format_web_refs: result = {result}")
+            # print("  format_web_refs: success")
+            # print(f"  format_web_refs: result = {result}")
             return result
-        except Exception as e:
-            print(f"  format_web_refs: Exception {e}")
-            raise e
-        finally:
-            print("format_web_refs: end")
+        except Exception as exception:
+            print("")
+            print(f"  format_web_refs: print: Exception: {exception}")
+            print("")
+            logging.warning(f"  format_web_refs: logging.warrning: Exception: {exception}")
+            raise exception
+        # finally:
+        #     print("format_web_refs: end")
 
     # Override
     def format_pubmed(self, e):
-        print("\nformat_pubmed: start")
+        # print("\nformat_pubmed: start")
         return format_href_fixed(
             prefix1='https://www.ncbi.nlm.nih.gov/pubmed/',
             prefix2='PMID:',
-            field_key='pubmed',
+            field_name='pubmed',
         )
 
     # Override
     def format_doi(self, e):
-        print("\nformat_doi: start")
-        return format_href_fixed(
-            prefix1='https://doi.org/',
-            prefix2='doi:',
-            field_key='doi',
-        )
+        # print("\nformat_doi: start")
+        try:
+            return format_href_fixed(
+                prefix1='https://doi.org/',
+                prefix2='doi:',
+                field_name='doi',
+            )
+        except Exception as exception:
+            print("")
+            print(f"  format_doi: print: Exception: {exception}")
+            print("")
+            logging.warning(f"  format_doi: logging.warrning: Exception: {exception}")
+            return super().format_doi(e)
 
     def format_eprint(self, e):
         # based on urlbst format.eprint
-        print("\nformat_eprint: start")
+        # print("\nformat_eprint: start")
         return format_href_fixed(
             prefix1='https://arxiv.org/abs/',
             prefix2='arXiv:',
-            field_key='eprint',
+            field_name='eprint',
         )
 
 def format_href_fixed(
     prefix1: str,
     prefix2: str,
-    field_key: str,
-):
+    field_name: str,
+) -> template.Node:
     # node_raw = template.field(field_key, raw=True)
     # node1 = removeprefix_from_node(prefix=prefix1, node=node_raw)
     # node_fixed = removeprefix_from_node(prefix=prefix2, node=node1)
 
     def _fix_text(text: Text) -> Text:
+        old_text = str(text)
         try:
-            print("\n_fix_text: start")
+            # print(f"\n_fix_text: start, text = {text}")
             text = removeprefix_from_Text(text, prefix=prefix1)
             text = removeprefix_from_Text(text, prefix=prefix2)
             text = removeprefix_from_Text(text, prefix=prefix1)
             text = removeprefix_from_Text(text, prefix=prefix2)
-        except Exception as e:
-            print(f"  _fix_text: Exception {e}")
-            raise e
-        finally:
-            print(f"  _fix_text: text={text}")
-            print("_fix_text: end")
+        except Exception as exception:
+            print(f"  _fix_text: print: Exception {exception}")
+            logging.warning(f"  _fix_text: logging.warning: Exception {exception}")
+            text = Text(old_text)
+            raise exception
+        # else:
+        #     print("  _fix_text: success")
+        # finally:
+        #     print(f"  _fix_text: text={text}")
+        #     print("_fix_text: end")
         return text
 
-    node_fixed = template.field(field_key, apply_func=_fix_text, raw=True)
+    node_fixed = template.field(field_name, apply_func=_fix_text, raw=True)
     node_joined_1 = template.join[prefix1, node_fixed]
     node_joined_2 = template.join[prefix2, node_fixed]
     return template.href[node_joined_1, node_joined_2]
@@ -205,7 +220,9 @@ def removeprefix_from_Text(txt: richtext.Text, prefix: str) -> richtext.Text:
             if txt_str_removed != txt_str:
                 result = richtext.Text(txt_str_removed)
                 print("")
-                print(f"removeprefix_from_Text('{txt}', prefix='{prefix}'):")
+                print("removeprefix_from_Text:")
+                print(f"  text = {txt}")
+                print(f"  prefix='{prefix}'")
                 print(f"  result = '{result}'")
         except Exception as e:
             print("")
