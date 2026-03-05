@@ -26,6 +26,7 @@
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
 import json
+import logging
 import os
 import subprocess
 import sys
@@ -34,6 +35,16 @@ import urllib.request
 import pybtex.plugin
 import sphinx_rtd_theme  # noqa
 from pybtex.style.formatting.unsrt import Style as UnsrtStyle
+
+# Heirachy of requirements:
+# import pybtex
+# import pybtex_docutils
+# import sphinxcontrib.bibtex
+
+import pybtex.style.template as template
+import pybtex.richtext as richtext
+from pybtex.richtext import Text
+
 
 module_path = os.path.dirname(os.path.abspath(__file__))
 checksum_path = os.path.join(module_path, "../../Regression/Checksum")
@@ -101,6 +112,119 @@ class WarpXBibStyle(UnsrtStyle):
         # Set 'abbreviate_names' to True before calling the superclass (BaseStyle class) initializer
         kwargs["abbreviate_names"] = True
         super().__init__(*args, **kwargs)
+
+    def format_pubmed(self, e):
+        # based on urlbst format.pubmed
+        return template.href [
+            join_avoid_redundant_prefix[
+                'https://www.ncbi.nlm.nih.gov/pubmed/',
+                template.field('pubmed', raw=True)
+            ],
+            join_avoid_redundant_prefix[
+                'PMID:',
+                template.field('pubmed', raw=True)
+            ]
+        ]
+
+    def format_doi(self, e):
+        # based on urlbst format.doi
+        return template.href [
+            join_avoid_redundant_prefix[
+                'https://doi.org/',
+                template.field('doi', raw=True)
+            ],
+            join_avoid_redundant_prefix[
+                'doi:',
+                template.field('doi', raw=True)
+            ]
+        ]
+
+    def format_eprint(self, e):
+        # based on urlbst format.eprint
+        return template.href[
+            join_avoid_redundant_prefix[
+                'https://arxiv.org/abs/',
+                template.field('eprint', raw=True)
+            ],
+            join_avoid_redundant_prefix[
+                'arXiv:',
+                template.field('eprint', raw=True)
+            ]
+        ]
+
+# `@template.node`` decorator is defined as
+# def node(f: Callable):
+#     return Node(f.__name__, f)
+# where `f`` is a function that outputs richtext.Text
+
+# It is called in `Node.format_data`:
+# def format_data(self, data):
+#     return self.f(self.children, data, *self.args, **self.kwargs)
+#
+# Therefore, the function `f` must have the signature:
+# f(children, data, *args, **kwargs) -> Text
+
+def removeprefix_from_Text(txt: richtext.Text, prefix: str) -> richtext.Text:
+    result = txt
+    if prefix:
+        try:
+            prefix_str = str(prefix)
+            txt_str = str(txt)
+            txt_str_removed = txt_str.removeprefix(prefix_str)
+            if txt_str_removed != txt_str:
+                result = richtext.Text(txt_str_removed)
+                print("")
+                print(f"removeprefix_from_Text('{txt}', prefix='{prefix}'):")
+                print(f"  result = '{result}'")
+        except Exception as e:
+            print("")
+            print(f"removeprefix_from_Text('{txt}', prefix='{prefix}'):")
+            print(f"  Exception: {e}")
+            logging.warning(e)
+    return result
+
+@template.node
+def removeprefix_from_node(
+    children,
+    data,
+    node: template.Node,
+    prefix: str,
+) -> richtext.Text:
+    txt = node[children].format_data(data)
+    result = removeprefix_from_Text(txt, prefix=prefix)
+    return result
+
+@template.node
+def join_avoid_redundant_prefix(
+    children,
+    data,
+    *args,
+    **kwargs
+) -> richtext.Text:
+
+    join_node: template.Node
+    result: richtext.Text
+    extra_text: richtext.Text
+
+    join_node = template.join(*args, **kwargs)
+    result = join_node[children].format_data(data)
+
+    try:
+        child0 = children[0]
+        if child0:
+            prefix = str(child0)
+            extra_text = join_node[children[1:]].format_data(data)
+            extra_text = removeprefix_from_Text(extra_text, prefix=prefix)
+            new_text = richtext.Text(prefix + str(extra_text))
+        if str(new_text) != str(result):
+            old_result_str = str(result)
+            result = new_text
+            print(f"\njoin_remove_redundant_prefix:\n  removing extra prefix='{prefix}' in '{old_result_str}'\n  result = '{result}'")
+    except Exception as e:
+        print(f"\njoin_remove_redundant_prefix:\n  Exception: {e}")
+        logging.warning(e)
+
+    return result
 
 
 pybtex.plugin.register_plugin("pybtex.style.formatting", "warpxbibstyle", WarpXBibStyle)
