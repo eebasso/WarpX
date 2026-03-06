@@ -186,17 +186,42 @@ def format_href_fixed(
             logging.warning(f"  _fix_text: logging.warning: Exception {exception}")
             text = Text(old_text)
             raise exception
-        # else:
-        #     print("  _fix_text: success")
-        # finally:
-        #     print(f"  _fix_text: text={text}")
-        #     print("_fix_text: end")
         return text
 
-    node_fixed = template.field(field_name, apply_func=_fix_text, raw=True)
-    node_joined_1 = template.join[prefix1, node_fixed]
-    node_joined_2 = template.join[prefix2, node_fixed]
-    return template.href[node_joined_1, node_joined_2]
+    # node_fixed = template.field(field_name, apply_func=_fix_text, raw=True)
+    # node1 = template.join[prefix1, node_fixed]
+    # node2 = template.join[prefix2, node_fixed]
+
+    def _remove_both_prefixes(str_: str):
+        result = str_
+        result = result.removeprefix(prefix1)
+        result = result.removeprefix(prefix2)
+        result = result.removeprefix(prefix1)
+        result = result.removeprefix(prefix2)
+        return result
+
+    def _add_prefix(text: Text, prefix: str) -> Text:
+        field_text_str = str(text)
+        if field_text_str.startswith('https') and prefix.startswith('https'):
+            # Defer to text
+            result = text
+        else:
+            field_text_fixed_str = _remove_both_prefixes(field_text_str)
+            result = Text(prefix + field_text_fixed_str)
+        return result
+
+    def _join_prefix_1(text: Text) -> Text:
+        return _add_prefix(text, prefix1)
+
+    def _join_prefix_2(text: Text) -> Text:
+        return _add_prefix(text, prefix2)
+
+    node1 = template.field(field_name, apply_func=_join_prefix_1, raw=True)
+    node2 = template.field(field_name, apply_func=_join_prefix_2, raw=True)
+
+
+    result = template.href[node1, node2]
+    return result
 
 # `@template.node`` decorator is defined as
 # def node(f: Callable):
@@ -453,3 +478,35 @@ subprocess.call(
 )
 
 suppress_warnings = ["bibtex.duplicate_label"]
+
+# def format_href_node(
+#     children,
+#     data,
+#     prefix1: str,
+#     prefix2: str,
+#     field_name: str,
+# ) -> Text:
+
+#     # if field_text.startswith('https'):
+#     #     if prefix1.startswith('https'):
+#     #         node1 =
+
+#     @template.node
+#     def node1(children, data) -> Text:
+#         assert not children
+#         field_text: Text = template.field(field_name, raw=False).format_data(data)
+#         field_text_str: str = str(field_text)
+#         result = field_text
+
+#         if field_text_str.startswith('https') and prefix1.startswith('https'):
+#             return field_text
+#         else:
+#             result_str = field_text_str.removeprefix(prefix1)
+#             result_str = field_text_str.removeprefix(prefix2)
+#             result_str = field_text_str.removeprefix(prefix1)
+#             result_str = field_text_str.removeprefix(prefix2)
+#             result = Text(prefix1 + result_str)
+#         return result
+
+#     result = template.href[node1, node2]
+#     return result
