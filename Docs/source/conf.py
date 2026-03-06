@@ -130,6 +130,19 @@ class WarpXBibStyle(UnsrtStyle):
         # finally:
         #     print("format_web_refs: end")
 
+
+    # def format_web_refs(self, e):
+    #     url_node = template.optional[
+    #         self.format_url(e),
+    #         template.optional['(visited on ', template.field('urldate'), ')']
+    #     ]
+    #     eprint_node = template.optional[
+    #         self.format_eprint(e),
+    #     ]
+    #     pubmed_node = template.optional[
+
+    #     ]
+
     # Override
     def format_pubmed(self, e):
         # print("\nformat_pubmed: start")
