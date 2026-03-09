@@ -13,8 +13,10 @@ from pybtex.style.formatting.unsrt import Style as UnsrtStyle
 from pybtex.style.template import (
     field,
     href,
+    join,
     Node,
     optional,
+    optional_field,
     words,
 )
 
@@ -66,10 +68,25 @@ class WarpXBibStyle(UnsrtStyle):
             pubmed_text: Text = pubmed_node.format_data(data)
             doi_text: Text = doi_node.format_data(data)
 
+            l_url = True if url_text else False
+            l_eprint = True if eprint_text else False
+            l_pubmed = True if pubmed_text else False
+            l_doi = True if doi_text else False
+
             node_list: list[Node] = []
 
-            if doi_text and doi_text not in node_list:
+            if l_doi:
                 node_list.append(doi_node)
+                l_eprint = False
+                l_pubmed = False
+            if l_url:
+                node_list.append(url_node)
+                l_eprint = False
+                l_pubmed = False
+            if l_eprint:
+                node_list.append(eprint_node)
+            if l_pubmed:
+                node_list.append(pubmed_node)
 
             text = template.sentence[node_list].format_data(data)
             return text
@@ -77,15 +94,30 @@ class WarpXBibStyle(UnsrtStyle):
 
         return _result
 
-    def format_url(self, e):
+    def format_url(self, e) -> Node:
         # based on urlbst format.url
-        return words[
-            'URL:',
-            href[
-                field('url', raw=True),
-                field('url', raw=True)
-            ]
-        ]
+        url_field_node = field('url', raw=True)
+
+        @template.node
+        def _result(children, data) -> Text:
+            assert not children
+            https_node: Node
+            title_node: Node
+            url_field_text: Text = url_field_node.format_data(data)
+            if not url_field_text.startswith('http'):
+                print(f"\nformat_url: URL field does not start with http: \n  URL field entry = {url_field_text}")
+                raise ValueError
+            else:
+                https_node = url_field_node
+                title_node = join['link']
+
+            href_node = href[https_node, title_node]
+            result_node = words['URL:', href_node]
+            result_text: Text = result_node.format_data(data)
+
+            return result_text
+
+        return _result
 
     # Override
     def format_pubmed(self, e) -> Node:
@@ -137,25 +169,32 @@ def format_href_fixed(
 
     def _add_prefix(text: Text, prefix: str) -> Text:
         field_text_str = str(text)
-        if field_text_str.startswith('https') and prefix.startswith('https'):
+        if field_text_str.startswith('http') and prefix.startswith('http'):
             # Defer to text for links
             result = text
         else:
             field_text_fixed_str = _remove_both_prefixes(field_text_str)
-            result = Text(prefix + field_text_fixed_str)
+            result = Text(prefix, field_text_fixed_str)
         return result
 
-    def _join_prefix_1(text: Text) -> Text:
+    def _join_prefix_https(text: Text) -> Text:
         return _add_prefix(text, prefix_https)
 
-    def _join_prefix_2(text: Text) -> Text:
+    def _join_prefix_title(text: Text) -> Text:
         return _add_prefix(text, prefix_title)
 
-    node1 = template.field(field_name, apply_func=_join_prefix_1, raw=True)
-    node2 = template.field(field_name, apply_func=_join_prefix_2, raw=True)
+    https_node = template.field(
+        field_name,
+        apply_func=_join_prefix_https,
+        raw=True,
+    )
+    title_node = template.field(
+        field_name,
+        apply_func=_join_prefix_title,
+        raw=True,
+    )
 
-
-    result = template.href[node1, node2]
+    result = template.href[https_node, title_node]
     return result
 
 # `@template.node`` decorator is defined as
