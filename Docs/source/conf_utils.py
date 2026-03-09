@@ -126,28 +126,6 @@ def format_href_fixed(
     prefix_title: str,
     field_name: str,
 ) -> template.Node:
-    # node_raw = template.field(field_key, raw=True)
-    # node1 = removeprefix_from_node(prefix=prefix1, node=node_raw)
-    # node_fixed = removeprefix_from_node(prefix=prefix2, node=node1)
-
-    def _fix_text(text: Text) -> Text:
-        old_text = str(text)
-        try:
-            # print(f"\n_fix_text: start, text = {text}")
-            text = removeprefix_from_Text(text, prefix=prefix_https)
-            text = removeprefix_from_Text(text, prefix=prefix_title)
-            text = removeprefix_from_Text(text, prefix=prefix_https)
-            text = removeprefix_from_Text(text, prefix=prefix_title)
-        except Exception as exception:
-            print(f"  _fix_text: print: Exception {exception}")
-            logging.warning(f"  _fix_text: logging.warning: Exception {exception}")
-            text = Text(old_text)
-            raise exception
-        return text
-
-    # node_fixed = template.field(field_name, apply_func=_fix_text, raw=True)
-    # node1 = template.join[prefix1, node_fixed]
-    # node2 = template.join[prefix2, node_fixed]
 
     def _remove_both_prefixes(str_: str):
         result = str_
@@ -293,3 +271,26 @@ def join_avoid_redundant_prefix(
 
 #     result = template.href[node1, node2]
 #     return result
+
+    # node_raw = template.field(field_key, raw=True)
+    # node1 = removeprefix_from_node(prefix=prefix1, node=node_raw)
+    # node_fixed = removeprefix_from_node(prefix=prefix2, node=node1)
+
+    # def _old_fix_text(text: Text) -> Text:
+    #     old_text = str(text)
+    #     try:
+    #         # print(f"\n_fix_text: start, text = {text}")
+    #         text = removeprefix_from_Text(text, prefix=prefix_https)
+    #         text = removeprefix_from_Text(text, prefix=prefix_title)
+    #         text = removeprefix_from_Text(text, prefix=prefix_https)
+    #         text = removeprefix_from_Text(text, prefix=prefix_title)
+    #     except Exception as exception:
+    #         print(f"  _fix_text: print: Exception {exception}")
+    #         logging.warning(f"  _fix_text: logging.warning: Exception {exception}")
+    #         text = Text(old_text)
+    #         raise exception
+    #     return text
+
+    # node_fixed = template.field(field_name, apply_func=_fix_text, raw=True)
+    # node1 = template.join[prefix1, node_fixed]
+    # node2 = template.join[prefix2, node_fixed]
