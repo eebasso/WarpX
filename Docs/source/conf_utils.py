@@ -12,8 +12,10 @@ from pybtex.style.formatting.unsrt import Style as UnsrtStyle
 
 from pybtex.style.template import (
     field,
+    href,
     Node,
     optional,
+    words,
 )
 
 
@@ -46,7 +48,6 @@ class WarpXBibStyle(UnsrtStyle):
             raise exception
         return result
 
-
     def format_web_refs(self, e) -> Node:
         url_node: Node = optional[
             self.format_url(e),
@@ -75,12 +76,22 @@ class WarpXBibStyle(UnsrtStyle):
 
         return _result
 
+    def format_url(self, e):
+        # based on urlbst format.url
+        return words[
+            'URL:',
+            href[
+                field('url', raw=True),
+                field('url', raw=True)
+            ]
+        ]
+
     # Override
     def format_pubmed(self, e) -> Node:
         # print("\nformat_pubmed: start")
         return format_href_fixed(
-            prefix1='https://www.ncbi.nlm.nih.gov/pubmed/',
-            prefix2='PMID:',
+            prefix_https='https://www.ncbi.nlm.nih.gov/pubmed/',
+            prefix_title='PMID:',
             field_name='pubmed',
         )
 
@@ -89,8 +100,8 @@ class WarpXBibStyle(UnsrtStyle):
         # print("\nformat_doi: start")
         try:
             return format_href_fixed(
-                prefix1='https://doi.org/',
-                prefix2='doi:',
+                prefix_https='https://doi.org/',
+                prefix_title='doi:',
                 field_name='doi',
             )
         except Exception as exception:
@@ -104,14 +115,14 @@ class WarpXBibStyle(UnsrtStyle):
         # based on urlbst format.eprint
         # print("\nformat_eprint: start")
         return format_href_fixed(
-            prefix1='https://arxiv.org/abs/',
-            prefix2='arXiv:',
+            prefix_https='https://arxiv.org/abs/',
+            prefix_title='arXiv:',
             field_name='eprint',
         )
 
 def format_href_fixed(
-    prefix1: str,
-    prefix2: str,
+    prefix_https: str,
+    prefix_title: str,
     field_name: str,
 ) -> template.Node:
     # node_raw = template.field(field_key, raw=True)
@@ -122,10 +133,10 @@ def format_href_fixed(
         old_text = str(text)
         try:
             # print(f"\n_fix_text: start, text = {text}")
-            text = removeprefix_from_Text(text, prefix=prefix1)
-            text = removeprefix_from_Text(text, prefix=prefix2)
-            text = removeprefix_from_Text(text, prefix=prefix1)
-            text = removeprefix_from_Text(text, prefix=prefix2)
+            text = removeprefix_from_Text(text, prefix=prefix_https)
+            text = removeprefix_from_Text(text, prefix=prefix_title)
+            text = removeprefix_from_Text(text, prefix=prefix_https)
+            text = removeprefix_from_Text(text, prefix=prefix_title)
         except Exception as exception:
             print(f"  _fix_text: print: Exception {exception}")
             logging.warning(f"  _fix_text: logging.warning: Exception {exception}")
@@ -139,10 +150,10 @@ def format_href_fixed(
 
     def _remove_both_prefixes(str_: str):
         result = str_
-        result = result.removeprefix(prefix1)
-        result = result.removeprefix(prefix2)
-        result = result.removeprefix(prefix1)
-        result = result.removeprefix(prefix2)
+        result = result.removeprefix(prefix_https)
+        result = result.removeprefix(prefix_title)
+        result = result.removeprefix(prefix_https)
+        result = result.removeprefix(prefix_title)
         return result
 
     def _add_prefix(text: Text, prefix: str) -> Text:
@@ -156,10 +167,10 @@ def format_href_fixed(
         return result
 
     def _join_prefix_1(text: Text) -> Text:
-        return _add_prefix(text, prefix1)
+        return _add_prefix(text, prefix_https)
 
     def _join_prefix_2(text: Text) -> Text:
-        return _add_prefix(text, prefix2)
+        return _add_prefix(text, prefix_title)
 
     node1 = template.field(field_name, apply_func=_join_prefix_1, raw=True)
     node2 = template.field(field_name, apply_func=_join_prefix_2, raw=True)
