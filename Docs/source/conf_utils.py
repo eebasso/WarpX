@@ -10,6 +10,13 @@ import pybtex.richtext as richtext
 from pybtex.richtext import Text
 from pybtex.style.formatting.unsrt import Style as UnsrtStyle
 
+from pybtex.style.template import (
+    field,
+    Node,
+    optional,
+)
+
+
 # An brief introduction to custom BibTex formatting can be found in the Sphinx documentation:
 # https://sphinxcontrib-bibtex.readthedocs.io/en/latest/usage.html#bibtex-custom-formatting
 #
@@ -28,9 +35,7 @@ class WarpXBibStyle(UnsrtStyle):
         kwargs["abbreviate_names"] = True
         super().__init__(*args, **kwargs)
 
-    def format_web_refs(self, e):
-        # print("")
-        # print("format_web_refs: start")
+    def format_web_refs(self, e) -> Node:
         try:
             result = super().format_web_refs(e)
             # print("  format_web_refs: success")
@@ -59,7 +64,7 @@ class WarpXBibStyle(UnsrtStyle):
     #     ]
 
     # Override
-    def format_pubmed(self, e):
+    def format_pubmed(self, e) -> Node:
         # print("\nformat_pubmed: start")
         return format_href_fixed(
             prefix1='https://www.ncbi.nlm.nih.gov/pubmed/',
@@ -68,7 +73,7 @@ class WarpXBibStyle(UnsrtStyle):
         )
 
     # Override
-    def format_doi(self, e):
+    def format_doi(self, e) -> Node:
         # print("\nformat_doi: start")
         try:
             return format_href_fixed(
@@ -83,7 +88,7 @@ class WarpXBibStyle(UnsrtStyle):
             logging.warning(f"  format_doi: logging.warrning: Exception: {exception}")
             return super().format_doi(e)
 
-    def format_eprint(self, e):
+    def format_eprint(self, e) -> Node:
         # based on urlbst format.eprint
         # print("\nformat_eprint: start")
         return format_href_fixed(
