@@ -35,33 +35,45 @@ class WarpXBibStyle(UnsrtStyle):
         kwargs["abbreviate_names"] = True
         super().__init__(*args, **kwargs)
 
-    def format_web_refs(self, e) -> Node:
+    def _format_web_refs(self, e) -> Node:
         try:
             result = super().format_web_refs(e)
-            # print("  format_web_refs: success")
-            # print(f"  format_web_refs: result = {result}")
-            return result
         except Exception as exception:
             print("")
             print(f"  format_web_refs: print: Exception: {exception}")
             print("")
             logging.warning(f"  format_web_refs: logging.warrning: Exception: {exception}")
             raise exception
-        # finally:
-        #     print("format_web_refs: end")
+        return result
 
 
-    # def format_web_refs(self, e):
-    #     url_node = template.optional[
-    #         self.format_url(e),
-    #         template.optional['(visited on ', template.field('urldate'), ')']
-    #     ]
-    #     eprint_node = template.optional[
-    #         self.format_eprint(e),
-    #     ]
-    #     pubmed_node = template.optional[
+    def format_web_refs(self, e) -> Node:
+        url_node: Node = optional[
+            self.format_url(e),
+            optional['(visited on ', field('urldate'), ')']
+        ]
+        eprint_node: Node = optional[self.format_eprint(e)]
+        pubmed_node: Node = optional[self.format_pubmed(e)]
+        doi_node: Node = optional[self.format_doi(e)]
 
-    #     ]
+        @template.node
+        def _result(children, data):
+            assert not children
+            url_text: Text = url_node.format_data(data)
+            eprint_text: Text = eprint_node.format_data(data)
+            pubmed_text: Text = pubmed_node.format_data(data)
+            doi_text: Text = doi_node.format_data(data)
+
+            node_list: list[Node] = []
+
+            if doi_text and doi_text not in node_list:
+                node_list.append(doi_node)
+
+            text = template.sentence[node_list].format_data(data)
+            return text
+
+
+        return _result
 
     # Override
     def format_pubmed(self, e) -> Node:
@@ -136,7 +148,7 @@ def format_href_fixed(
     def _add_prefix(text: Text, prefix: str) -> Text:
         field_text_str = str(text)
         if field_text_str.startswith('https') and prefix.startswith('https'):
-            # Defer to text
+            # Defer to text for links
             result = text
         else:
             field_text_fixed_str = _remove_both_prefixes(field_text_str)
