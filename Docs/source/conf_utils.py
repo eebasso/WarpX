@@ -37,18 +37,19 @@ class WarpXBibStyle(UnsrtStyle):
         kwargs["abbreviate_names"] = True
         super().__init__(*args, **kwargs)
 
-    def _format_web_refs(self, e) -> Node:
+    def format_web_refs(self, e) -> Node:
         try:
-            result = super().format_web_refs(e)
+            result = self._format_web_refs(e)
         except Exception as exception:
             print("")
             print(f"  format_web_refs: print: Exception: {exception}")
             print("")
             logging.warning(f"  format_web_refs: logging.warrning: Exception: {exception}")
-            raise exception
+            result = super().format_web_refs(e)
+            # raise exception
         return result
 
-    def format_web_refs(self, e) -> Node:
+    def _format_web_refs(self, e) -> Node:
         url_node: Node = optional[
             self.format_url(e),
             optional['(visited on ', field('urldate'), ')']
