@@ -242,7 +242,18 @@ class BulletAnnotation:
 
         s = rest.strip()
 
-        # ── Units ──
+        # ── Collect additional co-listed names ────────────────────────────────────
+        extra_names: list[str] = []
+        while True:
+            m = re.match(r'^(?:,\s*|(?:and|&)\s+|,\s*(?:and|&)\s+)``([^`]+)``\s*(.*)', s, re.DOTALL)
+            if m:
+                extra_names.append(m.group(1).strip())
+                s = m.group(2).strip()
+            else:
+                break
+        raw_annotation = s
+
+        # Units
         in_unit_list: list[str] = [
             "meters",
             "seconds",
@@ -265,17 +276,6 @@ class BulletAnnotation:
             m = re.match(r'\((?:.*[,;]\s*in\s+)(?:)([^\);]+)[\);]', s, re.DOTALL)
             if m:
                 unit_str = m.group(0)
-
-        # ── Collect additional co-listed names ────────────────────────────────────
-        extra_names: list[str] = []
-        while True:
-            m = re.match(r'^(?:,\s*|(?:and|&)\s+|,\s*(?:and|&)\s+)``([^`]+)``\s*(.*)', s, re.DOTALL)
-            if m:
-                extra_names.append(m.group(1).strip())
-                s = m.group(2).strip()
-            else:
-                break
-        raw_annotation = s
 
         # Optional flag
         if "optional" in s:
