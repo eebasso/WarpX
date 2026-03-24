@@ -74,7 +74,7 @@ class Directive:
         self.type_str: str = annotation.type_str
         self.default_str: str = annotation.default_str
         self.unit_str: str = annotation.unit_str
-        self.comment_str: str = annotation.inline_desc
+        self.comment_str: str = annotation.comment_str
 
         self.annotation: BulletAnnotation = annotation
 
@@ -235,7 +235,7 @@ class BulletAnnotation:
         unit_str: str = ""
         type_str: str = ""
         default_str: str = ""
-        inline_desc: str = ""
+        comment_str: str = ""
         optional_flag: bool = False
 
         s = rest.strip()
@@ -292,35 +292,37 @@ class BulletAnnotation:
                 dm = re.match(r'default:?\s*(.*)', after[1:end2].strip(), re.IGNORECASE)
                 if dm:
                     default_str = dm.group(1).strip()
-                inline_desc = after[end2 + 1:].strip()
+                comment_str = after[end2 + 1:].strip()
             else:
-                inline_desc = after
+                comment_str = after
 
         elif s.lower().startswith('optional'):
             remainder = s[len('optional'):].strip()
             dm = re.match(r'\(default?\:?\s*(.*?)\)(.*)', remainder, re.IGNORECASE | re.DOTALL)
             if dm:
                 default_str = dm.group(1).strip() + " test2"
-                inline_desc = dm.group(2).strip()
+                comment_str = dm.group(2).strip()
             else:
-                inline_desc = remainder
+                comment_str = remainder
 
         elif s:
-            inline_desc = s
+            comment_str = s
 
         # Remove ':' or '='
         default_str = default_str.lstrip(":= ")
 
         # Strip a lone trailing "." or ':' left over from e.g. "(`type`, default: X)."
-        inline_desc = inline_desc.strip().lstrip('.:').strip()
+        comment_str = comment_str.strip().lstrip('.:').strip()
 
-        self.extra_names: list[str]  = extra_names # co-listed names, e.g. from "and ``foo.hi``"
+        # co-listed names, e.g. from "and ``foo.hi``"
+        self.extra_names: list[str]  = extra_names
 
         self.type_str: str = type_str
         self.default_str: str = default_str
         self.unit_str: str = unit_str
         self.optional_flag: bool = optional_flag
-        self.inline_desc: str = inline_desc # descriptive text on the bullet line itself
+        # descriptive text on the bullet line itself
+        self.comment_str: str = comment_str
 
         self.raw_source: str = rest
         self.raw_annotation: str = raw_annotation
