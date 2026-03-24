@@ -300,7 +300,7 @@ class BulletAnnotation:
             remainder = s[len('optional'):].strip()
             dm = re.match(r'\(default?\:?\s*(.*?)\)(.*)', remainder, re.IGNORECASE | re.DOTALL)
             if dm:
-                default_str = dm.group(1).strip() + " test2"
+                default_str = dm.group(1).strip()
                 comment_str = dm.group(2).strip()
             else:
                 comment_str = remainder
