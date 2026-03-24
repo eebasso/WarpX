@@ -200,11 +200,11 @@ def parse_meta(s: str) -> tuple[str, str]:
     s = s.strip()
     # "; default …" or ", default …"
     m = re.search(
-        r'(?:;|,)\s*default(?:\s+is)?:?\s*(.*)', s, re.IGNORECASE
+        r'[,;]\s*default(?:\s+is)?:?(?:\s*\=)?\s*(.*)', s, re.IGNORECASE
     )
     # "… X by default"
     m2 = re.search(
-        r'[,;]\s*(`[^`]+`|``[^`]+``|\S+)\s+by\s+default\s*$', s, re.IGNORECASE
+        r'[,;]\s*(\S+)\s+by\s+default$', s, re.IGNORECASE
     )
     if m:
         type_str = normalise_type(s[:m.start()].strip())
