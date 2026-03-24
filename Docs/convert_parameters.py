@@ -280,6 +280,7 @@ class BulletAnnotation:
         # Optional flag
         if "optional" in s:
             optional_flag = True
+            s = re.sub(r'optional', '', s, flags=re.IGNORECASE)
 
         # Type, default, comments
         if s.startswith('('):
@@ -312,11 +313,6 @@ class BulletAnnotation:
         elif s:
             comment_str = s
             # default_str += " test3"
-
-        # Remove trailing "optional"
-        m = re.match(r'(.*)[,;]?\s*optional$', type_str, re.IGNORECASE | re.DOTALL)
-        if m:
-            type_str = m.group(1)
 
         # Strip errant punctuation
         type_str = type_str.strip(".:;,= ")
