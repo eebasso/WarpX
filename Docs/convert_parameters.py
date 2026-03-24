@@ -279,6 +279,9 @@ class BulletAnnotation:
         # Optional flag
         if "optional" in s:
             optional_flag = True
+
+        if optional_flag:
+            # Remove "optional" from s
             s = re.sub(r'optional', '', s, flags=re.IGNORECASE)
 
         # Type, default, comments
