@@ -279,6 +279,7 @@ class BulletAnnotation:
                 break
         raw_annotation = s
 
+        # Type, default, comments
         if s.startswith('('):
             # Main parenthesised annotation
             end = find_paren_end(s)
@@ -308,11 +309,16 @@ class BulletAnnotation:
         elif s:
             comment_str = s
 
+        # Remove trailing "optional"
+        m = re.match(r'(.*)[,;]?\s*optional$', type_str, re.IGNORECASE | re.DOTALL)
+        if m:
+            type_str = m.group(1).strip(',; ')
+
         # Remove ':' or '='
         default_str = default_str.lstrip(":= ")
 
-        # Strip a lone trailing "." or ':' left over from e.g. "(`type`, default: X)."
-        comment_str = comment_str.strip().lstrip('.:').strip()
+        # Strip trailing punctuation left over from e.g. "(`type`, default: X)."
+        comment_str = comment_str.lstrip('.:;, ')
 
         # co-listed names, e.g. from "and ``foo.hi``"
         self.extra_names: list[str]  = extra_names
