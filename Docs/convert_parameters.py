@@ -279,7 +279,7 @@ class BulletAnnotation:
         if unit_str:
             # Remove unit string from s
             try:
-                s = re.sub(rf"(in\s+)?{unit_str}", '', s, re.DOTALL)
+                s = re.sub(r'(in\s+)?'+re.escape(unit_str), '', s, re.DOTALL)
             except Exception as e:
                 print(f"\nunit_str = {unit_str}\n")
                 raise e
