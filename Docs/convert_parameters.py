@@ -242,7 +242,7 @@ class BulletAnnotation:
 
         s = rest.strip()
 
-        # Units
+        # ── Units ──
         in_unit_list: list[str] = [
             "meters",
             "seconds",
@@ -266,10 +266,6 @@ class BulletAnnotation:
             if m:
                 unit_str = m.group(0)
 
-        # Optional flag
-        if "optional" in s:
-            optional_flag = True
-
         # ── Collect additional co-listed names ────────────────────────────────────
         extra_names: list[str] = []
         while True:
@@ -280,6 +276,10 @@ class BulletAnnotation:
             else:
                 break
         raw_annotation = s
+
+        # Optional flag
+        if "optional" in s:
+            optional_flag = True
 
         # Type, default, comments
         if s.startswith('('):
@@ -307,9 +307,11 @@ class BulletAnnotation:
                 comment_str = dm.group(2).strip()
             else:
                 comment_str = remainder
-
+            # default_str += " test2"
+            # comment_str += " test2"
         elif s:
             comment_str = s
+            # default_str += " test3"
 
         # Remove trailing "optional"
         m = re.match(r'(.*)[,;]?\s*optional$', type_str, re.IGNORECASE | re.DOTALL)
