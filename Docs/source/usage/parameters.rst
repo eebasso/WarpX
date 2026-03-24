@@ -126,7 +126,7 @@ Simulation Time
     The number of PIC cycles to perform.
 
 .. fv:var:: stop_time
-    :type: `float`; in seconds
+    :type: `float`
     :unit: seconds
 
     The maximum physical time of the simulation. Can be provided instead of ``max_step``. If both
@@ -633,7 +633,7 @@ Setting up the field mesh
     The default is ``1``, which corresponds to a perfectly axisymmetric simulation.
 
 .. fv:var:: geometry.prob_lo/hi
-    :type: `2 floats in 2D`, `3 floats in 3D`; in meters
+    :type: `2 floats in 2D`, `3 floats in 3D`
     :unit: meters
 
     The extent of the full simulation box. This box is rectangular, and thus its
@@ -671,7 +671,7 @@ Setting up the field mesh
     The timestep at which the moving window ends.
 
 .. fv:var:: warpx.fine_tag_lo/hi
-    :type: `2 floats in 2D`, `3 floats in 3D`; in meters
+    :type: `2 floats in 2D`, `3 floats in 3D`
     :unit: meters
     :optional:
 
@@ -1968,7 +1968,7 @@ Laser initialization
     must be provided for each laser pulse.
 
 .. fv:var:: <laser_name>.position
-    :type: `3 floats in 3D and 2D` ; in meters
+    :type: `3 floats in 3D and 2D`
     :unit: meters
 
     The coordinates of one of the point of the antenna that will emit the laser.
@@ -2014,7 +2014,7 @@ Laser initialization
         be parallel to ``warpx.boost_direction``, for now.
 
 .. fv:var:: <laser_name>.e_max
-    :type: `float` ; in V/m
+    :type: `float`
     :unit: V/m
 
     Peak amplitude of the laser field, in the focal plane.
@@ -2031,7 +2031,7 @@ Laser initialization
     perform the conversion to the boosted frame.
 
 .. fv:var:: <laser_name>.a0
-    :type: `float` ; dimensionless
+    :type: `float`
     :unit: dimensionless
 
     Peak normalized amplitude of the laser field, in the focal plane (given in the lab frame, just as ``e_max`` above).
@@ -2039,7 +2039,7 @@ Laser initialization
     Either ``a0`` or ``e_max`` must be specified.
 
 .. fv:var:: <laser_name>.wavelength
-    :type: `float`; in meters
+    :type: `float`
     :unit: meters
 
     The wavelength of the laser in vacuum.
@@ -2103,7 +2103,7 @@ Laser initialization
       A binary file can be generated from Python, see an example at ``Examples/Tests/laser_injection_from_file``
 
 .. fv:var:: <laser_name>.profile_t_peak
-    :type: `float`; in seconds
+    :type: `float`
     :unit: seconds
 
     The time at which the laser reaches its peak intensity, at the position
@@ -2114,7 +2114,7 @@ Laser initialization
     to automatically perform the conversion to the boosted frame.
 
 .. fv:var:: <laser_name>.profile_duration
-    :type: `float` ; in seconds
+    :type: `float`
     :unit: seconds
 
     The duration of the laser pulse for the ``"gaussian"`` profile, defined as :math:`\tau` below:
@@ -2132,7 +2132,7 @@ Laser initialization
     to automatically perform the conversion to the boosted frame.
 
 .. fv:var:: <laser_name>.profile_waist
-    :type: `float` ; in meters
+    :type: `float`
     :unit: meters
 
     The waist of the transverse Gaussian :math:`w_0`, i.e. defined such that the electric field of the
@@ -2143,7 +2143,7 @@ Laser initialization
         E(\boldsymbol{x},t) \propto \exp\left( -\frac{\boldsymbol{x}_\perp^2}{w_0^2} \right)
 
 .. fv:var:: <laser_name>.profile_focal_distance
-    :type: `float`; in meters
+    :type: `float`
     :unit: meters
 
     The distance from ``laser_position`` to the focal plane.
@@ -2156,7 +2156,7 @@ Laser initialization
     to automatically perform the conversion to the boosted frame.
 
 .. fv:var:: <laser_name>.phi0
-    :type: `float`; in radians
+    :type: `float`
     :unit: radians
     :default: `0.`
     :optional:
@@ -2173,7 +2173,7 @@ Laser initialization
     See definition in :cite:t:`param-AkturkOE2004`.
 
 .. fv:var:: <laser_name>.zeta
-    :type: `float`; in meters.seconds
+    :type: `float`; .seconds
     :unit: meters
     :default: `0.`
     :optional:
@@ -2182,7 +2182,7 @@ Laser initialization
     :cite:t:`param-AkturkOE2004`.
 
 .. fv:var:: <laser_name>.beta
-    :type: `float`; in seconds
+    :type: `float`
     :unit: seconds
     :default: `0.`
     :optional:
@@ -2191,7 +2191,7 @@ Laser initialization
     See definition in :cite:t:`param-AkturkOE2004`.
 
 .. fv:var:: <laser_name>.phi2
-    :type: `float`; in seconds**2
+    :type: `float`; **2
     :unit: seconds
     :default: `0.`
     :optional:
@@ -3307,7 +3307,7 @@ Maxwell solver: PSATD method
     Note that the update with and without rho is also supported in RZ geometry.
 
 .. fv:var:: psatd.v_galilean
-    :type: `3 floats`, in units of the speed of light
+    :type: `3 floats`
     :unit: units of the speed of light
     :default: ``0. 0. 0.``
 
@@ -3324,7 +3324,7 @@ Maxwell solver: PSATD method
     See the section :ref:`Numerical Stability and alternate formulation in a Galilean frame <theory-boostedframe-galilean>` for more information on the Galilean algorithm for boosted-frame simulations.
 
 .. fv:var:: psatd.v_comoving
-    :type: 3 floating-point values, in units of the speed of light
+    :type: 3 floating-point values
     :unit: units of the speed of light
     :default: ``0. 0. 0.``
 
@@ -4200,7 +4200,7 @@ In addition, ``TimeAveraged`` diagnostic options include:
     Will be ignored in the ``fixed_start`` mode (with warning).
 
 .. fv:var:: <diag_name>.average_period_time
-    :type: `float`, in seconds
+    :type: `float`
     :unit: seconds
 
     Configures the time (SI units) in an averaging period.
@@ -4246,7 +4246,7 @@ BackTransformed Diagnostics
     a run-time error occurs if the user attempts to set both ``num_snapshots_lab`` and ``intervals``.
 
 .. fv:var:: <diag_name>.dt_snapshots_lab
-    :type: `float`, in seconds
+    :type: `float`
     :unit: seconds
 
     Only used when ``<diag_name>.diag_type`` is ``BackTransformed``.
@@ -4254,7 +4254,7 @@ BackTransformed Diagnostics
     time interval is expressed in the laboratory frame).
 
 .. fv:var:: <diag_name>.dz_snapshots_lab
-    :type: `float`, in meters
+    :type: `float`
     :unit: meters
 
     Only used when ``<diag_name>.diag_type`` is ``BackTransformed``.
@@ -5149,7 +5149,7 @@ Schwinger process
     (the name of an existing positron species must be provided).
 
 .. fv:var:: qed_schwinger.y_size
-    :type: `float`; in meters
+    :type: `float`
     :unit: meters
 
     If Schwinger process is activated with ``DIM=2D``, a transverse size must be specified.

@@ -276,6 +276,14 @@ class BulletAnnotation:
             if m:
                 unit_str = m.group(1)
 
+        if unit_str:
+            # Remove unit string from s
+            try:
+                s = re.sub(rf"(in\s+)?{unit_str}", '', s, re.DOTALL)
+            except Exception as e:
+                print(f"\nunit_str = {unit_str}\n")
+                raise e
+
         # Optional flag
         if "optional" in s:
             optional_flag = True
