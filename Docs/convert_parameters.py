@@ -254,23 +254,11 @@ class BulletAnnotation:
         raw_annotation = s
 
         # Units
-        in_unit_list: list[str] = [
-            "meters",
-            "seconds",
-            "kilograms",
-            "volts/meter^2",
-            "Telsa/meter",
-            "V/m",
-        ]
         if "dimensionless" in s:
             unit_str = "dimensionless"
         elif "[meter]" in s:
             unit_str = "meters"
-        else:
-            for unit in in_unit_list:
-                if f"in {unit}" in s:
-                    unit_str = unit
-                    break
+
         if not unit_str:
             m = re.match(r'\((?:.*[,;]\s*in\s+)([^\);]+)[\);]', s, re.DOTALL)
             if m:

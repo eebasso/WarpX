@@ -2173,8 +2173,8 @@ Laser initialization
     See definition in :cite:t:`param-AkturkOE2004`.
 
 .. fv:var:: <laser_name>.zeta
-    :type: `float`; .seconds
-    :unit: meters
+    :type: `float`
+    :unit: meters.seconds
     :default: `0.`
     :optional:
 
@@ -2191,8 +2191,8 @@ Laser initialization
     See definition in :cite:t:`param-AkturkOE2004`.
 
 .. fv:var:: <laser_name>.phi2
-    :type: `float`; **2
-    :unit: seconds
+    :type: `float`
+    :unit: seconds**2
     :default: `0.`
     :optional:
 
