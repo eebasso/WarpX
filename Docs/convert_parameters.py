@@ -194,18 +194,26 @@ def parse_meta(s: str) -> tuple[str, str]:
         `int`, 0 by default
         ``0`` or ``1``; default is ``1`` for true
     """
+    type_str: str = ""
+    default_str: str = ""
+
     s = s.strip()
     # "; default …" or ", default …"
     m = re.search(r'(?:;|,)\s*default(?:\s+is)?:?\s*(.*)', s, re.IGNORECASE)
-    if m:
-        return normalise_type(s[:m.start()].strip()), m.group(1).strip().rstrip(')')
     # "… X by default"
     m2 = re.search(
         r'[,;]\s*(`[^`]+`|``[^`]+``|\S+)\s+by\s+default\s*$', s, re.IGNORECASE
     )
-    if m2:
-        return normalise_type(s[:m2.start()].strip()), m2.group(1).strip()
-    return normalise_type(s), ''
+    if m:
+        type_str = normalise_type(s[:m.start()].strip())
+        default_str = m.group(1).strip().rstrip(')')
+    elif m2:
+        type_str = normalise_type(s[:m2.start()].strip())
+        default_str = m2.group(1).strip()
+    else:
+        type_str = normalise_type(s)
+        default_str = ""
+    return type_str, default_str
 
 
 # ── Bullet annotation ─────────────────────────────────────────────────────────
