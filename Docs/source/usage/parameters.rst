@@ -2157,7 +2157,7 @@ Laser initialization
 
 .. fv:var:: <laser_name>.phi0
     :type: `float`; in radians
-    :unit: (`float`; in radians)
+    :unit: `float`; in radians
     :default: `0.`
     :optional:
 
@@ -3308,7 +3308,7 @@ Maxwell solver: PSATD method
 
 .. fv:var:: psatd.v_galilean
     :type: `3 floats`, in units of the speed of light
-    :unit: (`3 floats`, in units of the speed of light;
+    :unit: `3 floats`, in units of the speed of light
     :default: ``0. 0. 0.``
 
     Defines the Galilean velocity.
@@ -3325,7 +3325,7 @@ Maxwell solver: PSATD method
 
 .. fv:var:: psatd.v_comoving
     :type: 3 floating-point values, in units of the speed of light
-    :unit: (3 floating-point values, in units of the speed of light;
+    :unit: 3 floating-point values, in units of the speed of light
     :default: ``0. 0. 0.``
 
     Defines the comoving velocity in the comoving PSATD scheme.

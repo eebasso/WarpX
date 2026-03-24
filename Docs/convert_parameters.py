@@ -314,13 +314,13 @@ class BulletAnnotation:
         # Remove trailing "optional"
         m = re.match(r'(.*)[,;]?\s*optional$', type_str, re.IGNORECASE | re.DOTALL)
         if m:
-            type_str = m.group(1).strip(',; ')
+            type_str = m.group(1)
 
-        # Remove ':' or '='
-        default_str = default_str.lstrip(":= ")
-
-        # Strip trailing punctuation left over from e.g. "(`type`, default: X)."
-        comment_str = comment_str.lstrip('.:;, ')
+        # Strip errant punctuation
+        type_str = type_str.strip(".:;,= ")
+        default_str = default_str.lstrip(".:;,= ")
+        unit_str = unit_str.strip(".:;,=() ")
+        comment_str = comment_str.lstrip(".:;,= ")
 
         # co-listed names, e.g. from "and ``foo.hi``"
         self.extra_names: list[str]  = extra_names
