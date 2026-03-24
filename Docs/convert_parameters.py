@@ -262,7 +262,6 @@ class BulletAnnotation:
             "Telsa/meter",
             "V/m",
         ]
-
         if "dimensionless" in s:
             unit_str = "dimensionless"
         elif "[meter]" in s:
@@ -273,9 +272,9 @@ class BulletAnnotation:
                     unit_str = unit
                     break
         if not unit_str:
-            m = re.match(r'\((?:.*[,;]\s*in\s+)(?:)([^\);]+)[\);]', s, re.DOTALL)
+            m = re.match(r'\((?:.*[,;]\s*in\s+)([^\);]+)[\);]', s, re.DOTALL)
             if m:
-                unit_str = m.group(0)
+                unit_str = m.group(1)
 
         # Optional flag
         if "optional" in s:
