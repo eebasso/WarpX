@@ -256,21 +256,15 @@ class BulletAnnotation:
         # Units
         if "dimensionless" in s:
             unit_str = "dimensionless"
+            s = s.replace("dimensionless", "")
         elif "[meter]" in s:
             unit_str = "meters"
-
-        if not unit_str:
+            s = s.replace("[meter]", "")
+        else:
             m = re.match(r'\((?:.*[,;]\s*in\s+)([^\);]+)[\);]', s, re.DOTALL)
             if m:
                 unit_str = m.group(1)
-
-        if unit_str:
-            # Remove unit string from s
-            try:
                 s = re.sub(r'(in\s+)?'+re.escape(unit_str), '', s, re.DOTALL)
-            except Exception as e:
-                print(f"\nunit_str = {unit_str}\n")
-                raise e
 
         # Optional flag
         if "optional" in s:
