@@ -40,14 +40,11 @@ class Directive:
             span = Span(0, len(lines))
 
         bullet_line = lines[span.start]
-        m = PARAM_BULLET_RE.match(bullet_line)
-        assert m is not None  # guaranteed by find_directive_spans
+        annotation = BulletAnnotation(bullet_line)
 
-        bullet_indent = len(m.group(1))
-        first_name = m.group(3).strip()
-        rest = m.group(4).rstrip('\n')
+        first_name: str = annotation.first_name
+        bullet_indent: int = annotation.bullet_indent
 
-        annotation = BulletAnnotation(rest)
         names = merge_multiple_names([first_name] + annotation.extra_names)
 
         # Raw body: every source line after the bullet, newlines stripped
@@ -221,10 +218,10 @@ def parse_meta(s: str) -> tuple[str, str]:
 # ── Bullet annotation ─────────────────────────────────────────────────────────
 
 class BulletAnnotation:
-    """Parsed result of everything after the first ``name`` on a bullet line."""
+    """Parse bullet line."""
 
-    def __init__(self, rest: str):
-        """Parse everything after the opening ``name`` on a parameter bullet line.
+    def __init__(self, bullet_line: str):
+        """Parse bullet line.
 
         Handles the following source patterns (non-exhaustive):
             , ``co.name`` and ``other.name`` (`type`; default: X) desc…
@@ -239,6 +236,14 @@ class BulletAnnotation:
         default_str: str = ""
         comment_str: str = ""
         optional_flag: bool = False
+
+        m_bullet = PARAM_BULLET_RE.match(bullet_line)
+        assert m_bullet is not None
+
+        self.bullet_indent: int = len(m_bullet.group(1))
+        self.first_name: str = m_bullet.group(3).strip()
+
+        rest = m_bullet.group(4).rstrip('\n')
 
         s = rest.strip()
 
@@ -322,7 +327,8 @@ class BulletAnnotation:
         # descriptive text on the bullet line itself
         self.comment_str: str = comment_str
 
-        self.raw_source: str = rest
+        self.raw_bullet_line: str = bullet_line
+        self.raw_rest: str = rest
         self.raw_annotation: str = raw_annotation
 
 
