@@ -70,8 +70,12 @@ class Directive:
 
         self.bullet_line: str = bullet_line
         self.names: list[str] = names
+
         self.type_str: str = annotation.type_str
         self.default_str: str = annotation.default_str
+        self.unit_str: str = annotation.unit_str
+        self.comment_str: str = annotation.inline_desc
+
         self.annotation: BulletAnnotation = annotation
 
         self.raw_body: list[str] = raw_body
@@ -97,7 +101,7 @@ class Directive:
         body_indent: str = ' ' * self.body_indent
         out: list[str] = []
 
-        l_use_raw_annotation = True
+        l_use_raw_annotation = False
 
         l_past_first_name = False
         for name in self.names[:1]:
@@ -105,10 +109,17 @@ class Directive:
                 out.append('')
             l_past_first_name = True
             out.append(f'{bullet_indent}.. fv:var:: {name}')
-            # if self.type_str:
-            #     out.append(f'{body_indent}{indent}:type: {self.type_str}')
-            # if self.default_str:
-            #     out.append(f'{body_indent}{indent}:default: {self.default_str}')
+
+            if self.type_str:
+                out.append(f'{body_indent}:type: {self.type_str}')
+            if self.unit_str:
+                out.append(f'{body_indent}:unit: {self.unit_str}')
+            if self.default_str:
+                out.append(f'{body_indent}:default: {self.default_str}')
+            if self.annotation.optional_flag:
+                out.append(f'{body_indent}:optional:')
+            if self.comment_str:
+                out.append(f'{body_indent}:comment: {self.comment_str}')
             if l_use_raw_annotation:
                 raw_anno_txt = self.annotation.raw_annotation.strip().lstrip('.:').strip()
                 out.append(f"{body_indent}:annotation: {raw_anno_txt}")
