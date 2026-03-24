@@ -232,7 +232,38 @@ class BulletAnnotation:
             (``0`` or ``1``; default is ``1`` for true)
             plain description with no annotation
         """
+        self.unit_str: str = ""
+        self.optional_flag: bool = False
+
         s = rest.strip()
+
+        # Units
+        in_unit_list: list[str] = [
+            "meters",
+            "seconds",
+            "kilograms",
+            "volts/meter^2",
+            "Telsa/meter",
+            "V/m",
+        ]
+
+        if "dimensionless" in s:
+            self.unit_str = "dimensionless"
+        elif "[meter]" in s:
+            self.unit_str = "meters"
+        else:
+            for unit in in_unit_list:
+                if f"in {unit}" in s:
+                    self.unit_str = unit
+                    break
+        if not self.unit_str:
+            m = re.match(r'\((?:.*[,;]\s*in\s+)(?:)([^\);]+)[\);]', s, re.DOTALL)
+            if m:
+                self.unit_str = m.group(0)
+
+        # Optional flag
+        if "optional" in s:
+            self.optional_flag = True
 
         # ── Collect additional co-listed names ────────────────────────────────────
         extra_names: list[str] = []
