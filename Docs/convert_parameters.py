@@ -261,10 +261,10 @@ class BulletAnnotation:
             unit_str = "meters"
             s = s.replace("[meter]", "")
         else:
-            m = re.match(r'\((?:.*[,;]\s*in\s+)([^\);]+)[\);]', s, re.DOTALL)
+            m = re.match(r'\((?:.*)([,;]\s*in\s+)([^\);]+)[\);]', s, re.DOTALL)
             if m:
-                unit_str = m.group(1)
-                s = re.sub(r'(in\s+)?'+re.escape(unit_str), '', s, re.DOTALL)
+                unit_str = m.group(2)
+                s = s.replace(m.group(1)+m.group(2), "")
 
         # Optional flag
         if "optional" in s:
