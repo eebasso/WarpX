@@ -307,13 +307,18 @@ class BulletAnnotation:
         elif s:
             inline_desc = s
 
+        # Remove ':' or '='
+        default_str = default_str.lstrip(":= ")
+
         # Strip a lone trailing "." or ':' left over from e.g. "(`type`, default: X)."
         inline_desc = inline_desc.strip().lstrip('.:').strip()
 
         self.extra_names: list[str]  = extra_names # co-listed names, e.g. from "and ``foo.hi``"
+
         self.type_str: str = type_str
         self.default_str: str = default_str
         self.inline_desc: str = inline_desc # descriptive text on the bullet line itself
+
         self.raw_source: str = rest
         self.raw_annotation: str = raw_annotation
 
