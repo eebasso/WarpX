@@ -232,8 +232,11 @@ class BulletAnnotation:
             (``0`` or ``1``; default is ``1`` for true)
             plain description with no annotation
         """
-        self.unit_str: str = ""
-        self.optional_flag: bool = False
+        unit_str: str = ""
+        type_str: str = ""
+        default_str: str = ""
+        inline_desc: str = ""
+        optional_flag: bool = False
 
         s = rest.strip()
 
@@ -248,22 +251,22 @@ class BulletAnnotation:
         ]
 
         if "dimensionless" in s:
-            self.unit_str = "dimensionless"
+            unit_str = "dimensionless"
         elif "[meter]" in s:
-            self.unit_str = "meters"
+            unit_str = "meters"
         else:
             for unit in in_unit_list:
                 if f"in {unit}" in s:
-                    self.unit_str = unit
+                    unit_str = unit
                     break
-        if not self.unit_str:
+        if not unit_str:
             m = re.match(r'\((?:.*[,;]\s*in\s+)(?:)([^\);]+)[\);]', s, re.DOTALL)
             if m:
-                self.unit_str = m.group(0)
+                unit_str = m.group(0)
 
         # Optional flag
         if "optional" in s:
-            self.optional_flag = True
+            optional_flag = True
 
         # ── Collect additional co-listed names ────────────────────────────────────
         extra_names: list[str] = []
@@ -275,8 +278,6 @@ class BulletAnnotation:
             else:
                 break
         raw_annotation = s
-
-        type_str = default_str = inline_desc = ''
 
         if s.startswith('('):
             # Main parenthesised annotation
@@ -297,9 +298,9 @@ class BulletAnnotation:
 
         elif s.lower().startswith('optional'):
             remainder = s[len('optional'):].strip()
-            dm = re.match(r'\(default:?\s*(.*?)\)(.*)', remainder, re.IGNORECASE | re.DOTALL)
+            dm = re.match(r'\(default?\:?\s*(.*?)\)(.*)', remainder, re.IGNORECASE | re.DOTALL)
             if dm:
-                default_str = dm.group(1).strip()
+                default_str = dm.group(1).strip() + " test2"
                 inline_desc = dm.group(2).strip()
             else:
                 inline_desc = remainder
@@ -317,6 +318,8 @@ class BulletAnnotation:
 
         self.type_str: str = type_str
         self.default_str: str = default_str
+        self.unit_str: str = unit_str
+        self.optional_flag: bool = optional_flag
         self.inline_desc: str = inline_desc # descriptive text on the bullet line itself
 
         self.raw_source: str = rest
