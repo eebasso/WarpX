@@ -193,13 +193,9 @@ def parse_meta(s: str) -> tuple[str, str]:
 
     s = s.strip()
     # "; default …" or ", default …"
-    m_default_is = re.search(
-        r'[,;\s]*default(?:\s+is)?:?(?:\s*\=)?\s*([^\(\)]+)', s, re.IGNORECASE
-    )
+    m_default_is = DEFAULT_IS_RE.search(s)
     # "… X by default"
-    m_by_default = re.search(
-        r'[,;]\s*(\S+)\s+by\s+default$', s, re.IGNORECASE
-    )
+    m_by_default = BY_DEFAULT_RE.search(s)
     if m_default_is:
         type_str = normalise_type(s[:m_default_is.start()].strip())
         default_str = m_default_is.group(1).strip().rstrip(')')
@@ -214,6 +210,16 @@ def parse_meta(s: str) -> tuple[str, str]:
 
 
 # ── Bullet annotation ─────────────────────────────────────────────────────────
+
+DEFAULT_IS_RE = re.compile(
+    r'[,;\s]*default(?:\s+is)?:?(?:\s*\=)?\s*([^\(\)]+)',
+    re.IGNORECASE
+)
+
+BY_DEFAULT_RE = re.compile(
+    r'[,;]\s*(\S+)\s+by\s+default$',
+    re.IGNORECASE
+)
 
 class BulletAnnotation:
     """Parse bullet line."""
@@ -281,6 +287,10 @@ class BulletAnnotation:
         if s.startswith('('):
             # Main parenthesised annotation
             end = find_paren_end(s)
+            assert s[end] == ')'
+            # first_paren_txt = s[1:end]
+            # print(f"\nfirst_name: {self.first_name}\n  s[1:end]: {s[1:end]}\n  s[end]: {s[end]}\n")
+
             type_str, default_str = parse_meta(s[1:end])
             after = s[end + 1:].strip()
             # Strip a bare "optional" that sometimes follows
@@ -296,6 +306,7 @@ class BulletAnnotation:
                 comment_str = after
 
         elif s:
+            # print(f"\nCASE 3, first_name: '{self.first_name}', s: '{s}'\n")
             comment_str = s
 
         # Strip errant punctuation
