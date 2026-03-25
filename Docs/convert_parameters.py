@@ -157,7 +157,6 @@ def normalise_type(s: str) -> str:
     # s = re.sub(r'``(int|float|str|bool)``', r'`\1`', s)
     return s
 
-
 # Parenthesis finder
 def find_paren_end(s: str) -> int:
     """Return the index of the ')' matching the '(' assumed to be at s[0].
@@ -179,9 +178,7 @@ def find_paren_end(s: str) -> int:
         i += 1
     return len(s) - 1
 
-
 # Meta parsing
-
 def parse_meta(s: str) -> tuple[str, str]:
     """Parse the interior of a parenthesised annotation into (type_str, default_str).
 
@@ -297,19 +294,8 @@ class BulletAnnotation:
             else:
                 comment_str = after
 
-        elif s.lower().startswith('optional'):
-            remainder = s[len('optional'):].strip()
-            dm = re.match(r'\(default?\:?\s*(.*?)\)(.*)', remainder, re.IGNORECASE | re.DOTALL)
-            if dm:
-                default_str = dm.group(1).strip()
-                comment_str = dm.group(2).strip()
-            else:
-                comment_str = remainder
-            # default_str += " test2"
-            # comment_str += " test2"
         elif s:
             comment_str = s
-            # default_str += " test3"
 
         # Strip errant punctuation
         type_str = type_str.strip(".:;,= ")
