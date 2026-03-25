@@ -167,7 +167,8 @@ Overall simulation parameters
 -----------------------------
 
 .. fv:var:: authors
-    :type: `string`: e.g. ``"Jane Doe <jane@example.com>, Jimmy Joe <jimmy@example.com>"``
+    :type: `string`
+    :comment: e.g. ``"Jane Doe <jane@example.com>, Jimmy Joe <jimmy@example.com>"``
 
     Authors of an input file / simulation setup.
     When provided, this information is added as metadata to (openPMD) output files.
@@ -190,7 +191,8 @@ Overall simulation parameters
     (See the corresponding documentation of each input parameters for exceptions.)
 
 .. fv:var:: warpx.boost_direction
-    :type: string: ``x``, ``y`` or ``z``
+    :type: string
+    :comment: ``x``, ``y`` or ``z``
 
     The direction of the Lorentz-transform for boosted-frame simulations
     (The direction ``y`` cannot be used in 2D simulations.)
@@ -5246,8 +5248,9 @@ When developing, testing and :ref:`debugging WarpX <debugging_warpx>`, the follo
     crashes before a global warning report can be printed.
 
 .. fv:var:: warpx.abort_on_warning_threshold
-    :type: string: ``low``, ``medium`` or ``high``
+    :type: string
     :optional:
+    :comment: ``low``, ``medium`` or ``high``
 
     Optional threshold to abort as soon as a warning is raised.
     If the threshold is set, warning messages with priority greater than or

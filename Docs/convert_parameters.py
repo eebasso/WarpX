@@ -248,6 +248,7 @@ class BulletAnnotation:
             end = find_paren_end(s)
             assert s[end] == ')'
             first_paren_txt = s[1:end]
+            after = s[end + 1:].strip()
             # print(f"\nfirst_name: {self.first_name}\n  s[1:end]: {s[1:end]}\n  s[end]: {s[end]}\n")
 
             first_paren_txt = first_paren_txt.strip()
@@ -257,7 +258,7 @@ class BulletAnnotation:
                 r'[,;\s]*default(?:\s+is)?:?(?:\s*\=)?\s*([^\(\)]+)',
                 first_paren_txt, re.IGNORECASE
             )
-            # "… X by default"
+            # ";… X by default"
             m_by_default = re.search(
                 r'[,;]\s*(\S+)\s+by\s+default$',
                 first_paren_txt, re.IGNORECASE
@@ -274,7 +275,15 @@ class BulletAnnotation:
                 type_str = first_paren_txt
                 default_str = ""
 
-            after = s[end + 1:].strip()
+            # "type: comment"
+            m_type_comment = re.search(
+                r'(.+)[:](.+)',
+                type_str, re.DOTALL
+            )
+            if m_type_comment:
+                type_str = m_type_comment.group(1)
+                comment_str = m_type_comment.group(2)
+
             # Strip a bare "optional" that sometimes follows
             after = re.sub(r'^optional\b', '', after, flags=re.IGNORECASE).strip()
             # A second parenthesis may carry the default when the first didn't
@@ -283,13 +292,14 @@ class BulletAnnotation:
                 dm = re.match(r'default:?\s*(.*)', after[1:end2].strip(), re.IGNORECASE)
                 if dm:
                     default_str = dm.group(1).strip()
-                comment_str = after[end2 + 1:].strip()
+                comment_str += after[end2 + 1:].strip()
             else:
-                comment_str = after
+                comment_str += after
 
             # if type_str and not default_str and after:
             #     print("")
             #     print(f"first_name: {self.first_name}")
+            #     print(f"  bullet_line: {bullet_line}")
             #     print(f"  type_str: {type_str}")
             #     print(f"  default_str: {default_str}")
             #     print(f"  after: {after}")
