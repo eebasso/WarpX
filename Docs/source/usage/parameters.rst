@@ -2034,7 +2034,7 @@ Laser initialization
 
 .. fv:var:: <laser_name>.a0
     :type: `float`
-    :unit: dimensionless
+    :comment: dimensionless
 
     Peak normalized amplitude of the laser field, in the focal plane (given in the lab frame, just as ``e_max`` above).
     See the description of ``<laser_name>.e_max`` for the conversion between ``a0`` and ``e_max``.

@@ -223,7 +223,8 @@ class BulletAnnotation:
 
         # Units
         if "dimensionless" in s:
-            unit_str = "dimensionless"
+            # unit_str = "dimensionless"
+            comment_str += "dimensionless"
             s = s.replace("dimensionless", "")
         elif "[meter]" in s:
             unit_str = "meters"
@@ -282,7 +283,7 @@ class BulletAnnotation:
             )
             if m_type_comment:
                 type_str = m_type_comment.group(1)
-                comment_str = m_type_comment.group(2)
+                comment_str += m_type_comment.group(2)
 
             # Strip a bare "optional" that sometimes follows
             after = re.sub(r'^optional\b', '', after, flags=re.IGNORECASE).strip()
