@@ -193,19 +193,20 @@ def parse_meta(s: str) -> tuple[str, str]:
 
     s = s.strip()
     # "; default …" or ", default …"
-    m = re.search(
+    m_default_is = re.search(
         r'[,;\s]*default(?:\s+is)?:?(?:\s*\=)?\s*([^\(\)]+)', s, re.IGNORECASE
     )
     # "… X by default"
-    m2 = re.search(
+    m_by_default = re.search(
         r'[,;]\s*(\S+)\s+by\s+default$', s, re.IGNORECASE
     )
-    if m:
-        type_str = normalise_type(s[:m.start()].strip())
-        default_str = m.group(1).strip().rstrip(')')
-    elif m2:
-        type_str = normalise_type(s[:m2.start()].strip())
-        default_str = m2.group(1).strip()
+    if m_default_is:
+        type_str = normalise_type(s[:m_default_is.start()].strip())
+        default_str = m_default_is.group(1).strip().rstrip(')')
+    elif m_by_default:
+        # print(f"\nm2 match, s: '{s}'\n")
+        type_str = normalise_type(s[:m_by_default.start()].strip())
+        default_str = m_by_default.group(1).strip()
     else:
         type_str = normalise_type(s)
         default_str = ""
