@@ -311,9 +311,9 @@ class BulletAnnotation:
 
         # Strip errant punctuation
         type_str = type_str.strip(".:;,= ")
-        default_str = default_str.lstrip(".:;,= ")
-        unit_str = unit_str.strip(".:;,=() ")
-        comment_str = comment_str.lstrip(".:;,= ")
+        default_str = default_str.strip(":;,= ")
+        unit_str = unit_str.strip(".:;,= ")
+        comment_str = comment_str.lstrip(".;").strip(":,= ")
 
         # co-listed names, e.g. from "and ``foo.hi``"
         self.extra_names: list[str]  = extra_names
