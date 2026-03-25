@@ -178,48 +178,7 @@ def find_paren_end(s: str) -> int:
         i += 1
     return len(s) - 1
 
-# Meta parsing
-def parse_meta(s: str) -> tuple[str, str]:
-    """Parse the interior of a parenthesised annotation into (type_str, default_str).
-
-    Recognises patterns such as:
-        `float`; in seconds
-        `float`; default: 1.0
-        `int`, 0 by default
-        ``0`` or ``1``; default is ``1`` for true
-    """
-    type_str: str = ""
-    default_str: str = ""
-
-    s = s.strip()
-    # "; default …" or ", default …"
-    m_default_is = DEFAULT_IS_RE.search(s)
-    # "… X by default"
-    m_by_default = BY_DEFAULT_RE.search(s)
-    if m_default_is:
-        type_str = s[:m_default_is.start()].strip()
-        default_str = m_default_is.group(1).strip().rstrip(')')
-    elif m_by_default:
-        # print(f"\nm2 match, s: '{s}'\n")
-        type_str = s[:m_by_default.start()].strip()
-        default_str = m_by_default.group(1).strip()
-    else:
-        type_str = s
-        default_str = ""
-    return type_str, default_str
-
-
 # ── Bullet annotation ─────────────────────────────────────────────────────────
-
-DEFAULT_IS_RE = re.compile(
-    r'[,;\s]*default(?:\s+is)?:?(?:\s*\=)?\s*([^\(\)]+)',
-    re.IGNORECASE
-)
-
-BY_DEFAULT_RE = re.compile(
-    r'[,;]\s*(\S+)\s+by\s+default$',
-    re.IGNORECASE
-)
 
 class BulletAnnotation:
     """Parse bullet line."""
@@ -288,10 +247,33 @@ class BulletAnnotation:
             # Main parenthesised annotation
             end = find_paren_end(s)
             assert s[end] == ')'
-            # first_paren_txt = s[1:end]
+            first_paren_txt = s[1:end]
             # print(f"\nfirst_name: {self.first_name}\n  s[1:end]: {s[1:end]}\n  s[end]: {s[end]}\n")
 
-            type_str, default_str = parse_meta(s[1:end])
+            first_paren_txt = first_paren_txt.strip()
+
+            # "; default …" or ", default …"
+            m_default_is = re.search(
+                r'[,;\s]*default(?:\s+is)?:?(?:\s*\=)?\s*([^\(\)]+)',
+                first_paren_txt, re.IGNORECASE
+            )
+            # "… X by default"
+            m_by_default = re.search(
+                r'[,;]\s*(\S+)\s+by\s+default$',
+                first_paren_txt, re.IGNORECASE
+            )
+
+            if m_default_is:
+                type_str = first_paren_txt[:m_default_is.start()].strip()
+                default_str = m_default_is.group(1).strip().rstrip(')')
+            elif m_by_default:
+                # print(f"\nm2 match, s: '{s}'\n")
+                type_str = first_paren_txt[:m_by_default.start()].strip()
+                default_str = m_by_default.group(1).strip()
+            else:
+                type_str = first_paren_txt
+                default_str = ""
+
             after = s[end + 1:].strip()
             # Strip a bare "optional" that sometimes follows
             after = re.sub(r'^optional\b', '', after, flags=re.IGNORECASE).strip()
@@ -304,6 +286,14 @@ class BulletAnnotation:
                 comment_str = after[end2 + 1:].strip()
             else:
                 comment_str = after
+
+            # if type_str and not default_str and after:
+            #     print("")
+            #     print(f"first_name: {self.first_name}")
+            #     print(f"  type_str: {type_str}")
+            #     print(f"  default_str: {default_str}")
+            #     print(f"  after: {after}")
+            #     print("")
 
         elif s:
             # print(f"\nCASE 3, first_name: '{self.first_name}', s: '{s}'\n")
