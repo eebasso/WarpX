@@ -808,7 +808,7 @@ Domain Boundary Conditions
     * ``open``: For the electrostatic Poisson solver based on a Integrated Green Function method.
 
 .. fv:var:: boundary.potential_lo/hi_x/y/z
-    :type: default `0`
+    :default: `0`
 
     Gives the value of the electric potential, in Volts, at the boundaries, for ``pec`` boundaries. With electrostatic solvers
     (i.e., with ``warpx.do_electrostatic = ...``), this is used in order to compute the potential
@@ -2377,7 +2377,7 @@ are applied to the grid directly. In particular, these fields can be seen in the
     than periodic.
 
 .. fv:var:: warpx.maxlevel_extEMfield_init
-    :type: default is maximum number of levels in the simulation
+    :default: maximum number of levels in the simulation
 
     With this parameter, the externally applied electric and magnetic fields
     will not be applied for levels greater than ``warpx.maxlevel_extEMfield_init``.
