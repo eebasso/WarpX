@@ -68,6 +68,8 @@ class Directive:
         self.bullet_line: str = bullet_line
         self.names: list[str] = names
 
+        self.raw_name_list: list[str] = [first_name] + annotation.extra_names
+
         self.type_str: str = annotation.type_str
         self.default_str: str = annotation.default_str
         self.unit_str: str = annotation.unit_str
@@ -107,6 +109,10 @@ class Directive:
             l_past_first_name = True
             out.append(f'{bullet_indent}.. fv:var:: {name}')
 
+            if len(self.raw_name_list) > 1 or self.raw_name_list[0] != name:
+                other_names = [ elem.replace(" ", "") for elem in self.raw_name_list ]
+                other_names_str = " ".join(other_names)
+                out.append(f"{body_indent}:othernames: {other_names_str}")
             if self.type_str:
                 out.append(f'{body_indent}:type: {self.type_str}')
             if self.unit_str:
