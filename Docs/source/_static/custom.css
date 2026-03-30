@@ -4,3 +4,9 @@
     /* Copied from https://github.com/readthedocs/sphinx_rtd_theme/issues/301#issuecomment-1205755904 */
     float: right;
 }
+
+/* Make custom role, e.g., :fv:var:`param1`, simliar to RST
+ literals, e.g., ``param1``. */
+.rst-content code.literal.fv.fv-var {
+    color: #e74c3c
+}
