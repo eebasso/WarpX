@@ -616,6 +616,43 @@ class WarpXDomain(FlexVarDomain):
         "var": ObjType("parameter", "var"),
     }
 
+def warpx_source_read(app: Sphinx, docname: str, source: list[str]):
+    print("")
+    print(f"warpx_source_read: start")
+    print(f"  docname: '{docname}'")
+    print(f"  len(source) = {len(source)}")
+
+    if not re.search(r"parameters", docname):
+        print("warpx_source_read: end")
+        print("")
+        return
+
+    print(f"  Found match for docname: {docname}")
+
+    print(f"  Replace literals")
+
+    old_txt = source[0]
+    literal_re = re.compile(r"``([^`]+)``", re.DOTALL)
+
+    def _repl(m: re.Match[str]):
+        return f":p:`{m.group(1)}`"
+
+    source[0] = literal_re.sub(_repl, source[0])
+    print(f"  (old_txt == source[0]): {old_txt == source[0]}")
+
+    # Add default-role
+    old_txt = source[0]
+    print("  Define default role")
+    source_lines: list[str] = source[0].splitlines(keepends=True)
+    extra_txt: str = ""
+    extra_txt += ".. default-role:: fv:var\n"
+    extra_txt += "\n"
+    source_lines.insert(0, extra_txt)
+    source[0] = "".join(source_lines)
+    print(f"  (old_txt == source[0]): {old_txt == source[0]}")
+
+    print("warpx_source_read: end")
+    print("")
 
 def setup(app: Sphinx) -> dict:
     app.add_domain(WarpXDomain)
@@ -623,6 +660,8 @@ def setup(app: Sphinx) -> dict:
     for alias in aliases:
         app.add_role(alias, WarpXDomain.roles["var"])
         app.add_directive(alias, WarpXDomain.directives["var"])
+
+    app.connect("source-read", warpx_source_read)
 
     return {
         "version": "0.1.0",
