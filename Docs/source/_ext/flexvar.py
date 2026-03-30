@@ -418,6 +418,10 @@ class FlexVarXRefRole(XRefRole):
         # refnode2 = nodes.literal(target, "process_link_1 : ", refnode)
         # title = f"process_link_2 : {title}"
         # refnode.children = [ nodes.literal("", "process_link-1: " + refnode.astext()) ]
+
+        refnode["refdomain"] = FlexVarDomain.name
+        refnode["reftype"] = "var"
+
         return XRefRole.process_link(
             self, env, refnode, has_explicit_title, title, target
         )
@@ -615,7 +619,11 @@ class WarpXDomain(FlexVarDomain):
 
 def setup(app: Sphinx) -> dict:
     app.add_domain(WarpXDomain)
-    app.add_directive("warpxparam", FlexVarDirective)
+    aliases = ["p", "warpxparam"]
+    for alias in aliases:
+        app.add_role(alias, WarpXDomain.roles["var"])
+        app.add_directive(alias, WarpXDomain.directives["var"])
+
     return {
         "version": "0.1.0",
         "parallel_read_safe": True,
