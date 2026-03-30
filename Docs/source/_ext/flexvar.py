@@ -645,7 +645,19 @@ def warpx_source_read(app: Sphinx, docname: str, source: list[str]):
     literal_re = re.compile(r"``([^`]+)``", re.DOTALL)
 
     def _repl(m: re.Match[str]):
-        return f":p:`{m.group(1)}`"
+        # Replace double backticks with single backticks
+        # This allows double backticks to act like xrefs, which avoids to hunt
+        # down and replace every reference currently in a double backtick
+        # literal in every single .rst file of the documentation.
+        #
+        # Replace ``(...)`` with `\ (...)`
+        # The purpose of the whitespace escape hack is to preserve the string
+        # length to avoid breaking tables.
+        # rendering to the same thing as
+        #
+        # In summary:
+        # `\ XYZ` has the same length as ``XYZ`` and same render as `XYZ`.
+        return rf"`\ {m.group(1)}`"
 
     source[0] = literal_re.sub(_repl, source[0])
     print(f"  (old_txt == source[0]): {old_txt == source[0]}")
