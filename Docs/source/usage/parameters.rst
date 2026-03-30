@@ -40,6 +40,12 @@ Compare: `single-backtick-trailing-spaces-test\ `. More text.
 Inputs: Parameter List
 ======================
 
+.. warpxparam:: param_directive_test
+
+    Test description
+
+Test xref: :fv:var:`param_directive_test`
+
 This section describes the list of parameters that can be set in the WarpX inputs file.
 
 Examples of inputs files can be found in the :ref:`Examples <usage-examples>` section.

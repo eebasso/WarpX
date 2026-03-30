@@ -615,6 +615,7 @@ class WarpXDomain(FlexVarDomain):
 
 def setup(app: Sphinx) -> dict:
     app.add_domain(WarpXDomain)
+    app.add_directive("warpxparam", FlexVarDirective)
     return {
         "version": "0.1.0",
         "parallel_read_safe": True,
