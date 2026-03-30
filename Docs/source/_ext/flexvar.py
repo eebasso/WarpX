@@ -405,6 +405,19 @@ class FlexVarXRefRole(XRefRole):
             m = self._value_re.match(target)
             if m:
                 target = m.group(1).strip()
+        print("")
+        print("process_link:")
+        print(f"  refnode = {refnode}, astext() = '{refnode.astext()}'")
+        print(f"  refnode.children = {refnode.children}")
+        for child in refnode.children:
+            print(f"    refnode.child = {child}, astext() = '{child.astext()}'")
+        print(f"  title = {title}")
+        print(f"  target = {target}")
+        # refnode.children = [ nodes.literal("", "process_link_1", *refnode) ]
+        # refnode2 = refnode
+        # refnode2 = nodes.literal(target, "process_link_1 : ", refnode)
+        # title = f"process_link_2 : {title}"
+        # refnode.children = [ nodes.literal("", "process_link-1: " + refnode.astext()) ]
         return XRefRole.process_link(
             self, env, refnode, has_explicit_title, title, target
         )
@@ -483,17 +496,70 @@ class FlexVarDomain(Domain):
         node: addnodes.pending_xref,
         contnode: nodes.Element,
     ) -> nodes.Element | None:
+
+        def _print_node(_name, _n: nodes.Element):
+            print("")
+            print(f"  {_name}:")
+            print(f"    repr: {_n}")
+            print(f"    type: {type(_n)}")
+            print(f"    children: {_n.children}")
+            print(f"    astext(): '{_n.astext()}'")
+            print(f"    ['classes']: {_n.__getitem__('classes')}")
+
+        print("")
+        print("resolve_xref start:")
+        print(f"  target = {target}")
+        _print_node("node", node)
+        _print_node("contnode", contnode)
+
         obj: ObjectEntry | None = self.objects.get(target)
+        # node.children = [ nodes.literal("", "resolve_xref-node-0: " + node.astext()) ]
+        # contnode.children = [ nodes.literal("", "resolve_xref-contnode-0: " + contnode.astext()) ]
+
+        # classes: list[str] = []
+        # for class_str in contnode["classes"]:
+        #     if class_str != "xref":
+        #         classes.append(class_str)
+        # contnode["classes"] = classes
+
         if obj is None:
+            # node.children = [ nodes.literal("", "resolve_xref-node-None " + node.astext()) ]
+            # contnode.children = [ nodes.literal("", "resolve_xref-contnode-None: " + contnode.astext()) ]
+            # return nodes.literal("", "resolve_xref_None: ", *contnode)
+            # return nodes.literal("", "resolve_xref_None: " + node.astext())
+            print("")
+            print(f"  resolve_xref: obj is None:")
+            _print_node("node", node)
+            _print_node("contnode", contnode)
+            print("")
             return None
-        return make_refnode(
+
+        # contnode += nodes.literal("", " - resolve_xref_0")
+        # contnode.children.insert(0, nodes.literal("", "resolve_xref_1:"))
+        # child = nodes.literal("", "resolve_xref_1: ", contnode) # resolve_xref_1 was literal
+        # child = nodes.literal("", "resolve_xref_1: ", *contnode) # everything was literal
+        # child = nodes.literal("", "resolve_xref_1: ", *contnode.children) # Clustered
+        # child = nodes.literal("", "resolve_xref-1: " + contnode.astext())
+        # child = nodes.literal("", contnode.astext())
+        child = contnode
+
+        refnode = make_refnode(
             builder=builder,
             fromdocname=fromdocname,
             todocname=obj.docname,
             targetid=obj.node_id,
-            child=contnode,
+            child=child,
             title=target,
         )
+        result = refnode
+        # result = nodes.reference("", "", nodes.literal("", "resolve_xref_2 : " + refnode.astext()))
+        print("")
+        print(f"  resolve_xref end:")
+        _print_node("node", node)
+        _print_node("contnode", contnode)
+        _print_node("result", result)
+        print("")
+        return result
 
     def get_objects(self) -> Iterator[tuple[str, str, str, str, str, int]]:
         """Return an iterable of "object descriptions".
