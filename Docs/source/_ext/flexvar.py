@@ -501,18 +501,22 @@ class FlexVarDomain(Domain):
         contnode: nodes.Element,
     ) -> nodes.Element | None:
 
+        t = "    "
+
         def _print_node(_name, _n: nodes.Element):
             print("")
-            print(f"  {_name}:")
-            print(f"    repr = {_n}")
-            print(f"    type = {type(_n)}")
-            print(f"    children = {_n.children}")
-            print(f"    astext() = '{_n.astext()}'")
-            print(f"    ['classes'] = {_n.__getitem__('classes')}")
+            print(f"{t}{_name}:")
+            print(f"{t}{t}astext(): '{_n.astext()}'")
+            print(f"{t}{t}repr: {_n}")
+            print(f"{t}{t}type: {type(_n)}")
+            print(f"{t}{t}['classes']: {_n['classes']}")
+            print(f"{t}{t}children: {_n.children}")
+            for child in _n.children:
+                print(f"{t}{t}{t}{child}")
 
         print("")
         print("resolve_xref start:")
-        print(f"  target = '{target}'")
+        print(f"{t}target = '{target}'")
         _print_node("node", node)
         _print_node("contnode", contnode)
 
@@ -532,7 +536,7 @@ class FlexVarDomain(Domain):
             # return nodes.literal("", "resolve_xref_None: ", *contnode)
             # return nodes.literal("", "resolve_xref_None: " + node.astext())
             print("")
-            print(f"  resolve_xref: obj is None:")
+            print(f"{t}resolve_xref: obj is None:")
             _print_node("node", node)
             _print_node("contnode", contnode)
             print("")
@@ -558,7 +562,7 @@ class FlexVarDomain(Domain):
         result = refnode
         # result = nodes.reference("", "", nodes.literal("", "resolve_xref_2 : " + refnode.astext()))
         print("")
-        print(f"  resolve_xref end:")
+        print(f"{t}resolve_xref: end:")
         _print_node("node", node)
         _print_node("contnode", contnode)
         _print_node("result", result)
