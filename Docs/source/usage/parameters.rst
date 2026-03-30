@@ -1,5 +1,42 @@
 .. _running-cpp-parameters:
 
+.. default-role:: literal
+
+.. role:: p(literal)
+
+.. fv:var:: abc
+
+    Test description
+
+Xref: :fv:var:`abc` ``abc``
+
+Xref: :fv:var:`xyz` ``xyz``
+
+Xref with equation: :fv:var:`abc = 1`
+
+Xref with equation: :fv:var:`xyz = 2`
+
+Single backtick: `abc`
+
+Single backtick: `xyz`
+
+Double backticks: ``abc``
+
+Double backticks: ``xyz``
+
+Compare: ``single-backtick-trailing-spaces-test``. More text.
+
+Compare: `single-backtick-trailing-spaces-test`  . More text.
+
+Compare:  `single-backtick-trailing-spaces-test` . More text.
+
+Compare:   `single-backtick-trailing-spaces-test`. More text.
+
+Compare: `\ single-backtick-trailing-spaces-test`. More text.
+
+Compare: `single-backtick-trailing-spaces-test\ `. More text.
+
+
 Inputs: Parameter List
 ======================
 
@@ -17,7 +54,7 @@ Examples of inputs files can be found in the :ref:`Examples <usage-examples>` se
 
 .. note::
 
-   The AMReX parser (see :ref:`running-cpp-parameters-parser`) is used for the right-hand side of all input parameters that consist of one or more integers or floats. Expressions like ``<species_name>.density_max = "0.1+2.3"`` and expressions that include user-defined constants are accepted.
+   The AMReX parser (see :ref:`running-cpp-parameters-parser`) is used for the right-hand side of all input parameters that consist of one or more integers or floats. Expressions like :fv:var:`<species_name>.density_max = "0.1+2.3"` and expressions that include user-defined constants are accepted.
 
 .. _running-cpp-parameters-parser:
 
@@ -50,6 +87,19 @@ WarpX provides a few pre-defined constants that can be used for any input parame
 =============  ==================================
 
 The numerical values of these constants are set in `Source/ablastr/constant.H <https://github.com/BLAST-WarpX/warpx/blob/development/Source/ablastr/constant.H>`__.
+
+=============  ==================================
+:p:`q_e`        Elementary charge (C)
+:p:`m_e`        Electron mass (kg)
+:p:`m_p`        Proton mass (kg)
+:p:`m_u`        Unified atomic mass unit (kg)
+:p:`epsilon0`   Vacuum permittivity (F/m)
+:p:`mu0`        Vacuum permeability (H/m)
+:p:`clight`     Vacuum speed of light (m/s)
+:p:`kb`         Boltzmann's constant (J/K)
+:p:`hbar`       Reduced Planck constant (J*s)
+:p:`pi`         Mathematical constant :math:`\pi`
+=============  ==================================
 
 User-defined constants
 ^^^^^^^^^^^^^^^^^^^^^^
@@ -125,13 +175,13 @@ Simulation Time
 ---------------
 
 .. fv:var:: max_step
-    :type: `integer`
+    :type: :math:`radian`
 
     The number of PIC cycles to perform.
 
 .. fv:var:: stop_time
-    :type: `float`
-    :unit: seconds
+    :type: :math:`\mathrm{m s^{2}}`
+    :unit: :math:`m s^2`
 
     The maximum physical time of the simulation. Can be provided instead of ``max_step``. If both
     ``max_step`` and ``stop_time`` are provided, both criteria are used and the simulation stops
@@ -140,7 +190,7 @@ Simulation Time
     Note: in boosted-frame simulations, ``stop_time`` refers to the time in the boosted frame.
 
 .. fv:var:: warpx.zmax_plasma_to_compute_max_step
-    :type: `float`
+    :type: :math:`m s^2`
     :optional:
 
     Can be useful when running in a boosted frame. If specified, automatically
