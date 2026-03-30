@@ -1,8 +1,6 @@
 .. _running-cpp-parameters:
 
-.. default-role:: literal
-
-.. role:: p(literal)
+.. default-role:: fv:var
 
 .. fv:var:: abc
 
@@ -24,6 +22,10 @@ Double backticks: ``abc``
 
 Double backticks: ``xyz``
 
+Compare: :fv:var:`abc\ `
+
+Compare: :fv:var:`\ abc`
+
 Compare: ``single-backtick-trailing-spaces-test``. More text.
 
 Compare: `single-backtick-trailing-spaces-test`  . More text.
@@ -36,6 +38,7 @@ Compare: `\ single-backtick-trailing-spaces-test`. More text.
 
 Compare: `single-backtick-trailing-spaces-test\ `. More text.
 
+Alias tests: :p:`abc`, :warpxparam:`abc`
 
 Inputs: Parameter List
 ======================
@@ -44,7 +47,13 @@ Inputs: Parameter List
 
     Test description
 
-Test xref: :fv:var:`param_directive_test`
+Test xref: :warpxparam:`param_directive_test`
+
+.. p:: p_directive_test
+
+    Test description
+
+Test xref: :p:`p_directive_test`, :fv:var:`p_directive_test`, `p_directive_test`, `p_directive_test\ `
 
 This section describes the list of parameters that can be set in the WarpX inputs file.
 
