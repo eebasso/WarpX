@@ -411,8 +411,8 @@ class FlexVarXRefRole(XRefRole):
         print(f"  refnode.children = {refnode.children}")
         for child in refnode.children:
             print(f"    refnode.child = {child}, astext() = '{child.astext()}'")
-        print(f"  title = {title}")
-        print(f"  target = {target}")
+        print(f"  title = '{title}'")
+        print(f"  target = '{target}'")
         # refnode.children = [ nodes.literal("", "process_link_1", *refnode) ]
         # refnode2 = refnode
         # refnode2 = nodes.literal(target, "process_link_1 : ", refnode)
@@ -500,15 +500,15 @@ class FlexVarDomain(Domain):
         def _print_node(_name, _n: nodes.Element):
             print("")
             print(f"  {_name}:")
-            print(f"    repr: {_n}")
-            print(f"    type: {type(_n)}")
-            print(f"    children: {_n.children}")
-            print(f"    astext(): '{_n.astext()}'")
-            print(f"    ['classes']: {_n.__getitem__('classes')}")
+            print(f"    repr = {_n}")
+            print(f"    type = {type(_n)}")
+            print(f"    children = {_n.children}")
+            print(f"    astext() = '{_n.astext()}'")
+            print(f"    ['classes'] = {_n.__getitem__('classes')}")
 
         print("")
         print("resolve_xref start:")
-        print(f"  target = {target}")
+        print(f"  target = '{target}'")
         _print_node("node", node)
         _print_node("contnode", contnode)
 
