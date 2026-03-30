@@ -1,6 +1,9 @@
+.. default-role:: fv:var
+
 .. _running-cpp-parameters:
 
-.. default-role:: fv:var
+Inputs: Parameter List
+======================
 
 .. fv:var:: abc
 
@@ -39,9 +42,6 @@ Compare: `\ single-backtick-trailing-spaces-test`. More text.
 Compare: `single-backtick-trailing-spaces-test\ `. More text.
 
 Alias tests: :p:`abc`, :warpxparam:`abc`
-
-Inputs: Parameter List
-======================
 
 .. warpxparam:: param_directive_test
 
