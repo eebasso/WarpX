@@ -25,6 +25,10 @@ Double backticks: ``abc``
 
 Double backticks: ``xyz``
 
+Test: :fv:var:`\ escaped-space-before`
+
+Test: :fv:var:`escaped-space-after\ `
+
 Compare: :fv:var:`abc\ `
 
 Compare: :fv:var:`\ abc`

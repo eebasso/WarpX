@@ -535,6 +535,9 @@ class FlexVarDomain(Domain):
             # contnode.children = [ nodes.literal("", "resolve_xref-contnode-None: " + contnode.astext()) ]
             # return nodes.literal("", "resolve_xref_None: ", *contnode)
             # return nodes.literal("", "resolve_xref_None: " + node.astext())
+
+            contnode["classes"] = []
+
             print("")
             print(f"{t}resolve_xref: obj is None:")
             _print_node("node", node)
@@ -549,6 +552,9 @@ class FlexVarDomain(Domain):
         # child = nodes.literal("", "resolve_xref_1: ", *contnode.children) # Clustered
         # child = nodes.literal("", "resolve_xref-1: " + contnode.astext())
         # child = nodes.literal("", contnode.astext())
+
+        contnode["classes"] = ["xref", "fv", "fv-var"]
+
         child = contnode
 
         refnode = make_refnode(
