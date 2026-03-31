@@ -29,6 +29,8 @@ Test: :fv:var:`\ escaped-space-before`
 
 Test: :fv:var:`escaped-space-after\ `
 
+Test title with double backticks: ``Title of abc <abc>``
+
 Compare: :fv:var:`abc\ `
 
 Compare: :fv:var:`\ abc`
