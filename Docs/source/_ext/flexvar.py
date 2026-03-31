@@ -521,20 +521,8 @@ class FlexVarDomain(Domain):
         _print_node("contnode", contnode)
 
         obj: ObjectEntry | None = self.objects.get(target)
-        # node.children = [ nodes.literal("", "resolve_xref-node-0: " + node.astext()) ]
-        # contnode.children = [ nodes.literal("", "resolve_xref-contnode-0: " + contnode.astext()) ]
-
-        # classes: list[str] = []
-        # for class_str in contnode["classes"]:
-        #     if class_str != "xref":
-        #         classes.append(class_str)
-        # contnode["classes"] = classes
 
         if obj is None:
-            # node.children = [ nodes.literal("", "resolve_xref-node-None " + node.astext()) ]
-            # contnode.children = [ nodes.literal("", "resolve_xref-contnode-None: " + contnode.astext()) ]
-            # return nodes.literal("", "resolve_xref_None: ", *contnode)
-            # return nodes.literal("", "resolve_xref_None: " + node.astext())
 
             contnode["classes"] = []
 
@@ -545,28 +533,16 @@ class FlexVarDomain(Domain):
             print("")
             return None
 
-        # contnode += nodes.literal("", " - resolve_xref_0")
-        # contnode.children.insert(0, nodes.literal("", "resolve_xref_1:"))
-        # child = nodes.literal("", "resolve_xref_1: ", contnode) # resolve_xref_1 was literal
-        # child = nodes.literal("", "resolve_xref_1: ", *contnode) # everything was literal
-        # child = nodes.literal("", "resolve_xref_1: ", *contnode.children) # Clustered
-        # child = nodes.literal("", "resolve_xref-1: " + contnode.astext())
-        # child = nodes.literal("", contnode.astext())
-
         contnode["classes"] = ["xref", "fv", "fv-var"]
 
-        child = contnode
-
-        refnode = make_refnode(
+        result = make_refnode(
             builder=builder,
             fromdocname=fromdocname,
             todocname=obj.docname,
             targetid=obj.node_id,
-            child=child,
+            child=contnode,
             title=target,
         )
-        result = refnode
-        # result = nodes.reference("", "", nodes.literal("", "resolve_xref_2 : " + refnode.astext()))
         print("")
         print(f"{t}resolve_xref: end:")
         _print_node("node", node)
