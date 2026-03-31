@@ -632,10 +632,10 @@ def warpx_source_read(app: Sphinx, docname: str, source: list[str]):
     print(f"  docname: '{docname}'")
     print(f"  len(source) = {len(source)}")
 
-    if not re.search(r"parameters", docname):
-        print("warpx_source_read: end")
-        print("")
-        return
+    # if not re.search(r"parameters", docname):
+    #     print("warpx_source_read: end")
+    #     print("")
+    #     return
 
     print(f"  Found match for docname: {docname}")
 
