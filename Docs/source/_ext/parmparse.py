@@ -455,7 +455,7 @@ class ParmParseDomain(Domain):
         for alt_name in desc.link_aliases:
             self.add_object(alt_name, obj, location)
 
-    def add_object(self, name: str, obj: ObjectEntry, location: Any) -> None:
+    def add_object(self, name: str, obj: ObjectEntry, location: Any = None) -> None:
         if name in self.objects:
             other = self.objects[name]
             logger.warning(
