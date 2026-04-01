@@ -478,6 +478,28 @@ class ParmParseDomain(Domain):
             if info.docname in docnames:
                 self.objects[name] = info
 
+    def find_obj_matches(self, name: str) -> list[tuple[str, ObjectEntry]]:
+        """
+        Find an object for "name".
+        Returns a list of (name, object entry) tuples.
+        """
+        matches: list[tuple[str, ObjectEntry]] = []
+
+        if name in self.objects:
+            matches.append((name, self.objects[name]))
+        else:
+            for entry_name, entry_obj in self.objects.items():
+                entry_name_split: list[str] = entry_name.split(".")
+                for i in range(1, len(entry_name_split)):
+                    entry_name_joined: str = ".".join(entry_name_split[i:])
+                    if name == entry_name_joined:
+                        matches.append((entry_name, entry_obj))
+                # "fuzzy" searching mode
+                # if entry_name.endswith("." + name):
+                #     matches.append((entry_name, entry_obj))
+
+        return matches
+
     def resolve_xref(
         self,
         env: BuildEnvironment,
