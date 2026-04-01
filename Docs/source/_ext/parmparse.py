@@ -530,6 +530,45 @@ class ParmParseDomain(Domain):
             title=target,
         )
 
+    def resolve_any_xref(
+        self,
+        env: BuildEnvironment,
+        fromdocname: str,
+        builder: Builder,
+        target: str,
+        node: addnodes.pending_xref,
+        contnode: nodes.Element,
+    ) -> list[tuple[str, nodes.Element]]:
+        results: list[tuple[str, nodes.Element]] = []
+        matches = self.find_obj_matches(target)
+        for obj_key, obj in matches:
+            obj_type = "param"
+            ref = self.resolve_xref(
+                env=env,
+                fromdocname=fromdocname,
+                builder=builder,
+                typ=obj_type,
+                target=obj_key,
+                node=node,
+                contnode=contnode,
+            )
+            role_name: str = f"{self.name}:{self.role_for_objtype(obj_type)}"
+            if ref:
+                results.append((role_name, ref))
+            # contnode["classes"] = ["xref", self.name, f"{self.name}-{obj_type}"]
+            # title = obj_key
+            # refnode = make_refnode(
+            #     builder=builder,
+            #     fromdocname=fromdocname,
+            #     todocname=obj.docname,
+            #     targetid=obj.node_id,
+            #     child=contnode,
+            #     title=title,
+            # )
+            # results.append((role_name, refnode))
+
+        return results
+
     def get_objects(self) -> Iterator[tuple[str, str, str, str, str, int]]:
         for obj_key, obj in self.objects.items():
             # name: Fully qualified name.
