@@ -511,16 +511,25 @@ class ParmParseDomain(Domain):
         node: addnodes.pending_xref,
         contnode: nodes.Element,
     ) -> nodes.Element | None:
-        obj: ObjectEntry | None = self.objects.get(target)
-        if obj is None:
+        matches: list[tuple[str, ObjectEntry]] = self.find_obj_matches(target)
+        if not matches:
             # Revert contnode to plain literal
             contnode["classes"] = []
             return None
+        elif len(matches) > 1:
+            logger.warning(
+                "more than one target found for cross-reference %r: %s",
+                target,
+                ", ".join(match[0] for match in matches),
+                location=node,
+            )
+        title: str = matches[0][0]
+        obj: ObjectEntry = matches[0][1]
 
         # Set classes for valid cross reference to object
-        domain_name = type(self).name
-
-        contnode["classes"] = ["xref", domain_name, f"{domain_name}-param"]
+        # This is necessary for role/directive aliases
+        obj_type: str = "param"
+        contnode["classes"] = ["xref", self.name, f"{self.name}-{obj_type}"]
 
         return make_refnode(
             builder=builder,
@@ -528,7 +537,7 @@ class ParmParseDomain(Domain):
             todocname=obj.docname,
             targetid=obj.node_id,
             child=contnode,
-            title=target,
+            title=title,
         )
 
     def resolve_any_xref(
