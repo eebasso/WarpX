@@ -543,6 +543,18 @@ class WarpXDomain(ParmParseDomain):
 
 
 def warpx_source_read(app: Sphinx, docname: str, source: list[str]):
+    # Replace interpreted role with emphasis.
+    # \s`XYZ`\s -> \s*XYZ*\s
+    # Look behind and ahead for the absence of non-whitespace charcters.
+    interpreted_pattern = re.compile(r"(?<!\S)`([^`]+)`(?!\S)")
+
+    def interpreted_repl(m: re.Match) -> str:
+        # Replace `XYZ` wtih *XYZ*
+        return "*" + m.group(1) + "*"
+
+    for i in range(len(source)):
+        source[i] = interpreted_pattern.sub(interpreted_repl, source[i])
+
     # Add default-role defintion at beginning of each document.
     # This makes `XYZ` equivalent to :pp:param:`XYZ`.
     for i in range(len(source)):
@@ -587,14 +599,14 @@ def warpx_source_read(app: Sphinx, docname: str, source: list[str]):
     # https://docutils.sourceforge.io/0.4/docs/ref/rst/restructuredtext.html#escaping-mechanism
 
     # Pattern for ``XYZ``
-    literal_re = re.compile(r"``([^`]+)``", re.DOTALL)
+    literal_pattern = re.compile(r"(?<!\S)``([^`]+)``(?!\S)", re.DOTALL)
 
-    def _repl(m: re.Match[str]):
+    def literal_repl(m: re.Match[str]):
         # Replace r"``XYZ``" with r"\ `XYZ`"
         return r"\ `" + m.group(1) + r"`"
 
     for i in range(len(source)):
-        source[i] = literal_re.sub(_repl, source[i])
+        source[i] = literal_pattern.sub(literal_repl, source[i])
 
 
 def setup(app: Sphinx) -> dict:
