@@ -183,19 +183,17 @@ class ParmParseDirective(ObjectDescription[ObjDesc]):
         ``<name> (<type>; [<unit>]; optional, default: <default>) <comment>``
         """
         # Parse self.options
-        helper = ParmParseOptionHelper(
-            options=self.options,
-            sig=sig,
-            signode=signode,
-        )
-        aliases_str: str | None = helper.get_option("link_aliases")
-        type_str: str | None = helper.get_option("type")
-        default_str: str | None = helper.get_option("default", "value")
-        unit_str: str | None = helper.get_option("unit", "units")
-        comment_str: str | None = helper.get_option("annotation", "comment")
+        self._handle_signature_sig: str = sig
+        self._handle_signature_signode: desc_signature = signode
+
+        aliases_str: str | None = self.get_option("link_aliases")
+        type_str: str | None = self.get_option("type")
+        default_str: str | None = self.get_option("default", "value")
+        unit_str: str | None = self.get_option("unit", "units")
+        comment_str: str | None = self.get_option("annotation", "comment")
         l_optional: bool = "optional" in self.options
         l_required: bool = "required" in self.options
-        helper.check_conflicting_options("optional", "required")
+        self.check_conflicting_options("optional", "required")
 
         # Make canonical name
         name: str = re.sub(r"\s+", "", sig)
@@ -325,17 +323,9 @@ class ParmParseDirective(ObjectDescription[ObjDesc]):
                 ("single", name + " (parameter)", node_id, "", None)
             )
 
-
-class ParmParseOptionHelper:
-    def __init__(
-        self,
-        options: dict[str, Any],
-        sig: str,
-        signode: desc_signature,
-    ):
-        self.options: dict[str, Any] = options
-        self.sig: str = sig
-        self.signode: desc_signature = signode
+    # ------------------------------------------------------------------
+    # Helper methods
+    # ------------------------------------------------------------------
 
     def get_option(self, *keys: str, default=None) -> Any:
         if len(keys) > 1:
@@ -350,9 +340,9 @@ class ParmParseOptionHelper:
         if sum(blist) > 1:
             logger.warning(
                 "Conflicting options for %s: specify only one of :%s",
-                self.sig.strip(),
+                self._handle_signature_sig.strip(),
                 keys,
-                location=self.signode,
+                location=self._handle_signature_signode,
             )
 
 
