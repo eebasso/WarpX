@@ -404,6 +404,7 @@ class ParmParseXRefRole(XRefRole):
             if m:
                 target = m.group(1).strip()
 
+        # Only needed this when setting aliases for role in `setup` function
         refnode["refdomain"] = ParmParseDomain.name
         refnode["reftype"] = "param"
 
