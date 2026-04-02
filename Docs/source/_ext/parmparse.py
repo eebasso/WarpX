@@ -662,7 +662,7 @@ def warpx_source_read(app: Sphinx, docname: str, source: list[str]):
     # https://docutils.sourceforge.io/0.4/docs/ref/rst/restructuredtext.html#escaping-mechanism
 
     # Pattern for ``XYZ``
-    literal_pattern = re.compile(r"(?<!\S)``([^`]+)``(?!\S)", re.DOTALL)
+    literal_pattern = re.compile(r"``([^`]+)``", re.DOTALL)
 
     def literal_repl(m: re.Match[str]):
         # Replace r"``XYZ``" with r"\ `XYZ`"
