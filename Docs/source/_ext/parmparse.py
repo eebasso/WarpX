@@ -513,7 +513,7 @@ class ParmParseDomain(Domain):
     ) -> nodes.Element | None:
         matches: list[tuple[str, ObjectEntry]] = self.find_obj_matches(target)
         if not matches:
-            # Revert contnode to plain literal
+            # Revert content node to plain literal
             contnode["classes"] = []
             return None
         elif len(matches) > 1:
@@ -526,7 +526,7 @@ class ParmParseDomain(Domain):
         title: str = matches[0][0]
         obj: ObjectEntry = matches[0][1]
 
-        # Set classes for valid cross reference to object
+        # Set content node classes for valid cross reference to object
         # This is necessary for role/directive aliases
         obj_type: str = "param"
         contnode["classes"] = ["xref", self.name, f"{self.name}-{obj_type}"]
