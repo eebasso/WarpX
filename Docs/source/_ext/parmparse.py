@@ -341,9 +341,9 @@ class ParmParseDirective(ObjectDescription[ObjDesc]):
         blist: list[bool] = [(key in self.options) for key in keys]
         if sum(blist) > 1:
             logger.warning(
-                "Conflicting options for %s: specify only one of :%s",
+                "Conflicting options for %s: specify only one of: %s",
                 self._handle_signature_sig.strip(),
-                keys,
+                ", ".join(keys),
                 location=self._handle_signature_signode,
             )
 
