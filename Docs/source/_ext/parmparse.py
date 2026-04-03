@@ -543,10 +543,6 @@ class ParmParseDomain(Domain):
         title: str = matches[0][0]
         obj: ObjectEntry = matches[0][1]
 
-        # Set content node classes for valid cross reference to object
-        # This is necessary for role/directive aliases
-        # contnode["classes"] = ["xref", "pp", f"pp-{roletype}"]
-
         return make_refnode(
             builder=builder,
             fromdocname=fromdocname,
@@ -572,12 +568,7 @@ class ParmParseDomain(Domain):
             role: str = self.role_for_objtype(objtype, "unknown_role")
             domain_role: str = f"pp:{role}"
             child = contnode
-            # child = contnode.deepcopy()
-            # child["classes"] = ["xref", "pp", f"pp-{role}"]
             title = obj_key
-            # refnode = make_refnode(
-            #     builder, fromdocname, obj.docname, obj.node_id, child, title,
-            # )
             refnode = make_refnode(
                 builder=builder,
                 fromdocname=fromdocname,
@@ -587,34 +578,6 @@ class ParmParseDomain(Domain):
                 title=title,
             )
             results.append((domain_role, refnode))
-
-        # matches = self.find_obj_matches(target)
-        # for obj_key, obj in matches:
-        #     obj_type = obj.objtype
-        #     domain_role_name: str = f"{self.name}:{self.role_for_objtype(obj_type)}"
-        #     contnode["classes"] = ["xref", self.name, domain_role_name]
-        #     title = obj_key
-        #     refnode = make_refnode(
-        #         builder=builder,
-        #         fromdocname=fromdocname,
-        #         todocname=obj.docname,
-        #         targetid=obj.node_id,
-        #         child=contnode,
-        #         title=title,
-        #     )
-        #     results.append((domain_role_name, refnode))
-        # if target in self.objects:
-        #     obj: ObjectEntry = self.objects[target]
-        #     objtype: str = obj.objtype
-        #     role: str = self.role_for_objtype(objtype, "unknown_role")
-        #     domain_role: str = f"{self.name}:{role}"
-        #     child = contnode.deepcopy()
-        #     child["classes"] = ["xref", self.name, domain_role]
-        #     title = target
-        #     refnode = make_refnode(
-        #         builder, fromdocname, obj.docname, obj.node_id, child, title,
-        #     )
-        #     results.append((domain_role, refnode))
 
         return results
 
