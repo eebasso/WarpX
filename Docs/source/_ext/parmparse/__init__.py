@@ -327,6 +327,173 @@ class ParmParseDirective(ObjectDescription[ObjDesc]):
                 ("single", name + " (parameter)", node_id, "", None)
             )
 
+    from typing import Sequence
+
+    def run(self) -> list[nodes.Node]:
+        result = super().run()
+        # desc_node: addnodes.desc | None = None
+        # content_node: addnodes.desc_content | None = None
+        for desc_node in result:
+            if not isinstance(desc_node, addnodes.desc):
+                continue
+            content_node: addnodes.desc_content | None = None
+            for child in desc_node.children:
+                if isinstance(child, addnodes.desc_content):
+                    content_node = child
+            if content_node and not content_node.astext():
+                desc_node.setdefault("classes", []).append("title-only")
+                desc_node.setdefault("classes", []).append("empty-content")
+                desc_node.setdefault("classes", []).append("no-content")
+        return result
+
+        # result = super().run()
+        # desc_node: addnodes.desc | None = None
+        # content_node: addnodes.desc_content | None = None
+        # for result_node in result:
+        #     if isinstance(result_node, addnodes.desc):
+        #         desc_node = result_node
+        # if desc_node:
+        #     for child in desc_node.children:
+        #         if isinstance(child, addnodes.desc_content):
+        #             content_node = child
+        # if desc_node and content_node and not content_node.astext():
+        #     desc_node.setdefault("classes", []).append("title-only")
+        #     desc_node.setdefault("classes", []).append("empty-content")
+        #     desc_node.setdefault("classes", []).append("no-content")
+        # return result
+
+        # result = super().run()
+        # desc_node: addnodes.desc | None = None
+        # content_node: addnodes.desc_content | None = None
+        # for n in result:
+        #     if isinstance(n, addnodes.desc):
+        #         desc_node = n
+        # if desc_node:
+        #     for child in desc_node.children:
+        #         if isinstance(child, addnodes.desc_content):
+        #             content_node = child
+        #             break
+        # if desc_node and content_node and not content_node.astext():
+        #     desc_node.setdefault("classes", []).append("title-only")
+        #     desc_node.setdefault("classes", []).append("empty-content")
+        #     desc_node.setdefault("classes", []).append("no-content")
+        # return result
+        # result = super().run()
+        # desc_node: addnodes.desc | None = None
+        # for n in result:
+        #     if isinstance(n, addnodes.desc):
+        #         desc_node = n
+        #         break
+        # if desc_node:
+        #     content_node: addnodes.desc_content | None = None
+        #     for child in desc_node.children:
+        #         if isinstance(child, addnodes.desc_content):
+        #             content_node = child
+        #             break
+        #     if content_node and not content_node.astext():
+        #         desc_node.setdefault("classes", []).append("title-only")
+        #         desc_node.setdefault("classes", []).append("empty-content")
+        #         desc_node.setdefault("classes", []).append("no-content")
+        # return result
+
+        # result = super().run()
+        # for desc_node in result:
+        #     if isinstance(desc_node, addnodes.desc):
+        #         for content_node in desc_node.children:
+        #             if isinstance(content_node, addnodes.desc_content):
+        #                 if not content_node.astext():
+        #                     desc_node.setdefault("classes", []).append("title-only")
+        #                     desc_node.setdefault("classes", []).append("empty-content")
+        #                     desc_node.setdefault("classes", []).append("no-content")
+        # return result
+
+
+        # result = super().run()
+        # for desc_node in result:
+        #     if not isinstance(desc_node, addnodes.desc):
+        #         continue
+        #     for content_node in desc_node.children:
+        #         if not isinstance(content_node, addnodes.desc_content):
+        #             continue
+        #         if not content_node.astext():
+        #             desc_node.setdefault("classes", []).append("title-only")
+        #             desc_node.setdefault("classes", []).append("empty-content")
+        #             desc_node.setdefault("classes", []).append("no-content")
+        # return result
+
+        # result = super().run()
+        # desc_node: addnodes.desc | None = None
+        # for n in result:
+        #     if isinstance(n, addnodes.desc):
+        #         desc_node = n
+        #         break
+        # if desc_node:
+        #     content_node: addnodes.desc_content | None = None
+        #     for child in desc_node.children:
+        #         if isinstance(child, addnodes.desc_content):
+        #             content_node = child
+        #             break
+        #     if content_node:
+        #         if not content_node.astext():
+        #             desc_node.setdefault("classes", []).append("title-only")
+        #             desc_node.setdefault("classes", []).append("empty-content")
+        #             desc_node.setdefault("classes", []).append("no-content")
+        # return result
+
+        # result = super().run()
+        # for desc_node in result:
+        #     if not isinstance(desc_node, addnodes.desc):
+        #         continue
+        #     for content_node in desc_node.children:
+        #         if not isinstance(content_node, addnodes.desc_content):
+        #             continue
+        #         if not content_node.astext():
+        #             cast(list, desc_node["classes"]).append("title-only")
+        # return result
+
+        # for desc_node in result:
+        #     if not isinstance(desc_node, addnodes.desc):
+        #         continue
+        #     l_empty: bool = False
+        #     for content_node in desc_node.children:
+        #         if not isinstance(content_node, addnodes.desc_content):
+        #             continue
+        #         if not content_node.astext():
+        #             l_empty = True
+        #             break
+
+        #     if l_empty:
+        #         for content_node in desc_node.children:
+        #             cast(list, desc_node["classes"]).append("empty")
+        #             cast(list, content_node["classes"]).append("title-only")
+        #             cast(list, desc_node["classes"]).append("empty-content")
+
+        # if not result:
+        #     return result
+        # desc_node = result[-1]
+        # if isinstance(desc_node, addnodes.desc):
+        #     content_node = desc_node.children[-1]
+        #     if isinstance(content_node, addnodes.desc_content):
+        #         if not content_node.astext():
+        #             cast(list, desc_node["classes"]).append("title-only")
+        #             cast(list, content_node["classes"]).append("empty")
+
+        # if not result:
+        #     return result
+        # desc_node = cast(addnodes.desc, result[-1])
+        # content_node = cast(addnodes.desc_content, desc_node.children[-1])
+        # if not content_node.astext():
+        #     cast(list, desc_node["classes"]).append("title-only")
+        #     cast(list, content_node["classes"]).append("empty")
+
+        # for desc_node in result:
+        #     if isinstance(desc_node, addnodes.desc):
+        #         for content_node in desc_node.children:
+        #             if isinstance(content_node, addnodes.desc_content):
+        #                 if not content_node.astext():
+        #                     cast(list, desc_node["classes"]).append("title-only")
+        #                     cast(list, content_node["classes"]).append("empty")
+
 
 class ParmParseOptionHelper:
     def __init__(
