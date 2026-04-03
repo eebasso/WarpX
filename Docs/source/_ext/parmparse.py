@@ -124,6 +124,7 @@ def replace_equiv_names(txt: str, equiv_dict: dict[str, list[str]]) -> str:
 class ObjectEntry(NamedTuple):
     docname: str
     node_id: str
+    objtype: str
     desc: ObjDesc
 
 
@@ -315,6 +316,7 @@ class ParmParseDirective(ObjectDescription[ObjDesc]):
 
         domain = cast(ParmParseDomain, self.env.get_domain(ParmParseDomain.name))
         domain.note_object(
+            objtype=self.objtype,
             desc=desc,
             node_id=node_id,
             location=signode,
@@ -441,6 +443,7 @@ class ParmParseDomain(Domain):
 
     def note_object(
         self,
+        objtype: str,
         desc: ObjDesc,
         node_id: str,
         location: Any = None,
@@ -449,6 +452,7 @@ class ParmParseDomain(Domain):
         obj = ObjectEntry(
             docname=self.env.docname,
             node_id=node_id,
+            objtype=objtype,
             desc=desc,
         )
         self.add_object(name, obj, location)
@@ -479,25 +483,32 @@ class ParmParseDomain(Domain):
             if info.docname in docnames:
                 self.objects[name] = info
 
-    def find_obj_matches(self, name: str) -> list[tuple[str, ObjectEntry]]:
+    def find_obj_matches(
+        self,
+        name: str,
+        roletype: str | None,
+        fuzzy_search: bool = False,
+    ) -> list[tuple[str, ObjectEntry]]:
         """
-        Find an object for "name".
+        Find an object for "name" and "roletype"
         Returns a list of (name, object entry) tuples.
         """
         matches: list[tuple[str, ObjectEntry]] = []
 
-        if name in self.objects:
-            matches.append((name, self.objects[name]))
+        objtypes: list[str] = []
+        if roletype:
+            objtypes = self.objtypes_for_role(roletype, [])
         else:
+            objtypes = list(self.object_types.keys())
+
+        obj = self.objects.get(name, None)
+        if obj and obj.objtype in objtypes:
+            matches.append((name, obj))
+        elif fuzzy_search:
             for entry_name, entry_obj in self.objects.items():
-                entry_name_split: list[str] = entry_name.split(".")
-                for i in range(1, len(entry_name_split)):
-                    entry_name_joined: str = ".".join(entry_name_split[i:])
-                    if name == entry_name_joined:
-                        matches.append((entry_name, entry_obj))
                 # "fuzzy" searching mode
-                # if entry_name.endswith("." + name):
-                #     matches.append((entry_name, entry_obj))
+                if entry_name.endswith("." + name) and entry_obj.objtype in self.object_types:
+                    matches.append((entry_name, entry_obj))
 
         return matches
 
@@ -506,17 +517,23 @@ class ParmParseDomain(Domain):
         env: BuildEnvironment,
         fromdocname: str,
         builder: Builder,
-        typ: str,
+        roletype: str,
         target: str,
         node: addnodes.pending_xref,
         contnode: nodes.Element,
     ) -> nodes.Element | None:
-        matches: list[tuple[str, ObjectEntry]] = self.find_obj_matches(target)
+        fuzzy_search = True
+        multiple_match_warning = True
+        matches = self.find_obj_matches(
+            target,
+            roletype=roletype,
+            fuzzy_search=fuzzy_search,
+        )
         if not matches:
             # Revert content node to plain literal
             contnode["classes"] = []
             return None
-        elif len(matches) > 1:
+        elif len(matches) > 1 and multiple_match_warning:
             logger.warning(
                 "more than one target found for cross-reference %r: %s",
                 target,
@@ -528,8 +545,7 @@ class ParmParseDomain(Domain):
 
         # Set content node classes for valid cross reference to object
         # This is necessary for role/directive aliases
-        obj_type: str = "param"
-        contnode["classes"] = ["xref", self.name, f"{self.name}-{obj_type}"]
+        # contnode["classes"] = ["xref", "pp", f"pp-{roletype}"]
 
         return make_refnode(
             builder=builder,
@@ -550,32 +566,55 @@ class ParmParseDomain(Domain):
         contnode: nodes.Element,
     ) -> list[tuple[str, nodes.Element]]:
         results: list[tuple[str, nodes.Element]] = []
-        matches = self.find_obj_matches(target)
+        matches = self.find_obj_matches(target, roletype=None, fuzzy_search=True)
         for obj_key, obj in matches:
-            obj_type = "param"
-            ref = self.resolve_xref(
-                env=env,
-                fromdocname=fromdocname,
-                builder=builder,
-                typ=obj_type,
-                target=obj_key,
-                node=node,
-                contnode=contnode,
-            )
-            role_name: str = f"{self.name}:{self.role_for_objtype(obj_type)}"
-            if ref:
-                results.append((role_name, ref))
-            # contnode["classes"] = ["xref", self.name, f"{self.name}-{obj_type}"]
-            # title = obj_key
+            objtype: str = obj.objtype
+            role: str = self.role_for_objtype(objtype, "unknown_role")
+            domain_role: str = f"pp:{role}"
+            child = contnode
+            # child = contnode.deepcopy()
+            # child["classes"] = ["xref", "pp", f"pp-{role}"]
+            title = obj_key
             # refnode = make_refnode(
-            #     builder=builder,
-            #     fromdocname=fromdocname,
-            #     todocname=obj.docname,
-            #     targetid=obj.node_id,
-            #     child=contnode,
-            #     title=title,
+            #     builder, fromdocname, obj.docname, obj.node_id, child, title,
             # )
-            # results.append((role_name, refnode))
+            refnode = make_refnode(
+                builder=builder,
+                fromdocname=fromdocname,
+                todocname=obj.docname,
+                targetid=obj.node_id,
+                child=child,
+                title=title,
+            )
+            results.append((domain_role, refnode))
+
+        # matches = self.find_obj_matches(target)
+        # for obj_key, obj in matches:
+        #     obj_type = obj.objtype
+        #     domain_role_name: str = f"{self.name}:{self.role_for_objtype(obj_type)}"
+        #     contnode["classes"] = ["xref", self.name, domain_role_name]
+        #     title = obj_key
+        #     refnode = make_refnode(
+        #         builder=builder,
+        #         fromdocname=fromdocname,
+        #         todocname=obj.docname,
+        #         targetid=obj.node_id,
+        #         child=contnode,
+        #         title=title,
+        #     )
+        #     results.append((domain_role_name, refnode))
+        # if target in self.objects:
+        #     obj: ObjectEntry = self.objects[target]
+        #     objtype: str = obj.objtype
+        #     role: str = self.role_for_objtype(objtype, "unknown_role")
+        #     domain_role: str = f"{self.name}:{role}"
+        #     child = contnode.deepcopy()
+        #     child["classes"] = ["xref", self.name, domain_role]
+        #     title = target
+        #     refnode = make_refnode(
+        #         builder, fromdocname, obj.docname, obj.node_id, child, title,
+        #     )
+        #     results.append((domain_role, refnode))
 
         return results
 
@@ -586,7 +625,7 @@ class ParmParseDomain(Domain):
             # dispname: Name to display when searching/linking.
             dispname: str = obj_key
             # type_: Object type, a key in ``self.object_types``.
-            type_: str = "param"
+            type_: str = obj.objtype
             # docname: The document where it is to be found.
             docname: str = obj.docname
             # anchor: The anchor name for the object.
