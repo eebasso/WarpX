@@ -609,7 +609,10 @@ def warpx_source_read(app: Sphinx, docname: str, source: list[str]):
     # Replace interpreted role with emphasis.
     # \s`XYZ`\s -> \s*XYZ*\s
     # Look behind and ahead for the absence of non-whitespace charcters.
-    interpreted_pattern = re.compile(r"(?<!\S)`([^`]+)`(?!\S)")
+    interpreted_pattern = re.compile(
+        r"""(?<![^\s,;\.'"\(])`(?=\S)([^`]+)(?<=\S)`(?![^\s,;\.'"\)])""",
+        flags=re.VERBOSE,
+    )
 
     def interpreted_repl(m: re.Match) -> str:
         # Replace `XYZ` wtih *XYZ*
@@ -662,7 +665,7 @@ def warpx_source_read(app: Sphinx, docname: str, source: list[str]):
     # https://docutils.sourceforge.io/0.4/docs/ref/rst/restructuredtext.html#escaping-mechanism
 
     # Pattern for ``XYZ``
-    literal_pattern = re.compile(r"``([^`]+)``", re.DOTALL)
+    literal_pattern = re.compile(r"``(?=\S)([^`]+)(?<=\S)``", re.DOTALL)
 
     def literal_repl(m: re.Match[str]):
         # Replace r"``XYZ``" with r"\ `XYZ`"
