@@ -112,6 +112,13 @@ public:
                  ImplicitOptions const * implicit_options = nullptr) override;
 
     /**
+     * \brief Deposit mass matrices.
+     */
+    void DepositMassMatrices (ablastr::fields::MultiFabRegister& fields,
+                              int lev,
+                              amrex::Real dt) override;
+
+    /**
      * \brief Gather fields and push particles in one fused kernel.
      */
     virtual void PushPX (WarpXParIter& pti,
@@ -402,6 +409,12 @@ public:
     bool has_virtual_photons () const override;
 
     /**
+    * Tells if beam size effect is enabled for
+    * the virtual photons
+    */
+    bool has_virtual_photons_beam_size_effect () const override;
+
+    /**
      * Gets the index of the PhysicalParticleContainer
      * that corresponds to the virtual photons
      * @return index of the virtual photon species
@@ -503,6 +516,10 @@ protected:
 
     // A flag to enable virtual photons
     bool m_do_qed_virtual_photons = false;
+
+    // A flag to enable beam size effect ala xsuite/guineapig in radiative bhabha and pairs
+    bool m_qed_virtual_photons_do_beam_size_effect = false;
+
 #endif
     /* Vector of user-defined integer attributes for species, species_name */
     std::vector<std::string> m_user_int_attribs;

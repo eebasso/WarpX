@@ -276,6 +276,9 @@ PhysicalParticleContainer::PhysicalParticleContainer (AmrCore* amr_core, int isp
     if (m_do_qed_virtual_photons) {
         pp_species_name.query("qed_virtual_photon_species_name", m_qed_virtual_photon_species_name);
     }
+
+    pp_species_name.query("qed_virtual_photons_do_beam_size_effect", m_qed_virtual_photons_do_beam_size_effect);
+
 #endif
 
     // User-defined integer attributes
@@ -404,6 +407,21 @@ PhysicalParticleContainer::BackwardCompatibility ()
         WARPX_ABORT_WITH_MESSAGE("<species>.plot_species is not supported anymore. "
                      "Please use the new syntax for diagnostics, see documentation.");
     }
+
+    std::string backward_profile_type;
+    if (pp_species_name.query("profile", backward_profile_type) && backward_profile_type == "predefined"){
+        WARPX_ABORT_WITH_MESSAGE(
+            "<species>.profile = predefined is no longer supported. "
+            "Please use <species>.profile = parse_density_function instead.");
+    }
+
+    std::string backward_mom_dist;
+    if (pp_species_name.query("momentum_distribution_type", backward_mom_dist) &&
+        backward_mom_dist == "radial_expansion") {
+        WARPX_ABORT_WITH_MESSAGE(
+            "<species>.momentum_distribution_type = radial_expansion is not supported anymore. "
+            "Please use momentum_distribution_type = parse_momentum_function instead.");
+    }
 }
 
 void PhysicalParticleContainer::InitData ()
@@ -468,8 +486,12 @@ PhysicalParticleContainer::Evolve (ablastr::fields::MultiFabRegister& fields,
     bool const deposit_charge = (
         has_rho &&
         !skip_deposition &&
+        !do_not_deposit
+    );
+    bool const deposit_current = (
+        !skip_deposition &&
         !do_not_deposit &&
-        (position_push_type == PositionPushType::Full)
+        !(implicit_options && implicit_options->evolve_suborbit_particles_only)
     );
     bool const split_particles = (
         do_splitting &&
@@ -671,7 +693,7 @@ PhysicalParticleContainer::Evolve (ablastr::fields::MultiFabRegister& fields,
                 ABLASTR_PROFILE_VAR_STOP(blp_fg);
 
                 // Current Deposition
-                if (!skip_deposition && !(implicit_options && implicit_options->evolve_suborbit_particles_only))
+                if (deposit_current)
                 {
                     // Deposit at t_{n+1/2} with explicit push
                     const amrex::Real relative_time = (push_type == PushType::Explicit ? -0.5_rt * dt : 0.0_rt);
@@ -680,23 +702,13 @@ PhysicalParticleContainer::Evolve (ablastr::fields::MultiFabRegister& fields,
                         pti.GetiAttribs("ionizationLevel").dataPtr():nullptr;
 
                     // Deposit inside domains
-                    if (implicit_options && implicit_options->deposit_mass_matrices) {
-                        // Note that J for particles included in MM are deposited to current_fp_MM
-                        amrex::MultiFab * jx = fields.get(FieldType::current_fp_MM, Direction{0}, lev);
-                        amrex::MultiFab * jy = fields.get(FieldType::current_fp_MM, Direction{1}, lev);
-                        amrex::MultiFab * jz = fields.get(FieldType::current_fp_MM, Direction{2}, lev);
-                        amrex::MultiFab * Sxx = fields.get(FieldType::MassMatrices_X, Direction{0}, lev);
-                        amrex::MultiFab * Sxy = fields.get(FieldType::MassMatrices_X, Direction{1}, lev);
-                        amrex::MultiFab * Sxz = fields.get(FieldType::MassMatrices_X, Direction{2}, lev);
-                        amrex::MultiFab * Syx = fields.get(FieldType::MassMatrices_Y, Direction{0}, lev);
-                        amrex::MultiFab * Syy = fields.get(FieldType::MassMatrices_Y, Direction{1}, lev);
-                        amrex::MultiFab * Syz = fields.get(FieldType::MassMatrices_Y, Direction{2}, lev);
-                        amrex::MultiFab * Szx = fields.get(FieldType::MassMatrices_Z, Direction{0}, lev);
-                        amrex::MultiFab * Szy = fields.get(FieldType::MassMatrices_Z, Direction{1}, lev);
-                        amrex::MultiFab * Szz = fields.get(FieldType::MassMatrices_Z, Direction{2}, lev);
-                        DepositCurrentAndMassMatrices(pti, wp, uxp, uyp, uzp, jx, jy, jz,
-                                       Sxx, Sxy, Sxz, Syx, Syy, Syz, Szx, Szy, Szz,
-                                       bxfab, byfab, bzfab, 0, np_to_deposit, thread_num, lev, lev, dt);
+                    if (implicit_options) {
+                        amrex::MultiFab * jx = fields.get(FieldType::current_fp_non_suborbit, Direction{0}, lev);
+                        amrex::MultiFab * jy = fields.get(FieldType::current_fp_non_suborbit, Direction{1}, lev);
+                        amrex::MultiFab * jz = fields.get(FieldType::current_fp_non_suborbit, Direction{2}, lev);
+                        DepositCurrent(pti, wp, uxp, uyp, uzp, ion_lev, jx, jy, jz,
+                                       0, np_to_deposit, thread_num,
+                                       lev, lev, dt, relative_time, push_type);
                     }
                     else {
                         amrex::MultiFab * jx = fields.get(current_fp_string, Direction{0}, lev);
@@ -808,6 +820,68 @@ PhysicalParticleContainer::Evolve (ablastr::fields::MultiFabRegister& fields,
     if (split_particles) {
         SplitParticles(lev);
     }
+}
+
+void
+PhysicalParticleContainer::DepositMassMatrices (ablastr::fields::MultiFabRegister& fields,
+                                                int lev, Real dt)
+{
+    using ablastr::fields::Direction;
+    using warpx::fields::FieldType;
+
+    ABLASTR_PROFILE("PhysicalParticleContainer::DepositMassMatrices()");
+
+    if (do_not_push) { return; }
+
+    const amrex::MultiFab & Bx = *fields.get(FieldType::Bfield_aux, Direction{0}, lev);
+    const amrex::MultiFab & By = *fields.get(FieldType::Bfield_aux, Direction{1}, lev);
+    const amrex::MultiFab & Bz = *fields.get(FieldType::Bfield_aux, Direction{2}, lev);
+
+#ifdef AMREX_USE_OMP
+#pragma omp parallel
+#endif
+    {
+#ifdef AMREX_USE_OMP
+        const int thread_num = omp_get_thread_num();
+#else
+        const int thread_num = 0;
+#endif
+
+        for (WarpXParIter pti(*this, lev); pti.isValid(); ++pti)
+        {
+
+            // Extract particle data
+            const auto& attribs = pti.GetAttribs();
+            const auto&  wp = attribs[PIdx::w];
+            const auto& uxp = attribs[PIdx::ux];
+            const auto& uyp = attribs[PIdx::uy];
+            const auto& uzp = attribs[PIdx::uz];
+
+            const long np_to_deposit = pti.numParticles();
+
+            // Data on the grid
+            FArrayBox const* bxfab = &Bx[pti];
+            FArrayBox const* byfab = &By[pti];
+            FArrayBox const* bzfab = &Bz[pti];
+
+            // Mass Matrices Deposition
+            amrex::MultiFab * Sxx = fields.get(FieldType::MassMatrices_X, Direction{0}, lev);
+            amrex::MultiFab * Sxy = fields.get(FieldType::MassMatrices_X, Direction{1}, lev);
+            amrex::MultiFab * Sxz = fields.get(FieldType::MassMatrices_X, Direction{2}, lev);
+            amrex::MultiFab * Syx = fields.get(FieldType::MassMatrices_Y, Direction{0}, lev);
+            amrex::MultiFab * Syy = fields.get(FieldType::MassMatrices_Y, Direction{1}, lev);
+            amrex::MultiFab * Syz = fields.get(FieldType::MassMatrices_Y, Direction{2}, lev);
+            amrex::MultiFab * Szx = fields.get(FieldType::MassMatrices_Z, Direction{0}, lev);
+            amrex::MultiFab * Szy = fields.get(FieldType::MassMatrices_Z, Direction{1}, lev);
+            amrex::MultiFab * Szz = fields.get(FieldType::MassMatrices_Z, Direction{2}, lev);
+            WarpXParticleContainer::DepositMassMatrices(pti, wp, uxp, uyp, uzp,
+                              Sxx, Sxy, Sxz, Syx, Syy, Syz, Szx, Szy, Szz,
+                              bxfab, byfab, bzfab, 0, np_to_deposit, thread_num, lev, lev, dt);
+
+            amrex::Gpu::synchronize();
+        }
+    }
+
 }
 
 void
@@ -1690,6 +1764,11 @@ bool PhysicalParticleContainer::has_breit_wheeler () const
 bool PhysicalParticleContainer::has_virtual_photons () const
 {
     return m_do_qed_virtual_photons;
+}
+
+bool PhysicalParticleContainer::has_virtual_photons_beam_size_effect () const
+{
+    return m_qed_virtual_photons_do_beam_size_effect;
 }
 
 int PhysicalParticleContainer::getVirtualPhotonSpeciesIndex() const{
