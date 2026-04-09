@@ -999,27 +999,40 @@ from 0 to 1 as :math:`\frac{1}{1-x}^{1/4}`. Particles that are affected have the
 using the temperature parameter ``theta`` for any direction in which their momentum component is over the threshold.
 The parameters affecting this region are as follows:
 
-* ``particle_thermalizer.normal`` (`string`)
+.. fv:var:: particle_thermalizer.normal
+    :type: `string`
+
     The normal direction describing the thermalizer region. Allowed values are ``x``, ``y``, or ``z`` (case-insensitive). Along with the ``start`` and ``stop`` parameters below, this specifies the region in space where particles will be thermalized.
     This parameter is optional. If not specified, the thermalizer will not be applied.
 
-* ``particle_thermalizer.species`` (`list of strings`, optional)
+.. fv:var:: particle_thermalizer.species
+    :type: `list of strings`
+    :optional:
+
     Names of the species to which the thermalizer is applied. If not specified, the thermalizer
     is applied to all species.
 
-* ``particle_thermalizer.start`` (`float`)
+.. fv:var:: particle_thermalizer.start
+    :type: `float`
+
     Starting coordinate (in SI units) of the thermalization region along the specified normal direction.
     This parameter is required if the thermalizer is enabled.
 
-* ``particle_thermalizer.end`` (`float`)
+.. fv:var:: particle_thermalizer.end
+    :type: `float`
+
     Ending coordinate (in SI units) of the thermalization region along the specified normal direction.
     This parameter is required if the thermalizer is enabled.
 
-* ``particle_thermalizer.momentum_threshold`` (`float`)
+.. fv:var:: particle_thermalizer.momentum_threshold
+    :type: `float`
+
     Momentum threshold used by the thermalizer. In each direction, if a particle's normalized momentum component (e.g. :math:`\gamma \beta_x`) is above this threshold, that component will be thermalized.
     This parameter is required if the thermalizer is enabled.
 
-* ``particle_thermalizer.theta`` (`float`)
+.. fv:var:: particle_thermalizer.theta
+    :type: `float`
+
     Dimensionless temperature parameter (k*T/m/c^2) used to sample the thermalized particle velocities.
     This parameter is required if the thermalizer is enabled. For the selected particles, if the
     normalized momentum in any direction exceeds the threshold, the particle's momentum in that direction will be set
@@ -1764,7 +1777,9 @@ Particle initialization
 
     * ``v``: each particle's velocity :math:`{\bf v}`, including transverse components
 
-* ``<species_name>.do_backward_propagation`` (`bool`)
+.. fv:var:: <species_name>.do_backward_propagation
+    :type: `bool`
+
     Inject a backward-propagating beam to reduce the effect of charge-separation
     fields when running in the boosted frame. See examples.
 
@@ -2010,7 +2025,11 @@ Particle initialization
     This QED feature is separated from the strong-field QED modules (quantum synchrotron and non-linear Breit-Wheeler).
     It requires WarpX to be compiled with ``WarpX_QED=ON`` (CMake) or ``QED=TRUE`` (GNU Make).
 
-* ``<species>.qed_virtual_photons_do_beam_size_effect`` (`boolean`) optional (default `false`)
+.. fv:var:: <species>.qed_virtual_photons_do_beam_size_effect
+    :type: `boolean`
+    :default: `false`
+    :optional:
+
     Applies the beam size effect on the virtual photons.
     This effect reduces the radiative Bhabha scattering cross section by approximately half, by smearing the impact parameter of the virtual photons on a disc around the equivalent primary. This accounts for the finite transverse size of the colliding bunches. Otherwise all virtual photons are assumed at the same impact parameter. The (transverse) virtual photon coordinates will be randomized around the coordinate of the corresponding primary and distributed on a disc perpendicular to the primary's propagation direction. The radius of the disc is :math:`\rho=\frac{\hbar}{\sqrt{Q^2(1-x)}}`, where :math:`Q` is the photon virtuality and :math:`x` is the fractional photon energy.
     See :cite:t:`param-Kicsiny2024` for more details.
@@ -2790,12 +2809,18 @@ Details about the collision models can be found in the :ref:`theory section <mul
     If using ``bremsstrahlung``, the product species must be of type photon.
     If using ``linear_compton``, these should be two species: first, a photon species, and second, a lepton species, in this exact order.
 
-* ``<collision_name>.ndt_supercycle`` (`int`) optional
+.. fv:var:: <collision_name>.ndt_supercycle
+    :type: `int`
+    :optional:
+
     Execute collision once every ``ndt_supercycle`` PIC time steps.
     The effective collision time step is ``dt_collision = ndt_supercycle * dt_PIC``.
     Must be >= 1. Mutually exclusive with ``ndt_subcycle``. Default is 1.
 
-* ``<collision_name>.ndt_subcycle`` (`int`) optional
+.. fv:var:: <collision_name>.ndt_subcycle
+    :type: `int`
+    :optional:
+
     Execute collision ``ndt_subcycle`` times per PIC time step.
     The effective collision time step is ``dt_collision = dt_PIC / ndt_subcycle``.
     Must be >= 1. Mutually exclusive with ``ndt_supercycle``.
@@ -2862,13 +2887,19 @@ Details about the collision models can be found in the :ref:`theory section <mul
     ``probability_threshold``, WarpX reduces the event multiplier for
     that collisions such that the probability approches ``probability_target_value``.
 
-* ``<collision_name>.scattering_angle_model`` (`string`, optional, default: ``isotropic``)
+.. fv:var:: <collision_name>.scattering_angle_model
+    :type: `string`
+    :default: ``isotropic``
+    :optional:
+
     Only for ``nuclearfusion``. The scattering angle for the products of the fusion reaction.
     The possible values are ``isotropic`` and ``forward``.
     With ``isotropic``, the scattering angle is drawn from an isotropic distribution.
     With ``forward``, the scattering angle is set to zero, i.e. the products are emitted in the same direction as the reactant.
 
-* ``<collision_name>.background_density`` (`float`)
+.. fv:var:: <collision_name>.background_density
+    :type: `float`
+
     Only for ``background_mcc`` and ``background_stopping``. The density of the background in :math:`m^{-3}`.
     Can also provide ``<collision_name>.background_density(x,y,z,t)`` using the parser
     initialization style for spatially and temporally varying density. With ``background_mcc``, if a function
