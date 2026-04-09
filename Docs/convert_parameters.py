@@ -1,5 +1,5 @@
 """
-Convert WarpX parameters.rst to use fv:var directives.
+Convert WarpX parameters.rst to use pp:param directives.
 
 Only top-level param bullets are converted; nested param bullets inside
 description bodies are left as raw RST (no recursive conversion).
@@ -93,7 +93,7 @@ class Directive:
         """
         Render a Directive to output lines.
 
-        One ``.. fv:var::`` block is emitted per name in d.names, all sharing
+        One ``.. pp:param::`` block is emitted per name in d.names, all sharing
         the same type, default, and body.  Blocks are separated by blank lines.
         """
         bullet_indent: str = ' ' * self.bullet_indent
@@ -107,7 +107,7 @@ class Directive:
             if l_past_first_name:
                 out.append('')
             l_past_first_name = True
-            out.append(f'{bullet_indent}.. fv:var:: {name}')
+            out.append(f'{bullet_indent}.. pp:param:: {name}')
 
             if len(self.raw_name_list) > 1 or self.raw_name_list[0] != name:
                 other_names = [ elem.replace(" ", "") for elem in self.raw_name_list ]
@@ -613,7 +613,7 @@ def strip_lines(lines: list[str]) -> list[str]:
 # ── Main conversion ───────────────────────────────────────────────────────────
 
 def convert(lines: list[str]) -> list[str]:
-    """Replace parameter bullets with fv:var directives.
+    """Replace parameter bullets with pp:param directives.
 
     Iterates through source lines once.  Lines belonging to a known directive
     span are replaced by the rendered directive (at the span's start line) or
@@ -655,8 +655,8 @@ def main() -> None:
     with open('source/usage/parameters.rst', 'w') as f:
         f.write('\n'.join(result) + '\n')
 
-    n = sum(1 for ln in result if re.search(r'^\s*\.\. fv:var::', ln))
-    print(f"Done: {len(lines)} source lines → {len(result)} output lines, {n} fv:var directives")
+    n = sum(1 for ln in result if re.search(r'^\s*\.\. pp:param::', ln))
+    print(f"Done: {len(lines)} source lines → {len(result)} output lines, {n} pp:param directives")
 
 
 if __name__ == '__main__':
