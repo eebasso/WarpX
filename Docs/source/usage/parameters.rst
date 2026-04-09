@@ -3,6 +3,40 @@
 Inputs: Parameter List
 ======================
 
+.. pp:param:: test1
+
+    Description for test
+
+    .. pp:param:: test_inside_test1
+
+        Description 2
+
+        .. pp:param:: test2_inside_test1
+
+            Description 3
+
+    .. pp:param:: xyz1
+
+    .. pp:param:: xyz2
+
+    .. pp:param:: xyz3
+
+    More description
+
+.. pp:param:: test2
+
+.. pp:param:: test3
+
+.. pp:param:: test4
+
+.. pp:param:: test5
+
+    Description for test
+
+.. pp:param:: test6
+
+    Description for test
+
 This section describes the list of parameters that can be set in the WarpX inputs file.
 
 Examples of inputs files can be found in the :ref:`Examples <usage-examples>` section.
@@ -2081,7 +2115,7 @@ Laser initialization
 
 .. pp:param:: <laser_name>.a0
     :type: `float`
-    :comment: dimensionless
+    :unit: dimensionless
 
     Peak normalized amplitude of the laser field, in the focal plane (given in the lab frame, just as ``e_max`` above).
     See the description of ``<laser_name>.e_max`` for the conversion between ``a0`` and ``e_max``.
